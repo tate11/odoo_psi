@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- workflow -->
+        <record id="hr_job_wkf" model="workflow">
+            <field name="name">Workflow Poste</field>
+            <field name="osv">hr.job</field>
+            <field name="on_create">True</field>
+        </record>
+        
+        <!-- recruit,analyse,rr_validation,open,tdr_redaction,approuved -->
+        
+        <!-- activity -->
+        <record id="activity_recruit" model="workflow.activity">
+            <field name="wkf_id" ref="hr_job_wkf"/>
+            <field name="name">activity_recruit</field>
+            <field name="kind">function</field>
+			<field name="action">write({'state':'recruit'})</field>
+		</record>
+		<record id="activity_analyse" model="workflow.activity">
+		    <field name="wkf_id" ref="hr_job_wkf"/>
+            <field name="name">activity_analyse</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'analyse'})</field>
+        </record>
+        <record id="activity_rr_validation" model="workflow.activity">
+		    <field name="wkf_id" ref="hr_job_wkf"/>
+            <field name="name">activity_rr_validation</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'rr_validation'})</field>
+        </record>
+        <record id="activity_open" model="workflow.activity">
+		    <field name="wkf_id" ref="hr_job_wkf"/>
+		    <field name="flow_start">True</field>
+            <field name="name">activity_open</field>
+            <field name="kind">dummy</field>
+        </record>
+        <record id="activity_refused" model="workflow.activity">
+		    <field name="wkf_id" ref="hr_job_wkf"/>
+            <field name="name">activity_refused</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'refused'})</field>
+        </record>
+         <record id="activity_tdr_redaction" model="workflow.activity">
+		    <field name="wkf_id" ref="hr_job_wkf"/>
+            <field name="name">activity_tdr_redaction</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'tdr_redaction'})</field>
+        </record>
+		
+		<!-- transition -->
+		<record id="activity_open_to_activity_analyse" model="workflow.transition">
+            <field name="act_from" ref="activity_open"/>
+            <field name="act_to" ref="activity_analyse"/>
+            <field name="signal">button_analyse</field>
+        </record>
+        <record id="activity_analyse_to_activity_rr_validation" model="workflow.transition">
+            <field name="act_from" ref="activity_analyse"/>
+            <field name="act_to" ref="activity_rr_validation"/>
+            <field name="signal">button_rr_validation</field>
+        </record>
+        <record id="activity_rr_validation_to_activity_refused" model="workflow.transition">
+            <field name="act_from" ref="activity_rr_validation"/>
+            <field name="act_to" ref="activity_refused"/>
+            <field name="signal">button_refuser</field>
+        </record>
+        <record id="activity_rr_validation_to_activity_tdr_redaction" model="workflow.transition">
+            <field name="act_from" ref="activity_rr_validation"/>
+            <field name="act_to" ref="activity_tdr_redaction"/>
+            <field name="signal">button_tdr_redaction</field>
+        </record>
+        <record id="activity_analyse_to_activity_refused" model="workflow.transition">
+            <field name="act_from" ref="activity_analyse"/>
+            <field name="act_to" ref="activity_refused"/>
+            <field name="signal">button_refuser</field>
+        </record>
+        <record id="activity_tdr_redaction_to_activity_recruit" model="workflow.transition">
+            <field name="act_from" ref="activity_tdr_redaction"/>
+            <field name="act_to" ref="activity_recruit"/>
+            <field name="signal">button_accepter</field>
+        </record>
+        <!-- transition from analyse to tdr_redaction -->
+        <record id="activity_analyse_to_activity_tdr_redaction" model="workflow.transition">
+            <field name="act_from" ref="activity_analyse"/>
+            <field name="act_to" ref="activity_tdr_redaction"/>
+            <field name="signal">button_analyse_tdr_redaction</field>
+        </record>
+        <!-- transition pour relancer le workflow depuis le debut -->
+        <record id="activity_recruit_to_activity_open" model="workflow.transition">
+            <field name="act_from" ref="activity_recruit"/>
+            <field name="act_to" ref="activity_open"/>
+            <field name="signal">button_relance</field>
+        </record>
+    
+    </data>
+</odoo>

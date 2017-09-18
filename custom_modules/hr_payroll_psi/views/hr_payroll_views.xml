@@ -1,0 +1,116 @@
+<odoo>
+    <data>	
+		<!-- avance sur salaire Tree View -->
+	    <record model="ir.ui.view" id="hr_wage_advance_tree">
+	        <field name="name">hr.wage.advance</field>
+	        <field name="model">hr.wage.advance</field>
+	        <field name="arch" type="xml">
+	            <tree string="Avance sur salaire">
+	                <field name="name"/>
+	                <field name="employee_id"/>
+	                <field name="department_id"/>
+	                <field name="manager_id"/>
+	                <field name="date"/>
+	                <field name="amount"/>
+	            </tree>
+	        </field>
+	    </record>
+	    
+	    <!-- avance sur salaire Tree View -->
+	    <record model="ir.ui.view" id="hr_payroll_interim_tree">
+	        <field name="name">hr.payroll.interim</field>
+	        <field name="model">hr.payroll.interim</field>
+	        <field name="arch" type="xml">
+	            <tree string="Interim">
+	                <field name="employee_id"/>
+	                <field name="department_id"/>
+	                <field name="manager_id"/>
+	            </tree>
+	        </field>
+	    </record>
+	    
+	    <!-- avance sur salaire form view-->
+	    <record id="hr_wage_advance_form" model="ir.ui.view">
+	        <field name="name">hr.wage.advance</field>
+	        <field name="model">hr.wage.advance</field>
+	        <field name="arch" type="xml">
+	            <form string="Création d'un avance sur salaire">
+	                <header>
+                       	<field name="state" widget="statusbar" clickable="1" statusbar_visible="draft,ok,not_ok" />   
+                    </header>
+	                <sheet>
+	                    <group>
+	                        <group>
+		                        <div class="oe_title">
+			                        <label for="employee_id" class="oe_edit_only"/>
+			                        <h1><field name="employee_id" placeholder="Employé"/></h1>
+		                    	</div>
+	                    	</group>
+	                    	<group>
+		                	    <field name="name"/>
+		                	    <field name="date"/>
+		                	    <field name="amount"/>
+	                		</group>
+		                    <group>
+			                    <field name="department_id"/> 
+		                		<field name="manager_id"/> 
+		                	</group>
+                		</group>
+	                </sheet>
+	            </form>
+	        </field>
+	    </record>
+	    
+	    <!-- interim form view -->
+	    <record id="hr_payroll_interim_form" model="ir.ui.view">
+	        <field name="name">hr.payroll.interim</field>
+	        <field name="model">hr.payroll.interim</field>
+	        <field name="arch" type="xml">
+	            <form string="Création d'une interim">
+	                <sheet>
+	                    <group>
+		                    <group>
+			                    <field name="employee_id"/>
+		                		<field name="department_id"/> 
+		                		<field name="manager_id"/> 
+		                	</group>
+                		</group>
+	                </sheet>
+	            </form>
+	        </field>
+	    </record>
+	    
+	    <!-- avance sur salaire menu action -->
+	    <record model="ir.actions.act_window" id="action_hr_wage_advance">
+	       <field name="name">Avances sur salaire</field>
+	       <field name="res_model">hr.wage.advance</field>
+	       <field name="view_type">form</field>
+	       <field name="view_mode">tree,form</field>
+	       <field name="help" type="html">
+	         <p class="oe_view_nocontent_create">
+	             Cliquer sur créer pour créer un avance sur salaire
+	         </p>
+	       </field>
+	   </record>
+	   
+	   <!-- action Interim -->
+	   <record model="ir.actions.act_window" id="action_hr_payroll_interim">
+	       <field name="name">Interim</field>
+	       <field name="res_model">hr.payroll.interim</field>
+	       <field name="view_type">form</field>
+	       <field name="view_mode">tree,form</field>
+	       <field name="help" type="html">
+	         <p class="oe_view_nocontent_create">
+	             Cliquer sur créer pour créer une interim
+	         </p>
+	       </field>
+	   </record>
+	   
+	   <!-- Menu Type de recrutement -->
+	   <menuitem id="menu_hr_wage_advance" name="Avances sur salaire" parent="hr_payroll.menu_hr_payroll_root" action="action_hr_wage_advance" />
+	   
+	   <!-- menu interim -->
+	   <menuitem id="menu_hr_payroll_interim" name="Interim" parent="hr_payroll.menu_hr_payroll_root" action="action_hr_payroll_interim" />
+	   <!--  -->
+  </data>
+</odoo>

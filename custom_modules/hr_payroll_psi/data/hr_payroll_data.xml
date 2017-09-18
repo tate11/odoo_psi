@@ -1,0 +1,75 @@
+<odoo>
+    <data>
+        <!-- Règles salariales -->
+	    <record id="hr_payroll.hr_rule_basic" model="hr.salary.rule">
+	        <field name="name">Salaire de Base</field>
+	        <field name="sequence" eval="1"/>
+	        <field name="code">BASIC</field>
+	        <field name="category_id" ref="hr_payroll.BASIC"/>
+	        <field name="condition_select">none</field>
+	        <field name="amount_select">code</field>
+	        <field name="amount_python_compute">result = contract.wage</field>
+	    </record>
+	    <record id="hr_payroll.hr_rule_taxable" model="hr.salary.rule">
+	        <field name="name">Salaire Brut</field>
+	        <field name="sequence" eval="100"/>
+	        <field name="code">GROSS</field>
+	        <field name="category_id" ref="hr_payroll.GROSS"/>
+	        <field name="condition_select">none</field>
+	        <field name="amount_select">code</field>
+	        <field name="amount_python_compute">result = categories.BASIC + categories.ALW</field>
+	    </record>
+	    <record id="hr_payroll.hr_rule_net" model="hr.salary.rule">
+	       <field name="category_id" ref="hr_payroll.NET"/>
+	       <field name="name">Salaire Net</field>
+	       <field name="code">NET</field>
+	       <field name="sequence">200</field>
+	       <field name="condition_select">none</field>
+	       <field name="amount_select">code</field>
+	       <field name="amount_python_compute">result = categories.BASIC + categories.ALW - categories.DED-CNAPS_EMP-OMSI_EMP</field>
+	       <field name="appears_on_payslip" eval="False"/>
+	       <field name="note">C'est le salaire Net qui est le salaire Brut - toutes les retenues</field>
+	   	</record>
+        <record id="hr_rule_basic_AVANCE15" model="hr.salary.rule">
+	        <field name="category_id" ref="hr_payroll.DED"/>
+	        <field name="name">Avance quinzaine</field>
+	        <field name="code">AVANCE15</field>
+	        <field name="sequence">117</field>
+	        <field name="condition_select">none</field>
+	        <field name="amount_select">code</field>
+	        <field name="amount_python_compute">result = MAVANCE15</field>
+	        <field name="appears_on_payslip" eval="True"/>
+	        <field name="note">C'est le Montant avance quinzaine.</field>
+    	</record> 
+	    <record id="hr_rule_basic_MAVANCE15" model="hr.salary.rule">
+	        <field name="category_id" ref="hr_payroll.NET"/>
+	        <field name="parent_rule_id" ref="hr_rule_basic_AVANCE15"/>
+	        <field name="name">Montant avance quinzaine</field>
+	        <field name="code">MAVANCE15</field>
+	        <field name="sequence">116</field>
+	        <field name="condition_select">none</field>
+	        <field name="amount_select">code</field>
+	        <field name="amount_python_compute">if inputs.AVANCE15 and  inputs.AVANCE15.amount:result = inputs.AVANCE15.amount
+else:result = 0.0</field>
+	        <field name="appears_on_payslip" eval="False"/>
+	        <field name="note">C'est le Montant avance quinzaine.</field>
+	    </record>
+	    
+	    <!-- Structure salariale -->
+	    <record id="hr_payroll_salary_structure_base" model="hr.payroll.structure">
+	        <field name="code">Mg-Base-horaire</field>
+	        <field name="name">Structure Malagasy</field>
+	        <field name="company_id" ref="base.main_company"/>
+	        <field name="parent_id" ref="hr_payroll.structure_base"/>
+	        <field 
+	            eval="[(6, 0, [
+	            ref('hr_payroll.hr_rule_basic'), 
+	            ref('hr_payroll.hr_rule_taxable'),
+	            ref('hr_payroll.hr_rule_net'),
+	            ref('hr_rule_basic_AVANCE15')
+	            ])]" 
+	            name="rule_ids"/>
+	        <field name="note">Cette rubrique représente la structure des employés Malagasy.</field>
+    	</record>
+    </data>
+</odoo>
