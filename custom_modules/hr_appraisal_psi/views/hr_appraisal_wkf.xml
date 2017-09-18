@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- workflow -->
+        <record id="hr_appraisal_wkf" model="workflow">
+            <field name="name">Workflow évaluation</field>
+            <field name="osv">hr.appraisal</field>
+            <field name="on_create">True</field>
+        </record>
+        
+        <!-- activity -->
+        <record id="act_new" model="workflow.activity">
+            <field name="wkf_id" ref="hr_appraisal_wkf"/>
+            <field name="flow_start">True</field>
+            <field name="name">new</field>
+			<field name="kind">dummy</field>
+		</record>
+		<record id="act_pending" model="workflow.activity">
+		    <field name="wkf_id" ref="hr_appraisal_wkf"/>
+            <field name="name">pending</field>
+            <field name="kind">function</field>
+            <field name="action">button_send_appraisal()</field>
+        </record>
+        <record id="act_done" model="workflow.activity">
+		    <field name="wkf_id" ref="hr_appraisal_wkf"/>
+            <field name="name">done</field>
+            <field name="kind">function</field>
+            <field name="action">button_done_appraisal()</field>
+        </record>
+        <record id="act_formation" model="workflow.activity">
+		    <field name="wkf_id" ref="hr_appraisal_wkf"/>
+            <field name="name">formation</field>
+            <field name="kind">function</field>
+            <field name="action">action_formation()</field>
+        </record>
+        <record id="act_bonus" model="workflow.activity">
+		    <field name="wkf_id" ref="hr_appraisal_wkf"/>
+            <field name="name">bonus</field>
+            <field name="kind">function</field>
+            <field name="action">action_bonus()</field>
+        </record>
+		
+		<!-- transition -->
+		<record id="act_new_to_act_pending" model="workflow.transition">
+            <field name="act_from" ref="act_new"/>
+            <field name="act_to" ref="act_pending"/>
+            <field name="signal">pending</field>
+        </record>
+        <record id="act_pending_to_act_formation" model="workflow.transition">
+            <field name="act_from" ref="act_pending"/>
+            <field name="act_to" ref="act_formation"/>
+            <field name="signal">formation</field>
+        </record>
+        <record id="act_pending_to_act_bonus" model="workflow.transition">
+            <field name="act_from" ref="act_pending"/>
+            <field name="act_to" ref="act_bonus"/>
+            <field name="signal">bonus</field>
+        </record>
+        <record id="act_formation_to_act_done" model="workflow.transition">
+            <field name="act_from" ref="act_formation"/>
+            <field name="act_to" ref="act_done"/>
+            <field name="signal">done</field>
+        </record>
+        <record id="act_bonus_to_act_done" model="workflow.transition">
+            <field name="act_from" ref="act_bonus"/>
+            <field name="act_to" ref="act_done"/>
+            <field name="signal">done</field>
+        </record>
+    </data>
+</odoo>

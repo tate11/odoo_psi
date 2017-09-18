@@ -1,0 +1,28 @@
+<odoo>
+    <record id="view_hr_appraisal_form1" model="ir.ui.view">
+        <field name="name">hr.appraisal.form1</field>
+        <field name="model">hr.appraisal</field>
+        <field name="inherit_id" ref="hr_appraisal.view_hr_appraisal_form"/>
+        <field name="arch" type="xml">
+        	
+            <xpath expr="//field[@name='state']" position="replace">
+	        	<field name="state" widget="statusbar" statusbar_visible="new,pending,formation,bonus,cancel,done" />
+	        </xpath>
+	        
+	        <!-- boutons -->
+	        <xpath expr="//button[@name='button_send_appraisal']" position="replace">
+		    	<button name="pending" states="new" string="Démarrer l'évaluation et envoyer par email" />
+		    </xpath>
+	        <xpath expr="//button[@name='button_done_appraisal']" position="before">
+		    	<button name="bonus" states="pending" string="valider Bonus de performance" class="oe_highlight" />
+		    </xpath>
+	        <xpath expr="//button[@name='button_done_appraisal']" position="before">
+		    	<button name="formation" states="pending" string="Demande de formation" class="oe_highlight" />
+		    </xpath>
+		    <xpath expr="//button[@name='button_done_appraisal']" position="replace">
+		    	<button name="done" states="formation,bonus" string="Fait" />
+		    </xpath>
+		    
+        </field>
+    </record>
+</odoo>

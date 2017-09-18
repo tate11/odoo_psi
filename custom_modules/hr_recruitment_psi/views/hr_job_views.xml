@@ -1,0 +1,67 @@
+<odoo>
+
+    <record id="view_hr_job_form2" model="ir.ui.view">
+        <field name="name">hr.job.form</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+        	
+        	<field name="department_id" position="after" >
+        		<field name="recrutement_type_id" />
+        		<field name="recrutement_type" invisible="1" />
+        	</field>
+        	
+        	<button name="set_recruit" position="replace">
+        		 <button name="set_recruit" invisible="1" />
+        	</button>
+        	
+            <xpath expr="//field[@name='state']" position="replace">
+            	<!-- etats pour recrutement autres que stagiaires ??? -->
+	        	<field name="state" widget="statusbar" statusbar_visible="open,analyse,rr_validation,refused,tdr_redaction,recruit" />
+	        	
+	        	<!-- etats pour recrutement de stagiaires ??? -->
+	        </xpath>
+	        
+	        <!-- boutons -->
+	        <xpath expr="//button[@name='set_open']" position="after">
+		    	<button name="button_analyse" states="open" string="Analyser la demande" class="oe_highlight" />
+		    </xpath>
+		    <xpath expr="//button[@name='set_open']" position="after">
+		    	<button name="button_refuser" states="analyse,rr_validation" string="Refuser" />
+		    </xpath>
+		    <xpath expr="//button[@name='set_open']" position="after">
+		    	<button name="button_rr_validation" string="Approuver par RR" class="oe_highlight" 
+		    			attrs="{'invisible': ['|', ('recrutement_type','=','stagiaire'), ('state','!=','analyse')]}"
+		    	/>
+		    </xpath>
+		    <xpath expr="//button[@name='set_open']" position="after">
+		    	<button name="button_analyse_tdr_redaction" 
+		    			string="Rédiger TDR et Profil de poste Stagiaire" class="oe_highlight" 
+		    			attrs="{'invisible': ['|', ('recrutement_type','!=','stagiaire'), ('state','!=','analyse')]}"
+		    	/>
+		    </xpath>
+		    <xpath expr="//button[@name='set_open']" position="after">
+		    	<button name="button_tdr_redaction" states="rr_validation" string="Rédiger TDR et Profil de poste" class="oe_highlight" />
+		    </xpath>
+		    <xpath expr="//button[@name='set_open']" position="after">
+		    	<button name="button_accepter" states="tdr_redaction" string="Accepter" class="oe_highlight" />
+		    </xpath>
+		    
+        </field>
+    </record>
+    
+    <record id="hr_job_simple_form2" model="ir.ui.view">
+		<field name="name">hr.job.simple.form1</field>
+		<field name="model">hr.job</field>
+		<field name="inherit_id" ref="hr_recruitment.hr_job_simple_form" />
+		<field name="arch" type="xml">
+		    <data>
+		    	<field name="name" position="after">
+		    	    <field name="recrutement_type_id" />
+		    		<field name="recrutement_type" invisible="1" />
+		    	</field>
+			</data>
+		</field>
+	</record>
+	
+</odoo>
