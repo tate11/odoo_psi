@@ -68,7 +68,7 @@
             <field name="arch" type="xml">
 				<field name="identification_id" position="after">
 		    		<field name="num_cnaps_emp" string="N° CNAPS"/>
-		  			<field name="num_cin" string="N° CIN"/>
+		  		<!--  	<field name="num_cin" string="N° CIN"/>   --> 
 			  		<field name="num_emp" string="N° Matricule"/>
 			  	</field>					 				 
            	</field>

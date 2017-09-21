@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record id="hr_employee_view_form2" model="ir.ui.view">
+		<field name="name">hr.employee.form1</field>
+		<field name="model">hr.employee</field>
+		<field name="inherit_id" ref="hr.view_employee_form" />
+		<field name="arch" type="xml">
+		    <xpath expr="//field[@name='identification_id']" position='before'>
+           		<field name="information_cin_id"/>
+        	</xpath> 
+			<xpath expr="//field[@name='address_home_id']" position='before'>
+           		<field name="father_name" />
+           		<field name="mother_name" />
+           		<field name="spouse_s_name" />
+        	</xpath> 
+	    	<xpath expr="//field[@name='address_home_id']" position='after'>
+	    		<field name="information_about_children_id" />
+           		<field name="emergency_contact_id" />
+           		<field name="beneficiary_of_death_benefit_id" />
+       		</xpath>
+	   </field>
+	</record>
+</odoo>
