@@ -8,6 +8,7 @@ encoding//custom_modules/gestion_de_paie/models/paie.py=utf-8
 encoding//custom_modules/hr_appraisal_psi/models/hr_appraisal.py=utf-8
 encoding//custom_modules/hr_contract_psi/__manifest__.py=utf-8
 encoding//custom_modules/hr_contract_psi/models/hr_contract.py=utf-8
+encoding//custom_modules/hr_contract_psi/models/res_partner.py=utf-8
 encoding//custom_modules/hr_employee_psi/__manifest__.py=utf-8
 encoding//custom_modules/hr_employee_psi/models/hr_employee.py=utf-8
 encoding//custom_modules/hr_recruitment_psi/__manifest__.py=utf-8

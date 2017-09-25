@@ -6,9 +6,10 @@
     'sequence': 0,
     'description': """Gestion ds contrats sur le PSI""",
     'website': 'https://www.ingenosya.mg',
-    'depends': ['hr','hr_contract'],
+    'depends': ['base','hr','hr_contract','mail','contacts'],
     'data':  [
               'views/hr_contract_views.xml',
+              'views/hr_template_email.xml',
              ],
     'demo': [],
     'test': [],

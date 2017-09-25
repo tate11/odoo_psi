@@ -115,5 +115,24 @@
    <!-- Menu Type de recrutement -->
    <menuitem id="menu_hr_recruitment_type_recrutement" name="Type de recrutement" parent="hr_recruitment.menu_hr_recruitment_configuration" action="action_type_recrutement" sequence="2" />
    <!--  -->
+   
+   <menuitem
+        name="Listing"
+        parent="hr_recruitment.menu_hr_recruitment_root"
+        id="menu_listing_applications" groups="base.group_no_one" />
+   
+       <!-- Listing -->
+    <record model="ir.ui.view" id="hr_recruitment_listing_tree">
+        <field name="name">hr.job.tree</field>
+        <field name="model">hr.job</field>
+        <field name="arch" type="xml">
+            <tree string="candidature_long_list">
+                <field name="contract_duration"/>
+                <field name="motif"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+   
   </data>
 </odoo>

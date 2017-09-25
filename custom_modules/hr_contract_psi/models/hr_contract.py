@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models, api
-from odoo.exceptions import ValidationError
+
 import smtplib
 
 class HrContract(models.Model):
@@ -13,15 +13,21 @@ class HrContract(models.Model):
     state_of_work   = fields.Selection([
         ('cdd', 'CDD'),
         ('cdi', 'CDI')
-     ], string='Statut')
-     
-    @api.model
-    def create(self, values):
-        res_id = super(hr_contract, self).create(values)
-        if values['state_of_work'] == 'cdd' and values['date_end'] == None :
-                return
-        return res_id           
+     ], string='Statut')        
     
+    def send_email_collaborator(self):
+        template = self.env.ref('hr_contract_psi.custom_template_id')
+        self.env['mail.template'].browse(template.id).send_mail(self.id)
+    
+   # @api.multi
+   # def create(self, vals = {}):
+   #     cron = self.pool.get('ir.cron')
+   #     crons = cron.search([['name', '=', 'send_email_one_collaborator'],['active','=',False]])
+   #     res = super(HrContract, self).write(vals)
+   #     self.id = res['id']
+   #     for cron in crons :
+   #         self.sudo(user=1)._callback(cron.model, cron.function, cron.args, cron.id)
+   #     return res
     
     def send_email(self):
         sender = 'xxxxx@gmail.com'
