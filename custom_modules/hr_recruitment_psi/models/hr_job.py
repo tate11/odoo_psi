@@ -12,11 +12,11 @@ class hr_job(models.Model):
         ('cdi', 'CDI')
     ], string='Type de contrat', help="Type contract", required=True)
     
-    contract_duration = fields.Integer(string="Durée du contrat")
+    contract_duration = fields.Integer(string="Durée du contrat", required=True)
     motif = fields.Text(string="Motif du recrutement", required=True)
     poste_description = fields.Text(string="Description des objectifs reliés au travail", required=True)
-    formation_requise = fields.Text(string="Formation requise")
-    duration_minimale = fields.Integer(string="Durées minimales")
+   # formation_requise = fields.Text(string="Formation requise")
+   # duration_minimale = fields.Integer(string="Durées minimales")
     
     state = fields.Selection([
         ('open', '1- Demande d\'embauche'),
@@ -27,9 +27,14 @@ class hr_job(models.Model):
         ('recruit', '6- Appel aux candidatures')
     ], string='Status', readonly=True, required=True, track_visibility='always', copy=False, default='open', help="Set whether the recruitment process is open or closed for this job position.")
     
-    domaine_id = fields.Many2one('hr.job.domaine', string='Domaines')
+    domaine_id = fields.Many2one('hr.job.domaine', string='Domaines', required=True)
     recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement')
     recrutement_type = fields.Selection(related='recrutement_type_id.recrutement_type',string='Type de recrutement selection')
+    level_of_education = fields.Char(string='Niveau de formation', required=True)
+    budget_code = fields.Char(string='Code budgetaire', required=True)
+    place_of_employment = fields.Char(string='Lieu d\'embauche', required=True)
+    subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination', required=True)
+    experience_required_id = fields.Many2one('hr.experience.required', string='Expérience Requise', required=True)
     
 #     def set_recruit(self):
 #         for record in self:
@@ -37,6 +42,17 @@ class hr_job(models.Model):
 #             record.signal_workflow('button_relance')
 #             record.write({'state': 'open', 'no_of_recruitment': no_of_recruitment})
 #         return True
+
+class SubordinationLink(models.Model):
+     _name = 'hr.subordination.link'
+     
+     name = fields.Char(string='Subordination', required=True)
+
+class ExperienceRequise(models.Model):
+      _name ='hr.experience.required'
+      
+      name = fields.Char(string='Domaine', required=True)
+      duration = fields.Integer(string='Durée', required=True)
 
 class Domaine(models.Model):
     _name = 'hr.job.domaine'

@@ -43,7 +43,7 @@ class Applicant(models.Model):
     
     job_name = fields.Char(String='Job title',related='job_id.name')
     type_name = fields.Char(String='Titre du poste',related='type_id.name')
-    formation_requise = fields.Text(String='Formation Requise', related='job_id.formation_requise')
+    #formation_requise = fields.Text(String='Formation Requise', related='job_id.formation_requise')
     domaine_name = fields.Char(String='Domaine', related='job_id.domaine_id.name')
     job_description = fields.Text(String='Description', related='job_id.poste_description')
     

@@ -143,7 +143,7 @@
 					<field name="partner_name" />
 					<field name="age" />
 					<field name="type_name" />
-					<field name="formation_requise" />
+					<!-- <field name="formation_requise" />  -->
 					<field name="number_of_years_of_experience"></field>
 					<field name="correspondance"></field>
 					<field name="job_description" />
@@ -162,7 +162,7 @@
 					<field name="partner_name" />
 					<field name="age" />
 					<field name="type_name" />
-					<field name="formation_requise" />
+					<!-- <field name="formation_requise" />  -->
 					<field name="number_of_years_of_experience"></field>
 					<field name="correspondance"></field>
 				</tree>
