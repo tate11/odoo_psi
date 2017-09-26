@@ -5,31 +5,28 @@ from odoo import fields, models
 class hr_job(models.Model):
     
     _inherit = "hr.job"
-    name = fields.Char(size=28, required=True)
     
+    name = fields.Char(size=28, required=True)
     contract_type = fields.Selection([
         ('cdd', 'CDD'),
         ('cdi', 'CDI')
     ], string='Type de contrat',help="Type contract")
     
     contract_duration = fields.Integer(string="Durée du contrat")
-    
     motif = fields.Text(string="Motif du recrutement")
-    
     description = fields.Text(string="Description des objectifs reliés au travail")
-    
     formation_requise = fields.Text(string="Formation requise")
-    
     duration_minimale = fields.Integer(string="Durées minimales")
     
     state = fields.Selection([
-        ('open', 'Demande d\'embauche'),
-        ('analyse', 'Analyse de la demande'),
-        ('rr_validation', 'Approbation par RR'),
-        ('tdr_redaction', 'Rédaction TDR'),
-        ('refused', 'Refusé'),
-        ('recruit', 'Appel aux candidatures')
+        ('open', '1- Demande d\'embauche'),
+        ('analyse', '2- Analyse de la demande'),
+        ('rr_validation', '3- Approbation par RR'),
+        ('tdr_redaction', '4- Rédaction TDR'),
+        ('refused', '5- Refusé'),
+        ('recruit', '6- Appel aux candidatures')
     ], string='Status', readonly=True, required=True, track_visibility='always', copy=False, default='open', help="Set whether the recruitment process is open or closed for this job position.")
+    
     domaine_id = fields.Many2one('hr.job.domaine', string='Domaines')
     recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement')
     recrutement_type = fields.Selection(related='recrutement_type_id.recrutement_type',string='Type de recrutement selection')
