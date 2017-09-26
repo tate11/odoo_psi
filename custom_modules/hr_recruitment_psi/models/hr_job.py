@@ -35,6 +35,10 @@ class hr_job(models.Model):
     place_of_employment = fields.Char(string='Lieu d\'embauche', required=True)
     subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination', required=True)
     experience_required_ids = fields.One2many('hr.experience.required', 'id', string='Expérience requise')
+    nature_recrutement = fields.Selection([
+        ('interne', 'Appel à candidature interne'),
+        ('externe', 'Appel à candidature externe')
+        ], string="Nature de recrutement")
     
     @api.one
     @api.constrains('contract_duration')
