@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models
+from odoo import fields, models, api
+from odoo.exceptions import ValidationError
 
 class hr_job(models.Model):
     
@@ -34,6 +35,13 @@ class hr_job(models.Model):
     place_of_employment = fields.Char(string='Lieu d\'embauche', required=True)
     subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination', required=True)
     experience_required_ids = fields.One2many('hr.experience.required', 'id', string='Expérience requise')
+    
+    @api.one
+    @api.constrains('contract_duration')
+    def _check_contract_duration(self):
+        for record in self:
+            if record.contract_type == 'cdd' and record.contract_duration == 0:
+                raise ValidationError("Le durée de contrat ne doit pas etre 0")
     
 #     def set_recruit(self):
 #         for record in self:
