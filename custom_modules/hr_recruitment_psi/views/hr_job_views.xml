@@ -6,9 +6,10 @@
 		<field name="inherit_id" ref="hr_recruitment.hr_job_survey"></field>
 		<field name="arch" type="xml">
 			<field name="address_id" position="after">
-				
-				<field name="budget_code" />
 				<field name="place_of_employment" />
+				<field name="motif" />
+				<field name="nature_recrutement" />
+				<field name="budget_code" />
 				<field name="subordination_link_id" />
 				<field name="contract_type" />
 				<field name="contract_duration" />
@@ -32,7 +33,7 @@
 						<field name="duration" />
 					</tree>
 				</field>
-				<field name="motif" />
+				
 				<field name="poste_description" />
 				
 
