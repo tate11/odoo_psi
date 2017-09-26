@@ -30,7 +30,7 @@ class hr_job(models.Model):
     
     recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement')
     recrutement_type = fields.Selection(related='recrutement_type_id.recrutement_type',string='Type de recrutement selection')
-    level_of_education_id = fields.Many2one('hr.level.education', string='Niveau de formations', required=True)
+    level_of_education_id = fields.Many2one('hr.recruitment.degree', string='Niveau de formations', required=True)
     budget_code = fields.Char(string='Code budgetaire', required=True)
     place_of_employment = fields.Char(string='Lieu d\'embauche', required=True)
     subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination', required=True)
@@ -54,10 +54,7 @@ class hr_job(models.Model):
 #             record.write({'state': 'open', 'no_of_recruitment': no_of_recruitment})
 #         return True
 
-class LevelOfEducation(models.Model):
-    _name = 'hr.level.education'
-    name = fields.Char(string='Niveau de formation', required=True)
-
+   
 class SubordinationLink(models.Model):
      _name = 'hr.subordination.link'
      
