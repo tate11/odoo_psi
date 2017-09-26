@@ -13,7 +13,7 @@
 				<field name="experience_required_id"></field>
 				<field name="poste_description" />
 				<field name="contract_type" />
-				<field name="contract_duration" />
+				<field name="contract_duration" attrs="{'invisible': [('contract_type', '=', 'cdi')], 'required': [('contract_type', '=', 'cdd')]}"/>
 				 <field name="domaine_id" />
 				<field name="level_of_education" />
 				<field name="budget_code" />
