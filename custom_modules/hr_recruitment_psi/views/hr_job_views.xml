@@ -12,7 +12,7 @@
 				<field name="budget_code" />
 				<field name="subordination_link_id" />
 				<field name="contract_type" />
-				<field name="contract_duration" />
+				<field name="contract_duration" attrs="{'invisible': [('contract_type','=','cdi')], 'required': [('contract_type', '=', 'cdd')]}" />
 			</field>
 		</field>
 	</record>
@@ -35,9 +35,6 @@
 				</field>
 				
 				<field name="poste_description" />
-				
-
-
 			</field>
 			<button name="set_recruit" position="replace">
 				<button name="set_recruit" invisible="1" />
