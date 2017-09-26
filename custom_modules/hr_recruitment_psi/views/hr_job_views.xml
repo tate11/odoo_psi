@@ -10,6 +10,7 @@
 				<field name="recrutement_type_id" />
 				<field name="recrutement_type" invisible="1" />
 				<field name="motif" />
+				<field name="formation_requise"></field>
 				<field name="description" />
 				<field name="contract_type" />
 				<field name="contract_duration" />

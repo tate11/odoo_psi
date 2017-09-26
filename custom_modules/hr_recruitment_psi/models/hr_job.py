@@ -10,19 +10,17 @@ class hr_job(models.Model):
     contract_type = fields.Selection([
         ('cdd', 'CDD'),
         ('cdi', 'CDI')
-    ], string='Type de contrat',help="Type contract", required=True)
+    ], string='Type de contrat',help="Type contract")
     
-    contract_duration = fields.Integer(string="Durée du contrat", required=True)
+    contract_duration = fields.Integer(string="Durée du contrat")
     
-    motif = fields.Text(string="Motif du recrutement", required=True)
+    motif = fields.Text(string="Motif du recrutement")
     
-    description = fields.Text(string="Description des objectifs reliés au travail", required=True)
+    description = fields.Text(string="Description des objectifs reliés au travail")
     
-    formation_requise = fields.Text(string="Formation requise", required=True)
+    formation_requise = fields.Text(string="Formation requise")
     
-    duration_minimale = fields.Integer(string="Durées minimales", required=True)
-    
-    domaine = fields.Text(string="Domaines", required=True)
+    duration_minimale = fields.Integer(string="Durées minimales")
     
     state = fields.Selection([
         ('open', 'Demande d\'embauche'),
@@ -32,8 +30,8 @@ class hr_job(models.Model):
         ('refused', 'Refusé'),
         ('recruit', 'Appel aux candidatures')
     ], string='Status', readonly=True, required=True, track_visibility='always', copy=False, default='open', help="Set whether the recruitment process is open or closed for this job position.")
-    domaine_id = fields.Many2one('hr.job.domaine', string='Domaines',required=True)
-    recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement',required=True)
+    domaine_id = fields.Many2one('hr.job.domaine', string='Domaines')
+    recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement')
     recrutement_type = fields.Selection(related='recrutement_type_id.recrutement_type',string='Type de recrutement selection')
     
 #     def set_recruit(self):

@@ -24,10 +24,13 @@ class RecruitmentStage(models.Model):
     
 class Applicant(models.Model):
     _inherit = "hr.applicant"
+    _name = "hr.applicant"
     
     def _default_stage_id(self):
         return self.env.ref('hr_recruitment_psi.draft2').id
-
+    
+    
+    
     recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement')
     recrutement_type = fields.Selection(related='job_id.recrutement_type_id.recrutement_type',string='Type de recrutement selection')
     
@@ -38,6 +41,17 @@ class Applicant(models.Model):
                                default=_default_stage_id)
     #champ relie au champ stage_id pour utilisation dans les domaines des views
     stage = fields.Char(related='stage_id.stage',string='Stage')
+    
+    
+    job_name = fields.Char(String='Job title',related='job_id.name')
+    type_name = fields.Char(String='Titre du poste',related='type_id.name')
+    formation_requise = fields.Text(String='Formation Requise', related='job_id.formation_requise')
+    domaine_name = fields.Char(String='Domaine', related='job_id.domaine_id.name')
+    job_description = fields.Text(String='Description', related='job_id.description')
+    
+    age = fields.Char(String='Age')
+    number_of_years_of_experience = fields.Integer(string='Nombre d’année d’expérience') 
+    correspondance = fields.Text(string='Correspondance', required=True)
     
     def action_cv_received(self):
         self.write({'stage_id': self.env.ref('hr_recruitment_psi.cv_received').id})

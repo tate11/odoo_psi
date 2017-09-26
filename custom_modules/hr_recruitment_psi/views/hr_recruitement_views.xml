@@ -1,138 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <data>
-    <record id="grp_recruitement" model="res.groups">
-          <field name="name">Recrutement</field>
-    </record>
-    
-    <record id="crm_case_form_view_job_inherit1" model="ir.ui.view">
-      <field name="name">Ajout des boutons du workflow</field>
-      <field name="model">hr.applicant</field>
-      <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job" />
-      <field name="arch" type="xml">
-	        <field name="partner_id" position="before">
-	      	    <field name="stage" invisible="1"/>
-	      	    <field name="recrutement_type_id" />
-	      	    <field name="recrutement_type" invisible="1" />
-	      	</field>
-	      	<button name="create_employee_from_applicant" position="replace">
-		      	<button 
-		      	    string="Create Employee" 
-		      	    name="create_employee_from_applicant" 
-		      	    type="object" class="oe_highlight" 
-		      	    attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"
-		      	    invisible="1"/>
-	      	</button>
-	        <field name="stage_id" position="before">
-	        	<button name ="cv_received" string="Recevoir le CV" attrs="{'invisible': [('stage','!=','draft2')]}"/>
-	        	<button name ="cv_saved" string="Enregistrer le CV" attrs="{'invisible': [('stage','!=','cv_received')]}"/>
-	        	
-	        	<!-- Recrutement consultant et stagiaire -->
-	        	<button name ="can_be_interviewed_consultant" string="Mettre à interviewer" attrs="{'invisible': ['|',('stage','!=','cv_saved'),('recrutement_type','not in',('consultant', 'stagiaire'))]}"/>
-	        	
-	        	<!-- Recrutement stagiaire -->
-	        	<button name ="drh_validation" string="Validation DRH" attrs="{'invisible': ['|',('stage','!=','first_interview'),('recrutement_type','!=','stagiaire')]}"/>
-	        	<button name ="drh_allocation_stage" string="DRH Allocation de stage" attrs="{'invisible': ['|',('stage','!=','first_interview'),('recrutement_type','!=','stagiaire')]}"/>
-	        	
-	        	<button name ="can_do_test" string="Faire les tests" attrs="{'invisible': ['|',('stage','!=','cv_saved'),('recrutement_type','!=','collaborateur')]}"/>
-	        	<button name ="can_be_interviewed" string="Mettre à interviewer" attrs="{'invisible': [('stage','!=','can_do_test')]}"/>
-	        	<button name ="first_interview" string="Passer le premier entretien" attrs="{'invisible': [('stage','!=','can_be_interviewed')]}"/>
-	        	<button name ="in_deliberation" string="Passer à la délibération" attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','not in',('first_interview','final_decision'))]}"/>
-	        	<button name ="second_interview" string="Passer le second entretien" attrs="{'invisible': [('stage','!=','in_deliberation')]}"/>
-	        	<button name ="bi" string="Bridger Insight" attrs="{'invisible': [('stage','not in',('in_deliberation','second_interview', 'drh_validation'))]}"/>
-	        	<button name ="final_decision" string="Passer à la décision finale" attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','not in',('bi','verification_ref','candidat_notified'))]}"/>
-	        	<button name ="verification_ref" string="Vérifier les références de la candidature" attrs="{'invisible': [('stage','!=','bi')]}"/>
-	        	<button name ="wage_proposal" string="Proposer un salaire" attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','!=','verification_ref')]}"/>
-	        	<button name ="salary_validated" string="Valider salaire" attrs="{'invisible': [('stage','!=','wage_proposal')]}"/>
-	        	<button name ="candidat_notified" string="Notifier le candidat" attrs="{'invisible': ['|',('recrutement_type','!=','stagiaire'),('stage','not in',('verification_ref'))]}"/>
-	        	<button name ="candidat_notified" string="Notifier le candidat" attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','not in',('salary_validated'))]}"/>
-	        	<button name ="contract" string="Etablir le contrat" attrs="{'invisible': [('stage','not in',('final_decision','drh_allocation_stage','candidat_notified'))]}"/>
-	        	<button name ="contract_signed" string="Signer le contrat" attrs="{'invisible': [('stage','!=','contract')]}"/>
-	        </field>
-	        <field name="stage_id" position="replace">
-	        	<field 
-	        	    name="stage_id" 
-	        	    widget="statusbar" 
-	        	    options="{'fold_field': 'fold'}" 
-	        	    attrs="{'invisible': [('active', '=', False),('emp_id', '=', False)]}" />
-	      	</field>
-      </field>
-    </record>
-    
-    <record model="ir.ui.view" id="hr_recruitment_stage_form1">
-        <field name="name">hr.recruitment.stage.form1</field>
-        <field name="model">hr.recruitment.stage</field>
-        <field name="inherit_id" ref="hr_recruitment.hr_recruitment_stage_form" />
-        <field name="arch" type="xml">
-            <field name="job_id" position='after'>
-            	<field name="recrutement_type_ids" widget="many2many_tags" />
-            </field>
-        </field>
-    </record>
-    
-    <!-- type de recrutment Tree View -->
-    <record model="ir.ui.view" id="hr_recruitment_type_tree">
-        <field name="name">hr.recruitment.type</field>
-        <field name="model">hr.recruitment.type</field>
-        <field name="arch" type="xml">
-            <tree string="Type de recrutement">
-                <field name="name"/>
-                <field name="recrutement_type"/>
-            </tree>
-        </field>
-    </record>
-    
-    <!-- type de recrutment form view-->
-    <record id="hr_recruitment_type_form" model="ir.ui.view">
-        <field name="name">hr.recruitment.type</field>
-        <field name="model">hr.recruitment.type</field>
-        <field name="arch" type="xml">
-            <form string="Create recruitement type">
-                <sheet>
-                    <group>
-	                    <field name="name" placeholder="Nom du type de recrutement" required="1"/>
-	                    <field name="recrutement_type" placeholder="Type de recrutement" required="1"/>    
-                	</group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-    
-    <!-- Type de recrutement menu action -->
-    <record model="ir.actions.act_window" id="action_type_recrutement">
-       <field name="name">Type de recrutement</field>
-       <field name="res_model">hr.recruitment.type</field>
-       <field name="view_type">form</field>
-       <field name="view_mode">tree,form</field>
-       <field name="help" type="html">
-         <p class="oe_view_nocontent_create">
-             Click here to create a new recruitement type .
-         </p>
-       </field>
-   </record>
-   <!--  -->
-   
-   <!-- Menu Type de recrutement -->
-   <menuitem id="menu_hr_recruitment_type_recrutement" name="Type de recrutement" parent="hr_recruitment.menu_hr_recruitment_configuration" action="action_type_recrutement" sequence="2" />
-   <!--  -->
-   
-   <menuitem
-        name="Listing"
-        parent="hr_recruitment.menu_hr_recruitment_root"
-        id="menu_listing_applications" groups="base.group_no_one" />
-   
-       <!-- Listing -->
-    <record model="ir.ui.view" id="hr_recruitment_listing_tree">
-        <field name="name">hr.job.tree</field>
-        <field name="model">hr.job</field>
-        <field name="arch" type="xml">
-            <tree string="candidature_long_list">
-                <field name="contract_duration"/>
-                <field name="motif"/>
-                <field name="description"/>
-            </tree>
-        </field>
-    </record>
-   
-  </data>
+	<data>
+		<record id="grp_recruitement" model="res.groups">
+			<field name="name">Recrutement</field>
+		</record>
+
+		<record id="crm_case_form_view_job_inherit1" model="ir.ui.view">
+			<field name="name">Ajout des boutons du workflow</field>
+			<field name="model">hr.applicant</field>
+			<field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job" />
+			<field name="arch" type="xml">
+				<field name="partner_id" position="before">
+					<field name="age" />
+					<field name="stage" invisible="1" />
+					<field name="recrutement_type_id" />
+					<field name="recrutement_type" invisible="1" />
+				</field>
+				<field name="type_id" position="after">
+					<field name="number_of_years_of_experience"></field>
+					<field name="correspondance"></field>
+				</field>
+				<button name="create_employee_from_applicant" position="replace">
+					<button string="Create Employee" name="create_employee_from_applicant"
+						type="object" class="oe_highlight"
+						attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"
+						invisible="1" />
+				</button>
+				<field name="stage_id" position="before">
+					<button name="cv_received" string="Recevoir le CV"
+						attrs="{'invisible': [('stage','!=','draft2')]}" />
+					<button name="cv_saved" string="Enregistrer le CV"
+						attrs="{'invisible': [('stage','!=','cv_received')]}" />
+
+					<!-- Recrutement consultant et stagiaire -->
+					<button name="can_be_interviewed_consultant" string="Mettre à interviewer"
+						attrs="{'invisible': ['|',('stage','!=','cv_saved'),('recrutement_type','not in',('consultant', 'stagiaire'))]}" />
+
+					<!-- Recrutement stagiaire -->
+					<button name="drh_validation" string="Validation DRH"
+						attrs="{'invisible': ['|',('stage','!=','first_interview'),('recrutement_type','!=','stagiaire')]}" />
+					<button name="drh_allocation_stage" string="DRH Allocation de stage"
+						attrs="{'invisible': ['|',('stage','!=','first_interview'),('recrutement_type','!=','stagiaire')]}" />
+
+					<button name="can_do_test" string="Faire les tests"
+						attrs="{'invisible': ['|',('stage','!=','cv_saved'),('recrutement_type','!=','collaborateur')]}" />
+					<button name="can_be_interviewed" string="Mettre à interviewer"
+						attrs="{'invisible': [('stage','!=','can_do_test')]}" />
+					<button name="first_interview" string="Passer le premier entretien"
+						attrs="{'invisible': [('stage','!=','can_be_interviewed')]}" />
+					<button name="in_deliberation" string="Passer à la délibération"
+						attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','not in',('first_interview','final_decision'))]}" />
+					<button name="second_interview" string="Passer le second entretien"
+						attrs="{'invisible': [('stage','!=','in_deliberation')]}" />
+					<button name="bi" string="Bridger Insight"
+						attrs="{'invisible': [('stage','not in',('in_deliberation','second_interview', 'drh_validation'))]}" />
+					<button name="final_decision" string="Passer à la décision finale"
+						attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','not in',('bi','verification_ref','candidat_notified'))]}" />
+					<button name="verification_ref" string="Vérifier les références de la candidature"
+						attrs="{'invisible': [('stage','!=','bi')]}" />
+					<button name="wage_proposal" string="Proposer un salaire"
+						attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','!=','verification_ref')]}" />
+					<button name="salary_validated" string="Valider salaire"
+						attrs="{'invisible': [('stage','!=','wage_proposal')]}" />
+					<button name="candidat_notified" string="Notifier le candidat"
+						attrs="{'invisible': ['|',('recrutement_type','!=','stagiaire'),('stage','not in',('verification_ref'))]}" />
+					<button name="candidat_notified" string="Notifier le candidat"
+						attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','not in',('salary_validated'))]}" />
+					<button name="contract" string="Etablir le contrat"
+						attrs="{'invisible': [('stage','not in',('final_decision','drh_allocation_stage','candidat_notified'))]}" />
+					<button name="contract_signed" string="Signer le contrat"
+						attrs="{'invisible': [('stage','!=','contract')]}" />
+				</field>
+				<field name="stage_id" position="replace">
+					<field name="stage_id" widget="statusbar" options="{'fold_field': 'fold'}"
+						attrs="{'invisible': [('active', '=', False),('emp_id', '=', False)]}" />
+				</field>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="hr_recruitment_stage_form1">
+			<field name="name">hr.recruitment.stage.form1</field>
+			<field name="model">hr.recruitment.stage</field>
+			<field name="inherit_id" ref="hr_recruitment.hr_recruitment_stage_form" />
+			<field name="arch" type="xml">
+				<field name="job_id" position='after'>
+					<field name="recrutement_type_ids" widget="many2many_tags" />
+				</field>
+			</field>
+		</record>
+
+		<!-- type de recrutment Tree View -->
+		<record model="ir.ui.view" id="hr_recruitment_type_tree">
+			<field name="name">hr.recruitment.type</field>
+			<field name="model">hr.recruitment.type</field>
+			<field name="arch" type="xml">
+				<tree string="Type de recrutement">
+					<field name="name" />
+					<field name="recrutement_type" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- type de recrutment form view -->
+		<record id="hr_recruitment_type_form" model="ir.ui.view">
+			<field name="name">hr.recruitment.type</field>
+			<field name="model">hr.recruitment.type</field>
+			<field name="arch" type="xml">
+				<form string="Create recruitement type">
+					<sheet>
+						<group>
+							<field name="name" placeholder="Nom du type de recrutement"
+								required="1" />
+							<field name="recrutement_type" placeholder="Type de recrutement"
+								required="1" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Type de recrutement menu action -->
+		<record model="ir.actions.act_window" id="action_type_recrutement">
+			<field name="name">Type de recrutement</field>
+			<field name="res_model">hr.recruitment.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click here to create a new recruitement type .
+				</p>
+			</field>
+		</record>
+		<!-- -->
+
+		<!-- LONG LIST -->
+		<record id="hr_recrutement_long_list_candidature_tree" model="ir.ui.view">
+			<field name="name">hr.recrutement.candidature.tree</field>
+			<field name="model">hr.applicant</field>
+			<field name="arch" type="xml">
+				<tree string="Long List">
+					<field name="job_name" />
+					<field name="partner_name" />
+					<field name="age" />
+					<field name="type_name" />
+					<field name="formation_requise" />
+					<field name="number_of_years_of_experience"></field>
+					<field name="correspondance"></field>
+					<field name="job_description" />
+				</tree>
+			</field>
+		</record>
+		<!-- END LONG LIST -->
+
+		<!-- SHORT LIST -->
+		<record id="hr_recrutement_short_list_candidature_tree" model="ir.ui.view">
+			<field name="name">hr.recrutement.candidature.tree</field>
+			<field name="model">hr.applicant</field>
+			<field name="arch" type="xml">
+				<tree string="Short List">
+					<field name="job_name" />
+					<field name="partner_name" />
+					<field name="age" />
+					<field name="type_name" />
+					<field name="formation_requise" />
+					<field name="number_of_years_of_experience"></field>
+					<field name="correspondance"></field>
+				</tree>
+			</field>
+		</record>
+		<!-- END SHORT LIST -->
+
+		<!-- ACTIONS -->
+
+		<record id="hr_recruitment_short_listing_tree" model="ir.actions.act_window">
+			<field name="name">Short listing</field>
+			<field name="res_model">hr.applicant</field>
+
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="hr_recrutement_long_list_candidature_tree" />
+		</record>
+
+		<record id="hr_recruitment_long_listing_tree" model="ir.actions.act_window">
+			<field name="name">Long listing</field>
+			<field name="res_model">hr.applicant</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="hr_recrutement_short_list_candidature_tree" />
+		</record>
+
+		<!-- Menu Type de recrutement -->
+		<menuitem id="menu_hr_recruitment_type_recrutement" name="Type de recrutement"
+			parent="hr_recruitment.menu_hr_recruitment_configuration" action="action_type_recrutement"
+			sequence="2" />
+		<!-- -->
+
+		<menuitem name="Listing" parent="hr_recruitment.menu_hr_recruitment_root"
+			id="menu_listing_applications" />
+
+		<menuitem name="Long Listing" parent="menu_listing_applications"
+			id="menu_long_listing_applications" action="hr_recruitment_long_listing_tree" />
+
+		<menuitem name="Short Listing" parent="menu_listing_applications"
+			id="menu_short_listing_applications" action="hr_recruitment_short_listing_tree" />
+
+	</data>
 </odoo>
