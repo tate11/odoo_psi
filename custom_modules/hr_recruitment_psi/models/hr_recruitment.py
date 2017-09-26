@@ -45,7 +45,7 @@ class Applicant(models.Model):
     type_name = fields.Char(String='Titre du poste',related='type_id.name')
     formation_requise = fields.Text(String='Formation Requise', related='job_id.formation_requise')
     domaine_name = fields.Char(String='Domaine', related='job_id.domaine_id.name')
-    job_description = fields.Text(String='Description', related='job_id.description')
+    job_description = fields.Text(String='Description', related='job_id.poste_description')
     
     age = fields.Char(String='Age')
     number_of_years_of_experience = fields.Integer(string='Nombre d’année d’expérience') 

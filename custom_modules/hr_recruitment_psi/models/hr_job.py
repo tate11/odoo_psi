@@ -10,11 +10,11 @@ class hr_job(models.Model):
     contract_type = fields.Selection([
         ('cdd', 'CDD'),
         ('cdi', 'CDI')
-    ], string='Type de contrat',help="Type contract")
+    ], string='Type de contrat', help="Type contract", required=True)
     
     contract_duration = fields.Integer(string="Durée du contrat")
-    motif = fields.Text(string="Motif du recrutement")
-    description = fields.Text(string="Description des objectifs reliés au travail")
+    motif = fields.Text(string="Motif du recrutement", required=True)
+    poste_description = fields.Text(string="Description des objectifs reliés au travail", required=True)
     formation_requise = fields.Text(string="Formation requise")
     duration_minimale = fields.Integer(string="Durées minimales")
     

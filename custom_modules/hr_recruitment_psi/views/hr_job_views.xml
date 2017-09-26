@@ -11,7 +11,7 @@
 				<field name="recrutement_type" invisible="1" />
 				<field name="motif" />
 				<field name="formation_requise"></field>
-				<field name="description" />
+				<field name="poste_description" />
 				<field name="contract_type" />
 				<field name="contract_duration" />
 				<field name="domaine_id" />

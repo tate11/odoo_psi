@@ -138,7 +138,7 @@
 			<field name="name">hr.recrutement.candidature.tree</field>
 			<field name="model">hr.applicant</field>
 			<field name="arch" type="xml">
-				<tree string="Long List">
+				<tree string="Long List" edit="false" create="false">
 					<field name="job_name" />
 					<field name="partner_name" />
 					<field name="age" />
@@ -157,7 +157,7 @@
 			<field name="name">hr.recrutement.candidature.tree</field>
 			<field name="model">hr.applicant</field>
 			<field name="arch" type="xml">
-				<tree string="Short List">
+				<tree string="Short List" edit="false" create="false">
 					<field name="job_name" />
 					<field name="partner_name" />
 					<field name="age" />

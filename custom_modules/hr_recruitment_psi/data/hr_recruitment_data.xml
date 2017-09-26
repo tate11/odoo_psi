@@ -3,7 +3,7 @@
   <data>
     <!-- etape candidature -->  
 	<record model="hr.recruitment.stage" id="draft2">
-        <field name="name">Nouveau</field>
+        <field name="name">1- Nouveau</field>
         <field name="sequence">1</field>
 		<field name="stage">draft2</field>
     </record>  
