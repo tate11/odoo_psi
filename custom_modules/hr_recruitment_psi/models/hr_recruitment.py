@@ -29,8 +29,6 @@ class Applicant(models.Model):
     def _default_stage_id(self):
         return self.env.ref('hr_recruitment_psi.draft2').id
     
-    
-    
     recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement')
     recrutement_type = fields.Selection(related='job_id.recrutement_type_id.recrutement_type',string='Type de recrutement selection')
     
