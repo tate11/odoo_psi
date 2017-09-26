@@ -26,7 +26,7 @@
 				<field name="recrutement_type_id" />
 				<field name="recrutement_type" invisible="1" />
 				
-				<field name="level_of_education" />
+				<field name="level_of_education_id" />
 				<field name="experience_required_ids" colspan="2">
 					<tree string="Experience requise" editable="bottom">
 						<field name="name" />
