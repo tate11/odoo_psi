@@ -27,14 +27,13 @@ class hr_job(models.Model):
         ('recruit', '6- Appel aux candidatures')
     ], string='Status', readonly=True, required=True, track_visibility='always', copy=False, default='open', help="Set whether the recruitment process is open or closed for this job position.")
     
-    domaine_id = fields.Many2one('hr.job.domaine', string='Domaines', required=True)
     recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement')
     recrutement_type = fields.Selection(related='recrutement_type_id.recrutement_type',string='Type de recrutement selection')
     level_of_education = fields.Char(string='Niveau de formation', required=True)
     budget_code = fields.Char(string='Code budgetaire', required=True)
     place_of_employment = fields.Char(string='Lieu d\'embauche', required=True)
     subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination', required=True)
-    experience_required_id = fields.Many2one('hr.experience.required', string='Expérience Requise', required=True)
+    experience_required_ids = fields.One2many('hr.experience.required', 'id', string='Expérience requise')
     
 #     def set_recruit(self):
 #         for record in self:
@@ -51,10 +50,5 @@ class SubordinationLink(models.Model):
 class ExperienceRequise(models.Model):
       _name ='hr.experience.required'
       
-      name = fields.Char(string='Domaine', required=True)
-      duration = fields.Integer(string='Durée', required=True)
-
-class Domaine(models.Model):
-    _name = 'hr.job.domaine'
-    
-    name = fields.Char(string="Domaine", required=True)
+      name = fields.Char(string='Domaines', required=True)
+      duration = fields.Integer(string='Durées minimales', required=True)
