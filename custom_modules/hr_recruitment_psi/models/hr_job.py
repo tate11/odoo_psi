@@ -10,15 +10,15 @@ class hr_job(models.Model):
     name = fields.Char(size=28, required=True)
     psi_contract_type = fields.Selection([
         ('cdd', 'CDD'),
-        ('cdi', 'CDI')
+        ('cdi', 'CDI'),
+        ('prestataire','Prestataire')
     ], string='Type de contrat', help="Type contract", required=True)
     
     psi_contract_duration = fields.Integer(string="Durée du contrat", required=True)
     psi_motif = fields.Text(string="Motif du recrutement", required=True)
     poste_description = fields.Text(string="Description des objectifs reliés au travail", required=True)
-   # formation_requise = fields.Text(string="Formation requise")
-   # duration_minimale = fields.Integer(string="Durées minimales")
     
+      
     state = fields.Selection([
         ('open', '1- Demande d\'embauche'),
         ('analyse', '2- Analyse de la demande'),
@@ -31,14 +31,18 @@ class hr_job(models.Model):
     recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement')
     recrutement_type = fields.Selection(related='recrutement_type_id.recrutement_type',string='Type de recrutement selection')
     level_of_education_id = fields.Many2one('hr.recruitment.degree', string='Niveau de formations', required=True)
-    budget_code = fields.Char(string='Code budgetaire', required=True)
+    psi_budget_code = fields.Many2one('account.analytic.account',string='Code budgetaire',  required=True)
     place_of_employment = fields.Char(string='Lieu d\'embauche', required=True)
-    subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination', required=True)
-    experience_required_ids = fields.One2many('hr.experience.required', 'job_id', string='Expérience requise')
+    subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination')
+    experience_required_ids = fields.One2many('hr.experience.required', 'job_id', string='Expérience requise', required=True)
     nature_recrutement = fields.Selection([
+        ('conssideration_dossier', 'Conssideration de dossier'),
         ('interne', 'Appel à candidature interne'),
-        ('externe', 'Appel à candidature externe')
-        ], string="Nature de recrutement")
+        ('externe', 'Appel à candidature externe'),
+        ('externe_interne', 'Appel à candidature externe et interne')
+        ], string="Nature de recrutement", required=True)
+    
+    application_deadline_date = fields.Date(string="Delai de candidature", required=True)
     
     @api.one
     @api.constrains('psi_contract_duration')
@@ -64,5 +68,6 @@ class ExperienceRequise(models.Model):
       _name ='hr.experience.required'
       
       name = fields.Char(string='Domaines', required=True)
-      duration = fields.Integer(string='Durées minimales', required=True)
+      month = fields.Integer(string='Mois')
+      year = fields.Integer(string='Années')
       job_id = fields.Many2one('hr.job')

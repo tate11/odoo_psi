@@ -7,12 +7,13 @@
 		<field name="arch" type="xml">
 			<field name="address_id" position="after">
 				<field name="place_of_employment" />
+				<field name="application_deadline_date" />
 				<field name="psi_motif" />
 				<field name="nature_recrutement" />
-				<field name="budget_code" />
+				<field name="psi_budget_code" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
 				<field name="subordination_link_id" />
 				<field name="psi_contract_type" />
-				<field name="psi_contract_duration" attrs="{'invisible': [('psi_contract_type','=','cdi')], 'required': [('psi_contract_type', '=', 'cdd')]}" />
+				<field name="psi_contract_duration" attrs="{'invisible': ['|',('psi_contract_type','=','cdi'),('psi_contract_type','=','prestataire')], 'required': [('psi_contract_type', '=', 'cdd')]}" />
 			</field>
 		</field>
 	</record>
@@ -30,7 +31,8 @@
 				<field name="experience_required_ids" colspan="2">
 					<tree string="Experience requise" editable="bottom">
 						<field name="name" />
-						<field name="duration" />
+						<field name="month" />
+						<field name="year" />
 					</tree>
 				</field>
 				
