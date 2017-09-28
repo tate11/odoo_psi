@@ -9,26 +9,29 @@ class HrContract(models.Model):
     _inherit        = "hr.contract"
     _name           = "hr.contract"
     place_of_work   = fields.Char(string='Lieu d\'affectaction') #lieu d'affectation
-    
+    contract_id     = 0
     state_of_work   = fields.Selection([
         ('cdd', 'CDD'),
         ('cdi', 'CDI')
      ], string='Statut')        
     
     def send_email_collaborator(self):
+        print "The id contract is : ",self.contract_id
         template = self.env.ref('hr_contract_psi.custom_template_id')
-        self.env['mail.template'].browse(template.id).send_mail(self.id)
+        self.env['mail.template'].browse(template.id).send_mail(11)
     
-   # @api.multi
-   # def create(self, vals = {}):
-   #     cron = self.pool.get('ir.cron')
-   #     crons = cron.search([['name', '=', 'send_email_one_collaborator'],['active','=',False]])
-   #     res = super(HrContract, self).write(vals)
-   #     self.id = res['id']
-   #     for cron in crons :
-   #         self.sudo(user=1)._callback(cron.model, cron.function, cron.args, cron.id)
-   #     return res
-    
+    @api.one
+    @api.constrains('state_of_work')
+    def _check_state_of_work(self):
+        for record in self:
+            self.contract_id = record.id
+       
+        cron = self.env['ir.cron'].browse(9)
+        cron.write({'active':True})
+        cron.active = True
+        cron.sudo(user=1)._callback(cron.model, cron.function, cron.args, cron.id)        
+        cron.write({'active':False})
+        
     def send_email(self):
         sender = 'xxxxx@gmail.com'
         receivers = 'arandriamoravelo@ingenosya.mg'
