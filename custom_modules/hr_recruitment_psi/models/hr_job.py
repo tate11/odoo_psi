@@ -8,13 +8,13 @@ class hr_job(models.Model):
     _inherit = "hr.job"
     
     name = fields.Char(size=28, required=True)
-    contract_type = fields.Selection([
+    psi_contract_type = fields.Selection([
         ('cdd', 'CDD'),
         ('cdi', 'CDI')
     ], string='Type de contrat', help="Type contract", required=True)
     
-    contract_duration = fields.Integer(string="Durée du contrat", required=True)
-    motif = fields.Text(string="Motif du recrutement", required=True)
+    psi_contract_duration = fields.Integer(string="Durée du contrat", required=True)
+    psi_motif = fields.Text(string="Motif du recrutement", required=True)
     poste_description = fields.Text(string="Description des objectifs reliés au travail", required=True)
    # formation_requise = fields.Text(string="Formation requise")
    # duration_minimale = fields.Integer(string="Durées minimales")
@@ -34,17 +34,17 @@ class hr_job(models.Model):
     budget_code = fields.Char(string='Code budgetaire', required=True)
     place_of_employment = fields.Char(string='Lieu d\'embauche', required=True)
     subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination', required=True)
-    experience_required_ids = fields.One2many('hr.experience.required', 'id', string='Expérience requise')
+    experience_required_ids = fields.One2many('hr.experience.required', 'job_id', string='Expérience requise')
     nature_recrutement = fields.Selection([
         ('interne', 'Appel à candidature interne'),
         ('externe', 'Appel à candidature externe')
         ], string="Nature de recrutement")
     
     @api.one
-    @api.constrains('contract_duration')
-    def _check_contract_duration(self):
+    @api.constrains('psi_contract_duration')
+    def _check_psi_contract_duration(self):
         for record in self:
-            if record.contract_type == 'cdd' and record.contract_duration == 0:
+            if record.psi_contract_type == 'cdd' and record.psi_contract_duration == 0:
                 raise ValidationError("Le durée de contrat ne doit pas etre 0")
     
 #     def set_recruit(self):
@@ -65,3 +65,4 @@ class ExperienceRequise(models.Model):
       
       name = fields.Char(string='Domaines', required=True)
       duration = fields.Integer(string='Durées minimales', required=True)
+      job_id = fields.Many2one('hr.job')
