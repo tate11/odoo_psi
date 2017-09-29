@@ -10,7 +10,7 @@
 				<field name="application_deadline_date" />
 				<field name="psi_motif" />
 				<field name="nature_recrutement" />
-				<field name="psi_budget_code" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+				<field name="psi_budget_code" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'required': [('state', '=', 'validation_finance')]}"/>
 				<field name="subordination_link_id" />
 				<field name="psi_contract_type" />
 				<field name="psi_contract_duration" attrs="{'invisible': ['|',('psi_contract_type','=','cdi'),('psi_contract_type','=','prestataire')], 'required': [('psi_contract_type', '=', 'cdd')]}" />
