@@ -21,11 +21,12 @@ class hr_job(models.Model):
       
     state = fields.Selection([
         ('open', '1- Demande d\'embauche'),
-        ('analyse', '2- Analyse de la demande'),
-        ('rr_validation', '3- Approbation par RR'),
-        ('tdr_redaction', '4- Rédaction TDR'),
-        ('refused', '5- Refusé'),
-        ('recruit', '6- Appel aux candidatures')
+         ('tdr_redaction', '2- Rédaction TDR'),
+        ('validation_finance','3- Validation Finance'),
+        ('analyse', '4- Analyse de la demande'),
+        ('rr_validation', '5- Approbation par RR'), 
+        ('refused', '6- Refusé'),
+        ('recruit', '7- Appel aux candidatures')
     ], string='Status', readonly=True, required=True, track_visibility='always', copy=False, default='open', help="Set whether the recruitment process is open or closed for this job position.")
     
     recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement')

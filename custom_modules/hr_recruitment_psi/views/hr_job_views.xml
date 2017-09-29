@@ -45,37 +45,39 @@
 			<xpath expr="//field[@name='state']" position="replace">
 				<!-- etats pour recrutement autres que stagiaires ??? -->
 				<field name="state" widget="statusbar"
-					statusbar_visible="open,analyse,rr_validation,refused,tdr_redaction,recruit" />
+					statusbar_visible="open,tdr_redaction,validation_finance,analyse,rr_validation,refused,recruit" />
 
 				<!-- etats pour recrutement de stagiaires ??? -->
 			</xpath>
 
 			<!-- boutons -->
-			<xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_analyse" states="open" string="Analyser la demande"
-					class="oe_highlight" />
-			</xpath>
+	
 			<xpath expr="//button[@name='set_open']" position="after">
 				<button name="button_refuser" states="analyse,rr_validation"
-					string="Refuser" />
+					string="Refuser" attrs="{'invisible': [('state','!=','analyse')]}" />
 			</xpath>
 			<xpath expr="//button[@name='set_open']" position="after">
 				<button name="button_rr_validation" string="Approuver par RR"
 					class="oe_highlight"
-					attrs="{'invisible': ['|', ('recrutement_type','=','stagiaire'), ('state','!=','analyse')]}" />
+					attrs="{'invisible': [('state','!=','analyse')]}" />
+			</xpath>
+		
+			<xpath expr="//button[@name='set_open']" position="after">
+				<button name="button_tdr_redaction" states="open"
+					string="Rédiger TDR" class="oe_highlight" />
 			</xpath>
 			<xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_analyse_tdr_redaction" string="Rédiger TDR et Profil de poste Stagiaire"
-					class="oe_highlight"
-					attrs="{'invisible': ['|', ('recrutement_type','!=','stagiaire'), ('state','!=','analyse')]}" />
-			</xpath>
-			<xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_tdr_redaction" states="rr_validation"
-					string="Rédiger TDR et Profil de poste" class="oe_highlight" />
-			</xpath>
-			<xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_accepter" states="tdr_redaction" string="Accepter"
+				<button name="button_accepter"  string="Appel aux candidatures"  state="analyse" attrs="{'invisible': [('state','!=','rr_validation')]}"
 					class="oe_highlight" />
+			</xpath>
+			<xpath expr="//button[@name='set_open']" position="after">
+				<button name="button_analyse" string="Analyse faite" attrs="{'invisible': [('state','!=','validation_finance')]}"
+					class="oe_highlight" />
+			</xpath>
+			
+			<xpath expr="//button[@name='set_open']" position="after">
+				<button name="button_validation_finance" string="Validation Finance"
+					class="oe_highlight" attrs="{'invisible': [('state','!=','tdr_redaction')]}"  />
 			</xpath>
 
 		</field>

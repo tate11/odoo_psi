@@ -17,6 +17,12 @@
             <field name="kind">function</field>
 			<field name="action">write({'state':'recruit'})</field>
 		</record>
+		<record id="activity_validation_finance" model="workflow.activity">
+            <field name="wkf_id" ref="hr_job_wkf"/>
+            <field name="name">activity_validation_finance</field>
+            <field name="kind">function</field>
+			<field name="action">write({'state':'validation_finance'})</field>
+		</record>
 		<record id="activity_analyse" model="workflow.activity">
 		    <field name="wkf_id" ref="hr_job_wkf"/>
             <field name="name">activity_analyse</field>
@@ -50,12 +56,23 @@
         </record>
 		
 		<!-- transition -->
-		<record id="activity_open_to_activity_analyse" model="workflow.transition">
+		<record id="activity_rr_validation_to_activity_tdr_redaction" model="workflow.transition">
             <field name="act_from" ref="activity_open"/>
+            <field name="act_to" ref="activity_tdr_redaction"/>
+            <field name="signal">button_tdr_redaction</field>
+        </record>
+       
+        <record id="activity_open_to_activity_validation_finance" model="workflow.transition">
+            <field name="act_from" ref="activity_tdr_redaction"/>
+            <field name="act_to" ref="activity_validation_finance"/>
+            <field name="signal">button_validation_finance</field>
+        </record>
+        <record id="activity_open_to_activity_analyse" model="workflow.transition">
+            <field name="act_from" ref="activity_validation_finance"/>
             <field name="act_to" ref="activity_analyse"/>
             <field name="signal">button_analyse</field>
         </record>
-        <record id="activity_analyse_to_activity_rr_validation" model="workflow.transition">
+         <record id="activity_analyse_to_activity_rr_validation" model="workflow.transition">
             <field name="act_from" ref="activity_analyse"/>
             <field name="act_to" ref="activity_rr_validation"/>
             <field name="signal">button_rr_validation</field>
@@ -65,27 +82,18 @@
             <field name="act_to" ref="activity_refused"/>
             <field name="signal">button_refuser</field>
         </record>
-        <record id="activity_rr_validation_to_activity_tdr_redaction" model="workflow.transition">
-            <field name="act_from" ref="activity_rr_validation"/>
-            <field name="act_to" ref="activity_tdr_redaction"/>
-            <field name="signal">button_tdr_redaction</field>
-        </record>
+        
         <record id="activity_analyse_to_activity_refused" model="workflow.transition">
             <field name="act_from" ref="activity_analyse"/>
             <field name="act_to" ref="activity_refused"/>
             <field name="signal">button_refuser</field>
         </record>
         <record id="activity_tdr_redaction_to_activity_recruit" model="workflow.transition">
-            <field name="act_from" ref="activity_tdr_redaction"/>
+            <field name="act_from" ref="activity_rr_validation"/>
             <field name="act_to" ref="activity_recruit"/>
             <field name="signal">button_accepter</field>
         </record>
-        <!-- transition from analyse to tdr_redaction -->
-        <record id="activity_analyse_to_activity_tdr_redaction" model="workflow.transition">
-            <field name="act_from" ref="activity_analyse"/>
-            <field name="act_to" ref="activity_tdr_redaction"/>
-            <field name="signal">button_analyse_tdr_redaction</field>
-        </record>
+     
         <!-- transition pour relancer le workflow depuis le debut -->
         <record id="activity_recruit_to_activity_open" model="workflow.transition">
             <field name="act_from" ref="activity_recruit"/>
