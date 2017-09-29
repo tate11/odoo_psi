@@ -49,7 +49,31 @@ class Applicant(models.Model):
     
     age = fields.Char(String='Age')
     number_of_years_of_experience = fields.Integer(string='Nombre d’année d’expérience') 
-    correspondance = fields.Text(string='Correspondance', required=True)
+    
+    psi_note_hr = fields.Integer(string="Note RH")
+    psi_note_candidate = fields.Integer(string="Note Candidature")
+    
+    psi_average_note = fields.Integer(string="Moyenne")
+    
+    @api.model
+    def create(self, vals):
+        res = super(Applicant, self).create(vals)
+        res['psi_average_note'] = ((res['psi_note_hr'] + res['psi_note_candidate']) / 2)
+        return res
+    
+    @api.multi
+    def write(self, vals):
+        vals['psi_average_note'] = ((vals['psi_note_hr'] + vals['psi_note_candidate']) / 2) 
+        res = super(Applicant, self).write(vals)       
+        return res
+    
+    correspondance = fields.Selection([
+        ('oui', 'Oui'),
+        ('non', 'Non'),
+        ('disqualifie', 'Disqualifié')
+    ], string='Correspondance', required=True)
+   
+    
     
     def action_cv_received(self):
         self.write({'stage_id': self.env.ref('hr_recruitment_psi.cv_received').id})

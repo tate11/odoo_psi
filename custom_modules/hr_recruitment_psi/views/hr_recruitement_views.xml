@@ -19,6 +19,8 @@
 				<field name="type_id" position="after">
 					<field name="number_of_years_of_experience"></field>
 					<field name="correspondance"></field>
+					<field name="psi_note_hr"></field>
+					<field name="psi_note_candidate"></field>
 				</field>
 				<button name="create_employee_from_applicant" position="replace">
 					<button string="Create Employee" name="create_employee_from_applicant"
@@ -165,6 +167,8 @@
 					<!-- <field name="formation_requise" />  -->
 					<field name="number_of_years_of_experience"></field>
 					<field name="correspondance"></field>
+					<field name="psi_note_hr"></field>
+					<field name="psi_note_candidate"></field>
 				</tree>
 			</field>
 		</record>
@@ -204,5 +208,21 @@
 		<menuitem name="Short Listing" parent="menu_listing_applications"
 			id="menu_short_listing_applications" action="hr_recruitment_short_listing_tree" />
 
+	<record id="hr_recrutement_candidature_tree_filter" model="ir.ui.view">
+		
+        <field name="name">hr.recrutement.candidature.tree.filter</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">	
+			<search string="Recherche">
+				<group expand="0" string="Group By...">
+					   <filter string="Long listing" icon="terp-personal+" domain="[]"/>
+                       <filter string="Short listing" icon="terp-personal+" domain="[('correspondance','=','oui')]" />
+                       <filter string="Liste Restreint" icon="terp-personal+" domain="[('psi_average_note','>=',2)]" />
+                </group>
+			</search>
+       </field>
+    </record>
+    
+    
 	</data>
 </odoo>
