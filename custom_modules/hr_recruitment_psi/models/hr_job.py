@@ -66,9 +66,21 @@ class SubordinationLink(models.Model):
      name = fields.Char(string='Subordination', required=True)
 
 class ExperienceRequise(models.Model):
-      _name ='hr.experience.required'
+      _name = 'hr.experience.required'
       
       name = fields.Char(string='Domaines', required=True)
-      month = fields.Integer(string='Mois')
-      year = fields.Integer(string='Années')
+      month = fields.Integer(string='en Mois', max=99)
+      year = fields.Float(string='en Année', size=2)
       job_id = fields.Many2one('hr.job')
+      
+      @api.constrains('month')
+      def _check_length_mois(self):
+          for record in self:
+              if record.month > 999:
+                  raise ValidationError(u"Le mois doit être 3 chiffres au maximum: %s" % record.month)
+              
+      @api.constrains('year')
+      def _check_length_year(self):
+          for record in self:
+              if record.year > 99:
+                  raise ValidationError(u"L'année doit être 2 chiffres au maximum: %s" % record.year)   
