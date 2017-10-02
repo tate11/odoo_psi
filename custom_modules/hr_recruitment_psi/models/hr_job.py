@@ -42,7 +42,7 @@ class hr_job(models.Model):
         ('interne', u'Appel à candidature interne'),
         ('externe', u'Appel à candidature externe'),
         ('externe_interne', u'Appel à candidature interne et externe')
-        ], string="Nature de recrutement", required=True)
+        ], string="Nature de recrutement")
     
     application_deadline_date = fields.Date(string=u"Délai de candidature", required=True)
     

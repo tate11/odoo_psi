@@ -9,7 +9,7 @@
 				<field name="place_of_employment" />
 				<field name="application_deadline_date" />
 				<field name="psi_motif" />
-				<field name="nature_recrutement" />
+				<field name="nature_recrutement" attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': [('recrutement_type', '=', 'consultant')]}"/>
 				<field name="psi_budget_code" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'required': [('state', '=', 'validation_finance')]}"/>
 				<field name="subordination_link_id" />
 				<field name="psi_contract_type" />
