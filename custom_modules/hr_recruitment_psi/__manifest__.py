@@ -6,7 +6,7 @@
     'sequence': 0,
     'description': """Gestion de recrutement PSI""",
     'website': 'https://www.ingenosya.mg',
-    'depends': ['hr','hr_recruitment','account.analytic.account'],
+    'depends': ['hr','hr_recruitment','account_analytic_account'],
     'data': [
              'data/hr_recruitment_data.xml',
              'views/hr_job_views.xml',
