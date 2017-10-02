@@ -63,7 +63,8 @@ class Applicant(models.Model):
     
     @api.multi
     def write(self, vals):
-        vals['psi_average_note'] = ((vals['psi_note_hr'] + vals['psi_note_candidate']) / 2) 
+        if vals.has_key('psi_note_hr') and vals.has_key('psi_note_candidate') : 
+            vals['psi_average_note'] = ((vals['psi_note_hr'] + vals['psi_note_candidate']) / 2) 
         res = super(Applicant, self).write(vals)       
         return res
     
