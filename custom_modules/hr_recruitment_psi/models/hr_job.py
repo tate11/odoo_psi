@@ -13,9 +13,9 @@ class hr_job(models.Model):
         ('cdd', 'CDD'),
         ('cdi', 'CDI'),
         ('prestataire',u'Préstataire')
-    ], string='Type de contrat', help="Type de contrat", required=True)
+    ], string='Type de contrat', help="Type de contrat")
     
-    psi_contract_duration = fields.Integer(string=u"Durée du contrat", required=True)
+    psi_contract_duration = fields.Integer(string=u"Durée du contrat")
     psi_motif = fields.Text(string="Motif du recrutement")
     poste_description = fields.Text(string=u"Description des objectifs reliés au travail")
       
@@ -27,7 +27,7 @@ class hr_job(models.Model):
         ('rr_validation', '5- Approbation par RR'), 
         ('refused', '6- Refusé'),
         ('recruit', '7- Appel aux candidatures')
-    ], string='Status', readonly=True, required=True, track_visibility='always', copy=False, default='open', help="Set whether the recruitment process is open or closed for this job position.")
+    ], string='Status', readonly=True, track_visibility='always', copy=False, default='open', help="Set whether the recruitment process is open or closed for this job position.")
     
     recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement')
     recrutement_type = fields.Selection(related='recrutement_type_id.recrutement_type', string=u'Type de recrutement sélection')
@@ -35,7 +35,7 @@ class hr_job(models.Model):
     psi_budget_code = fields.Many2one('account.analytic.account', string='Code budgetaire')
     place_of_employment = fields.Char(string=u'Lieu d\'embauche')
     subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination')
-    experience_required_ids = fields.One2many('hr.experience.required', 'job_id', string=u'Expériences requises', required=True)
+    experience_required_ids = fields.One2many('hr.experience.required', 'job_id', string=u'Expériences requises')
     
     nature_recrutement = fields.Selection([
         ('conssideration_dossier', u'Considération de dossier'),
@@ -44,7 +44,7 @@ class hr_job(models.Model):
         ('externe_interne', u'Appel à candidature interne et externe')
         ], string="Nature de recrutement")
     
-    application_deadline_date = fields.Date(string=u"Délai de candidature", required=True)
+    application_deadline_date = fields.Date(string=u"Délai de candidature")
     
     @api.one
     @api.constrains('psi_contract_duration')
