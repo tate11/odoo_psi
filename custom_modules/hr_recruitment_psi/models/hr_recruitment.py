@@ -77,6 +77,7 @@ class Applicant(models.Model):
         return res
     
     def action_contract_established(self) :
+        self.create_employee_from_applicant()
         self.write({ 'state': 'contract_established'})
         
     
