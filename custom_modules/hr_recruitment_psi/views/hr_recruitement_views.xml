@@ -12,7 +12,6 @@
 			<field name="arch" type="xml">
 				<field name="partner_id" position="before">
 					<field name="age" />
-					<field name="stage" invisible="1" />
 					<field name="recrutement_type_id" />
 					<field name="recrutement_type" invisible="1" />
 				</field>
@@ -21,6 +20,7 @@
 					<field name="correspondance"></field>
 					<field name="psi_note_hr"></field>
 					<field name="psi_note_candidate"></field>
+					<field name="nature_recrutement_id" invisible="1" />
 				</field>
 				<button name="create_employee_from_applicant" position="replace">
 					<button string="Create Employee" name="create_employee_from_applicant"
@@ -29,54 +29,43 @@
 						invisible="1" />
 				</button>
 				<field name="stage_id" position="before">
-					<button name="cv_received" string="Recevoir le CV"
-						attrs="{'invisible': [('stage','!=','draft2')]}" />
-					<button name="cv_saved" string="Enregistrer le CV"
-						attrs="{'invisible': [('stage','!=','cv_received')]}" />
-
-					<!-- Recrutement consultant et stagiaire -->
-					<button name="can_be_interviewed_consultant" string="Mettre à interviewer"
-						attrs="{'invisible': ['|',('stage','!=','cv_saved'),('recrutement_type','not in',('consultant', 'stagiaire'))]}" />
-
-					<!-- Recrutement stagiaire -->
-					<button name="drh_validation" string="Validation DRH"
-						attrs="{'invisible': ['|',('stage','!=','first_interview'),('recrutement_type','!=','stagiaire')]}" />
-					<button name="drh_allocation_stage" string="DRH Allocation de stage"
-						attrs="{'invisible': ['|',('stage','!=','first_interview'),('recrutement_type','!=','stagiaire')]}" />
-
-					<button name="can_do_test" string="Faire les tests"
-						attrs="{'invisible': ['|',('stage','!=','cv_saved'),('recrutement_type','!=','collaborateur')]}" />
-					<button name="can_be_interviewed" string="Mettre à interviewer"
-						attrs="{'invisible': [('stage','!=','can_do_test')]}" />
-					<button name="first_interview" string="Passer le premier entretien"
-						attrs="{'invisible': [('stage','!=','can_be_interviewed')]}" />
-					<button name="in_deliberation" string="Passer à la délibération"
-						attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','not in',('first_interview','final_decision'))]}" />
-					<button name="second_interview" string="Passer le second entretien"
-						attrs="{'invisible': [('stage','!=','in_deliberation')]}" />
-					<button name="bi" string="Bridger Insight"
-						attrs="{'invisible': [('stage','not in',('in_deliberation','second_interview', 'drh_validation'))]}" />
-					<button name="final_decision" string="Passer à la décision finale"
-						attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','not in',('bi','verification_ref','candidat_notified'))]}" />
-					<button name="verification_ref" string="Vérifier les références de la candidature"
-						attrs="{'invisible': [('stage','!=','bi')]}" />
-					<button name="wage_proposal" string="Proposer un salaire"
-						attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','!=','verification_ref')]}" />
-					<button name="salary_validated" string="Valider salaire"
-						attrs="{'invisible': [('stage','!=','wage_proposal')]}" />
-					<button name="candidat_notified" string="Notifier le candidat"
-						attrs="{'invisible': ['|',('recrutement_type','!=','stagiaire'),('stage','not in',('verification_ref'))]}" />
-					<button name="candidat_notified" string="Notifier le candidat"
-						attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','not in',('salary_validated'))]}" />
-					<button name="contract" string="Etablir le contrat"
-						attrs="{'invisible': [('stage','not in',('final_decision','drh_allocation_stage','candidat_notified'))]}" />
-					<button name="contract_signed" string="Signer le contrat"
-						attrs="{'invisible': [('stage','!=','contract')]}" />
+					<button name="button_convoked_for_test" string="Convoqué pour les tests"
+						attrs="{'invisible': ['|',('state','!=','applicant_selected'),('nature_recrutement_id', '=', 'conssideration_dossier')]}" />
+					<button name="button_interview" string="Entretiens"
+						attrs="{'invisible': ['|',('state','!=','convoked_for_test'),('nature_recrutement_id', '=', 'conssideration_dossier')]}" />
+					<button name="button_consultant_consideration_de_dossier" string="Passer au Références professionnelles"
+						attrs="{'invisible': ['|',('state','!=','applicant_selected'),('nature_recrutement_id', '!=', 'conssideration_dossier')]}" />
+					<button name="button_professional_reference" string="Références professionnelles"
+						attrs="{'invisible': [('state','!=','interview')]}" />
+					<button name="button_bridger_insight" string="Brider Insight"
+						attrs="{'invisible': [('state','!=','professional_reference')]}" />
+					<button name="button_psi_wage_proposal" string="Proposition salariale"
+						attrs="{'invisible': ['|',('state','!=','bridger_insight'),('recrutement_type', '=', 'consultant')]}" />
+						
+					<button name="button_psi_honorary_proposal" string="Proposition honoraire"
+						attrs="{'invisible': ['|',('state','!=','bridger_insight'),('recrutement_type', '!=', 'consultant')]}" />
+					
+					<button name="button_notification_of_employment" string="Notification d'embauche" attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '=', 'consultant')]}"
+						 />
+					
+					<button name="button_contract_established_consultant" string="Etablir contrat" attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '!=', 'consultant')]}"
+						 />
+					
+					<button name="button_contract_established" string="Etablir contrat"
+						attrs="{'invisible': [('state','!=','notification_of_employment')]}" />
 				</field>
 				<field name="stage_id" position="replace">
-					<field name="stage_id" widget="statusbar" options="{'fold_field': 'fold'}"
-						attrs="{'invisible': [('active', '=', False),('emp_id', '=', False)]}" />
+					<field name="state" widget="statusbar" 
+	        	    attrs="{'invisible': [('active', '=', False)]}"
+					statusbar_visible="applicant_selected,convoked_for_test,interview,professional_reference,bridger_insight,psi_wage_proposal,notification_of_employment,contract_established" />
+
 				</field>
+				
+				<button name="archive_applicant" position="replace" type='object'>
+					<button name="archive_applicant"  
+	        	    attrs="{'invisible': [('state', '=', 'contract_established')]}" />
+				
+				</button>
 			</field>
 		</record>
 

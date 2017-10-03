@@ -39,9 +39,9 @@ class hr_job(models.Model):
     
     nature_recrutement = fields.Selection([
         ('conssideration_dossier', u'Considération de dossier'),
+        ('conssideration_dossier_by_cvtheque', u'Considération de dossier par CVTheque'),
         ('interne', u'Appel à candidature interne'),
-        ('externe', u'Appel à candidature externe'),
-        ('externe_interne', u'Appel à candidature interne et externe')
+        ('externe', u'Appel à candidature externe')
         ], string="Nature de recrutement")
     
     application_deadline_date = fields.Date(string=u"Délai de candidature")

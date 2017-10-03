@@ -9,266 +9,115 @@
         </record>
         
         <!-- activity -->
-        <record id="activity_draft" model="workflow.activity">
+         <record id="activity_applicant_selected" model="workflow.activity">
             <field name="wkf_id" ref="hr_recruitement_wkf"/>
             <field name="flow_start">True</field>
-            <field name="name">draft</field>
+            <field name="name">activity_applicant_selected</field>
 			<field name="kind">dummy</field>
 		</record>
-		<record id="activity_cv_received" model="workflow.activity">
+        <record id="activity_convoked_for_test" model="workflow.activity">
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">cv_received</field>
+            <field name="name">convoked_for_test</field>
             <field name="kind">function</field>
-            <field name="action">write({'stage_id': env.ref('hr_recruitment_psi.cv_received').id})</field>
+            <field name="action">write({'state':'convoked_for_test'})</field>
         </record>
-        <record id="activity_cv_saved" model="workflow.activity">
+        <record id="activity_interview" model="workflow.activity">
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">cv_saved</field>
+            <field name="name">interview</field>
             <field name="kind">function</field>
-            <field name="action">action_cv_saved()</field>
+            <field name="action">write({'state': 'interview'})</field>
         </record>
-        <record id="activity_can_do_test" model="workflow.activity">
+        <record id="activity_professional_reference" model="workflow.activity">
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">can_do_test</field>
+            <field name="name">professional_reference</field>
             <field name="kind">function</field>
-            <field name="action">action_can_do_test()</field>
+            <field name="action">write({'state':'professional_reference'})</field>
         </record>
-        <record id="activity_can_be_interviewed" model="workflow.activity">
+        <record id="activity_bridger_insight" model="workflow.activity">
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">can_be_interviewed</field>
+            <field name="name">bridger_insight</field>
             <field name="kind">function</field>
-            <field name="action">write({'stage_id': env.ref('hr_recruitment_psi.can_be_interviewed').id})</field>
+            <field name="action">write({'state':'bridger_insight'})</field>
         </record>
-        <record id="activity_first_interview" model="workflow.activity">
+        <record id="activity_psi_wage_proposal" model="workflow.activity">
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">first_interview</field>
+            <field name="name">psi_wage_proposal</field>
             <field name="kind">function</field>
-            <field name="action">action_first_interview()</field>
+            <field name="action">write({'state':'psi_wage_proposal'})</field>
         </record>
-        <record id="activity_in_deliberation" model="workflow.activity">
+        <record id="activity_notification_of_employment" model="workflow.activity">
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">in_deliberation</field>
+            <field name="name">notification_of_employment</field>
             <field name="kind">function</field>
-            <field name="action">action_in_deliberation()</field>
+            <field name="action">write({'state':'notification_of_employment'})</field>
         </record>
-        <record id="activity_second_interview" model="workflow.activity">
+        <record id="activity_contract_established" model="workflow.activity">
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">second_interview</field>
+            <field name="name">contract_established</field>
             <field name="kind">function</field>
-            <field name="action">action_second_interview()</field>
+            <field name="action">action_contract_established()</field>
         </record>
-        <record id="activity_bi" model="workflow.activity">
-		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">bi</field>
-            <field name="kind">function</field>
-            <field name="action">action_bi()</field>
-        </record>
-        <record id="activity_verification_ref" model="workflow.activity">
-		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">verification_ref</field>
-            <field name="kind">function</field>
-            <field name="action">action_verification_ref()</field>
-        </record>
-        <record id="activity_wage_proposal" model="workflow.activity">
-		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">wage_proposal</field>
-            <field name="kind">function</field>
-            <field name="action">action_wage_proposal()</field>
-        </record>
-        <record id="activity_salary_validated" model="workflow.activity">
-		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">salary_validated</field>
-            <field name="kind">function</field>
-            <field name="action">action_salary_validated()</field>
-        </record>
-        <record id="activity_candidat_notified" model="workflow.activity">
-		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">candidat_notified</field>
-            <field name="kind">function</field>
-            <field name="action">action_candidat_notified()</field>
-        </record>
-        <record id="activity_final_decision" model="workflow.activity">
-		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">final_decision</field>
-            <field name="kind">function</field>
-            <field name="action">action_final_decision()</field>
-        </record>
-        <record id="activity_contract" model="workflow.activity">
-		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">contract</field>
-            <field name="kind">function</field>
-            <field name="action">action_contract()</field>
-        </record>
-        <record id="activity_contract_signed" model="workflow.activity">
-		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">contract_signed</field>
-            <field name="kind">function</field>
-            <field name="action">action_contract_signed()</field>
-            <field name="flow_stop">True</field>
-        </record>
-        <record id="activity_drh_validation" model="workflow.activity">
-		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">drh_validation</field>
-            <field name="kind">function</field>
-            <field name="action">action_drh_validation()</field>
-        </record>
-        <record id="activity_drh_allocation_stage" model="workflow.activity">
-		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
-            <field name="name">drh_allocation_stage</field>
-            <field name="kind">function</field>
-            <field name="action">action_drh_allocation_stage()</field>
-        </record>
-		
+        
 		<!-- transition -->
-		<record id="draft_to_received" model="workflow.transition">
-            <field name="act_from" ref="activity_draft"/>
-            <field name="act_to" ref="activity_cv_received"/>
-            <field name="signal">cv_received</field>
-        </record>
-        <record id="cv_received_to_cv_saved" model="workflow.transition">
-            <field name="act_from" ref="activity_cv_received"/>
-            <field name="act_to" ref="activity_cv_saved"/>
-            <field name="signal">cv_saved</field>
+		<record id="activity_draft_to_activity_convoked_for_test" model="workflow.transition">
+            <field name="act_from" ref="activity_applicant_selected"/>
+            <field name="act_to" ref="activity_convoked_for_test"/>
+            <field name="signal">button_convoked_for_test</field>
         </record>
         
-        <!-- Recrutement consultant -->
-        <record id="cv_saved_to_can_be_interviewed" model="workflow.transition">
-            <field name="act_from" ref="activity_cv_saved"/>
-            <field name="act_to" ref="activity_can_be_interviewed"/>
-            <field name="signal">can_be_interviewed_consultant</field>
+        <record id="activity_draft_to_activity_interview" model="workflow.transition">
+            <field name="act_from" ref="activity_applicant_selected"/>
+            <field name="act_to" ref="activity_interview"/>
+            <field name="signal">button_consultant_consideration_de_dossier</field>
         </record>
         
-        <!-- recrutement stagiaire -->
-        <record id="first_interview_to_drh_validation" model="workflow.transition">
-            <field name="act_from" ref="activity_first_interview"/>
-            <field name="act_to" ref="activity_drh_validation"/>
-            <field name="signal">drh_validation</field>
-        </record>
-        <record id="first_interview_to_drh_allocation_stage" model="workflow.transition">
-            <field name="act_from" ref="activity_first_interview"/>
-            <field name="act_to" ref="activity_drh_allocation_stage"/>
-            <field name="signal">drh_allocation_stage</field>
-        </record>
-        <record id="drh_allocation_stage_to_contract" model="workflow.transition">
-            <field name="act_from" ref="activity_drh_allocation_stage"/>
-            <field name="act_to" ref="activity_contract"/>
-            <field name="signal">contract</field>
-        </record>
-        <record id="drh_validation_to_bi" model="workflow.transition">
-            <field name="act_from" ref="activity_drh_validation"/>
-            <field name="act_to" ref="activity_bi"/>
-            <field name="signal">bi</field>
-        </record>
-        <record id="verification_ref_to_candidat_notified" model="workflow.transition">
-            <field name="act_from" ref="activity_verification_ref"/>
-            <field name="act_to" ref="activity_candidat_notified"/>
-            <field name="signal">candidat_notified</field>
-        </record>
-        <record id="candidat_notified_to_activity_contract" model="workflow.transition">
-            <field name="act_from" ref="activity_candidat_notified"/>
-            <field name="act_to" ref="activity_contract"/>
-            <field name="signal">contract</field>
+        <record id="activity_convoked_for_test_to_activity_interview" model="workflow.transition">
+            <field name="act_from" ref="activity_convoked_for_test"/>
+            <field name="act_to" ref="activity_interview"/>
+            <field name="signal">button_interview</field>
         </record>
         
-        <!-- Recrutement collaborateur permanent avec un cabinnet externe-->
-        <record id="cv_saved_to_can_be_interviewed_externe" model="workflow.transition">
-            <field name="act_from" ref="activity_cv_saved"/>
-            <field name="act_to" ref="activity_can_be_interviewed"/>
-            <field name="condition">recrutement_type == 'collaborateur_externe'</field>
-        </record>
-        <!--  -->
-        
-        <record id="cv_saved_to_can_do_test" model="workflow.transition">
-            <field name="act_from" ref="activity_cv_saved"/>
-            <field name="act_to" ref="activity_can_do_test"/>
-            <field name="signal">can_do_test</field>
-        </record>
-        <record id="can_do_test_to_can_be_interviewed" model="workflow.transition">
-            <field name="act_from" ref="activity_can_do_test"/>
-            <field name="act_to" ref="activity_can_be_interviewed"/>
-            <field name="signal">can_be_interviewed</field>
-        </record>
-        <record id="can_be_interviewed_to_first_interview" model="workflow.transition">
-            <field name="act_from" ref="activity_can_be_interviewed"/>
-            <field name="act_to" ref="activity_first_interview"/>
-            <field name="signal">first_interview</field>
-        </record>
-        <record id="first_interview_to_interview_1" model="workflow.transition">
-            <field name="act_from" ref="activity_first_interview"/>
-            <field name="act_to" ref="activity_in_deliberation"/>
-            <field name="signal">in_deliberation</field>
-        </record>
-        <record id="in_deliberation_to_bi" model="workflow.transition">
-            <field name="act_from" ref="activity_in_deliberation"/>
-            <field name="act_to" ref="activity_bi"/>
-            <field name="signal">bi</field>
-        </record>
-        <record id="in_deliberation_to_interview_2" model="workflow.transition">
-            <field name="act_from" ref="activity_in_deliberation"/>
-            <field name="act_to" ref="activity_second_interview"/>
-            <field name="signal">second_interview</field>
-        </record>
-        <record id="second_interview_to_bi" model="workflow.transition">
-            <field name="act_from" ref="activity_second_interview"/>
-            <field name="act_to" ref="activity_bi"/>
-            <field name="signal">bi</field>
-        </record>
-        <record id="bi_to_bi_ok" model="workflow.transition">
-            <field name="act_from" ref="activity_bi"/>
-            <field name="act_to" ref="activity_final_decision"/>
-            <field name="signal">final_decision</field>
-        </record>
-        <record id="bi_to_bi_not_ok" model="workflow.transition">
-            <field name="act_from" ref="activity_bi"/>
-            <field name="act_to" ref="activity_verification_ref"/>
-            <field name="signal">verification_ref</field>
-        </record>
-        <record id="verification_ref_to_ref_ok" model="workflow.transition">
-            <field name="act_from" ref="activity_verification_ref"/>
-            <field name="act_to" ref="activity_wage_proposal"/>
-            <field name="signal">wage_proposal</field>
-        </record>
-        <record id="verification_ref_to_ref_not_ok" model="workflow.transition">
-            <field name="act_from" ref="activity_verification_ref"/>
-            <field name="act_to" ref="activity_final_decision"/>
-            <field name="signal">final_decision</field>
-        </record>
-        <record id="wage_proposal_to_salary_validated" model="workflow.transition">
-            <field name="act_from" ref="activity_wage_proposal"/>
-            <field name="act_to" ref="activity_salary_validated"/>
-            <field name="signal">salary_validated</field>
-        </record>
-        <record id="salary_validated_to_candidat_notified" model="workflow.transition">
-            <field name="act_from" ref="activity_salary_validated"/>
-            <field name="act_to" ref="activity_candidat_notified"/>
-            <field name="signal">candidat_notified</field>
-        </record>
-        <record id="candidat_notified_to_final_decision" model="workflow.transition">
-            <field name="act_from" ref="activity_candidat_notified"/>
-            <field name="act_to" ref="activity_final_decision"/>
-            <field name="signal">final_decision</field>
-        </record>
-        <record id="final_decision_to_in_deliberation" model="workflow.transition">
-            <field name="act_from" ref="activity_final_decision"/>
-            <field name="act_to" ref="activity_in_deliberation"/>
-            <field name="signal">in_deliberation</field>
-        </record>
-        <record id="final_decision_to_contract" model="workflow.transition">
-            <field name="act_from" ref="activity_final_decision"/>
-            <field name="act_to" ref="activity_contract"/>
-            <field name="signal">contract</field>
-        </record>
-        <record id="contract_to_contract_signed" model="workflow.transition">
-            <field name="act_from" ref="activity_contract"/>
-            <field name="act_to" ref="activity_contract_signed"/>
-            <field name="signal">contract_signed</field>
+        <record id="activity_interview_to_activity_professional_reference" model="workflow.transition">
+            <field name="act_from" ref="activity_interview"/>
+            <field name="act_to" ref="activity_professional_reference"/>
+            <field name="signal">button_professional_reference</field>
         </record>
         
-        <!-- transition convocation candidat -> interview -->
-        <record id="contract_to_contract_signed" model="workflow.transition">
-            <field name="act_from" ref="activity_contract"/>
-            <field name="act_to" ref="activity_contract_signed"/>
-            <field name="signal">contract_signed</field>
+        <record id="activity_professional_reference_to_activity_bridger_insight" model="workflow.transition">
+            <field name="act_from" ref="activity_professional_reference"/>
+            <field name="act_to" ref="activity_bridger_insight"/>
+            <field name="signal">button_bridger_insight</field>
         </record>
+        
+        <record id="activity_brigdger_insight_to_activity_psi_wage_proposal" model="workflow.transition">
+            <field name="act_from" ref="activity_bridger_insight"/>
+            <field name="act_to" ref="activity_psi_wage_proposal"/>
+            <field name="signal">button_psi_wage_proposal</field>
+        </record>
+        
+        <record id="activity_brigdger_insight_to_activity_psi_honorary_proposal" model="workflow.transition">
+            <field name="act_from" ref="activity_bridger_insight"/>
+            <field name="act_to" ref="activity_psi_wage_proposal"/>
+            <field name="signal">button_psi_honorary_proposal</field>
+        </record>
+        
+        <record id="activity_psi_wage_proposalt_to_activity_notification_of_employment" model="workflow.transition">
+            <field name="act_from" ref="activity_psi_wage_proposal"/>
+            <field name="act_to" ref="activity_notification_of_employment"/>
+            <field name="signal">button_notification_of_employment</field>
+        </record>
+        <record id="activity_notification_of_employment_to_activity_contract_established" model="workflow.transition">
+            <field name="act_from" ref="activity_notification_of_employment"/>
+            <field name="act_to" ref="activity_contract_established"/>
+            <field name="signal">button_contract_established</field>
+        </record>
+        
+        
+        <record id="activity_psi_wage_proposal_to_activity_contract_established" model="workflow.transition">
+            <field name="act_from" ref="activity_psi_wage_proposal"/>
+            <field name="act_to" ref="activity_contract_established"/>
+            <field name="signal">button_contract_established_consultant</field>
+        </record>
+        
     </data>
 </odoo>
