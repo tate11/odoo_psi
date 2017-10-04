@@ -12,10 +12,12 @@
 			<field name="arch" type="xml">
 				<field name="partner_id" position="before">
 					<field name="age" />
+					<field name="sex" />
 					<field name="recrutement_type_id" />
 					<field name="recrutement_type" invisible="1" />
 				</field>
 				<field name="type_id" position="after">
+					<field name="experiences" placeholder="Resumé de votre experience (250 mots)"></field>
 					<field name="number_of_years_of_experience"></field>
 					<field name="correspondance"></field>
 					<field name="psi_note_hr"></field>
@@ -28,15 +30,21 @@
 						attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"
 						invisible="1" />
 				</button>
-				<field name="stage_id" position="before">
+				<field name="stage_id" position="before">				
 					<button name="button_convoked_for_test" string="Convoqué pour les tests"
 						attrs="{'invisible': ['|',('state','!=','applicant_selected'),('nature_recrutement_id', '=', 'conssideration_dossier')]}" />
 					<button name="button_interview" string="Entretiens"
-						attrs="{'invisible': ['|',('state','!=','convoked_for_test'),('nature_recrutement_id', '=', 'conssideration_dossier')]}" />
+						attrs="{'invisible': ['|',('state','!=','convoked_for_test'),('nature_recrutement_id', '=', 'conssideration_dossier')]}" />					
 					<button name="button_consultant_consideration_de_dossier" string="Passer au Références professionnelles"
 						attrs="{'invisible': ['|',('state','!=','applicant_selected'),('nature_recrutement_id', '!=', 'conssideration_dossier')]}" />
 					<button name="button_professional_reference" string="Références professionnelles"
 						attrs="{'invisible': [('state','!=','interview')]}" />
+						
+						
+					<button name="button_refuser" string="Refuser"
+						attrs="{'invisible': [('state','!=','interview')]}" />
+						
+						
 					<button name="button_bridger_insight" string="Brider Insight"
 						attrs="{'invisible': [('state','!=','professional_reference')]}" />
 					<button name="button_psi_wage_proposal" string="Proposition salariale"

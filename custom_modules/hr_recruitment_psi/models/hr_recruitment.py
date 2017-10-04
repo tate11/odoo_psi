@@ -50,6 +50,11 @@ class Applicant(models.Model):
     job_description = fields.Text(string='Description', related='job_id.poste_description')
     
     age = fields.Char(String='Age')
+    sex = fields.Selection([
+        ('masculin', 'Masculin'),
+        ('feminin', 'Feminin')
+     ], string='Sex') 
+    experiences = fields.Text(String='Experiences', size=250)
     number_of_years_of_experience = fields.Integer(string='Nombre d’année d’expérience') 
     
     psi_note_hr = fields.Integer(string="Note RH")
