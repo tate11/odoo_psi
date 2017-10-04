@@ -26,21 +26,21 @@ class Applicant(models.Model):
     _inherit = "hr.applicant"
     _name = "hr.applicant"
     
-    recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement')
+    recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement', readonly=True)
     recrutement_type = fields.Selection(related='job_id.recrutement_type_id.recrutement_type',string='Type de recrutement selection')
     
     nature_recrutement_id = fields.Selection(related='job_id.nature_recrutement',string='Nature de recrutement')
     
     state = fields.Selection([
-        ('applicant_selected','Candidature selectionnées'),
-        ('convoked_for_test', '1- Convoqué pour les tests'),
-        ('interview', '2- Entretients'),
-        ('professional_reference','3- Références professionnelles'),
+        ('applicant_selected', u'Candidatures selectionnées'),
+        ('convoked_for_test', u'1- Convoqués pour les tests'),
+        ('interview', '2- Entretiens'),
+        ('professional_reference', u'3- Références proféssionnelles'),
         ('bridger_insight', '4- Bridger Insight'),
         ('psi_wage_proposal', '5- Proposition salariale'), 
         ('notification_of_employment', '6- Notification d\'embauche'),
-        ('contract_established', '7- Contrat établi')
-    ], string='Status', readonly=True, required=True, track_visibility='always', copy=False, default='applicant_selected', help="Set whether the recruitment process is open or closed for this job position.")
+        ('contract_established', u'7- Contrat établi')
+    ], string='Status', readonly=True, required=True, track_visibility='onchange', copy=False, default='applicant_selected', help="Set whether the recruitment process is open or closed for this job position.")
     
     job_name = fields.Char(String='Job title',related='job_id.name')
     
@@ -50,10 +50,10 @@ class Applicant(models.Model):
     age = fields.Char(String='Age')
     sex = fields.Selection([
         ('masculin', 'Masculin'),
-        ('feminin', 'Feminin')
-     ], string='Sex') 
-    experiences = fields.Text(String='Experiences', size=250)
-    number_of_years_of_experience = fields.Integer(string='Nombre d’année d’expérience') 
+        ('feminin', u'Féminin')
+     ], string='Sexe', required=True) 
+    experiences = fields.Text(String='Expériences', size=250)
+    number_of_years_of_experience = fields.Integer(string=u'Nombre d’années d’expérience') 
     
     psi_note_hr = fields.Selection([
         ('1', '1'),
@@ -74,7 +74,7 @@ class Applicant(models.Model):
     correspondance = fields.Selection([
         ('oui', 'Oui'),
         ('non', 'Non'),
-        ('disqualifie', 'Disqualifié')
+        ('disqualifie', u'Disqualifié')
     ], string='Correspondance', required=True)  
        
     @api.model

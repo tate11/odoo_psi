@@ -17,7 +17,7 @@ class hr_job(models.Model):
     
     psi_contract_duration = fields.Integer(string=u"Durée du contrat")
     psi_motif = fields.Text(string="Motif du recrutement")
-    poste_description = fields.Text(string=u"Description des objectifs reliés au travail")
+    poste_description = fields.Text(string=u"Déscription des objectifs reliés au travail")
       
     state = fields.Selection([
         ('open', '1- Demande d\'embauche'),
@@ -38,7 +38,7 @@ class hr_job(models.Model):
     experience_required_ids = fields.One2many('hr.experience.required', 'job_id', string=u'Expériences requises')
     
     nature_recrutement = fields.Selection([
-        ('conssideration_dossier', u'Reonsidération de dossier'),
+        ('conssideration_dossier', u'Reconsidération de dossier'),
         ('conssideration_dossier_by_cvtheque', u'Reconsidération de dossier par CVThèque'),
         ('interne', u'Appel à candidature interne'),
         ('externe', u'Appel à candidature externe')
