@@ -77,6 +77,12 @@
             <field name="signal">button_interview</field>
         </record>
         
+        <record id="activity_applicant_selected_to_activity_interview" model="workflow.transition">
+            <field name="act_from" ref="activity_applicant_selected"/>
+            <field name="act_to" ref="activity_interview"/>
+            <field name="signal">button_interview</field>
+        </record>
+        
         <record id="activity_interview_to_activity_professional_reference" model="workflow.transition">
             <field name="act_from" ref="activity_interview"/>
             <field name="act_to" ref="activity_professional_reference"/>
