@@ -32,7 +32,7 @@ class hr_job(models.Model):
     recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement')
     recrutement_type = fields.Selection(related='recrutement_type_id.recrutement_type', string=u'Type de recrutement sélection')
     level_of_education_id = fields.Many2one('hr.recruitment.degree', string='Niveau de formation')
-    psi_budget_code = fields.Many2one('account.analytic.account', string='Code budgetaire')
+    psi_budget_code_distribution = fields.Many2one('account.analytic.distribution', string='Code budgetaire')
     place_of_employment = fields.Char(string=u'Lieu d\'embauche')
     subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination')
     experience_required_ids = fields.One2many('hr.experience.required', 'job_id', string=u'Expériences requises')
@@ -62,16 +62,25 @@ class ExperienceRequise(models.Model):
       _name = 'hr.experience.required'
       
       name = fields.Char(string='Domaines', required=True)
-      month = fields.Integer(string='en Mois', max=99)
+      #month = fields.Selection(string='en Mois', size=12)
+      psi_month = fields.Selection([
+        ('1', '1'),
+         ('2', '2'),
+          ('3', '3'),
+           ('4', '4'),
+            ('5', '5'),
+             ('6', '6'),
+              ('7', '7'),
+               ('8', '8'),
+                ('9', '9'),
+                 ('10', '10'),
+                  ('11', '11'),
+                   ('12', '12')
+        ], string="en Mois")
       year = fields.Float(string='en Année', size=2)
       job_id = fields.Many2one('hr.job')
       
-      @api.constrains('month')
-      def _check_length_mois(self):
-          for record in self:
-              if record.month > 999:
-                  raise ValidationError(u"Le mois doit être 3 chiffres au maximum: %s" % record.month)
-              
+                  
       @api.constrains('year')
       def _check_length_year(self):
           for record in self:
