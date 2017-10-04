@@ -62,8 +62,7 @@ class ExperienceRequise(models.Model):
       _name = 'hr.experience.required'
       
       name = fields.Char(string='Domaines', required=True)
-      #month = fields.Selection(string='en Mois', size=12)
-      psi_month = fields.Selection([
+      month = fields.Selection([
         ('1', '1'),
          ('2', '2'),
           ('3', '3'),
@@ -77,7 +76,7 @@ class ExperienceRequise(models.Model):
                   ('11', '11'),
                    ('12', '12')
         ], string="en Mois")
-      year = fields.Float(string='en Année', size=2)
+      year = fields.Integer(string='en Année', size=2)
       job_id = fields.Many2one('hr.job')
       
                   

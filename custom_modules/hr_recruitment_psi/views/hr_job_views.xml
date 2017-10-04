@@ -31,7 +31,7 @@
 				<field name="experience_required_ids" colspan="2">
 					<tree string="Experience requise" editable="bottom">
 						<field name="name" />
-						<field name="psi_month" />
+						<field name="month" />
 						<field name="year" />
 					</tree>
 				</field>

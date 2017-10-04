@@ -42,9 +42,7 @@ class Applicant(models.Model):
         ('contract_established', '7- Contrat établi')
     ], string='Status', readonly=True, required=True, track_visibility='always', copy=False, default='applicant_selected', help="Set whether the recruitment process is open or closed for this job position.")
     
-    
     job_name = fields.Char(String='Job title',related='job_id.name')
-
     
     type_name = fields.Char(string='Titre du poste',related='type_id.name')
     job_description = fields.Text(string='Description', related='job_id.poste_description')
@@ -57,10 +55,21 @@ class Applicant(models.Model):
     experiences = fields.Text(String='Experiences', size=250)
     number_of_years_of_experience = fields.Integer(string='Nombre d’année d’expérience') 
     
-    psi_note_hr = fields.Integer(string="Note RH")
-    psi_note_candidate = fields.Integer(string="Note Candidature")
+    psi_note_hr = fields.Selection([
+        ('1', '1'),
+         ('2', '2'),
+          ('3', '3'),
+           ('4', '4')
+        ], string="Note RH")
     
-    psi_average_note = fields.Integer(string="Moyenne")
+    psi_note_candidate = fields.Selection([
+        ('1', '1'),
+         ('2', '2'),
+          ('3', '3'),
+           ('4', '4')
+        ], string="Note Candidat")
+    
+    psi_average_note = fields.Integer(string="Moyenne", readonly=True)
     
     correspondance = fields.Selection([
         ('oui', 'Oui'),
@@ -84,6 +93,3 @@ class Applicant(models.Model):
     def action_contract_established(self) :
         self.create_employee_from_applicant()
         self.write({ 'state': 'contract_established'})
-        
-    
-   
