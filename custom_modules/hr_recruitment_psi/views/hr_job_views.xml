@@ -9,7 +9,7 @@
 				<field name="place_of_employment" />
 				<field name="application_deadline_date" attrs="{'required': [('state', 'in', ('open'))]}"/>
 				<field name="psi_motif" attrs="{'required': [('state', 'in', ('open'))]}"/>
-				<field name="nature_recrutement" attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': ['|', ('state', 'in', ('open')), ('recrutement_type', '=', 'consultant')]}" />
+				<field name="nature_recrutement" attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': [('recrutement_type', '=', 'consultant')]}" />
 				<field name="psi_budget_code_distribution" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'required': [('state', '=', 'validation_finance')]}"/>
 				<field name="subordination_link_id" />
 				<field name="psi_contract_type" attrs="{'required': [('state', 'in', ('open'))]}" />
@@ -22,7 +22,6 @@
 		<field name="model">hr.job</field>
 		<field name="inherit_id" ref="hr.view_hr_job_form" />
 		<field name="arch" type="xml">
-
 			<field name="department_id" position="after">
 				<field name="recrutement_type_id" />
 				<field name="recrutement_type" invisible="1" />
@@ -41,6 +40,9 @@
 			<button name="set_recruit" position="replace">
 				<button name="set_recruit" invisible="1" />
 			</button>
+			<field name="message_follower_ids" position="after">
+				<field name="message_ids" widget="mail_thread"/>
+			</field>
 
 			<xpath expr="//field[@name='state']" position="replace">
 				<!-- etats pour recrutement autres que stagiaires ??? -->

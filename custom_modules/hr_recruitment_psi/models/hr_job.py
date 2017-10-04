@@ -27,7 +27,7 @@ class hr_job(models.Model):
         ('rr_validation', '5- Approbation par RR'), 
         ('refused', '6- Refusé'),
         ('recruit', '7- Appel aux candidatures')
-    ], string='Status', readonly=True, track_visibility='always', copy=False, default='open', help="Set whether the recruitment process is open or closed for this job position.")
+    ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='open', help="Set whether the recruitment process is open or closed for this job position.")
     
     recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement')
     recrutement_type = fields.Selection(related='recrutement_type_id.recrutement_type', string=u'Type de recrutement sélection')
@@ -38,8 +38,8 @@ class hr_job(models.Model):
     experience_required_ids = fields.One2many('hr.experience.required', 'job_id', string=u'Expériences requises')
     
     nature_recrutement = fields.Selection([
-        ('conssideration_dossier', u'Considération de dossier'),
-        ('conssideration_dossier_by_cvtheque', u'Considération de dossier par CVTheque'),
+        ('conssideration_dossier', u'Reonsidération de dossier'),
+        ('conssideration_dossier_by_cvtheque', u'Reconsidération de dossier par CVThèque'),
         ('interne', u'Appel à candidature interne'),
         ('externe', u'Appel à candidature externe')
         ], string="Nature de recrutement")
