@@ -2,95 +2,45 @@
 <odoo>
   <data>
     <!-- etape candidature -->  
-	<record model="hr.recruitment.stage" id="draft2">
-        <field name="name">1- Nouveau</field>
+	<record model="hr.recruitment.stage" id="applicant_selected">
+        <field name="name">Candidatures sélectionnées</field>
         <field name="sequence">1</field>
-		<field name="stage">draft2</field>
+		<field name="stage">applicant_selected</field>
     </record>  
-    <record model="hr.recruitment.stage" id="cv_received">
-        <field name="name">2- CV réceptionné</field>
+    <record model="hr.recruitment.stage" id="convoked_for_test">
+        <field name="name">1- Convoqués pour les tests</field>
         <field name="sequence">2</field>
-		<field name="stage">cv_received</field>
+		<field name="stage">convoked_for_test</field>
     </record>
-    <record model="hr.recruitment.stage" id="cv_saved">
-        <field name="name">3- CV enregistré</field>
+    <record model="hr.recruitment.stage" id="interview">
+        <field name="name">2- Entretiens</field>
         <field name="sequence">3</field>
-		<field name="stage">cv_saved</field>
+		<field name="stage">interview</field>
     </record>
-    <record model="hr.recruitment.stage" id="can_do_test">
-        <field name="name">4- Convoqué pour les tests</field>
+    <record model="hr.recruitment.stage" id="professional_reference">
+        <field name="name">3- Références proféssionnelles</field>
         <field name="sequence">4</field>
-		<field name="stage">can_do_test</field>
+		<field name="stage">professional_reference</field>
     </record>
-    <record model="hr.recruitment.stage" id="can_be_interviewed">
-        <field name="name">5- A interviewer</field>
+    <record model="hr.recruitment.stage" id="bridger_insight">
+        <field name="name">4- Bridger Insight</field>
         <field name="sequence">5</field>
-		<field name="stage">can_be_interviewed</field>
+		<field name="stage">bridger_insight</field>
     </record>
-    <record model="hr.recruitment.stage" id="first_interview">
-        <field name="name">6- Premier entretien</field>
+    <record model="hr.recruitment.stage" id="psi_wage_proposal">
+        <field name="name">5- Proposition Salariale</field>
         <field name="sequence">6</field>
-		<field name="stage">first_interview</field>
+		<field name="stage">psi_wage_proposal</field>
     </record>
-    <record model="hr.recruitment.stage" id="drh_validation">
-        <field name="name">7- Validation DRH</field>
+    <record model="hr.recruitment.stage" id="notification_of_employment">
+        <field name="name">6- Notification d'embauche</field>
         <field name="sequence">7</field>
-        <field name="stage">drh_validation</field>
+        <field name="stage">notification_of_employment</field>
     </record>
-    <record model="hr.recruitment.stage" id="drh_allocation_stage">
-        <field name="name">8- DRH Allocation de stage</field>
+    <record model="hr.recruitment.stage" id="contract_established">
+        <field name="name">7- Contrat Etabli</field>
         <field name="sequence">8</field>
-        <field name="stage">drh_allocation_stage</field>
-    </record>
-    <record model="hr.recruitment.stage" id="in_deliberation">
-        <field name="name">9- En attente de délibération</field>
-        <field name="sequence">9</field>
-        <field name="stage">in_deliberation</field>
-    </record>
-    <record model="hr.recruitment.stage" id="second_interview">
-        <field name="name">10- Deuxième entretien</field>
-        <field name="sequence">10</field>
-        <field name="stage">second_interview</field>
-    </record>
-    <record model="hr.recruitment.stage" id="bi">
-        <field name="name">11- Bridger Insight</field>
-        <field name="sequence">11</field>
-        <field name="stage">bi</field>
-    </record>
-    <record model="hr.recruitment.stage" id="verification_ref">
-        <field name="name">12- Vérification des références</field>
-        <field name="sequence">12</field>
-        <field name="stage">verification_ref</field>
-    </record>
-    <record model="hr.recruitment.stage" id="wage_proposal">
-        <field name="name">14- Salaire proposé</field>
-        <field name="sequence">14</field>
-        <field name="stage">wage_proposal</field>
-    </record>
-    <record model="hr.recruitment.stage" id="salary_validated">
-        <field name="name">15- Salaire validé</field>
-        <field name="sequence">15</field>
-        <field name="stage">salary_validated</field>
-    </record>
-    <record model="hr.recruitment.stage" id="candidat_notified">
-        <field name="name">16- Candidat notifié</field>
-        <field name="sequence">16</field>
-		<field name="stage">candidat_notified</field>
-    </record>
-    <record model="hr.recruitment.stage" id="final_decision">
-        <field name="name">17- Décision finale</field>
-        <field name="sequence">17</field>
-		<field name="stage">final_decision</field>
-    </record>
-    <record model="hr.recruitment.stage" id="contract">
-        <field name="name">18- Contrat établi</field>
-        <field name="sequence">18</field>
-		<field name="stage">contract</field>
-    </record>
-    <record model="hr.recruitment.stage" id="contract_signed">
-        <field name="name">19- Contrat signé</field>
-        <field name="sequence">19</field>
-		<field name="stage">contract_signed</field>
+        <field name="stage">contract_established</field>
     </record>
     <!-- fin etape candidature -->
     
@@ -108,7 +58,7 @@
         <field name="recrutement_type">stagiaire</field>
     </record>
     <record model="hr.recruitment.type" id="type_collaborateur_externe">
-        <field name="name">Recrutement d'un collaborateur permanent avec un Cabinet Externe</field>
+        <field name="name">Recrutement avec Cabinet de recrutement</field>
         <field name="recrutement_type">collaborateur_externe</field>
     </record>
     <!-- fin type de recrutement -->
