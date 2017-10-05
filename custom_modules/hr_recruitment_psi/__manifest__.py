@@ -13,7 +13,6 @@
              'views/hr_job_wkf.xml',
              'views/hr_recruitement_views.xml',
              'views/hr_recruitement_wkf.xml',
-             'views/template_mail_refus.xml',
              ],
     'demo': [],
     'test': [],

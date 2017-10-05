@@ -20,7 +20,7 @@
 					<field name="experiences" placeholder="Resumé de votre experience (250 mots)"></field>
 					<field name="number_of_years_of_experience"></field>
 					<field name="correspondance"></field>
-					<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}"></field>
+					<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}" />
 					<field name="psi_note_candidate"></field>
 					<field name="nature_recrutement_id" invisible="1" />
 				</field>
@@ -40,31 +40,21 @@
 					<button name="button_professional_reference" string="Références professionnelles"
 						attrs="{'invisible': [('state','!=','interview')]}" />
 					<button name="button_mail_refuse" string="Refuser" type="object"
-						attrs="{'invisible': [('state','!=','interview')]}" />												
+						attrs="{'invisible': [('state','not in',('interview', 'professional_reference', 'bridger_insight', 'psi_wage_proposal'))]}" />	
 					<button name="button_bridger_insight" string="Brider Insight"
-						attrs="{'invisible': [('state','!=','professional_reference')]}" />
-					<button name="button_mail_refuse" string="Refuser" type="object" 
 						attrs="{'invisible': [('state','!=','professional_reference')]}" />
 					<button name="button_psi_wage_proposal" string="Proposition salariale"
 						attrs="{'invisible': ['|',('state','!=','bridger_insight'),('recrutement_type', '=', 'consultant')]}" />
-					<button name="button_mail_refuse" string="Refuser" type="object"
-						attrs="{'invisible': ['|',('state','!=','bridger_insight'),('recrutement_type', '=', 'consultant')]}" />											
 					<button name="button_psi_honorary_proposal" string="Proposition honoraire"
 						attrs="{'invisible': ['|',('state','!=','bridger_insight'),('recrutement_type', '!=', 'consultant')]}" />
-					<button name="button_mail_refuse" string="Refuser" type="object"
-						attrs="{'invisible': ['|',('state','!=','bridger_insight'),('recrutement_type', '!=', 'consultant')]}" />										
 					<button name="button_notification_of_employment" string="Notification d'embauche" 
 						attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '=', 'consultant')]}"/>					
-					<button name="button_mail_refuse" string="Refuser" type="object"
-					<button name="button_notification_of_employment" string="Notification d'embauche" attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '=', 'consultant')]}"
-						 />
-					
-					<button name="button_contract_established_consultant" string="Etablir contrat" attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '!=', 'consultant')]}"
-						attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '!=', 'consultant')]}"/>					
+					<button name="button_notification_of_employment" string="Notification d'embauche" 
+						attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '=', 'consultant')]}" />
+					<button name="button_contract_established_consultant" string="Etablir contrat" 
+						attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '!=', 'consultant')]}" />					
 					<button name="button_contract_established" string="Etablir contrat"
 						attrs="{'invisible': [('state','!=','notification_of_employment')]}" />						
-					<button name="button_mail_refuse" string="Refuser" type="object"
-						attrs="{'invisible': [('state','!=','notification_of_employment')]}" />
 				</field>
 				<field name="stage_id" position="replace">
 					<field name="state" widget="statusbar" 
