@@ -63,13 +63,6 @@ class Applicant(models.Model):
         ], string="Note RH")
     
     psi_note_candidate = fields.Selection([
-        ('1', '1'),
-         ('2', '2'),
-          ('3', '3'),
-           ('4', '4')
-        ], string="Note Candidat")
-    
-    psi_average_note = fields.Integer(string="Moyenne", readonly=True)
     
     correspondance = fields.Selection([
         ('oui', 'Oui'),
@@ -93,3 +86,10 @@ class Applicant(models.Model):
     def action_contract_established(self) :
         self.create_employee_from_applicant()
         self.write({ 'state': 'contract_established'})
+       
+    @api.multi
+    def button_mail_refuse(self):
+        template = self.env.ref('hr_recruitment_psi.example_email_template')
+        self.env['mail.template'].browse(template.id).send_mail(self.id)
+        self.write({'state':'applicant_selected'})
+        
