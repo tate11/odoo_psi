@@ -100,6 +100,17 @@
             <field name="act_to" ref="activity_open"/>
             <field name="signal">button_relance</field>
         </record>
+        <record id="activity_validation_finance_to_activity_rr_validation" model="workflow.transition">
+        	<field name="act_from" ref="activity_tdr_redaction"/>
+        	<field name="act_to" ref="activity_recruit" />
+        	<field name="signal">button_accepter_consideration_dossier</field>
+        </record>
+        
+        <record id="activity_open_to_activity_recruit" model="workflow.transition">
+        	<field name="act_from" ref="activity_open"/>
+        	<field name="act_to" ref="activity_recruit" />
+        	<field name="signal">button_interne</field>
+        </record>
     
     </data>
 </odoo>
