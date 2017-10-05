@@ -73,7 +73,7 @@
 					string="Appel au candidatures" class="oe_highlight" attrs="{'invisible': ['|',('nature_recrutement','!=','interne'), ('state', '!=', 'open')]}"/>
 			</xpath>
 			<xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_accepter_consideration_dossier"  string="Accepter"  attrs="{'invisible': ['|',('state','!=','tdr_redaction'),('nature_recrutement','!=','conssideration_dossier')]}"
+				<button name="button_accepter_consideration_dossier"  string="Appel aux candidatures"  attrs="{'invisible': ['|',('state','!=','tdr_redaction'),('nature_recrutement','!=','conssideration_dossier')]}"
 					class="oe_highlight" />
 			</xpath>
 			<xpath expr="//button[@name='set_open']" position="after">

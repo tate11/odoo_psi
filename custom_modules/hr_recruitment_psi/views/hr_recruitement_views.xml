@@ -135,10 +135,11 @@
 	        <field name="model">hr.applicant</field>
 	        <field name="arch" type="xml">	
 				<search string="Recherche">
+					<field name="job_id" string="Job concerné" />
 					<group expand="0" string="Group By...">
 						   <filter string="Long listing" icon="terp-personal+" domain="[]"/>
 	                       <filter string="Short listing" icon="terp-personal+" domain="[('correspondance','=','oui')]" />
-	                       <filter string="Liste Restreint" icon="terp-personal+" domain="[('psi_average_note','>=',2)]" />
+	                       <filter string="Liste Restreinte" icon="terp-personal+" domain="[('psi_average_note','>=',2)]" />
 	                </group>
 				</search>
 	       </field>
