@@ -48,7 +48,7 @@ class Applicant(models.Model):
     job_description = fields.Text(string='Description', related='job_id.poste_description')
     
     age = fields.Char(String='Age')
-    sex = fields.Selection([
+    sexe = fields.Selection([
         ('masculin', 'Masculin'),
         ('feminin', u'Féminin')
      ], string='Sexe', required=True) 

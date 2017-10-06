@@ -12,7 +12,7 @@
 			<field name="arch" type="xml">
 				<field name="partner_id" position="before">
 					<field name="age" />
-					<field name="sex" />
+					<field name="sexe" />
 					<field name="recrutement_type_id" />
 					<field name="recrutement_type" invisible="1" />
 				</field>
