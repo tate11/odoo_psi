@@ -31,6 +31,7 @@ class hr_job(models.Model):
     
     recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement')
     recrutement_type = fields.Selection(related='recrutement_type_id.recrutement_type', string=u'Type de recrutement sélection')
+    tdr_file = fields.Binary(string='TDR')
     level_of_education_id = fields.Many2one('hr.recruitment.degree', string='Niveau de formation')
     psi_budget_code_distribution = fields.Many2one('account.analytic.distribution', string='Code budgetaire')
     place_of_employment = fields.Char(string=u'Lieu d\'embauche')
