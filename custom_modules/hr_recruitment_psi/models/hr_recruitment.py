@@ -55,26 +55,28 @@ class Applicant(models.Model):
     experiences = fields.Text(String='Expériences', size=250)
     number_of_years_of_experience = fields.Integer(string=u'Nombre d’années d’expérience') 
     
-    #panel
-    #short listing - panel
-    #short test - panel
-    #short entretien - panel
-    
+    #Note ShortList
     psi_note_hr = fields.Selection([
         ('1', '1'),
          ('2', '2'),
           ('3', '3'),
            ('4', '4')
         ], string="Note RH")
-    
     psi_note_candidate = fields.Selection([
         ('1', '1'),
          ('2', '2'),
           ('3', '3'),
            ('4', '4')
         ], string="Note Demandeur")
-    
     psi_average_note = fields.Integer(string="Moyenne", readonly=True)
+    
+    #Note test
+    psi_note_test_rh = fields.Integer(string="Note Test RH")
+    psi_note_test_candidate = fields.Integer(string="Note Test Demandeur")
+    psi_average_note_test = fields.Integer(string="Moyenne", readonly=True)
+    
+    #Note Entretien
+    psi_note_interview = fields.Integer(string="Note Entretien")
     
     correspondance_profil = fields.Selection([
         ('oui', 'Oui'),
