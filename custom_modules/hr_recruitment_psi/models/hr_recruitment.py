@@ -77,6 +77,55 @@ class Applicant(models.Model):
         ('disqualifie', u'Disqualifié')
     ], string='Correspondance', required=True)  
        
+    psi_salary_type = fields.Selection([
+        ('net', 'Net'),
+        ('brut', 'Brut')
+    ], string='Type de salaire')
+    
+    psi_salary_negotiable = fields.Selection([
+        ('negotiable', 'Négociale'),
+        ('not_negotiable', 'Non négociable')
+    ], string='Salaire Négociable')
+    
+    psi_maiden_name = fields.Char(string="Nom de jeune fille s'il y a lieu")
+    
+    country_id = fields.Many2one('res.country', string='Nationality (Country)')
+    
+    marital = fields.Selection([
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('widower', 'Widower'),
+        ('divorced', 'Divorced')
+    ], string='Marital Status')
+    
+    number_of_dependent_children = fields.Integer(string="Nombre d'enfant à charge (moins de 21 ans)")
+    
+    parents_employed_in_psi = fields.Boolean(string='Avez-vous des parents employés au sein de PSI Madagascar ?')
+    
+    parent_information_employees = fields.One2many('hr.recruitement.parent.information', 'id', string=u'Dans l\'affirmatif, donnez les renseignements suivants')
+    
+    already_answered_application = fields.Boolean(string="Avez-vous déjà répondu à un appel à candidature de PSI ?")
+    
+    description_already_answered_application = fields.One2many('hr.already_answered_application', 'id',"Dans l'affirmatif, à quel moment ? Pour quel poste et à quelle période ?")
+    
+    linguistic_knowledge = fields.One2many('hr.recruitment.linguistic.knowledge', 'id',string="Connaissance linguistique")
+    
+    book_publish = fields.Text(string="Indiquez les ouvrages importants que vous avez publiés (thèses, essai, etc...)")
+    
+    university_studies = fields.One2many('hr.recruitment.university.study','id',string='')
+    
+    secondary_studies = fields.One2many('hr.recruitment.university.study','id',string='')
+    
+    current_employer_report = fields.Boolean(string='Accepteriez-vous que nous mettions en rapport avec votre employeur actuel ?')
+    
+    professional_references = fields.One2many('hr.recruitment.professional.reference','id',string='')
+     
+    bridger_insight = fields.Boolean(string="")
+    
+    affirmative_bridger_insight = fields.Text(string="Dans l'affirmative, faites un résumé du (des) cas")
+    
+    previous_functions = fields.One2many('hr.recruitment.previous.functions','id', string='')
+    
     @api.model
     def create(self, vals):
         res = super(Applicant, self).create(vals)
@@ -100,3 +149,82 @@ class Applicant(models.Model):
         #self.env['mail.template'].browse(template.id).send_mail(self.id)
         self.write({'state':'applicant_selected'})
     
+class ParentInformationEmployed(models.Model):
+      _name = 'hr.recruitement.parent.employed.information'
+      
+      name                      = fields.Char(string='NOM ET PRENOM', required=True)
+      degree_of_relationship    = fields.Selection([
+        ('enfant', 'Enfant'),
+        ('famille', 'Famille'),
+        ('conjoint', 'Conjoint')
+       ], string='DEGRE DE PARENTE')
+      post_office_title         = fields.Char(string="POSTE/TITRE/BUREAU")
+      
+class AlreadyAnsweredApplicant(models.Model):
+     _name = 'hr.recruitment.already.answered.applicant'
+     
+     name           = fields.Char(string='POSTE')
+     period         = fields.Date(string='PERIODE')
+     
+class LinguisticKnowledge(models.Model):
+    _name = 'hr.recruitment.linguistic.knowledge'
+    
+    name        = fields.Char(string="CONNAISSANCE LINGUISTIQUE")
+    written     = fields.Selection([
+        ('basic', 'Basique'),
+        ('intermediate', 'Intermédiaire'),
+        ('good', 'Bon'),
+        ('excellent', 'Excellent'),
+        ('Current', 'Courant')
+       ], string='Ecrit')
+    spoken      = fields.Selection([
+        ('basic', 'Basique'),
+        ('intermediate', 'Intermédiaire'),
+        ('good', 'Bon'),
+        ('excellent', 'Excellent'),
+        ('Current', 'Courant')
+       ], string='Ecrit')
+    listen      = fields.Selection([
+        ('basic', 'Basique'),
+        ('intermediate', 'Intermédiaire'),
+        ('good', 'Bon'),
+        ('excellent', 'Excellent'),
+        ('Current', 'Courant')
+       ], string='Ecrit') 
+    
+class UniversityStudy(models.Model):
+    _name = "hr.recruitment.university.study"
+    
+    name            = fields.Char(string="Nom de l'établissement")
+    city            = fields.Char(string='Ville')
+    country_id      = fields.Many2one('res.country', string='Nationality (Country)')
+    from_date       = fields.Date(string="Debut")
+    end_date        = fields.Date(string="Fin")
+    degree          = fields.Char(string="Diplômes/certificats obtenus")
+    study_domain    = fields.Char(string="Principal domaine d'étude") 
+   
+class ProfessionalReference(models.Model):
+    _name = "hr.recruitment.professional.reference"
+    
+    name            = fields.Char(string="NOM ET PRENOM")
+    function_title  = fields.Char(string="TITRE ET FONCTION")
+    company         = fields.Char(string="SOCIETES")
+    mobile_phone    = fields.Char('Work Mobile')
+    work_email      = fields.Char('Work Email')
+   
+class PreviousFunctions(models.Model):
+    _name = "hr.recruitment.previous.functions"
+    
+    begin_date              = fields.Date()
+    end_date                = fields.Date()
+    last_basic_salary       = fields.Float(string="Dernier salaire de base")
+    title_function          = fields.Char(string="Titre et fonction")
+    employer                = fields.Char(string="Employeur")
+    type_of_activity        = fields.Char(string="Type d'activité")
+    address                 = fields.Char(string="Adresse")
+    name_of_supervisor      = fields.Char(string="Nom du supérieur hiérarchique")
+    number_of_supervised    = fields.Char(string="Nombre de supervisé")
+    reason_for_leaving      = fields.Char(string="Motif de votre départ")
+    mobile_phone            = fields.Char('Work Mobile')
+    work_email              = fields.Char('Work Email')
+    description             = fields.Text(string="BREVE DESCRIPTIONS DES TACHES ET RESPONSABILITES")

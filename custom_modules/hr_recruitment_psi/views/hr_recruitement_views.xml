@@ -13,16 +13,26 @@
 				<field name="partner_id" position="before">
 					<field name="age" />
 					<field name="sex" />
+					<field name="country_id" />
+					<field name="marital" />
+					<field name="number_of_dependent_children" />
+					<field name="parents_employed_in_psi" />
+					<field name="parent_information_employees" attrs="{'invisible': [('parents_employed_in_psi', '=', False)]}" />
 					<field name="recrutement_type_id" />
 					<field name="recrutement_type" invisible="1" />
 				</field>
 				<field name="type_id" position="after">
 					<field name="experiences" placeholder="Resumé de votre experience (250 mots)"></field>
-					<field name="number_of_years_of_experience"></field>
+					<field name="number_of_years_of_experience" invisible="1"></field>
 					<field name="correspondance"></field>
 					<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}" />
 					<field name="psi_note_candidate"></field>
 					<field name="nature_recrutement_id" invisible="1" />
+				</field>
+				
+				<field name="salary_expected" position="after">
+					<field name="psi_salary_type"/>
+					<field name="psi_salary_negotiable" />
 				</field>
 				<button name="create_employee_from_applicant" position="replace">
 					<button string="Create Employee" name="create_employee_from_applicant"

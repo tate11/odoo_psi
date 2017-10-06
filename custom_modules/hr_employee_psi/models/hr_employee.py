@@ -37,7 +37,7 @@ class PersonInformation(models.Model):
     _inherit      = 'hr.person'
     _name         = 'hr.person.information'
     
-    address       = fields.Char(string='Adresse',required=True)
+    address       = fields.Char(string='Adresse')
     contact       = fields.Integer(string='Contact')
     
     relation      = fields.Selection([
