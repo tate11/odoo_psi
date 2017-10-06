@@ -48,12 +48,17 @@ class Applicant(models.Model):
     job_description = fields.Text(string='Description', related='job_id.poste_description')
     
     age = fields.Char(String='Age')
-    sex = fields.Selection([
+    sexe = fields.Selection([
         ('masculin', 'Masculin'),
         ('feminin', u'Féminin')
      ], string='Sexe', required=True) 
     experiences = fields.Text(String='Expériences', size=250)
     number_of_years_of_experience = fields.Integer(string=u'Nombre d’années d’expérience') 
+    
+    #panel
+    #short listing - panel
+    #short test - panel
+    #short entretien - panel
     
     psi_note_hr = fields.Selection([
         ('1', '1'),
@@ -67,15 +72,15 @@ class Applicant(models.Model):
          ('2', '2'),
           ('3', '3'),
            ('4', '4')
-        ], string="Note Candidat")
+        ], string="Note Demandeur")
     
     psi_average_note = fields.Integer(string="Moyenne", readonly=True)
     
-    correspondance = fields.Selection([
+    correspondance_profil = fields.Selection([
         ('oui', 'Oui'),
         ('non', 'Non'),
         ('disqualifie', u'Disqualifié')
-    ], string='Correspondance', required=True)  
+    ], string='Profil', required=True)  
        
     psi_salary_type = fields.Selection([
         ('net', 'Net'),
@@ -144,10 +149,10 @@ class Applicant(models.Model):
         self.write({ 'state': 'contract_established'})
        
     @api.multi
-    def button_mail_refuse(self):
-        #template = self.env.ref('hr_recruitment_psi.example_email_template')
-        #self.env['mail.template'].browse(template.id).send_mail(self.id)
+    def mail_refuse_applicant(self):
+        template = self.env.ref('hr_recruitment_psi.template_mail_refuse')
         self.write({'state':'applicant_selected'})
+
     
 class ParentInformationEmployed(models.Model):
       _name = 'hr.recruitement.parent.employed.information'
@@ -228,3 +233,4 @@ class PreviousFunctions(models.Model):
     mobile_phone            = fields.Char('Work Mobile')
     work_email              = fields.Char('Work Email')
     description             = fields.Text(string="BREVE DESCRIPTIONS DES TACHES ET RESPONSABILITES")
+

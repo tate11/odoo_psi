@@ -2,6 +2,7 @@
 
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
+from pychart.arrow import default
 
 class hr_job(models.Model):
     
@@ -21,16 +22,17 @@ class hr_job(models.Model):
       
     state = fields.Selection([
         ('open', '1- Demande d\'embauche'),
-        ('tdr_redaction', '2- Rédaction TDR'),
-        ('validation_finance','3- Validation Finance'),
-        ('analyse', '4- Analyse de la demande'),
-        ('rr_validation', '5- Approbation par RR'), 
-        ('refused', '6- Refusé'),
-        ('recruit', '7- Appel aux candidatures')
+        #('tdr_redaction', '2- Rédaction TDR'),
+        ('validation_finance','2- Validation Finance'),
+        ('analyse', '3- Analyse de la demande'),
+        ('rr_validation', '4- Approbation par RR'), 
+        ('refused', '5- Refusé'),
+        ('recruit', '6- Appel aux candidatures')
     ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='open', help="Set whether the recruitment process is open or closed for this job position.")
     
-    recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement')
+    recrutement_type_id = fields.Many2one('hr.recruitment.type', string='Type de recrutement', required=True)
     recrutement_type = fields.Selection(related='recrutement_type_id.recrutement_type', string=u'Type de recrutement sélection')
+    tdr_file = fields.Binary(string=u'Termes de Références (TDR)', required=True)
     level_of_education_id = fields.Many2one('hr.recruitment.degree', string='Niveau de formation')
     psi_budget_code_distribution = fields.Many2one('account.analytic.distribution', string='Code budgetaire')
     place_of_employment = fields.Char(string=u'Lieu d\'embauche')
@@ -45,6 +47,7 @@ class hr_job(models.Model):
         ], string="Nature de recrutement")
     
     application_deadline_date = fields.Date(string=u"Délai de candidature")
+    rr_approbation = fields.Boolean("Approbation par RR", default=True)
     
     @api.one
     @api.constrains('psi_contract_duration')
@@ -52,6 +55,14 @@ class hr_job(models.Model):
         for record in self:
             if record.psi_contract_type == 'cdd' and record.psi_contract_duration == 0:
                 raise ValidationError(u"La durée de contrat ne doit pas être 0")
+    
+    @api.multi
+    def set_to_open(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state': 'open'})
+        wf_service = netsvc.LocalService("workflow")
+        for id in ids:
+            wf_service.trg_create(uid, 'hr.job', id, cr)
+            return True
     
 class SubordinationLink(models.Model):
      _name = 'hr.subordination.link'
