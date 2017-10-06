@@ -19,7 +19,7 @@
 				<field name="type_id" position="after">
 					<field name="experiences" placeholder="Resumé de votre experience (250 mots)"></field>
 					<field name="number_of_years_of_experience"></field>
-					<field name="correspondance"></field>
+					<field name="correspondance_profil"></field>
 					<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}" />
 					<field name="psi_note_candidate"></field>
 					<field name="nature_recrutement_id" invisible="1" />
@@ -136,9 +136,10 @@
 	        <field name="arch" type="xml">	
 				<search string="Recherche">
 					<field name="job_id" string="Job concerné" />
+					<field name="partner_name" string="Nom du candidat" />
 					<group expand="0" string="Group By...">
 						   <filter string="Long listing" icon="terp-personal+" domain="[]"/>
-	                       <filter string="Short listing" icon="terp-personal+" domain="[('correspondance','=','oui')]" />
+	                       <filter string="Short listing" icon="terp-personal+" domain="[('correspondance_profil','=','oui')]" />
 	                       <filter string="Liste Restreinte" icon="terp-personal+" domain="[('psi_average_note','>=',2)]" />
 	                </group>
 				</search>
