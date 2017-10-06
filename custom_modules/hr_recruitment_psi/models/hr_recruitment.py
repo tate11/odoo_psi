@@ -95,8 +95,8 @@ class Applicant(models.Model):
         self.write({ 'state': 'contract_established'})
        
     @api.multi
-    def button_mail_refuse(self):
-        #template = self.env.ref('hr_recruitment_psi.example_email_template')
-        #self.env['mail.template'].browse(template.id).send_mail(self.id)
+    def mail_refuse_applicant(self):
+        template = self.env.ref('hr_recruitment_psi.template_mail_refuse')
         self.write({'state':'applicant_selected'})
-    
+
+

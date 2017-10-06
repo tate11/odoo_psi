@@ -30,7 +30,7 @@
 						attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"
 						invisible="1" />
 				</button>
-				<field name="stage_id" position="before">				
+				<field name="stage_id" position="before">					
 					<button name="button_convoked_for_test" string="Convoqué pour les tests"
 						attrs="{'invisible': ['|',('state','!=','applicant_selected'),('nature_recrutement_id', '=', 'conssideration_dossier')]}" />
 					<button name="button_interview" string="Entretiens"
@@ -39,8 +39,6 @@
 						attrs="{'invisible': ['|',('state','!=','applicant_selected'),('nature_recrutement_id', '!=', 'conssideration_dossier')]}" />
 					<button name="button_professional_reference" string="Références professionnelles"
 						attrs="{'invisible': [('state','!=','interview')]}" />
-					<button name="button_mail_refuse" string="Refuser" type="object"
-						attrs="{'invisible': [('state','not in',('interview', 'professional_reference', 'bridger_insight', 'psi_wage_proposal'))]}" />	
 					<button name="button_bridger_insight" string="Brider Insight"
 						attrs="{'invisible': [('state','!=','professional_reference')]}" />
 					<button name="button_psi_wage_proposal" string="Proposition salariale"
@@ -52,7 +50,9 @@
 					<button name="button_notification_of_employment" string="Notification d'embauche" 
 						attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '=', 'consultant')]}" />
 					<button name="button_contract_established_consultant" string="Etablir contrat" 
-						attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '!=', 'consultant')]}" />					
+						attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '!=', 'consultant')]}" />							
+					<button string="Refuse" name="mail_refuse_applicant" type="object" 
+					 	attrs="{'invisible': [('state','not in',('interview', 'professional_reference', 'bridger_insight', 'psi_wage_proposal'))]}"/>					 			
 					<button name="button_contract_established" string="Etablir contrat"
 						attrs="{'invisible': [('state','!=','notification_of_employment')]}" />						
 				</field>
