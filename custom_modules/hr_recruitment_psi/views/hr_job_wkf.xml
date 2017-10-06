@@ -87,6 +87,11 @@
             <field name="act_to" ref="activity_recruit"/>
             <field name="signal">button_accepter</field>
         </record>
+        <record id="activity_analyse_to_activity_recruit" model="workflow.transition">
+            <field name="act_from" ref="activity_analyse"/>
+            <field name="act_to" ref="activity_recruit"/>
+            <field name="signal">button_accepter</field>
+        </record>
      
         <!-- transition pour relancer le workflow depuis le debut -->
         <record id="activity_recruit_to_activity_open" model="workflow.transition">

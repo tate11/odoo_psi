@@ -14,6 +14,7 @@
 				<field name="subordination_link_id" />
 				<field name="psi_contract_type" attrs="{'required': [('state', 'in', ('open'))]}" />
 				<field name="psi_contract_duration" attrs="{'invisible': ['|',('psi_contract_type','=','cdi'),('psi_contract_type','=','prestataire')], 'required': [('psi_contract_type', '=', 'cdd')]}" />
+				<field name="rr_approbation" />
 			</field>
 		</field>
 	</record>
@@ -25,7 +26,6 @@
 			<field name="department_id" position="after">
 				<field name="recrutement_type_id" />
 				<field name="recrutement_type" invisible="1" />
-				
 				<field name="level_of_education_id" />
 				<field name="experience_required_ids" colspan="2">
 					<tree string="Experience requise" editable="bottom">
@@ -34,7 +34,6 @@
 						<field name="year" />
 					</tree>
 				</field>
-				
 				<field name="poste_description" />
 			</field>
 			<button name="set_recruit" position="replace">
@@ -58,32 +57,27 @@
 				<button name="button_refuser" states="analyse,rr_validation"
 					string="Refuser" attrs="{'invisible': [('state','!=','analyse')]}" />
 			</xpath>
+			
 			<xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_rr_validation" string="Analyse Faite"
-					class="oe_highlight"
-					attrs="{'invisible': [('state','!=','analyse')]}" />
+				<button name="button_rr_validation" string="Analyse Faite" class="oe_highlight"
+					attrs="{'invisible': ['|', ('rr_approbation', '=', False), ('state','!=','analyse')]}" />
 			</xpath>
 			<xpath expr="//button[@name='set_open']" position="after">
 				<button name="button_reopen" string="Refaire la demande" class="oe_highlight" 
 					attrs="{'invisible': [('state', '!=', 'refused')]}"/>
 			</xpath>
 			
-			<!-- <xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_interne" 
-					string="Appel au candidatures" class="oe_highlight" attrs="{'invisible': ['|',('nature_recrutement','!=','interne'), ('state', '!=', 'open')]}"/>
-			</xpath> -->
-			<!-- <xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_accepter_consideration_dossier"  string="Appel aux candidatures"  attrs="{'invisible': ['|',('state','!=','tdr_redaction'),('nature_recrutement','!=','conssideration_dossier')]}"
-					class="oe_highlight" />
-			</xpath> -->
 			<xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_accepter" string="Approuver" state="analyse" attrs="{'invisible': [('state','!=','rr_validation')]}"
+				<button name="button_accepter" string="Approuver" state="analyse" 
+					attrs="{'invisible': ['|', '&amp;', ('rr_approbation', '=', True), ('state', '!=', 'rr_validation'), '&amp;', ('rr_approbation', '=', False), ('state','!=', 'analyse')]}"
 					class="oe_highlight" />
 			</xpath>
+			
 			<xpath expr="//button[@name='set_open']" position="after">
 				<button name="button_analyse" string="Validation faite" attrs="{'invisible': [('state','!=','validation_finance')]}"
 					class="oe_highlight" />
 			</xpath>
+			
 			<xpath expr="//button[@name='set_open']" position="after">
 				<button name="button_validation_finance" string="Passer à Validation Finance"
 					class="oe_highlight" attrs="{'invisible': [('state','!=','open')]}"  />

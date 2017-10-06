@@ -2,6 +2,7 @@
 
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
+from pychart.arrow import default
 
 class hr_job(models.Model):
     
@@ -46,6 +47,7 @@ class hr_job(models.Model):
         ], string="Nature de recrutement")
     
     application_deadline_date = fields.Date(string=u"Délai de candidature")
+    rr_approbation = fields.Boolean("Approbation par RR", default=True)
     
     @api.one
     @api.constrains('psi_contract_duration')
