@@ -54,7 +54,7 @@ class Applicant(models.Model):
      ], string='Sexe', required=True) 
     experiences = fields.Text(String='Expériences', size=250)
     number_of_years_of_experience = fields.Integer(string=u'Nombre d’années d’expérience') 
-    
+    birthday = fields.Date('Date of Birth')
     #panel
     #short listing - panel
     #short test - panel
@@ -111,7 +111,7 @@ class Applicant(models.Model):
     
     already_answered_application = fields.Boolean(string="Avez-vous déjà répondu à un appel à candidature de PSI ?")
     
-    description_already_answered_application = fields.One2many('hr.already_answered_application', 'id',"Dans l'affirmatif, à quel moment ? Pour quel poste et à quelle période ?")
+    description_already_answered_application = fields.One2many('hr.recruitment.already.answered.applicant', 'id',"Dans l'affirmatif, à quel moment ? Pour quel poste et à quelle période ?")
     
     linguistic_knowledge = fields.One2many('hr.recruitment.linguistic.knowledge', 'id',string="Connaissance linguistique")
     
@@ -127,7 +127,7 @@ class Applicant(models.Model):
      
     bridger_insight = fields.Boolean(string="")
     
-    affirmative_bridger_insight = fields.Text(string="Dans l'affirmative, faites un résumé du (des) cas")
+    affirmative_bridger_insight = fields.Text(string="Dans l'affirmative, faites une résumé du (des) cas")
     
     previous_functions = fields.One2many('hr.recruitment.previous.functions','id', string='')
     
@@ -155,7 +155,7 @@ class Applicant(models.Model):
 
     
 class ParentInformationEmployed(models.Model):
-      _name = 'hr.recruitement.parent.employed.information'
+      _name = 'hr.recruitement.parent.information'
       
       name                      = fields.Char(string='NOM ET PRENOM', required=True)
       degree_of_relationship    = fields.Selection([
@@ -174,7 +174,12 @@ class AlreadyAnsweredApplicant(models.Model):
 class LinguisticKnowledge(models.Model):
     _name = 'hr.recruitment.linguistic.knowledge'
     
-    name        = fields.Char(string="CONNAISSANCE LINGUISTIQUE")
+    name       = fields.Selection([
+        ('langue_maternelle', 'Langue maternelle'),
+        ('malagasy', 'Malagasy'),
+        ('french', 'Français'),
+        ('english', 'Anglais')
+       ], string='CONNAISSANCE LINGUISTIQUE')
     written     = fields.Selection([
         ('basic', 'Basique'),
         ('intermediate', 'Intermédiaire'),
