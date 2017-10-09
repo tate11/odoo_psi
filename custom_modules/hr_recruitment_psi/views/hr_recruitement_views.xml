@@ -21,12 +21,16 @@
 				<field name="partner_mobile" position="before">
 					<field name="marital" />
 					<field name="number_of_dependent_children" />
+
 				</field>
 				<field name="source_id" position="after">
 					<field name="correspondance_profil" />
 					<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}" />
 					<field name="psi_note_candidate" />
 				</field>
+
+					<field name="parents_employed_in_psi" />
+					<!-- <field name="parent_information_employees" attrs="{'invisible': [('parents_employed_in_psi', '=', False)]}" /> -->
 
 				<field name="type_id" position="replace">
 					<field name="type_id" invisible="1" />
@@ -176,6 +180,33 @@
 				<field name="availability" position="after">
 					<field name="psi_salary_type" />
 					<field name="psi_salary_negotiable" />
+				</field>
+				<field name="description" position="after">
+					<separator string="Avis sur la candidature"/>
+					<div class="oe_title">
+						<h2 class="o_row">
+							<div>
+								<label for="correspondance_profil" />
+								<field name="correspondance_profil" />
+							</div>
+							<div>
+								<label for="psi_note_interview"  />
+								<field name="psi_note_interview" />
+							</div>
+						</h2>
+					</div>
+					<group>
+						<group string="Note Shortlist">
+							<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}"/>
+							<field name="psi_note_candidate" attrs="{'required': [('state','in',('interview'))]}"/>
+							<field name="psi_average_note" />
+						</group>
+						<group string="Note Test">
+							<field name="psi_note_test_rh"/>
+							<field name="psi_note_test_candidate" />
+							<field name="psi_average_note_test" />
+						</group>
+					</group>
 				</field>
 				<button name="create_employee_from_applicant" position="replace">
 					<button string="Create Employee" name="create_employee_from_applicant"
