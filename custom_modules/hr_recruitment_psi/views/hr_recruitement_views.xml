@@ -20,15 +20,6 @@
 					<field name="recrutement_type_id" />
 					<field name="recrutement_type" invisible="1" />
 				</field>
-				<!-- <field name="partner_mobile" position="before">
-					<field name="marital" />
-					<field name="number_of_dependent_children" />
-<<<<<<< Upstream, based on branch 'issuesPostes' of https://github.com/lrakotoarimino/odoo_psi.git
-				</field>
-=======
-
-				</field> -->
->>>>>>> 6e22d7c FIX: merge note/ formulaire
 				<field name="source_id" position="after">
 					<group string="Avis sur la candidature">
 						<field name="correspondance_profil" />
