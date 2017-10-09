@@ -62,26 +62,26 @@ class Applicant(models.Model):
     
     #Note ShortList
     psi_note_hr = fields.Selection([
-        ('1', '1'),
-         ('2', '2'),
-          ('3', '3'),
-           ('4', '4')
+        (1, '1'),
+         (2, '2'),
+          (3, '3'),
+           (4, '4')
         ], string="Note RH")
     psi_note_candidate = fields.Selection([
-        ('1', '1'),
-         ('2', '2'),
-          ('3', '3'),
-           ('4', '4')
+        (1, '1'),
+         (2, '2'),
+          (3, '3'),
+           (4, '4')
         ], string="Note Demandeur")
-    psi_average_note = fields.Integer(string="Moyenne", readonly=True)
+    psi_average_note = fields.Float(string="Moyenne Short List", readonly=True)
     
     #Note test
     psi_note_test_rh = fields.Integer(string="Note Test RH")
     psi_note_test_candidate = fields.Integer(string="Note Test Demandeur")
-    psi_average_note_test = fields.Integer(string="Moyenne", readonly=True)
+    psi_average_note_test = fields.Float(string="Moyenne Test", readonly=True)
     
     #Note Entretien
-    psi_note_interview = fields.Integer(string="Note Entretien")
+    psi_note_interview = fields.Float(string="Note Entretien")
     
     correspondance_profil = fields.Selection([
         ('oui', 'Oui'),

@@ -21,7 +21,6 @@
 				<field name="partner_mobile" position="before">
 					<field name="marital" />
 					<field name="number_of_dependent_children" />
-
 				</field>
 				<field name="source_id" position="after">
 					<field name="correspondance_profil" />
@@ -168,6 +167,156 @@
 				</field>
 				
 				<field name="type_id" position="after">
+					<field name="experiences" placeholder="Resumé de votre experience (250 mots)"
+						invisible="1" />
+					<field name="number_of_years_of_experience" invisible="1" />
+
+				</field>
+				<field name="source_id" position="after">
+					<field name="correspondance_profil" />
+					<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}" />
+					<field name="psi_note_candidate" />
+				</field>
+
+					<field name="parents_employed_in_psi" />
+					<!-- <field name="parent_information_employees" attrs="{'invisible': [('parents_employed_in_psi', '=', False)]}" /> -->
+
+				<field name="type_id" position="replace">
+					<field name="type_id" invisible="1" />
+				</field>
+				<field name="user_id" position="replace">
+					<field name="user_id" invisible="1" />
+				</field>
+				<field name="reference" position="replace">
+					<field name="reference" invisible="1" />
+				</field>
+
+				<field name="medium_id" position="replace">
+					<field name="medium_id" invisible="1" />
+				</field>
+				<field name="source_id" position="replace">
+					<field name="source_id" invisible="1" />
+				</field>
+				<field name="priority" position="replace">
+					<field name="priority" invisible="1" />
+				</field>
+				<field name="description" position="before">
+					<div>
+						<label for="parents_employed_in_psi" />
+						<field name="parents_employed_in_psi" />
+					</div>
+					<p attrs="{'invisible': [('parents_employed_in_psi', '=', False)]}">Dans l'affirmatif, donnez les renseignements suivants:
+					</p>
+					<field name="parent_information_employees" colspan="2"
+						attrs="{'invisible': [('parents_employed_in_psi', '=', False)]}">
+						<tree string="Experience requise" editable="bottom">
+							<field name="name" />
+							<field name="degree_of_relationship" />
+							<field name="post_office_title" />
+						</tree>
+					</field>
+					<div>
+						<label for="already_answered_application" />
+						<field name="already_answered_application" />
+					</div>
+					<p attrs="{'invisible': [('already_answered_application', '=', False)]}">
+						Dans l'affirmatif, à quel moment ? Pour quel poste et à
+						quelle période ?:
+					</p>
+					<field name="description_already_answered_application"
+						attrs="{'invisible': [('already_answered_application', '=', False)]}">
+						<tree string="" editable="bottom">
+							<field name="name" />
+							<field name="period" />
+						</tree>
+					</field>
+					<field name="linguistic_knowledge">
+						<tree string="" editable="bottom">
+							<field name="name" />
+							<field name="written" />
+							<field name="spoken" />
+							<field name="listen" />
+						</tree>
+					</field>
+					<h1>ETUDES</h1>
+					<p>Veuillez donner l'intitulé exact de chaque diplôme ou titre
+						universitaire dans la langue dans laquelle il a été établi, et non
+						une traduction ou un équivalent.</p>
+					<h1>A. Etudes Universitaires</h1>
+					<field name="university_studies">
+						<tree string="" editable="bottom">
+							<field name="name" />
+							<field name="city" />
+							<field name="country_id" />
+							<field name="from_date" />
+							<field name="end_date" />
+							<field name="degree" />
+							<field name="study_domain" />
+						</tree>
+					</field>
+					<h1>B. Etudes secondaires, techniques ou apprentissage</h1>
+					<field name="secondary_studies">
+						<tree string="" editable="bottom">
+							<field name="name" />
+							<field name="city" />
+							<field name="country_id" />
+							<field name="from_date" />
+							<field name="end_date" />
+							<field name="degree" />
+							<field name="study_domain" />
+						</tree>
+					</field>
+					<h1>FONCTIONS ANTERIEURES :</h1>
+					<p>En partant de votre poste actuel, indiquez, dans l'ordre
+						chronologique inverse, tous les postes que vous avez occupés</p>
+					<field name="previous_functions">
+						<tree colspan="2">
+							<field name="begin_date" />
+							<field name="end_date" />
+							<field name="last_basic_salary" />
+							<field name="title_function" />
+							<field name="employer" />	
+							<field name="type_of_activity" />	
+							<field name="address" />
+							<field name="name_of_supervisor" />
+							<field name="number_of_supervised" />
+							<field name="reason_for_leaving" />
+							<field name="mobile_phone" />
+							<field name="work_email" />
+							<field name="description" />
+						</tree>
+					</field>
+					<label for="current_employer_report" />
+					<field name="current_employer_report" />
+					<h1 attrs="{'invisible': [('current_employer_report', '=', False)]}">REFERENCES PROFESSIONNELLES</h1>
+					<p>
+						Donnez le nom et l'adresse des trois personnes avec qui vous
+						avez travaillé étroitement, n'ayant avec vous aucun lien de parenté
+						et connaissant votre moralité et vos valeurs professionnelles
+					</p>
+					<field name="professional_references"
+						attrs="{'invisible': [('current_employer_report', '=', False)]}">
+						<tree string="" editable="bottom">
+							<field name="name" />
+							<field name="function_title" />
+							<field name="company" />
+							<field name="mobile_phone" />
+							<field name="work_email" />
+						</tree>
+					</field>
+					<b attrs="{'invisible': [('current_employer_report', '=', False)]}">
+						Par la présente, j'autorise PSI Madagascar à prendre contact avec le personnes
+						de références citées ci-dessus.
+					</b>
+					<p>
+					  Avez-vous jamais été arrête, inculpé ou poursuivi au criminel ? Avez-vous jamais été reconnu coupable ou condamné à une autre amende ou une peine de prison pour un délit (autre qu'une infraction en matiére de circulation) ?
+					</p>
+					<field name="bridger_insight"></field><br />
+					<label for="affirmative_bridger_insight"></label>
+					<field name="affirmative_bridger_insight"></field>
+				</field>
+
+				<field name="type_id" position="after">
 				
 					<field name="experiences" placeholder="Resumé de votre experience (250 mots)"
 						invisible="1" />
@@ -254,6 +403,46 @@
 				</button>
 			</field>
 		</record>
+
+		<record model="ir.ui.view" id="crm_case_tree_view_job2">
+	        <field name="name">Applicants</field>
+	        <field name="model">hr.applicant</field>
+	        <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job" />
+	        <field name="arch" type="xml">
+					<field name="medium_id" position="replace">
+						<field name="medium_id" invisible="1" />
+					</field>
+					<field name="source_id" position="replace">
+						<field name="source_id" invisible="1"/>
+					</field>	
+					<field name="priority" position="replace">
+						<field name="priority" invisible="1" />
+					</field>	
+					<field name="stage_id" position="after">
+						<field name="psi_average_note"/>
+						<field name="psi_average_note_test"/>
+						<field name="psi_note_interview"/>
+					</field>
+					
+	                <!-- <field name="message_needaction" invisible="1"/>
+	                <field name="last_stage_id" invisible="1"/>
+	                <field name="job_id"/>
+	                <field name="date_last_stage_update" invisible="1"/>
+	                <field name="partner_name"/>
+	                <field name="email_from"/>
+	                <field name="partner_phone"/>
+	                <field name="stage_id"/>
+	                <field name="title_action" invisible="context.get('invisible_next_action', True)"/>
+	                <field name="date_action" invisible="context.get('invisible_next_date', True)"/>
+	                <field name="psi_average_note"/>
+	                <field name="psi_average_note_test"/>
+	                <field name="psi_note_interview"/>
+	                <field name="type_id" invisible="1"/>
+	                <field name="availability" invisible="1"/>
+	                <field name="department_id" invisible="context.get('invisible_department', True)"/>
+	                <field name="user_id"/> -->
+	        </field>
+	    </record>
 
 		<record model="ir.ui.view" id="hr_recruitment_stage_form1">
 			<field name="name">hr.recruitment.stage.form1</field>
