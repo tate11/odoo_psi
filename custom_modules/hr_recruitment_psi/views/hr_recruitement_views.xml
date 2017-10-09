@@ -15,21 +15,36 @@
 					<field name="age" />
 					<field name="country_id" />
 					<field name="sexe" />
+					<field name="marital" />
+					<field name="number_of_dependent_children" />
 					<field name="recrutement_type_id" />
 					<field name="recrutement_type" invisible="1" />
 				</field>
-				<field name="partner_mobile" position="before">
+				<!-- <field name="partner_mobile" position="before">
 					<field name="marital" />
 					<field name="number_of_dependent_children" />
+<<<<<<< Upstream, based on branch 'issuesPostes' of https://github.com/lrakotoarimino/odoo_psi.git
 				</field>
-				<field name="source_id" position="after">
-					<field name="correspondance_profil" />
-					<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}" />
-					<field name="psi_note_candidate" />
-				</field>
+=======
 
-					<field name="parents_employed_in_psi" />
-					<!-- <field name="parent_information_employees" attrs="{'invisible': [('parents_employed_in_psi', '=', False)]}" /> -->
+				</field> -->
+>>>>>>> 6e22d7c FIX: merge note/ formulaire
+				<field name="source_id" position="after">
+					<group string="Avis sur la candidature">
+						<field name="correspondance_profil" />
+						<field name="psi_note_interview" />
+					</group>
+					<group string="Note Shortlist">
+						<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}"/>
+						<field name="psi_note_candidate" attrs="{'required': [('state','in',('interview'))]}"/>
+						<field name="psi_average_note" />
+					</group>
+					<group string="Note Test">
+						<field name="psi_note_test_rh"/>
+						<field name="psi_note_test_candidate" />
+						<field name="psi_average_note_test" />
+					</group>
+				</field>
 
 				<field name="type_id" position="replace">
 					<field name="type_id" invisible="1" />
@@ -40,7 +55,6 @@
 				<field name="reference" position="replace">
 					<field name="reference" invisible="1" />
 				</field>
-
 				<field name="medium_id" position="replace">
 					<field name="medium_id" invisible="1" />
 				</field>
@@ -88,11 +102,11 @@
 							<field name="listen" />
 						</tree>
 					</field>
-					<h1>ETUDES</h1>
+					<h2>ETUDES</h2>
 					<p>Veuillez donner l'intitulé exact de chaque diplôme ou titre
 						universitaire dans la langue dans laquelle il a été établi, et non
 						une traduction ou un équivalent.</p>
-					<h1>A. Etudes Universitaires</h1>
+					<h2>A. Etudes Universitaires</h2>
 					<field name="university_studies">
 						<tree string="" editable="bottom">
 							<field name="name" />
@@ -104,7 +118,7 @@
 							<field name="study_domain" />
 						</tree>
 					</field>
-					<h1>B. Etudes secondaires, techniques ou apprentissage</h1>
+					<h2>B. Etudes secondaires, techniques ou apprentissage</h2>
 					<field name="secondary_studies">
 						<tree string="" editable="bottom">
 							<field name="name" />
@@ -116,7 +130,7 @@
 							<field name="study_domain" />
 						</tree>
 					</field>
-					<h1>FONCTIONS ANTERIEURES :</h1>
+					<h2>FONCTIONS ANTERIEURES :</h2>
 					<p>En partant de votre poste actuel, indiquez, dans l'ordre
 						chronologique inverse, tous les postes que vous avez occupés</p>
 					<field name="previous_functions">
@@ -134,18 +148,18 @@
 							<field name="mobile_phone" />
 							<field name="work_email" />
 							<field name="description" />
+							<field name="psi_applicant_id" invisible="1"/>
 						</tree>
 					</field>
 					<label for="current_employer_report" />
 					<field name="current_employer_report" />
-					<h1 attrs="{'invisible': [('current_employer_report', '=', False)]}">REFERENCES PROFESSIONNELLES</h1>
+					<h2>REFERENCES PROFESSIONNELLES</h2>
 					<p>
 						Donnez le nom et l'adresse des trois personnes avec qui vous
 						avez travaillé étroitement, n'ayant avec vous aucun lien de parenté
 						et connaissant votre moralité et vos valeurs professionnelles
 					</p>
-					<field name="professional_references"
-						attrs="{'invisible': [('current_employer_report', '=', False)]}">
+					<field name="professional_references">
 						<tree string="" editable="bottom">
 							<field name="name" />
 							<field name="function_title" />
@@ -159,7 +173,7 @@
 						de références citées ci-dessus.
 					</b>
 					<p>
-					  Avez-vous jamais été arrête, inculpé ou poursuivi au criminel ? Avez-vous jamais été reconnu coupable ou condamné à une autre amende ou une peine de prison pour un délit (autre qu'une infraction en matiére de circulation) ?
+					  Avez-vous jamais été arrêté, inculpé ou poursuivi au criminel ? Avez-vous jamais été reconnu coupable ou condamné à une autre amende ou une peine de prison pour un délit (autre qu'une infraction en matiére de circulation) ?
 					</p>
 					<field name="bridger_insight"></field><br />
 					<label for="affirmative_bridger_insight"></label>
@@ -330,33 +344,7 @@
 					<field name="psi_salary_type" />
 					<field name="psi_salary_negotiable" />
 				</field>
-				<field name="description" position="after">
-					<separator string="Avis sur la candidature"/>
-					<div class="oe_title">
-						<h2 class="o_row">
-							<div>
-								<label for="correspondance_profil" />
-								<field name="correspondance_profil" />
-							</div>
-							<div>
-								<label for="psi_note_interview"  />
-								<field name="psi_note_interview" />
-							</div>
-						</h2>
-					</div>
-					<group>
-						<group string="Note Shortlist">
-							<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}"/>
-							<field name="psi_note_candidate" attrs="{'required': [('state','in',('interview'))]}"/>
-							<field name="psi_average_note" />
-						</group>
-						<group string="Note Test">
-							<field name="psi_note_test_rh"/>
-							<field name="psi_note_test_candidate" />
-							<field name="psi_average_note_test" />
-						</group>
-					</group>
-				</field>
+				
 				<button name="create_employee_from_applicant" position="replace">
 					<button string="Create Employee" name="create_employee_from_applicant"
 						type="object" class="oe_highlight"
@@ -409,38 +397,29 @@
 	        <field name="model">hr.applicant</field>
 	        <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job" />
 	        <field name="arch" type="xml">
-					<field name="medium_id" position="replace">
-						<field name="medium_id" invisible="1" />
-					</field>
-					<field name="source_id" position="replace">
-						<field name="source_id" invisible="1"/>
-					</field>	
-					<field name="priority" position="replace">
-						<field name="priority" invisible="1" />
-					</field>	
-					<field name="stage_id" position="after">
-						<field name="psi_average_note"/>
-						<field name="psi_average_note_test"/>
-						<field name="psi_note_interview"/>
-					</field>
-					
-	                <!-- <field name="message_needaction" invisible="1"/>
-	                <field name="last_stage_id" invisible="1"/>
-	                <field name="job_id"/>
-	                <field name="date_last_stage_update" invisible="1"/>
-	                <field name="partner_name"/>
-	                <field name="email_from"/>
-	                <field name="partner_phone"/>
-	                <field name="stage_id"/>
-	                <field name="title_action" invisible="context.get('invisible_next_action', True)"/>
-	                <field name="date_action" invisible="context.get('invisible_next_date', True)"/>
-	                <field name="psi_average_note"/>
-	                <field name="psi_average_note_test"/>
-	                <field name="psi_note_interview"/>
-	                <field name="type_id" invisible="1"/>
-	                <field name="availability" invisible="1"/>
-	                <field name="department_id" invisible="context.get('invisible_department', True)"/>
-	                <field name="user_id"/> -->
+	        	<field name="partner_name" position="after">
+	        		<field name="age" />
+	        	</field>
+	        	<field name="job_id" position="after">
+	        		<field name="application_deadline_date" />
+	        		<field name="university_studies_degree" />
+	        	</field>
+				
+				<field name="medium_id" position="replace">
+					<field name="medium_id" invisible="1" />
+				</field>
+				<field name="source_id" position="replace">
+					<field name="source_id" invisible="1"/>
+				</field>	
+				<field name="priority" position="replace">
+					<field name="priority" invisible="1" />
+				</field>	
+				
+				<field name="stage_id" position="after">
+					<field name="psi_average_note"/>
+					<field name="psi_average_note_test"/>
+					<field name="psi_note_interview"/>
+				</field>
 	        </field>
 	    </record>
 
