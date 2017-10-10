@@ -158,7 +158,7 @@ class Applicant(models.Model):
         template = self.env.ref('hr_recruitment_psi.custom_template_refus')
         self.write({'state':'applicant_selected'})
 
-     @api.multi
+    @api.multi
     def button_notification_of_employment(self):
         '''
         This function opens a window to compose an email
