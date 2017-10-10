@@ -16,6 +16,8 @@ class hr_job(models.Model):
         ('prestataire',u'Préstataire')
     ], string='Type de contrat', help="Type de contrat")
     
+    website_published = fields.Boolean(default=False)
+    
     psi_contract_duration = fields.Integer(string=u"Durée du contrat")
     psi_motif = fields.Text(string="Motif du recrutement")
     poste_description = fields.Text(string=u"Déscription des objectifs reliés au travail")

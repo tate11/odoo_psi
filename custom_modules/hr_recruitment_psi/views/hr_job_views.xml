@@ -142,7 +142,7 @@
 	                    type="object"
 	                    icon="fa-globe"
 	                    attrs="{'invisible': [('state','!=','recruit')]}">
-	                    <!-- <field name="website_published" widget="website_button"/> -->
+	                    <field name="website_published" widget="website_button"/>
 	                </button>
 	            </div>
             </xpath>            
