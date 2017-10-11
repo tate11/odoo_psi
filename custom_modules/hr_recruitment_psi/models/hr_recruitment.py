@@ -2,6 +2,7 @@
 
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
+from operator import truediv
 
 class RecruitmentType(models.Model):
     _name = 'hr.recruitment.type'
@@ -136,6 +137,8 @@ class Applicant(models.Model):
     
     previous_functions = fields.One2many('hr.recruitment.previous.functions','psi_applicant_id', string='')
     
+    b_liste_restreinte = fields.Boolean(string='', default=False)
+    
     @api.model
     def create(self, vals):
         res = super(Applicant, self).create(vals)
@@ -144,8 +147,10 @@ class Applicant(models.Model):
     
     @api.multi
     def write(self, vals):
-        if vals.has_key('psi_note_hr') and vals.has_key('psi_note_candidate') : 
-            vals['psi_average_note'] = ((vals['psi_note_hr'] + vals['psi_note_candidate']) / 2) 
+        data = self.browse(self.id)
+        vals['psi_note_hr'] = vals['psi_note_hr'] if vals.has_key('psi_note_hr') else data.psi_note_hr
+        vals['psi_note_candidate'] = vals['psi_note_candidate'] if vals.has_key('psi_note_candidate') else data.psi_note_candidate
+        vals['psi_average_note'] = truediv((vals['psi_note_hr'] + vals['psi_note_candidate']), 2)
         res = super(Applicant, self).write(vals)       
         return res
     

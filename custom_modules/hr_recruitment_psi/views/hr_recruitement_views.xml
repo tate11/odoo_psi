@@ -339,7 +339,7 @@
 						<filter string="Short listing" icon="terp-personal+"
 							domain="[('correspondance_profil','=','oui')]" />
 						<filter string="Liste Restreinte" icon="terp-personal+"
-							domain="[('psi_average_note','&gt;=',2)]" />
+							domain="[('psi_average_note','&gt;=',2), ('correspondance_profil','=','oui')]" />
 					</group>
 				</search>
 			</field>
