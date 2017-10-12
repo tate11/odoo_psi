@@ -27,6 +27,9 @@ class Applicant(models.Model):
     _inherit = "hr.applicant"
     _name = "hr.applicant"
     
+    def _default_stage_id(self):
+        return self.env.ref('hr_recruitment_psi.applicant_selected').id
+    
     recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement', readonly=True)
     recrutement_type = fields.Selection(related='job_id.recrutement_type_id.recrutement_type',string='Type de recrutement selection')
     
@@ -42,7 +45,9 @@ class Applicant(models.Model):
         ('notification_of_employment', '6- Notification d\'embauche'),
         ('contract_established', u'7- Contrat établi')
     ], string='Status', readonly=True, required=True, track_visibility='onchange', copy=False, default='applicant_selected', help="Set whether the recruitment process is open or closed for this job position.")
-    
+     
+
+   
     job_name = fields.Char(String='Job title',related='job_id.name')
     
     type_name = fields.Char(string='Titre du poste',related='type_id.name')
@@ -112,8 +117,8 @@ class Applicant(models.Model):
     
     parents_employed_in_psi = fields.Boolean(string='Avez-vous des parents employés au sein de PSI Madagascar ?')
     
-    parent_information_employees = fields.One2many('hr.recruitement.parent.information', 'psi_applicant_id', string=u'Dans l\'affirmatif, donnez les renseignements suivants')
-    
+    parent_information_employees = fields.Many2many('hr.recruitement.parent.information', 'psi_applicant_id', string=u'Dans l\'affirmatif, donnez les renseignements suivants')
+     
     already_answered_application = fields.Boolean(string="Avez-vous déjà répondu à un appel à candidature de PSI ?")
     
     description_already_answered_application = fields.One2many('hr.recruitment.already.answered.applicant', 'psi_applicant_id',"Dans l'affirmatif, à quel moment ? Pour quel poste et à quelle période ?")
