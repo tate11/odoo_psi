@@ -39,6 +39,9 @@
 			<button name="set_recruit" position="replace">
 				<button name="set_recruit" invisible="1" />
 			</button>
+			<button name="set_open" position="replace">
+				<button name="set_open" invisible="1" />
+			</button>
 			<field name="message_follower_ids" position="after">
 				<field name="message_ids" widget="mail_thread"/>
 			</field>
@@ -65,6 +68,10 @@
 			<xpath expr="//button[@name='set_open']" position="after">
 				<button name="button_reopen" string="Refaire la demande" class="oe_highlight" 
 					attrs="{'invisible': [('state', '!=', 'refused')]}"/>
+			</xpath>
+			<xpath expr="//button[@name='set_open']" position="after">
+				<button name="button_relance" string="Relancer la demande" class="oe_highlight" 
+					attrs="{'invisible': [('state', '!=', 'recruit')]}"/>
 			</xpath>
 			
 			<xpath expr="//button[@name='set_open']" position="after">
