@@ -24,6 +24,7 @@
 					<group string="Avis sur la candidature">
 						<field name="correspondance_profil" />
 						<field name="psi_note_interview" />
+						<field name="b_liste_restreinte" />
 					</group>
 					<group string="Note Shortlist">
 						<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}"/>
@@ -217,7 +218,7 @@
 					<button name="button_contract_established_consultant"
 						string="Etablir contrat"
 						attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '!=', 'consultant')]}" />
-					<button string="Refuse" name="mail_refuse_applicant" type="object"
+					<button string="Refuser" name="mail_refuse_applicant" type="object"
 						attrs="{'invisible': [('state','not in',('interview', 'professional_reference', 'bridger_insight', 'psi_wage_proposal'))]}" />
 					<button name="button_contract_established" string="Etablir contrat"
 						attrs="{'invisible': [('state','!=','notification_of_employment')]}" />
@@ -337,13 +338,43 @@
 					<group expand="0" string="Group By...">
 						<filter string="Long listing" icon="terp-personal+" domain="[]" />
 						<filter string="Short listing" icon="terp-personal+"
-							domain="[('correspondance_profil','=','oui')]" />
+							domain="[('correspondance_profil','=','oui'), ('b_liste_restreinte','=',False)]" />
 						<filter string="Liste Restreinte" icon="terp-personal+"
-							domain="[('psi_average_note','&gt;=',2), ('correspondance_profil','=','oui')]" />
+							domain="[('b_liste_restreinte','=',True)]" />
 					</group>
 				</search>
 			</field>
 		</record>
+        
+        <record id="hr_applicant_liste_restreinte_add_action" model="ir.actions.server">
+            <field name="name">Ajouter a la liste restreinte</field>
+            <field name="model_id" ref="model_hr_applicant" />
+            <field name="state">code</field>
+            <field name="code">record.set_to_liste_restreinte(True)</field>
+        </record>
+        <record id="hr_applicant_liste_restreinte_remove_action" model="ir.actions.server">
+            <field name="name">Enlever de la liste restreinte</field>
+            <field name="model_id" ref="model_hr_applicant" />
+            <field name="state">code</field>
+            <field name="code">record.set_to_liste_restreinte(False)</field>
+        </record>
+        
+        <record id="hr_applicant_liste_restreinte_action_multi" model="ir.values">
+	        <field name="model_id" ref="model_hr_applicant" />
+	        <field name="name">add liste restreinte</field>
+	        <field name="key2">client_action_multi</field>
+	        <field name="key">action</field>
+	        <field name="model">hr.applicant</field>
+	        <field name="value" eval="'ir.actions.server,' + str(ref('hr_applicant_liste_restreinte_add_action'))" />
+	    </record>
+	    <record id="hr_applicant_liste_restreinte_remove_multi" model="ir.values">
+	        <field name="model_id" ref="model_hr_applicant" />
+	        <field name="name">remove liste restreinte</field>
+	        <field name="key2">client_action_multi</field>
+	        <field name="key">action</field>
+	        <field name="model">hr.applicant</field>
+	        <field name="value" eval="'ir.actions.server,' + str(ref('hr_applicant_liste_restreinte_remove_action'))" />
+	    </record>
 
 	</data>
 </odoo>

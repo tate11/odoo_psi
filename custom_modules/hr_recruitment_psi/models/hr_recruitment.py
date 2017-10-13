@@ -137,7 +137,7 @@ class Applicant(models.Model):
     
     previous_functions = fields.One2many('hr.recruitment.previous.functions','psi_applicant_id', string='')
     
-    b_liste_restreinte = fields.Boolean(string='', default=False)
+    b_liste_restreinte = fields.Boolean(string='Dans la liste restreinte', default=False)
     
     @api.model
     def create(self, vals):
@@ -198,8 +198,12 @@ class Applicant(models.Model):
             'target': 'new',
             'context': ctx,
         }
-
     
+    @api.multi
+    def set_to_liste_restreinte(self, val):
+        for obj in self:
+            obj.b_liste_restreinte = val
+
 class ParentInformationEmployed(models.Model):
       _name = 'hr.recruitement.parent.information'
       
