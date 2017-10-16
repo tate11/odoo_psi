@@ -215,7 +215,8 @@ class Applicant(models.Model):
     @api.depends('birthday')
     def _calcul_age(self):
         for record in self:
-            record.age = datetime.today().year - datetime.strptime(record.birthday, "%Y-%m-%d").year
+            if record.birthday:
+                record.age = datetime.today().year - datetime.strptime(record.birthday, "%Y-%m-%d").year
 
 class ParentInformationEmployed(models.Model):
       _name = 'hr.recruitement.parent.information'
