@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+		<!-- Email template  -->
+		<record id="hr_recruitment_psi.custom_template_refus" model="mail.template">
+			<field name="name">Email Refuse</field>
+			<field name="model_id" ref="hr_recruitment_psi.model_hr_applicant" />
+			<field name="email_from">${object.company_id and object.company_id.email or ''}</field>
+			<field name="subject">Mail de refus de ${object.name}</field>
+			<!--  <field name="email_to"> ${object.user_id.email} </field> -->
+			<field name="email_to">${object.email_from}</field>
+			<!--  <field name="email_cc"> ${object.user_id.parent_id.email} </field> -->
+			<!--  <field name="reply_to"> preferred Reply address</field> -->		
+			<field name="body_html"><![CDATA[
+                  
+                  
+               <p>  ${object.company_id.name} </p>
+<br\>
+<p>Prénom, NOM</p>
+<p>Adresse</p>
+<p>Tananarive 101</p>
+<p>+XXX XX XXX XX</p>
+<p>${object.company_id.mail}</p>
+<br\><br\>
+<p>Nom et Prénom de ${object.name}</p>
+<p>Adresse du Destinataire</p>
+<p>Code Postal - Ville</p>
+<br\>
+<p>(ville à préciser), le (date à préciser)</p>
+<br\>
+<p>Objet : réponse à votre candidature au poste de ${object.job_id.name}</p>
+<br\>
+<p>Monsieur (Madame),</p>
+<br\>
+<p>Nous avons bien reçu votre candidature relative à un poste de ** ${object.job_id.name} **  et nous vous remercions de l'intérêt que vous portez à notre société.</p> 
+
+<p>Cependant, malgré l'intérêt que suscite votre candidature, nous sommes au regret de ne pas pouvoir répondre favorablement à votre demande, ne disposant pas dans l'immédiat, de poste correspondant à votre profil.</p> 
+
+<p>Nous nous permettons toutefois, sauf avis contraire de votre part, de conserver votre curriculum vitae, afin de pouvoir vous contacter si un poste susceptible de vous intéresser venait à se présenter.</p> 
+
+<p>Nous vous souhaitons une pleine réussite dans votre recherche. Nous vous prions d'agréer, Monsieur (Madame), l'expression de nos sentiments respectueux.</p>
+                  
+                  ]]>
+			</field>
+		</record>
+		
+        <!-- Email template notification employment -->
+        <record id="hr_recruitment_psi.email_template_notification_employment" model="mail.template">
+            <field name="name">Notification d'embauche</field>
+			<field name="email_from">${object.company_id and object.company_id.email or ''}</field>
+			<field name="subject">Lettre d’embauche</field>
+			<field name="email_to">${object.email_from}</field>			
+            <field name="model_id" ref="hr_recruitment_psi.model_hr_applicant"/>
+            <field name="auto_delete" eval="True"/>            
+            <field name="body_html"><![CDATA[
+
+			<p>PSI Madagascar</p>
+			<p>Adresse xxxx-xx-xxx</p>
+			<br\>
+			
+			<p>Objet : Lettre d'embauche</p>
+			
+			<h5>Information à remplir (modele de confirmation d'embauche</h5>
+			<ul>
+				<li>Nom et prénoms : ${object.name}</li>
+				<li>Nouveau poste : ${object.job_id.name}</li>
+				<li>Date de prise de fonction : </li>
+				<li>Type de contrat : ${object.job_id.psi_contract_type}</li>
+				<li>Durée si CDD : ${object.job_id.psi_contract_duration}</li>
+				<li>Catégorie professionnelle : </li>
+				<li>Echelon : </li>
+				<li>Salaire brut : ${object.salary_proposed}</li>
+				<li>Lieu de travail : ${object.job_id.address_id}</li>				
+			</ul>
+			
+			]]></field>
+        </record>
+        
+    </data>
+</odoo>

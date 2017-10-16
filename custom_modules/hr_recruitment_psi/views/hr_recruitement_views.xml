@@ -1,119 +1,380 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <data>
-    <record id="grp_recruitement" model="res.groups">
-          <field name="name">Recrutement</field>
-    </record>
-    
-    <record id="crm_case_form_view_job_inherit1" model="ir.ui.view">
-      <field name="name">Ajout des boutons du workflow</field>
-      <field name="model">hr.applicant</field>
-      <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job" />
-      <field name="arch" type="xml">
-	        <field name="partner_id" position="before">
-	      	    <field name="stage" invisible="1"/>
-	      	    <field name="recrutement_type_id" />
-	      	    <field name="recrutement_type" invisible="1" />
-	      	</field>
-	      	<button name="create_employee_from_applicant" position="replace">
-		      	<button 
-		      	    string="Create Employee" 
-		      	    name="create_employee_from_applicant" 
-		      	    type="object" class="oe_highlight" 
-		      	    attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"
-		      	    invisible="1"/>
-	      	</button>
-	        <field name="stage_id" position="before">
-	        	<button name ="cv_received" string="Recevoir le CV" attrs="{'invisible': [('stage','!=','draft2')]}"/>
-	        	<button name ="cv_saved" string="Enregistrer le CV" attrs="{'invisible': [('stage','!=','cv_received')]}"/>
-	        	
-	        	<!-- Recrutement consultant et stagiaire -->
-	        	<button name ="can_be_interviewed_consultant" string="Mettre à interviewer" attrs="{'invisible': ['|',('stage','!=','cv_saved'),('recrutement_type','not in',('consultant', 'stagiaire'))]}"/>
-	        	
-	        	<!-- Recrutement stagiaire -->
-	        	<button name ="drh_validation" string="Validation DRH" attrs="{'invisible': ['|',('stage','!=','first_interview'),('recrutement_type','!=','stagiaire')]}"/>
-	        	<button name ="drh_allocation_stage" string="DRH Allocation de stage" attrs="{'invisible': ['|',('stage','!=','first_interview'),('recrutement_type','!=','stagiaire')]}"/>
-	        	
-	        	<button name ="can_do_test" string="Faire les tests" attrs="{'invisible': ['|',('stage','!=','cv_saved'),('recrutement_type','!=','collaborateur')]}"/>
-	        	<button name ="can_be_interviewed" string="Mettre à interviewer" attrs="{'invisible': [('stage','!=','can_do_test')]}"/>
-	        	<button name ="first_interview" string="Passer le premier entretien" attrs="{'invisible': [('stage','!=','can_be_interviewed')]}"/>
-	        	<button name ="in_deliberation" string="Passer à la délibération" attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','not in',('first_interview','final_decision'))]}"/>
-	        	<button name ="second_interview" string="Passer le second entretien" attrs="{'invisible': [('stage','!=','in_deliberation')]}"/>
-	        	<button name ="bi" string="Bridger Insight" attrs="{'invisible': [('stage','not in',('in_deliberation','second_interview', 'drh_validation'))]}"/>
-	        	<button name ="final_decision" string="Passer à la décision finale" attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','not in',('bi','verification_ref','candidat_notified'))]}"/>
-	        	<button name ="verification_ref" string="Vérifier les références de la candidature" attrs="{'invisible': [('stage','!=','bi')]}"/>
-	        	<button name ="wage_proposal" string="Proposer un salaire" attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','!=','verification_ref')]}"/>
-	        	<button name ="salary_validated" string="Valider salaire" attrs="{'invisible': [('stage','!=','wage_proposal')]}"/>
-	        	<button name ="candidat_notified" string="Notifier le candidat" attrs="{'invisible': ['|',('recrutement_type','!=','stagiaire'),('stage','not in',('verification_ref'))]}"/>
-	        	<button name ="candidat_notified" string="Notifier le candidat" attrs="{'invisible': ['|',('recrutement_type','=','stagiaire'),('stage','not in',('salary_validated'))]}"/>
-	        	<button name ="contract" string="Etablir le contrat" attrs="{'invisible': [('stage','not in',('final_decision','drh_allocation_stage','candidat_notified'))]}"/>
-	        	<button name ="contract_signed" string="Signer le contrat" attrs="{'invisible': [('stage','!=','contract')]}"/>
+	<data>
+		<record id="grp_recruitement" model="res.groups">
+			<field name="name">Recrutement</field>
+		</record>
+
+		<record id="crm_case_form_view_job_inherit1" model="ir.ui.view">
+			<field name="name">Ajout des boutons du workflow</field>
+			<field name="model">hr.applicant</field>
+			<field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job" />
+			<field name="arch" type="xml">
+				<field name="partner_id" position="before">
+					<field name="birthday" />
+					<field name="age" />
+					<field name="country_id" />
+					<field name="sexe" />
+					<field name="marital" />
+					<field name="number_of_dependent_children" />
+					<field name="recrutement_type_id" />
+					<field name="recrutement_type" invisible="1" />
+				</field>
+				<field name="source_id" position="after">
+					<group string="Avis sur la candidature">
+						<field name="correspondance_profil" />
+						<field name="psi_note_interview" />
+						<field name="b_liste_restreinte" />
+					</group>
+					<group string="Note Shortlist">
+						<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}"/>
+						<field name="psi_note_candidate" attrs="{'required': [('state','in',('interview'))]}"/>
+						<field name="psi_average_note" />
+					</group>
+					<group string="Note Test">
+						<field name="psi_note_test_rh"/>
+						<field name="psi_note_test_candidate" />
+						<field name="psi_average_note_test" />
+					</group>
+				</field>
+
+				<field name="type_id" position="replace">
+					<field name="type_id" invisible="1" />
+				</field>
+				<field name="user_id" position="replace">
+					<field name="user_id" invisible="1" />
+				</field>
+				<field name="reference" position="replace">
+					<field name="reference" invisible="1" />
+				</field>
+				<field name="medium_id" position="replace">
+					<field name="medium_id" invisible="1" />
+				</field>
+				<field name="source_id" position="replace">
+					<field name="source_id" invisible="1" />
+				</field>
+				<field name="priority" position="replace">
+					<field name="priority" invisible="1" />
+				</field>
+				<field name="description" position="before">
+					<div>
+						<label for="parents_employed_in_psi" />
+						<field name="parents_employed_in_psi" />
+					</div>
+					<p attrs="{'invisible': [('parents_employed_in_psi', '=', False)]}">Dans l'affirmatif, donnez les renseignements suivants:
+					</p>
+					<field name="parent_information_employees" colspan="2"
+						attrs="{'invisible': [('parents_employed_in_psi', '=', False)]}">
+						<tree string="Experience requise" editable="bottom">
+							<field name="name" />
+							<field name="degree_of_relationship" />
+							<field name="post_office_title" />
+						</tree>
+					</field>
+					<div>
+						<label for="already_answered_application" />
+						<field name="already_answered_application" />
+					</div>
+					<p attrs="{'invisible': [('already_answered_application', '=', False)]}">
+						Dans l'affirmatif, à quel moment ? Pour quel poste et à
+						quelle période ?:
+					</p>
+					<field name="description_already_answered_application"
+						attrs="{'invisible': [('already_answered_application', '=', False)]}">
+						<tree string="" editable="bottom">
+							<field name="name" />
+							<field name="period" />
+						</tree>
+					</field>
+					<field name="linguistic_knowledge">
+						<tree string="" editable="bottom">
+							<field name="name" />
+							<field name="written" />
+							<field name="spoken" />
+							<field name="listen" />
+						</tree>
+					</field>
+					<h2>ETUDES</h2>
+					<p>Veuillez donner l'intitulé exact de chaque diplôme ou titre
+						universitaire dans la langue dans laquelle il a été établi, et non
+						une traduction ou un équivalent.</p>
+					<h2>A. Etudes Universitaires</h2>
+					<field name="university_studies">
+						<tree string="" editable="bottom">
+							<field name="name" />
+							<field name="city" />
+							<field name="country_id" />
+							<field name="from_date" />
+							<field name="end_date" />
+							<field name="degree" />
+							<field name="study_domain" />
+						</tree>
+					</field>
+					<h2>B. Etudes secondaires, techniques ou apprentissage</h2>
+					<field name="secondary_studies">
+						<tree string="" editable="bottom">
+							<field name="name" />
+							<field name="city" />
+							<field name="country_id" />
+							<field name="from_date" />
+							<field name="end_date" />
+							<field name="degree" />
+							<field name="study_domain" />
+						</tree>
+					</field>
+					<h2>FONCTIONS ANTERIEURES :</h2>
+					<p>En partant de votre poste actuel, indiquez, dans l'ordre
+						chronologique inverse, tous les postes que vous avez occupés</p>
+					<field name="previous_functions">
+						<tree colspan="2">
+							<field name="begin_date" />
+							<field name="end_date" />
+							<field name="last_basic_salary" />
+							<field name="title_function" />
+							<field name="employer" />	
+							<field name="type_of_activity" />	
+							<field name="address" />
+							<field name="name_of_supervisor" />
+							<field name="number_of_supervised" />
+							<field name="reason_for_leaving" />
+							<field name="mobile_phone" />
+							<field name="work_email" />
+							<field name="description" />
+							<field name="psi_applicant_id" invisible="1"/>
+						</tree>
+					</field>
+					<label for="current_employer_report" />
+					<field name="current_employer_report" />
+					<h2>REFERENCES PROFESSIONNELLES</h2>
+					<p>
+						Donnez le nom et l'adresse des trois personnes avec qui vous
+						avez travaillé étroitement, n'ayant avec vous aucun lien de parenté
+						et connaissant votre moralité et vos valeurs professionnelles
+					</p>
+					<field name="professional_references">
+						<tree string="" editable="bottom">
+							<field name="name" />
+							<field name="function_title" />
+							<field name="company" />
+							<field name="mobile_phone" />
+							<field name="work_email" />
+						</tree>
+					</field>
+					<b attrs="{'invisible': [('current_employer_report', '=', False)]}">
+						Par la présente, j'autorise PSI Madagascar à prendre contact avec le personnes
+						de références citées ci-dessus.
+					</b>
+					<p>
+					  Avez-vous jamais été arrêté, inculpé ou poursuivi au criminel ? Avez-vous jamais été reconnu coupable ou condamné à une autre amende ou une peine de prison pour un délit (autre qu'une infraction en matiére de circulation) ?
+					</p>
+					<field name="bridger_insight"></field><br />
+					<label for="affirmative_bridger_insight"></label>
+					<field name="affirmative_bridger_insight"></field>
+				</field>
+
+				<field name="type_id" position="after">
+				
+					<field name="experiences" placeholder="Resumé de votre experience (250 mots)"
+						invisible="1" />
+
+					<field name="number_of_years_of_experience" invisible="1" />
+
+					<field name="nature_recrutement_id" invisible="1" />
+				</field>
+
+				<field name="availability" position="after">
+					<field name="psi_salary_type" />
+					<field name="psi_salary_negotiable" />
+				</field>
+				
+				<button name="create_employee_from_applicant" position="replace">
+					<button string="Create Employee" name="create_employee_from_applicant"
+						type="object" class="oe_highlight"
+						attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"
+						invisible="1" />
+				</button>
+				<field name="stage_id" position="before">
+					<button name="button_convoked_for_test" string="Convoqué pour les tests"
+						attrs="{'invisible': ['|',('state','!=','applicant_selected'),('nature_recrutement_id', '=', 'conssideration_dossier')]}" />
+					<button name="button_interview" string="Entretiens"
+						attrs="{'invisible': ['|',('state','not in',('convoked_for_test', 'applicant_selected')),('nature_recrutement_id', '=', 'conssideration_dossier')]}" />
+					<button name="button_consultant_consideration_de_dossier"
+						string="Passer aux Références professionnelles"
+						attrs="{'invisible': ['|',('state','!=','applicant_selected'),('nature_recrutement_id', '!=', 'conssideration_dossier')]}" />
+					<button name="button_professional_reference" string="Références professionnelles"
+						attrs="{'invisible': [('state','!=','interview')]}" />
+					<button name="button_bridger_insight" string="Brider Insight"
+						attrs="{'invisible': [('state','!=','professional_reference')]}" />
+					<button name="button_psi_wage_proposal" string="Proposition salariale"
+						attrs="{'invisible': ['|',('state','!=','bridger_insight'),('recrutement_type', '=', 'consultant')]}" />
+					<button name="button_psi_honorary_proposal" string="Proposition honoraire"
+						attrs="{'invisible': ['|',('state','!=','bridger_insight'),('recrutement_type', '!=', 'consultant')]}" />											
+					<button name="button_notification_of_employment" 
+						attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '=', 'consultant')]}" />
+					<button name="button_notification_of_employment" 
+							string="Notification d'embauche" 
+							states="psi_wage_proposal" type="object"  
+							class="oe_highlight"/>				
+					<button name="button_contract_established_consultant"
+						string="Etablir contrat"
+						attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '!=', 'consultant')]}" />
+					<button string="Refuser" name="mail_refuse_applicant" type="object"
+						attrs="{'invisible': [('state','not in',('interview', 'professional_reference', 'bridger_insight', 'psi_wage_proposal'))]}" />
+					<button name="button_contract_established" string="Etablir contrat"
+						attrs="{'invisible': [('state','!=','notification_of_employment')]}" />
+				</field>
+				<field name="stage_id" position="replace">
+					<field name="state" widget="statusbar"
+						attrs="{'invisible': [('active', '=', False)]}"
+						statusbar_visible="applicant_selected,convoked_for_test,interview,professional_reference,bridger_insight,psi_wage_proposal,notification_of_employment,contract_established" />
+				</field>
+
+				<button name="archive_applicant" position="replace" type='object'>
+					<button name="archive_applicant"
+						attrs="{'invisible': [('state', '=', 'contract_established')]}" />
+				</button>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="crm_case_tree_view_job2">
+	        <field name="name">Applicants</field>
+	        <field name="model">hr.applicant</field>
+	        <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job" />
+	        <field name="arch" type="xml">
+	        	<field name="partner_name" position="after">
+	        		<field name="age" />
+	        	</field>
+	        	<field name="job_id" position="after">
+	        		<field name="application_deadline_date" />
+	        		<field name="university_studies_degree" />
+	        	</field>
+				
+				<field name="medium_id" position="replace">
+					<field name="medium_id" invisible="1" />
+				</field>
+				<field name="source_id" position="replace">
+					<field name="source_id" invisible="1"/>
+				</field>	
+				<field name="priority" position="replace">
+					<field name="priority" invisible="1" />
+				</field>	
+				
+				<field name="stage_id" position="after">
+					<field name="psi_average_note"/>
+					<field name="psi_average_note_test"/>
+					<field name="psi_note_interview"/>
+				</field>
 	        </field>
-	        <field name="stage_id" position="replace">
-	        	<field 
-	        	    name="stage_id" 
-	        	    widget="statusbar" 
-	        	    options="{'fold_field': 'fold'}" 
-	        	    attrs="{'invisible': [('active', '=', False),('emp_id', '=', False)]}" />
-	      	</field>
-      </field>
-    </record>
-    
-    <record model="ir.ui.view" id="hr_recruitment_stage_form1">
-        <field name="name">hr.recruitment.stage.form1</field>
-        <field name="model">hr.recruitment.stage</field>
-        <field name="inherit_id" ref="hr_recruitment.hr_recruitment_stage_form" />
-        <field name="arch" type="xml">
-            <field name="job_id" position='after'>
-            	<field name="recrutement_type_ids" widget="many2many_tags" />
-            </field>
-        </field>
-    </record>
-    
-    <!-- type de recrutment Tree View -->
-    <record model="ir.ui.view" id="hr_recruitment_type_tree">
-        <field name="name">hr.recruitment.type</field>
-        <field name="model">hr.recruitment.type</field>
-        <field name="arch" type="xml">
-            <tree string="Type de recrutement">
-                <field name="name"/>
-                <field name="recrutement_type"/>
-            </tree>
-        </field>
-    </record>
-    
-    <!-- type de recrutment form view-->
-    <record id="hr_recruitment_type_form" model="ir.ui.view">
-        <field name="name">hr.recruitment.type</field>
-        <field name="model">hr.recruitment.type</field>
-        <field name="arch" type="xml">
-            <form string="Create recruitement type">
-                <sheet>
-                    <group>
-	                    <field name="name" placeholder="Nom du type de recrutement" required="1"/>
-	                    <field name="recrutement_type" placeholder="Type de recrutement" required="1"/>    
-                	</group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-    
-    <!-- Type de recrutement menu action -->
-    <record model="ir.actions.act_window" id="action_type_recrutement">
-       <field name="name">Type de recrutement</field>
-       <field name="res_model">hr.recruitment.type</field>
-       <field name="view_type">form</field>
-       <field name="view_mode">tree,form</field>
-       <field name="help" type="html">
-         <p class="oe_view_nocontent_create">
-             Click here to create a new recruitement type .
-         </p>
-       </field>
-   </record>
-   <!--  -->
-   
-   <!-- Menu Type de recrutement -->
-   <menuitem id="menu_hr_recruitment_type_recrutement" name="Type de recrutement" parent="hr_recruitment.menu_hr_recruitment_configuration" action="action_type_recrutement" sequence="2" />
-   <!--  -->
-  </data>
+	    </record>
+
+		<record model="ir.ui.view" id="hr_recruitment_stage_form1">
+			<field name="name">hr.recruitment.stage.form1</field>
+			<field name="model">hr.recruitment.stage</field>
+			<field name="inherit_id" ref="hr_recruitment.hr_recruitment_stage_form" />
+			<field name="arch" type="xml">
+				<field name="job_id" position='after'>
+					<field name="recrutement_type_ids" widget="many2many_tags" />
+				</field>
+			</field>
+		</record>
+
+		<!-- type de recrutment Tree View -->
+		<record model="ir.ui.view" id="hr_recruitment_type_tree">
+			<field name="name">hr.recruitment.type</field>
+			<field name="model">hr.recruitment.type</field>
+			<field name="arch" type="xml">
+				<tree string="Type de recrutement">
+					<field name="name" />
+					<field name="recrutement_type" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- type de recrutment form view -->
+		<record id="hr_recruitment_type_form" model="ir.ui.view">
+			<field name="name">hr.recruitment.type</field>
+			<field name="model">hr.recruitment.type</field>
+			<field name="arch" type="xml">
+				<form string="Create recruitement type">
+					<sheet>
+						<group>
+							<field name="name" placeholder="Nom du type de recrutement"
+								required="1" />
+							<field name="recrutement_type" placeholder="Type de recrutement"
+								required="1" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Type de recrutement menu action -->
+		<record model="ir.actions.act_window" id="action_type_recrutement">
+			<field name="name">Type de recrutement</field>
+			<field name="res_model">hr.recruitment.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click here to create a new recruitement type .
+				</p>
+			</field>
+		</record>
+		<!-- -->
+
+		<!-- Menu Type de recrutement -->
+		<menuitem id="menu_hr_recruitment_type_recrutement" name="Type de recrutement"
+			parent="hr_recruitment.menu_hr_recruitment_configuration" action="action_type_recrutement"
+			sequence="2" />
+		<!-- -->
+
+		<record id="hr_recrutement_candidature_tree_filter" model="ir.ui.view">
+			<field name="name">hr.recrutement.candidature.tree.filter</field>
+			<field name="model">hr.applicant</field>
+			<field name="arch" type="xml">
+				<search string="Recherche">
+					<field name="job_id" string="Job concerné" />
+					<field name="partner_name" string="Nom du candidat" />
+					<group expand="0" string="Group By...">
+						<filter string="Long listing" icon="terp-personal+" domain="[]" />
+						<filter string="Short listing" icon="terp-personal+"
+							domain="[('correspondance_profil','=','oui'), ('b_liste_restreinte','=',False)]" />
+						<filter string="Liste Restreinte" icon="terp-personal+"
+							domain="[('b_liste_restreinte','=',True)]" />
+					</group>
+				</search>
+			</field>
+		</record>
+        
+        <record id="hr_applicant_liste_restreinte_add_action" model="ir.actions.server">
+            <field name="name">Ajouter a la liste restreinte</field>
+            <field name="model_id" ref="model_hr_applicant" />
+            <field name="state">code</field>
+            <field name="code">record.set_to_liste_restreinte(True)</field>
+        </record>
+        <record id="hr_applicant_liste_restreinte_remove_action" model="ir.actions.server">
+            <field name="name">Enlever de la liste restreinte</field>
+            <field name="model_id" ref="model_hr_applicant" />
+            <field name="state">code</field>
+            <field name="code">record.set_to_liste_restreinte(False)</field>
+        </record>
+        
+        <record id="hr_applicant_liste_restreinte_action_multi" model="ir.values">
+	        <field name="model_id" ref="model_hr_applicant" />
+	        <field name="name">add liste restreinte</field>
+	        <field name="key2">client_action_multi</field>
+	        <field name="key">action</field>
+	        <field name="model">hr.applicant</field>
+	        <field name="value" eval="'ir.actions.server,' + str(ref('hr_applicant_liste_restreinte_add_action'))" />
+	    </record>
+	    <record id="hr_applicant_liste_restreinte_remove_multi" model="ir.values">
+	        <field name="model_id" ref="model_hr_applicant" />
+	        <field name="name">remove liste restreinte</field>
+	        <field name="key2">client_action_multi</field>
+	        <field name="key">action</field>
+	        <field name="model">hr.applicant</field>
+	        <field name="value" eval="'ir.actions.server,' + str(ref('hr_applicant_liste_restreinte_remove_action'))" />
+	    </record>
+
+	</data>
 </odoo>

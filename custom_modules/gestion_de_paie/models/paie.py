@@ -39,7 +39,7 @@ class hr_employee(models.Model):
     
     num_cnaps_emp = fields.Char(u'Numéro CNAPS', size=64)
     num_emp = fields.Char(u'Numéro Matricule', size=64)
-    num_cin = fields.Char(u'Numéro CIN', size=64)
+    #num_cin = fields.Char(u'Numéro CIN', size=64)
     
 class HrPayslip(models.Model):
     _inherit = 'hr.payslip'

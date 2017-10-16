@@ -2,6 +2,7 @@
 
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
+from operator import truediv
 
 class RecruitmentType(models.Model):
     _name = 'hr.recruitment.type'
@@ -10,7 +11,7 @@ class RecruitmentType(models.Model):
         ('collaborateur', 'Recrutement d\'un collaborateur permanent'),
         ('consultant', 'Recrutement d\'un consultant'),
         ('stagiaire', 'Recrutement d\'un stagiaire'),
-        ('collaborateur_externe', 'Recrutement d\'un collaborateur permanent avec un Cabinet Externe')
+        ('collaborateur_externe', 'Recrutement avec Cabinet de recrutement')
     ], string='Type de recrutement')
     
     name = fields.Char(string='Nom')
@@ -24,56 +25,286 @@ class RecruitmentStage(models.Model):
     
 class Applicant(models.Model):
     _inherit = "hr.applicant"
+    _name = "hr.applicant"
     
     def _default_stage_id(self):
-        return self.env.ref('hr_recruitment_psi.draft2').id
+        return self.env.ref('hr_recruitment_psi.applicant_selected').id
+    
+    attachment_file_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], ondelete='cascade',string='Attachments')
 
-    recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement')
+    recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement', readonly=True)
     recrutement_type = fields.Selection(related='job_id.recrutement_type_id.recrutement_type',string='Type de recrutement selection')
     
-    stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', track_visibility='onchange',
-                               domain="['|',('recrutement_type_ids', '=', False),('recrutement_type_ids', '=', recrutement_type_id)]",
-                               copy=False, index=True,
-                               group_expand='_read_group_stage_ids',
-                               default=_default_stage_id)
-    #champ relie au champ stage_id pour utilisation dans les domaines des views
-    stage = fields.Char(related='stage_id.stage',string='Stage')
+    nature_recrutement_id = fields.Selection(related='job_id.nature_recrutement',string='Nature de recrutement')
     
-    def action_cv_received(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.cv_received').id})
-    def action_cv_saved(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.cv_saved').id})
-    def action_can_do_test(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.can_do_test').id})
-    def action_first_interview(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.first_interview').id})
-    def action_in_deliberation(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.in_deliberation').id})
-    def action_second_interview(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.second_interview').id})
-    def action_bi(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.bi').id})
-    def action_verification_ref(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.verification_ref').id})
-    def action_wage_proposal(self):
-        if not self.salary_expected or not self.salary_proposed:
-            raise ValidationError('Erreur! Le salaire demandé et/ou le salaire proposé sont nuls.')
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.wage_proposal').id})
-    def action_salary_validated(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.salary_validated').id})
-    def action_candidat_notified(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.candidat_notified').id})
-    def action_final_decision(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.final_decision').id})
-    def action_contract(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.contract').id})
-    def action_contract_signed(self):
+    state = fields.Selection([
+        ('applicant_selected', u'Candidatures selectionnées'),
+        ('convoked_for_test', u'1- Convoqués pour les tests'),
+        ('interview', '2- Entretiens'),
+        ('professional_reference', u'3- Références proféssionnelles'),
+        ('bridger_insight', '4- Bridger Insight'),
+        ('psi_wage_proposal', '5- Proposition salariale'), 
+        ('notification_of_employment', '6- Notification d\'embauche'),
+        ('contract_established', u'7- Contrat établi')
+    ], string='Status', readonly=True, required=True, track_visibility='onchange', copy=False, default='applicant_selected', help="Set whether the recruitment process is open or closed for this job position.")
+     
+
+   
+    job_name = fields.Char(String='Job title',related='job_id.name')
+    
+    type_name = fields.Char(string='Titre du poste',related='type_id.name')
+    job_description = fields.Text(string='Description', related='job_id.poste_description')
+    application_deadline_date = fields.Date(string=u"Délai de candidature", related="job_id.application_deadline_date")
+    
+    age = fields.Integer(String='Age')
+    sexe = fields.Selection([
+        ('masculin', 'Masculin'),
+        ('feminin', u'Féminin')
+     ], string='Sexe', required=True) 
+    experiences = fields.Text(String='Expériences', size=250)
+    number_of_years_of_experience = fields.Integer(string=u'Nombre d’années d’expérience') 
+    birthday = fields.Date('Date of Birth')
+    
+    #Note ShortList
+    psi_note_hr = fields.Selection([
+        (1, '1'),
+         (2, '2'),
+          (3, '3'),
+           (4, '4')
+        ], string="Note RH")
+    psi_note_candidate = fields.Selection([
+        (1, '1'),
+         (2, '2'),
+          (3, '3'),
+           (4, '4')
+        ], string="Note Demandeur")
+    psi_average_note = fields.Float(string="Moyenne Short List", readonly=True)
+    
+    #Note test
+    psi_note_test_rh = fields.Integer(string="Note Test RH")
+    psi_note_test_candidate = fields.Integer(string="Note Test Demandeur")
+    psi_average_note_test = fields.Float(string="Moyenne Test", readonly=True)
+    
+    #Note Entretien
+    psi_note_interview = fields.Float(string="Note Entretien")
+    
+    correspondance_profil = fields.Selection([
+        ('oui', 'Oui'),
+        ('non', 'Non'),
+        ('disqualifie', u'Disqualifié')
+    ], string='Profil')  
+       
+    psi_salary_type = fields.Selection([
+        ('net', 'Net'),
+        ('brut', 'Brut')
+    ], string='Type de salaire')
+    
+    psi_salary_negotiable = fields.Selection([
+        ('negotiable', 'Négociable'),
+        ('not_negotiable', 'Non négociable')
+    ], string='Salaire Négociable')
+    
+    psi_maiden_name = fields.Char(string="Nom de jeune fille s'il y a lieu")
+    
+    country_id = fields.Many2one('res.country', string='Nationalité (Pays)')
+    
+    marital = fields.Selection([
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('widower', 'Widower'),
+        ('divorced', 'Divorced')
+    ], string='Marital Status')
+    
+    number_of_dependent_children = fields.Integer(string="Nombre d'enfant à charge (moins de 21 ans)")
+    
+    parents_employed_in_psi = fields.Boolean(string='Avez-vous des parents employés au sein de PSI Madagascar ?')
+    
+    parent_information_employees = fields.Many2many('hr.recruitement.parent.information', 'hr_recruitement_parent_information_id', string=u'Dans l\'affirmatif, donnez les renseignements suivants')
+     
+    already_answered_application = fields.Boolean(string="Avez-vous déjà répondu à un appel à candidature de PSI ?")
+    
+    description_already_answered_application = fields.One2many('hr.recruitment.already.answered.applicant', 'hr_recruitment_already_answered_applicant_id',"Dans l'affirmatif, à quel moment ? Pour quel poste et à quelle période ?")
+    
+    linguistic_knowledge = fields.One2many('hr.recruitment.linguistic.knowledge', 'psi_applicant_id',string="Connaissance linguistique")
+    
+    book_publish = fields.Text(string="Indiquez les ouvrages importants que vous avez publiés (thèses, essai, etc...)")
+    
+    university_studies = fields.One2many('hr.recruitment.university.study','psi_applicant_university_id',string='')
+    university_studies_degree = fields.Char(related="university_studies.degree")
+    
+    secondary_studies = fields.One2many('hr.recruitment.university.study','psi_applicant_secondary_id',string='')
+    
+    current_employer_report = fields.Boolean(string='Accepteriez-vous que nous mettions en rapport avec votre employeur actuel ?')
+    
+    professional_references = fields.One2many('hr.recruitment.professional.reference', 'psi_applicant_id', string='')
+     
+    bridger_insight = fields.Boolean(string="")
+    
+    affirmative_bridger_insight = fields.Text(string=u"Dans l'affirmative, faites un résumé du (des) cas")
+    
+    previous_functions = fields.One2many('hr.recruitment.previous.functions','psi_applicant_id', string='')
+    
+    b_liste_restreinte = fields.Boolean(string='Dans la liste restreinte', default=False)
+    
+    @api.model
+    def create(self, vals):
+        res = super(Applicant, self).create(vals)
+        res['psi_average_note'] = ((res['psi_note_hr'] + res['psi_note_candidate']) / 2)
+        return res
+    
+    @api.multi
+    def write(self, vals):
+        data = self.browse(self.id)
+        vals['psi_note_hr'] = vals['psi_note_hr'] if vals.has_key('psi_note_hr') else data.psi_note_hr
+        vals['psi_note_candidate'] = vals['psi_note_candidate'] if vals.has_key('psi_note_candidate') else data.psi_note_candidate
+        vals['psi_average_note'] = truediv((vals['psi_note_hr'] + vals['psi_note_candidate']), 2)
+        res = super(Applicant, self).write(vals)       
+        return res
+    
+    def action_contract_established(self) :
         self.create_employee_from_applicant()
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.contract_signed').id})
-    def action_drh_validation(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.drh_validation').id})
-    def action_drh_allocation_stage(self):
-        self.write({'stage_id': self.env.ref('hr_recruitment_psi.drh_allocation_stage').id})    
-        
-        
-        
+        self.write({ 'state': 'contract_established'})
+       
+    @api.multi
+    def mail_refuse_applicant(self):
+        template = self.env.ref('hr_recruitment_psi.custom_template_refus')
+        self.write({'state':'applicant_selected'})
+
+    @api.multi
+    def button_notification_of_employment(self):
+        '''
+        This function opens a window to compose an email
+        '''
+        self.ensure_one()
+        ir_model_data = self.env['ir.model.data']
+        try:
+            template_id = ir_model_data.get_object_reference('hr_recruitment_psi', 'email_template_notification_employment')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False
+        ctx = dict()
+        ctx.update({
+            'default_model': 'hr.applicant',
+            'default_res_id': self.ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_so_as_sent': True,
+        })
+        self.write({'state':'notification_of_employment'})
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }
+    
+    @api.multi
+    def set_to_liste_restreinte(self, val):
+        for obj in self:
+            obj.b_liste_restreinte = val
+
+class ParentInformationEmployed(models.Model):
+      _name = 'hr.recruitement.parent.information'
+      
+      name                      = fields.Char(string='NOM ET PRENOM', required=True)
+      degree_of_relationship    = fields.Selection([
+        ('enfant', 'Enfant'),
+        ('famille', 'Famille'),
+        ('conjoint', 'Conjoint')
+       ], string='DEGRE DE PARENTE')
+      post_office_title         = fields.Char(string="POSTE/TITRE/BUREAU")
+      
+      hr_recruitement_parent_information_id = fields.Many2one("hr.applicant")
+      
+class AlreadyAnsweredApplicant(models.Model):
+     _name = 'hr.recruitment.already.answered.applicant'
+     
+     name           = fields.Char(string='POSTE')
+     period         = fields.Date(string='PERIODE')
+     
+     hr_recruitment_already_answered_applicant_id = fields.Many2one("hr.applicant")
+     
+class LinguisticKnowledge(models.Model):
+    _name = 'hr.recruitment.linguistic.knowledge'
+    
+    name       = fields.Selection([
+        ('langue_maternelle', 'Langue maternelle'),
+        ('malagasy', 'Malagasy'),
+        ('french', 'Français'),
+        ('english', 'Anglais')
+       ], string='CONNAISSANCE LINGUISTIQUE')
+    written     = fields.Selection([
+        ('basic', 'Basique'),
+        ('intermediate', 'Intermédiaire'),
+        ('good', 'Bon'),
+        ('excellent', 'Excellent'),
+        ('Current', 'Courant')
+       ], string='Ecrit')
+    spoken      = fields.Selection([
+        ('basic', 'Basique'),
+        ('intermediate', 'Intermédiaire'),
+        ('good', 'Bon'),
+        ('excellent', 'Excellent'),
+        ('Current', 'Courant')
+       ], string=u'Parlé')
+    listen      = fields.Selection([
+        ('basic', 'Basique'),
+        ('intermediate', 'Intermédiaire'),
+        ('good', 'Bon'),
+        ('excellent', 'Excellent'),
+        ('Current', 'Courant')
+       ], string='Ecoute')
+    
+    psi_applicant_id = fields.Many2one("hr.applicant")
+    
+class UniversityStudy(models.Model):
+    _name = "hr.recruitment.university.study"
+    
+    name            = fields.Char(string="Nom de l'établissement")
+    city            = fields.Char(string='Ville')
+    country_id      = fields.Many2one('res.country', string=u'Nationalité (Pays)')
+    from_date       = fields.Date(string=u"Début")
+    end_date        = fields.Date(string="Fin")
+    degree          = fields.Char(string=u"Diplômes/certificats obtenus")
+    study_domain    = fields.Char(string="Principal domaine d'étude") 
+    
+    psi_applicant_secondary_id = fields.Many2one("hr.applicant")
+    psi_applicant_university_id = fields.Many2one("hr.applicant")
+   
+class ProfessionalReference(models.Model):
+    _name = "hr.recruitment.professional.reference"
+    
+    name            = fields.Char(string="NOM ET PRENOM")
+    function_title  = fields.Char(string="TITRE ET FONCTION")
+    company         = fields.Char(string="SOCIETES")
+    mobile_phone    = fields.Char('Mobile')
+    work_email      = fields.Char('Email')
+    
+    psi_applicant_id = fields.Many2one("hr.applicant")
+   
+class PreviousFunctions(models.Model):
+    _name = "hr.recruitment.previous.functions"
+    
+    begin_date              = fields.Date()
+    end_date                = fields.Date()
+    last_basic_salary       = fields.Integer(string=u"Dérnier salaire de base")
+    title_function          = fields.Char(string="Titre et fonction")
+    employer                = fields.Char(string="Employeur")
+    type_of_activity        = fields.Char(string=u"Type d'activité")
+    address                 = fields.Char(string="Adresse")
+    name_of_supervisor      = fields.Char(string=u"Nom du supérieur hiérarchique")
+    number_of_supervised    = fields.Char(string=u"Nombre de supervisé")
+    reason_for_leaving      = fields.Char(string=u"Motif de votre départ")
+    mobile_phone            = fields.Char('Mobile')
+    work_email              = fields.Char('Email')
+    description             = fields.Text(string=u"Brève Déscriptions Des Tâches et Résponsabilités")
+    
+    psi_applicant_id = fields.Many2one("hr.applicant")
