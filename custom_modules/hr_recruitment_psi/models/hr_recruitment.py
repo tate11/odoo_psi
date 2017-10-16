@@ -3,6 +3,7 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 from operator import truediv
+from datetime import datetime
 
 class RecruitmentType(models.Model):
     _name = 'hr.recruitment.type'
@@ -56,14 +57,14 @@ class Applicant(models.Model):
     job_description = fields.Text(string='Description', related='job_id.poste_description')
     application_deadline_date = fields.Date(string=u"Délai de candidature", related="job_id.application_deadline_date")
     
-    age = fields.Integer(String='Age')
+    age = fields.Integer(compute="_calcul_age", String='Age')
     sexe = fields.Selection([
         ('masculin', 'Masculin'),
         ('feminin', u'Féminin')
      ], string='Sexe', required=True) 
     experiences = fields.Text(String='Expériences', size=250)
     number_of_years_of_experience = fields.Integer(string=u'Nombre d’années d’expérience') 
-    birthday = fields.Date('Date of Birth')
+    birthday = fields.Date('Date de naissance', required=True)
     
     #Note ShortList
     psi_note_hr = fields.Selection([
@@ -210,6 +211,11 @@ class Applicant(models.Model):
     def set_to_liste_restreinte(self, val):
         for obj in self:
             obj.b_liste_restreinte = val
+            
+    @api.depends('birthday')
+    def _calcul_age(self):
+        for record in self:
+            record.age = datetime.today().year - datetime.strptime(record.birthday, "%Y-%m-%d").year
 
 class ParentInformationEmployed(models.Model):
       _name = 'hr.recruitement.parent.information'
