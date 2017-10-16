@@ -30,6 +30,8 @@ class Applicant(models.Model):
     def _default_stage_id(self):
         return self.env.ref('hr_recruitment_psi.applicant_selected').id
     
+    attachment_file_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], ondelete='cascade',string='Attachments')
+
     recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement', readonly=True)
     recrutement_type = fields.Selection(related='job_id.recrutement_type_id.recrutement_type',string='Type de recrutement selection')
     
@@ -117,11 +119,11 @@ class Applicant(models.Model):
     
     parents_employed_in_psi = fields.Boolean(string='Avez-vous des parents employés au sein de PSI Madagascar ?')
     
-    parent_information_employees = fields.Many2many('hr.recruitement.parent.information', 'psi_applicant_id', string=u'Dans l\'affirmatif, donnez les renseignements suivants')
+    parent_information_employees = fields.Many2many('hr.recruitement.parent.information', 'hr_recruitement_parent_information_id', string=u'Dans l\'affirmatif, donnez les renseignements suivants')
      
     already_answered_application = fields.Boolean(string="Avez-vous déjà répondu à un appel à candidature de PSI ?")
     
-    description_already_answered_application = fields.One2many('hr.recruitment.already.answered.applicant', 'psi_applicant_id',"Dans l'affirmatif, à quel moment ? Pour quel poste et à quelle période ?")
+    description_already_answered_application = fields.One2many('hr.recruitment.already.answered.applicant', 'hr_recruitment_already_answered_applicant_id',"Dans l'affirmatif, à quel moment ? Pour quel poste et à quelle période ?")
     
     linguistic_knowledge = fields.One2many('hr.recruitment.linguistic.knowledge', 'psi_applicant_id',string="Connaissance linguistique")
     
@@ -216,7 +218,7 @@ class ParentInformationEmployed(models.Model):
        ], string='DEGRE DE PARENTE')
       post_office_title         = fields.Char(string="POSTE/TITRE/BUREAU")
       
-      psi_applicant_id = fields.Many2one("hr.applicant")
+      hr_recruitement_parent_information_id = fields.Many2one("hr.applicant")
       
 class AlreadyAnsweredApplicant(models.Model):
      _name = 'hr.recruitment.already.answered.applicant'
@@ -224,7 +226,7 @@ class AlreadyAnsweredApplicant(models.Model):
      name           = fields.Char(string='POSTE')
      period         = fields.Date(string='PERIODE')
      
-     psi_applicant_id = fields.Many2one("hr.applicant")
+     hr_recruitment_already_answered_applicant_id = fields.Many2one("hr.applicant")
      
 class LinguisticKnowledge(models.Model):
     _name = 'hr.recruitment.linguistic.knowledge'
@@ -289,7 +291,7 @@ class PreviousFunctions(models.Model):
     
     begin_date              = fields.Date()
     end_date                = fields.Date()
-    last_basic_salary       = fields.Float(string=u"Dérnier salaire de base")
+    last_basic_salary       = fields.Integer(string=u"Dérnier salaire de base")
     title_function          = fields.Char(string="Titre et fonction")
     employer                = fields.Char(string="Employeur")
     type_of_activity        = fields.Char(string=u"Type d'activité")
