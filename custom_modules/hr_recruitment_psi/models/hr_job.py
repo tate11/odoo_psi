@@ -38,6 +38,7 @@ class hr_job(models.Model):
     #tdr_file = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.job')], string='Termes de Références (TDR)')
     level_of_education_id = fields.Many2one('hr.recruitment.degree', string='Niveau de formation')
     psi_budget_code_distribution = fields.Many2one('account.analytic.distribution', string='Code budgetaire')
+    place_of_work = fields.Many2many('hr.recruitment.working.state', string='Lieu de travail')
     place_of_employment = fields.Char(string=u'Lieu d\'embauche')
     subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination')
     experience_required_ids = fields.One2many('hr.experience.required', 'job_id', string=u'Expériences requises')
@@ -99,3 +100,9 @@ class ExperienceRequise(models.Model):
           for record in self:
               if record.year > 99:
                   raise ValidationError(u"L'année doit être 2 chiffres au maximum: %s" % record.year)   
+
+class WorkingState(models.Model):
+    _name = "hr.recruitment.working.state"
+    
+    name = fields.Char(string="Lieu")
+    
