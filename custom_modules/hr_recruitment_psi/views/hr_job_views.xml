@@ -3,16 +3,18 @@
 	<record id="view_hr_job_form3" model="ir.ui.view">
 		<field name="name">hr.job.form2</field>
 		<field name="model">hr.job</field>
-		<field name="inherit_id" ref="hr_recruitment.hr_job_survey"></field>
+		<field name="inherit_id" ref="hr_recruitment.hr_job_survey" />
 		<field name="arch" type="xml">
 			<field name="address_id" position="after">
 				<field name="place_of_employment" />
-				<field name="psi_motif" />
-				<field name="nature_recrutement" />
-				<field name="budget_code" />
+				<field name="application_deadline_date" attrs="{'required': [('state', 'in', ('open'))]}"/>
+				<field name="psi_motif" attrs="{'required': [('state', 'in', ('open'))]}"/>
+				<field name="nature_recrutement" attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': [('recrutement_type', '=', 'consultant')]}" />
+				<field name="psi_budget_code_distribution" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'required': [('state', '=', 'validation_finance')]}"/>
 				<field name="subordination_link_id" />
-				<field name="psi_contract_type" />
-				<field name="psi_contract_duration" attrs="{'invisible': [('psi_contract_type','=','cdi')], 'required': [('psi_contract_type', '=', 'cdd')]}" />
+				<field name="psi_contract_type" attrs="{'required': [('state', 'in', ('open'))]}" />
+				<field name="psi_contract_duration" attrs="{'invisible': ['|',('psi_contract_type','=','cdi'),('psi_contract_type','=','prestataire')], 'required': [('psi_contract_type', '=', 'cdd')]}" />
+				<field name="rr_approbation" />
 			</field>
 		</field>
 	</record>
@@ -21,59 +23,71 @@
 		<field name="model">hr.job</field>
 		<field name="inherit_id" ref="hr.view_hr_job_form" />
 		<field name="arch" type="xml">
-
 			<field name="department_id" position="after">
 				<field name="recrutement_type_id" />
 				<field name="recrutement_type" invisible="1" />
-				
 				<field name="level_of_education_id" />
 				<field name="experience_required_ids" colspan="2">
 					<tree string="Experience requise" editable="bottom">
 						<field name="name" />
-						<field name="duration" />
+						<field name="month" />
+						<field name="year" />
 					</tree>
 				</field>
-				
 				<field name="poste_description" />
 			</field>
 			<button name="set_recruit" position="replace">
 				<button name="set_recruit" invisible="1" />
 			</button>
+			<button name="set_open" position="replace">
+				<button name="set_open" invisible="1" />
+			</button>
+			<field name="message_follower_ids" position="after">
+				<field name="message_ids" widget="mail_thread"/>
+			</field>
 
 			<xpath expr="//field[@name='state']" position="replace">
 				<!-- etats pour recrutement autres que stagiaires ??? -->
 				<field name="state" widget="statusbar"
-					statusbar_visible="open,analyse,rr_validation,refused,tdr_redaction,recruit" />
+					statusbar_visible="open,validation_finance,analyse,rr_validation,refused,recruit" />
 
 				<!-- etats pour recrutement de stagiaires ??? -->
 			</xpath>
 
 			<!-- boutons -->
-			<xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_analyse" states="open" string="Analyser la demande"
-					class="oe_highlight" />
-			</xpath>
+	
 			<xpath expr="//button[@name='set_open']" position="after">
 				<button name="button_refuser" states="analyse,rr_validation"
-					string="Refuser" />
+					string="Refuser" attrs="{'invisible': [('state','!=','analyse')]}" />
+			</xpath>
+			
+			<xpath expr="//button[@name='set_open']" position="after">
+				<button name="button_rr_validation" string="Analyse Faite" class="oe_highlight"
+					attrs="{'invisible': ['|', ('rr_approbation', '=', False), ('state','!=','analyse')]}" />
 			</xpath>
 			<xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_rr_validation" string="Approuver par RR"
-					class="oe_highlight"
-					attrs="{'invisible': ['|', ('recrutement_type','=','stagiaire'), ('state','!=','analyse')]}" />
+				<button name="button_reopen" string="Refaire la demande" class="oe_highlight" 
+					attrs="{'invisible': [('state', '!=', 'refused')]}"/>
 			</xpath>
 			<xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_analyse_tdr_redaction" string="Rédiger TDR et Profil de poste Stagiaire"
-					class="oe_highlight"
-					attrs="{'invisible': ['|', ('recrutement_type','!=','stagiaire'), ('state','!=','analyse')]}" />
+				<button name="button_relance" string="Relancer la demande" class="oe_highlight" 
+					attrs="{'invisible': [('state', '!=', 'recruit')]}"/>
 			</xpath>
+			
 			<xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_tdr_redaction" states="rr_validation"
-					string="Rédiger TDR et Profil de poste" class="oe_highlight" />
-			</xpath>
-			<xpath expr="//button[@name='set_open']" position="after">
-				<button name="button_accepter" states="tdr_redaction" string="Accepter"
+				<button name="button_accepter" string="Approuver" state="analyse" 
+					attrs="{'invisible': ['|', '&amp;', ('rr_approbation', '=', True), ('state', '!=', 'rr_validation'), '&amp;', ('rr_approbation', '=', False), ('state','!=', 'analyse')]}"
 					class="oe_highlight" />
+			</xpath>
+			
+			<xpath expr="//button[@name='set_open']" position="after">
+				<button name="button_analyse" string="Validation faite" attrs="{'invisible': [('state','!=','validation_finance')]}"
+					class="oe_highlight" />
+			</xpath>
+			
+			<xpath expr="//button[@name='set_open']" position="after">
+				<button name="button_validation_finance" string="Passer à Validation Finance"
+					class="oe_highlight" attrs="{'invisible': [('state','!=','open')]}"  />
 			</xpath>
 
 		</field>
@@ -88,9 +102,58 @@
 				<field name="name" position="after">
 					<field name="recrutement_type_id" />
 					<field name="recrutement_type" invisible="1" />
+					<field name="tdr_file" />
 				</field>
 			</data>
 		</field>
 	</record>
-
+	
+	<!-- Publish button - Smart button -->	
+	<!-- BEGIN Make visible publish button in state recruit -->
+    <record id="website_published_button_visibility" model="ir.ui.view" >
+        <field name="name">website.published.button.visibility</field>        
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>        
+        <field name="arch" type="xml">
+        
+            <xpath expr="//div[@name='button_box']" position="replace">	
+            	<div class="oe_button_box" name="button_box">
+	           		<button class="oe_stat_button"
+	                    icon="fa-file-o"
+	                    name="281"
+	                    context="{'default_user_id': user_id}"
+	                    type="action">
+	                    <field name="application_count" widget="statinfo" string="Applications"/>
+	                </button>
+	                <button class="oe_stat_button"
+	                    icon="fa-users"
+	                    name="283"
+	                    type="action">
+	                    <field name="no_of_employee" widget="statinfo" string="Employees"/>
+	                </button>
+	                <button class="oe_stat_button"
+	                    icon="fa-book"
+	                    name="action_get_attachment_tree_view"
+	                    type="object">
+	                    <field name="documents_count" widget="statinfo" string="Documents"/>
+	                </button>
+	                <button class="oe_stat_button" type="action"
+	                    name="282" icon="fa-share"
+	                    context="{'default_job_id': active_id}">
+	                    <div class="o_form_field o_stat_info">
+	                        <span class="o_stat_text">Trackers</span>
+	                    </div>
+	                </button>
+	                <button class="oe_stat_button" 
+	                	name="website_publish_button"
+	                    type="object"
+	                    icon="fa-globe"
+	                    attrs="{'invisible': [('state','!=','recruit')]}">
+	                    <field name="website_published" widget="website_button"/>
+	                </button>
+	            </div>
+            </xpath>            
+        </field>
+    </record>	    
+	<!-- END Make visible publish button in state recruit -->
 </odoo>

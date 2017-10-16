@@ -18,7 +18,7 @@ class HrContract(models.Model):
     def send_email_collaborator(self):
         print "The id contract is : ",self.contract_id
         template = self.env.ref('hr_contract_psi.custom_template_id')
-        self.env['mail.template'].browse(template.id).send_mail(11)
+        self.env['mail.template'].browse(template.id).send_mail(self.id)
     
     @api.one
     @api.constrains('state_of_work')
