@@ -243,12 +243,13 @@ class LinguisticKnowledge(models.Model):
     _name = 'hr.recruitment.linguistic.knowledge'
     
     name       = fields.Selection([
-        ('langue_maternelle', 'Langue maternelle'),
+       
         ('malagasy', 'Malagasy'),
         ('french', 'Français'),
         ('english', 'Anglais')
        ], string='CONNAISSANCE LINGUISTIQUE')
     written     = fields.Selection([
+         ('langue_maternelle', 'Langue maternelle'),                            
         ('basic', 'Basique'),
         ('intermediate', 'Intermédiaire'),
         ('good', 'Bon'),
@@ -256,6 +257,7 @@ class LinguisticKnowledge(models.Model):
         ('Current', 'Courant')
        ], string='Ecrit')
     spoken      = fields.Selection([
+                                     ('langue_maternelle', 'Langue maternelle'),
         ('basic', 'Basique'),
         ('intermediate', 'Intermédiaire'),
         ('good', 'Bon'),
@@ -263,6 +265,7 @@ class LinguisticKnowledge(models.Model):
         ('Current', 'Courant')
        ], string=u'Parlé')
     listen      = fields.Selection([
+                                     ('langue_maternelle', 'Langue maternelle'),
         ('basic', 'Basique'),
         ('intermediate', 'Intermédiaire'),
         ('good', 'Bon'),
