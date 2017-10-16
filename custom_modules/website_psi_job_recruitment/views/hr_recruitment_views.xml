@@ -169,8 +169,8 @@
 				class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data"
 				data-model_name="hr.applicant" data-success_page="/page/website_hr_recruitment.thankyou">
 
-				<input type="hidden" name="parent_information_employees"
-					class="form-control o_website_form_input" value="22,23,24" />
+				<input type="hidden" name="job_id"
+					class="form-control o_website_form_input" t-att-value="job.id" />
 
 				<div class="form-group form-field o_website_form_required">
 					<div class="col-md-3 col-sm-4 text-right">
@@ -242,7 +242,7 @@
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" class="form-control o_website_form_input"
-							name="partner_name" />
+							name="partner_name" required="1"/>
 					</div>
 				</div>
 				<div class="form-group form-field">
@@ -283,7 +283,7 @@
 						<div class="o_website_form_flex">
 							<div class="radio o_website_form_flex_item">
 								<label>
-									<input type="radio" class="o_website_form_input" name="sexe"
+									<input type="radio" class="o_website_form_input" name="sexe" checked="True"
 										value="masculin" />
 									<span> Masculin </span>
 								</label>
@@ -489,48 +489,13 @@
 							</tr>
 							<tr>
 							   <td>
-									<input type="hidden" name="linguistique[]" value="langue_maternelle" />
-									Langue maternelle :  
-								</td>
-							    <td>
-									<select  class="form-control" name="written[]" >
-										<option value=""></option>
-										<option value="basic">Basique</option>
-										<option value="intermediate">Intérmediaire</option>
-										<option value="good">Bon</option>
-										<option value="excellent">Excellent</option>
-										<option value="Current">Courant</option>
-									</select> 
-								</td>
-								<td>
-									<select  class="form-control" name="spoken[]" >
-										<option value=""></option>
-										<option value="basic">Basique</option>
-										<option value="intermediate">Intérmediaire</option>
-										<option value="good">Bon</option>
-										<option value="excellent">Excellent</option>
-										<option value="Current">Courant</option>
-									</select> 
-								</td>
-								<td>
-									<select  class="form-control" name="listen[]" >
-										<option value=""></option>
-										<option value="basic">Basique</option>
-										<option value="intermediate">Intérmediaire</option>
-										<option value="good">Bon</option>
-										<option value="excellent">Excellent</option>
-										<option value="Current">Courant</option>
-									</select> 
-								</td>
-							</tr>
-							<tr>
-							   <td>
 									<input type="hidden" name="linguistique[]" value="malagasy" />
 									 Malagasy  
 								</td>
 							    <td>
 									<select  class="form-control" name="written[]" >
 										<option value=""></option>
+										
 										<option value="basic">Basique</option>
 										<option value="intermediate">Intérmediaire</option>
 										<option value="good">Bon</option>
@@ -541,6 +506,7 @@
 								<td>
 									<select  class="form-control" name="spoken[]" >
 										<option value=""></option>
+										
 										<option value="basic">Basique</option>
 										<option value="intermediate">Intérmediaire</option>
 										<option value="good">Bon</option>
@@ -551,6 +517,7 @@
 								<td>
 									<select  class="form-control" name="listen[]" >
 										<option value=""></option>
+										
 										<option value="basic">Basique</option>
 										<option value="intermediate">Intérmediaire</option>
 										<option value="good">Bon</option>
@@ -567,6 +534,7 @@
 							    <td>
 									<select  class="form-control" name="written[]" >
 										<option value=""></option>
+										
 										<option value="basic">Basique</option>
 										<option value="intermediate">Intérmediaire</option>
 										<option value="good">Bon</option>
@@ -577,6 +545,7 @@
 								<td>
 									<select  class="form-control" name="spoken[]" >
 										<option value=""></option>
+										
 										<option value="basic">Basique</option>
 										<option value="intermediate">Intérmediaire</option>
 										<option value="good">Bon</option>
@@ -587,6 +556,7 @@
 								<td>
 									<select  class="form-control" name="listen[]" >
 										<option value=""></option>
+										
 										<option value="basic">Basique</option>
 										<option value="intermediate">Intérmediaire</option>
 										<option value="good">Bon</option>
@@ -597,12 +567,13 @@
 							</tr>
 							<tr>
 							   <td>
-									<input type="hidden" name="linguistique[]" value="english"/>
+									<input type="hidden" name="linguistique[]" value="english" />
 									Anglais
 								</td>
 							    <td>
-									<select  class="form-control" name="written[]" >
+									<select  class="form-control" name="written[]" required="1">
 										<option value=""></option>
+										
 										<option value="basic">Basique</option>
 										<option value="intermediate">Intérmediaire</option>
 										<option value="good">Bon</option>
@@ -611,8 +582,9 @@
 									</select> 
 								</td>
 								<td>
-									<select  class="form-control" name="spoken[]" >
+									<select  class="form-control" name="spoken[]" required="1">
 										<option value=""></option>
+										
 										<option value="basic">Basique</option>
 										<option value="intermediate">Intérmediaire</option>
 										<option value="good">Bon</option>
@@ -621,8 +593,9 @@
 									</select> 
 								</td>
 								<td>
-									<select  class="form-control" name="listen[]" >
+									<select  class="form-control" name="listen[]" required="1">
 										<option value=""></option>
+										
 										<option value="basic">Basique</option>
 										<option value="intermediate">Intérmediaire</option>
 										<option value="good">Bon</option>
