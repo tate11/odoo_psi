@@ -156,9 +156,16 @@ class Applicant(models.Model):
     @api.multi
     def write(self, vals):
         data = self.browse(self.id)
+        # calcul note short list
         vals['psi_note_hr'] = vals['psi_note_hr'] if vals.has_key('psi_note_hr') else data.psi_note_hr
         vals['psi_note_candidate'] = vals['psi_note_candidate'] if vals.has_key('psi_note_candidate') else data.psi_note_candidate
         vals['psi_average_note'] = truediv((vals['psi_note_hr'] + vals['psi_note_candidate']), 2)
+        
+        # calcul note test
+        vals['psi_note_test_rh'] = vals['psi_note_test_rh'] if vals.has_key('psi_note_test_rh') else data.psi_note_test_rh
+        vals['psi_note_test_candidate'] = vals['psi_note_test_candidate'] if vals.has_key('psi_note_test_candidate') else data.psi_note_test_candidate
+        vals['psi_average_note_test'] = truediv((vals['psi_note_test_rh'] + vals['psi_note_test_candidate']), 2)
+        
         res = super(Applicant, self).write(vals)       
         return res
     
