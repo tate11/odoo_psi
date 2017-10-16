@@ -49,7 +49,7 @@ class Applicant(models.Model):
     job_description = fields.Text(string='Description', related='job_id.poste_description')
     application_deadline_date = fields.Date(string=u"Délai de candidature", related="job_id.application_deadline_date")
     
-    age = fields.Char(String='Age')
+    age = fields.Integer(String='Age')
     sexe = fields.Selection([
         ('masculin', 'Masculin'),
         ('feminin', u'Féminin')

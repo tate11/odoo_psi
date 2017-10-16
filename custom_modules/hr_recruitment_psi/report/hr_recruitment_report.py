@@ -12,7 +12,9 @@ class HrRecruitmentReportPsi(models.Model):
     sexe = fields.Selection([
         ('masculin', 'Masculin'),
         ('feminin', u'Féminin')
-     ], string='Sexe', readonly=True) 
+     ], string='Sexe', readonly=True)
+    
+    age_avg = fields.Float(u"Age moyen des recrutés", group_operator="avg", digits=0)
 
     @api.model_cr
     def init(self):
@@ -37,6 +39,7 @@ class HrRecruitmentReportPsi(models.Model):
                      s.medium_id,
                      s.source_id,
                      s.sexe,
+                     (sum(age)/count(*)) as age_avg,
                      sum(salary_proposed) as salary_prop,
                      (sum(salary_proposed)/count(*)) as salary_prop_avg,
                      sum(salary_expected) as salary_exp,
