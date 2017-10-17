@@ -81,7 +81,7 @@
         
          $('#add_form_ref').click(function () {
             setTimeout(function () {
-                $('#table_ref tr:last').after('<tr> <td> <input type="text" class="form-control" name="ref_name[]"/> </td> <td> <input type="text" name="ref_function_title[]" class="form-control"/> </td> <td> <input type="text" name="ref_company[]" class="form-control"/> </td> <td> Mob : <input type="text" name="ref_mobile_phone[]" class="form-control"/> <br /> Email : <input type="text" name="ref_work_email[]" class="form-control"/> </td> </tr>');
+                $('#table_ref tr:last').after('<tr> <td> <input type="text" class="form-control" name="ref_name[]"/> </td> <td> <input type="text" name="ref_function_title[]" class="form-control"/> </td> <td> <input type="text" name="ref_company[]" class="form-control"/> </td> <td> Mobile : <input type="text" name="ref_mobile_phone[]" class="form-control"/>  Email : <input type="text" name="ref_work_email[]" class="form-control"/> </td> </tr>');
              }, 200);
         });
         
@@ -388,7 +388,7 @@
 							renseignements suivants
 						</span>
 					
-						<table id="table_parent_information">
+						<table id="table_parent_information" class="table">
 							<tr>
 								<th>NOM ET PRENOM </th>
 								<th>DEGRE DE PARENTE </th>
@@ -471,7 +471,7 @@
 						<!-- Trigger the modal with a button -->
 					<div id="div_already_answered_application">	
 						<b>Veuillez choisir votre connaissance liguistique</b>
-						<table id="table_already_answered_application">
+						<table id="table_already_answered_application" class="table">
 							<tr>
 								<th>CONNAISSANCE LINGUISTIQUE</th>
 								<th>Ecrit</th>
@@ -602,7 +602,7 @@
 				<div class="form-group">
 					Veuillez donner l'intitulé exact de chaque diplôme ou titre universitaire dans la langue dans laquelle il à été établi, et non <br />une traduction ou un équivalent
 				<h3>A. ETUDES UNIVERSITAIRES</h3>
-				<table id="table_university_studies">
+				<table id="table_university_studies" class="table">
 					<tr>
 						<th>Nom de l'établissement</th>
 						<th>Ville</th>
@@ -646,7 +646,7 @@
 				</div>
 				<div class="form-group">
 				<h2>B. Etudes secondaires, techniques ou apprentissage</h2>
-				<table id="table_secondary">
+				<table id="table_secondary" class="table">
 					<tr>
 						<th>Nom de l'établissement</th>
 						<th>Ville</th>
@@ -774,7 +774,7 @@
                 <div class="form-group">
                 	<h3>REFERENCES PROFESSIONNELLES : </h3>
                 	<p>Donnez le nom et l'adresse des trois avec qui vous aviez travaillé étroitement, n'ayant avec vous aucun lien de parenté et connaissant votre moralité et vos valeurs professionnelles</p>
-                	<table id="table_ref">
+                	<table id="table_ref" class="table">
                 		<tr>
                 			<th>NOM ET PRENOM</th>
                 			<th>TITRE ET FONCTION</th>
@@ -792,7 +792,8 @@
                 				<input type="text" name="ref_company[]" class="form-control"/>
                 			</td>
                 			<td>
-                				Mob : <input type="text" name="ref_mobile_phone[]" class="form-control"/> <br />
+                				Mobile : <input type="text" name="ref_mobile_phone[]" class="form-control"/> 
+                			
                 				Email : <input type="text" name="ref_work_email[]" class="form-control"/>
                 			</td>
                 		</tr>

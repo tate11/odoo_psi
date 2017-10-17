@@ -333,7 +333,7 @@ class WebsiteHrRecruitment(http.Controller):
         linguistic_knowledge_line_ids = []
         
         linguistic_knowledge_line = {}
-        if len(linguistics) > 0 and linguistics[0] != '' :
+        if len(linguistics) > 0 and linguistics[0] != '':
             for index, linguistic in enumerate(linguistics):
                   if  linguistics[index] != '' and writtens[index] != '' and spokens[index] != '' and listens[index] != '' :
                     linguistic_knowledge_line = {
