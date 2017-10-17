@@ -187,7 +187,7 @@
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" class="form-control o_website_form_input"
-							step="any" name="salary_expected" />
+							step="any" name="salary_expected" required="1" />
 					</div>
 				</div>
 				<div class="form-group form-field">
@@ -308,7 +308,7 @@
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" class="form-control o_website_form_input"
-							name="email_from" />
+							name="email_from" required="1" />
 					</div>
 				</div>
 				<div class="form-group form-field">
@@ -317,7 +317,7 @@
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" class="form-control o_website_form_input"
-							name="partner_mobile" />
+							name="partner_mobile" required="1" />
 					</div>
 				</div>
 				<div class="form-group form-field">
@@ -600,7 +600,7 @@
 					   </div>	
 				</div>
 				<div class="form-group">
-					Veuillez donner l'intitulé exact de chaque diplôme ou titre universitaire dans la langue dans laquelle il à été établi, et non <br />une traduction ou un équivalent
+					<b>Veuillez donner l'intitulé exact de chaque diplôme ou titre universitaire dans la langue dans laquelle il à été établi, et non une traduction ou un équivalent</b>
 				<h3>A. ETUDES UNIVERSITAIRES</h3>
 				<table id="table_university_studies" class="table">
 					<tr>
@@ -641,7 +641,8 @@
 							<i class="fa fa-plus"></i>
 							Ajouter
 				</button>
-				<p>Indiquez les ouvrages importants que vous avez publiés (thèses, essai, etc...)</p>
+				<br/> <br/>
+				<p><b>Indiquez les ouvrages importants que vous avez publiés (thèses, essai, etc...)</b></p>
 				<textarea class="form-control o_website_form_input" name="book_publish"/>
 				</div>
 				<div class="form-group">
@@ -691,8 +692,10 @@
 				<div class="form-group">
 				<h3>FONCTIONS ANTERIEURES</h3>
 				<p>
+					<b>
 					En partant de votre poste actuel, indiquez, dans l'ordre chronologique inverse,
 					tous les postes que vous avez occupés (si les cases ne suffisent pas, en rajouter svp)
+					</b>
 				</p>
 				<div id="div_previous_functions">
 				<table class="table">
@@ -753,6 +756,7 @@
 				<textarea class="form-control" name="description[]"></textarea>
 			</div>
 			<div id="div_functions"></div>
+				<br />
 				<button type="button" class="btn btn-success"
 							id="add_form_previous_functions">
 							<i class="fa fa-plus"></i>
@@ -804,7 +808,7 @@
 							Ajouter
 				       </button>
 				       <p>
-				       		<b>Par la présente, j'autorise PSI Madagascar à prendre contact avec les personnes de références <br />citées i-dessus.</b>
+				       		<b>Par la présente, j'autorise PSI Madagascar à prendre contact avec les personnes de références citées i-dessus.</b>
 				       </p>
                 </div>
 				<div class="form-group form-field">
@@ -836,7 +840,7 @@
                 		</label>
           			</div>
           			<div class="col-md-7 col-sm-8">
-          			  	<input type="file" class="form-control o_website_form_input" name="attachment_file_ids" multiple="1"/>
+          			  	<input type="file" class="form-control o_website_form_input" name="attachment_file_ids" multiple="1" accept=".docx, .pdf"/>
           			</div>
         		</div>
 				<div class="form-group">
