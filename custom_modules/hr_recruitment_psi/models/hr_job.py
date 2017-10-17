@@ -37,7 +37,7 @@ class hr_job(models.Model):
     tdr_file = fields.Binary(string=u'Termes de Références (TDR)', required=True)
     #tdr_file = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.job')], string='Termes de Références (TDR)')
     level_of_education_id = fields.Many2one('hr.recruitment.degree', string='Niveau de formation')
-    psi_budget_code_distribution = fields.Many2one('account.analytic.distribution', string='Code budgetaire')
+    psi_budget_code_distribution = fields.Many2one('account.analytic.account', string='Code budgetaire')
     place_of_work = fields.Many2many('hr.recruitment.working.state', string='Lieu de travail')
     place_of_employment = fields.Char(string=u'Lieu d\'embauche')
     subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination')
@@ -52,6 +52,7 @@ class hr_job(models.Model):
     
     application_deadline_date = fields.Date(string=u"Délai de candidature")
     rr_approbation = fields.Boolean("Approbation par RR", default=True)
+    psi_memo = fields.Boolean(u"Mémo", default=False)
     
     @api.one
     @api.constrains('psi_contract_duration')

@@ -64,7 +64,7 @@ class Applicant(models.Model):
      ], string='Sexe', required=True) 
     experiences = fields.Text(String='Expériences', size=250)
     number_of_years_of_experience = fields.Integer(string=u'Nombre d’années d’expérience') 
-    birthday = fields.Date('Date de naissance', required=True)
+    birthday = fields.Date('Date de naissance')
     
     #Note ShortList
     psi_note_hr = fields.Selection([
@@ -89,6 +89,8 @@ class Applicant(models.Model):
     #Note Entretien
     psi_note_interview = fields.Float(string="Note Entretien")
     
+    psi_total_note = fields.Float(compute="_calcul_total_note", string="Total des notes", readonly=True)
+    
     correspondance_profil = fields.Selection([
         ('oui', 'Oui'),
         ('non', 'Non'),
@@ -110,11 +112,12 @@ class Applicant(models.Model):
     country_id = fields.Many2one('res.country', string='Nationalité (Pays)')
     
     marital = fields.Selection([
-        ('single', 'Single'),
-        ('married', 'Married'),
-        ('widower', 'Widower'),
-        ('divorced', 'Divorced')
-    ], string='Marital Status')
+        ('single', u'Célibataire'),
+        ('married', u'Marié(e)'),
+        ('separated', u'Séparé(e)'),
+        ('widower', 'Veuf(ve)'),
+        ('divorced', u'Divorcé(e)')
+    ], string='Situation de famille')
     
     number_of_dependent_children = fields.Integer(string="Nombre d'enfant à charge (moins de 21 ans)")
     
@@ -148,6 +151,11 @@ class Applicant(models.Model):
     b_liste_restreinte = fields.Boolean(string='Dans la liste restreinte', default=False)
     
     @api.model
+    def _calcul_total_note(self):
+        for record in self:
+            record.psi_total_note = record.psi_average_note_test + record.psi_average_note + record.psi_note_interview
+    
+    @api.model
     def create(self, vals):
         res = super(Applicant, self).create(vals)
         res['psi_average_note'] = ((res['psi_note_hr'] + res['psi_note_candidate']) / 2)
@@ -165,6 +173,8 @@ class Applicant(models.Model):
         vals['psi_note_test_rh'] = vals['psi_note_test_rh'] if vals.has_key('psi_note_test_rh') else data.psi_note_test_rh
         vals['psi_note_test_candidate'] = vals['psi_note_test_candidate'] if vals.has_key('psi_note_test_candidate') else data.psi_note_test_candidate
         vals['psi_average_note_test'] = truediv((vals['psi_note_test_rh'] + vals['psi_note_test_candidate']), 2)
+        
+        vals['psi_note_interview'] = vals['psi_note_interview'] if vals.has_key('psi_note_interview') else data.psi_note_interview
         
         res = super(Applicant, self).write(vals)       
         return res

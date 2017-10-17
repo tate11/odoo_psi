@@ -16,6 +16,7 @@
 				<field name="psi_contract_type" attrs="{'required': [('state', 'in', ('open'))]}" />
 				<field name="psi_contract_duration" attrs="{'invisible': ['|',('psi_contract_type','=','cdi'),('psi_contract_type','=','prestataire')], 'required': [('psi_contract_type', '=', 'cdd')]}" />
 				<field name="rr_approbation" />
+				<field name="psi_memo" attrs="{'invisible': [('nature_recrutement', '!=', 'conssideration_dossier')]}"/>
 			</field>
 			<field name="address_id" position="replace">
 				<field name="address_id" invisible="1" />
