@@ -61,7 +61,7 @@ class Applicant(models.Model):
     sexe = fields.Selection([
         ('masculin', 'Masculin'),
         ('feminin', u'Féminin')
-     ], string='Sexe', required=True) 
+     ], string='Sexe') 
     experiences = fields.Text(String='Expériences', size=250)
     number_of_years_of_experience = fields.Integer(string=u'Nombre d’années d’expérience') 
     birthday = fields.Date('Date de naissance')

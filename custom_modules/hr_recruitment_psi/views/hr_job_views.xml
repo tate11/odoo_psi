@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+	<record id="view_hr_job_form4" model="ir.ui.view">
+		<field name="name">hr.job.form4</field>
+		<field name="model">hr.job</field>
+		<field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban" />
+		<field name="arch" type="xml">
+			<xpath expr="//button[@name='set_recruit']" position="replace">
+				<button name="set_recruit" invisible="1" />
+			</xpath>
+		</field>
+	</record>
 	<record id="view_hr_job_form3" model="ir.ui.view">
 		<field name="name">hr.job.form2</field>
 		<field name="model">hr.job</field>
@@ -107,7 +117,7 @@
 				<field name="name" position="after">
 					<field name="recrutement_type_id" />
 					<field name="recrutement_type" invisible="1" />
-					<field name="tdr_file" />
+					<field name="tdr_file" attrs="{'required': True}"/>
 				</field>
 			</data>
 		</field>
