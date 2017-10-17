@@ -305,80 +305,83 @@ class WebsiteHrRecruitment(http.Controller):
         parent_information_line = {}
         if len(parents) > 0 and parents[0] != '' :
             for index, parent in enumerate(parents):
-                parent_information_line = {
+                if parents[index] != '' and degree_of_relationships[index] != '' and post_office_titles[index] !='' :
+                    parent_information_line = {
     
-                    'name': parents[index],
-                    'degree_of_relationship': degree_of_relationships[index],
-                    'post_office_title' : post_office_titles[index]
+                        'name': parents[index],
+                        'degree_of_relationship': degree_of_relationships[index],
+                        'post_office_title' : post_office_titles[index]
     
-                }
-                parent_information_line_ids.append((0, 0, parent_information_line))
+                        }
+                    parent_information_line_ids.append((0, 0, parent_information_line))
                 
         description_already_answered_application_line_ids = []
         
         description_already_answered_application_line = {}
         if len(postes) > 0 and postes[0] != '' :
             for index, poste in enumerate(postes):
-                description_already_answered_application_line = {
+                 if postes[index] != '' and periods[index] != '' :
+                    description_already_answered_application_line = {
     
-                    'name': postes[index],
-                    'period': periods[index]
+                        'name': postes[index],
+                        'period': periods[index]
                     
     
-                }
-                description_already_answered_application_line_ids.append((0, 0, description_already_answered_application_line))
+                        }
+                    description_already_answered_application_line_ids.append((0, 0, description_already_answered_application_line))
          
         linguistic_knowledge_line_ids = []
         
         linguistic_knowledge_line = {}
         if len(linguistics) > 0 and linguistics[0] != '' :
             for index, linguistic in enumerate(linguistics):
-                linguistic_knowledge_line = {
+                  if  linguistics[index] != '' and writtens[index] != '' and spokens[index] != '' and listens[index] != '' :
+                    linguistic_knowledge_line = {
     
-                    'name': linguistics[index],
-                    'written': writtens[index],
-                    'spoken': spokens[index],
-                    'listen': listens[index]
+                        'name': linguistics[index],
+                        'written': writtens[index],
+                        'spoken': spokens[index],
+                        'listen': listens[index]
                     
     
-                }
-                linguistic_knowledge_line_ids.append((0, 0, linguistic_knowledge_line))
+                       }
+                    linguistic_knowledge_line_ids.append((0, 0, linguistic_knowledge_line))
         
         university_line_ids = []
         
         university_line = {}
         if len(name_universitys) > 0 and name_universitys[0] != '' :
             for index, name_university in enumerate(name_universitys):
-                university_line = {
+                if name_universitys[index] != '' and city_universitys[index] != '' and country_id_universitys[index] != '' and degree_universitys[index] != '' and  study_domain_universitys[index] != '' and from_date_universitys[index] != '' and end_date_universitys[index] != '' :
+                        university_line = {
+                                           'name': name_universitys[index],
+                                           'city': city_universitys[index],
+                                           'country_id': country_id_universitys[index],
+                                           'from_date': from_date_universitys[index],
+                                           'end_date': end_date_universitys[index],
+                                           'degree': degree_universitys[index],
+                                           'study_domain': study_domain_universitys[index]
     
-                    'name': name_universitys[index],
-                    'city': city_universitys[index],
-                    'country_id': country_id_universitys[index],
-                    'from_date': from_date_universitys[index],
-                    'end_date': end_date_universitys[index],
-                    'degree': degree_universitys[index],
-                    'study_domain': study_domain_universitys[index]
-    
-                }
-                university_line_ids.append((0, 0, university_line))
+                        }
+                        university_line_ids.append((0, 0, university_line))
         
         secondary_line_ids = []
         
         secondary_line = {}
         if len(name_secondarys) > 0 and name_secondarys[0] != '' :
             for index, name_secondary in enumerate(name_secondarys):
-                secondary_line = {
+                if name_secondarys[index] != '' and city_secondarys[index] != '' and country_id_secondarys[index] != '' and degree_secondarys[index] != '' and  study_domain_secondarys[index] != '' and from_date_secondarys[index] != '' and end_date_secondarys[index] != '' :
+                        secondary_line = {
+                                           'name': name_secondarys[index],
+                                           'city': city_secondarys[index],
+                                           'country_id': country_id_secondarys[index],
+                                           'from_date': from_date_secondarys[index],
+                                           'end_date': end_date_secondarys[index],
+                                           'degree': degree_secondarys[index],
+                                           'study_domain': study_domain_secondarys[index]
     
-                    'name': name_secondarys[index],
-                    'city': city_secondarys[index],
-                    'country_id': country_id_secondarys[index],
-                    'from_date': from_date_secondarys[index],
-                    'end_date': end_date_secondarys[index],
-                    'degree': degree_secondarys[index],
-                    'study_domain': study_domain_secondarys[index]
-    
-                }
-                secondary_line_ids.append((0, 0, secondary_line))
+                        }
+                        secondary_line_ids.append((0, 0, secondary_line))
                 
                 
         previous_functions_line_ids = []
@@ -386,7 +389,8 @@ class WebsiteHrRecruitment(http.Controller):
         previous_functions_line = {}
         if len(begin_dates) > 0 and begin_dates[0] != '' :
             for index, begin_date in enumerate(begin_dates):
-                previous_functions_line = {
+                if begin_dates[index] != '' and  end_dates[index] != '' and last_basic_salarys[index] != '' and title_functions[index] != '' and employers[index] != '' and type_of_activitys[index] != '' and addresss[index] != '' and name_of_supervisors[index] != '' and name_of_supervisors[index] != '' and number_of_superviseds[index] != '' and reason_for_leavings[index] != '' and mobile_phones[index] != '' and work_emails[index] != '' and descriptions[index] != '':   
+                    previous_functions_line = {
     
                     'begin_date': begin_dates[index],
                     'end_date': end_dates[index],
@@ -402,24 +406,26 @@ class WebsiteHrRecruitment(http.Controller):
                      'work_email': work_emails[index],
                     'description': descriptions[index]
     
-                }
-                previous_functions_line_ids.append((0, 0, previous_functions_line))
+                    }
+                    previous_functions_line_ids.append((0, 0, previous_functions_line))
                 
         professional_references_line_ids = []
         
         professional_references_line = {}
         if len(ref_names) > 0 and ref_names[0] != '' :
             for index, ref_name in enumerate(ref_names):
-                professional_references_line = {
+                if ref_names[index] != '' and ref_function_titles[index] != '' and ref_companys[index] != '' and ref_mobile_phones[index] != '' and ref_work_emails[index] != '' :
+                     if ref_names[index] != '' and ref_function_titles[index] != '' and ref_companys[index] != '' and ref_mobile_phones[index] != '' and ref_work_emails[index] != '' :
+                         professional_references_line = {
+                                                        
+                            'name': ref_names[index],
+                            'function_title': ref_function_titles[index],
+                            'company': ref_companys[index],
+                            'mobile_phone': ref_mobile_phones[index],
+                            'work_email': ref_work_emails[index]
     
-                    'name': ref_names[index],
-                    'function_title': ref_function_titles[index],
-                    'company': ref_companys[index],
-                    'mobile_phone': ref_mobile_phones[index],
-                    'work_email': ref_work_emails[index]
-    
-                }
-                professional_references_line_ids.append((0, 0, professional_references_line))
+                            }
+                         professional_references_line_ids.append((0, 0, professional_references_line))
         data = self.extract_data(model, values)
     
         if data['record']:

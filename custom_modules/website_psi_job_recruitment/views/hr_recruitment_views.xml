@@ -238,7 +238,7 @@
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="partner_name"> Nom du candidat </label>
+						<label class="control-label" for="partner_name"> Nom du candidat *</label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" class="form-control o_website_form_input"
@@ -258,21 +258,12 @@
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="birthday"> Date of Birth </label>
+						<label class="control-label" for="birthday"> Date de naissance </label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text"
 							class="form-control o_website_form_input o_website_form_date"
-							name="birthday" />
-					</div>
-				</div>
-				<div class="form-group form-field">
-					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="age"> Age </label>
-					</div>
-					<div class="col-md-7 col-sm-8">
-						<input type="text" class="form-control o_website_form_input"
-							name="age" />
+							name="birthday" required="1"/>
 					</div>
 				</div>
 				<div class="form-group form-field">
@@ -313,7 +304,7 @@
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="email_from"> Courriel </label>
+						<label class="control-label" for="email_from"> Email </label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" class="form-control o_website_form_input"
@@ -322,7 +313,7 @@
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="partner_mobile"> Mobile </label>
+						<label class="control-label" for="partner_mobile"> Mobile N°</label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" class="form-control o_website_form_input"
@@ -331,7 +322,7 @@
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="marital"> Marital Status </label>
+						<label class="control-label" for="marital"> Situation de famille </label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<div class="o_website_form_flex">
@@ -339,28 +330,28 @@
 								<label>
 									<input type="radio" class="o_website_form_input" name="marital"
 										value="single" />
-									<span> Single </span>
+									<span> Célibataire </span>
 								</label>
 							</div>
 							<div class="radio o_website_form_flex_item">
 								<label>
 									<input type="radio" class="o_website_form_input" name="marital"
 										value="married" />
-									<span> Married </span>
+									<span> Marié(e) </span>
 								</label>
 							</div>
 							<div class="radio o_website_form_flex_item">
 								<label>
 									<input type="radio" class="o_website_form_input" name="marital"
 										value="widower" />
-									<span> Widower </span>
+									<span> Veuf(ve) </span>
 								</label>
 							</div>
 							<div class="radio o_website_form_flex_item">
 								<label>
 									<input type="radio" class="o_website_form_input" name="marital"
 										value="divorced" />
-									<span> Divorced </span>
+									<span> Divorcé(e) </span>
 								</label>
 							</div>
 						</div>
@@ -820,7 +811,7 @@
 					  Avez-vous jamais été arrêté, inculpé ou poursuivi au criminel ? Avez-vous jamais été reconnu coupable ou condamné à une autre amende ou une peine de prison pour un délit (autre qu'une infraction en matiére de circulation) ?
 					</p>
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="bridger_insight"> Bridger insight </label>
+						<label class="control-label" for="bridger_insight">  </label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="checkbox" value="Yes" class="o_website_form_input"
