@@ -101,7 +101,7 @@ class Employee(models.Model):
     
     @api.model
     def create(self, vals):
-        print "CREATE in EMPLOYEE -----------------------------------------------------------------------------"   
+        print "CREATE in EMPLOYEE -----------------------------------------------------------------------------"           
         employee = super(Employee, self).create(vals)
         self._update_cron_collab_1()    
         self._update_cron_collab_2()     
@@ -114,17 +114,11 @@ class Employee(models.Model):
         self._update_cron_collab_2()
         return employee
 
-    @api.multi
-    def unlink(self):
-        employee = super(Employee, self).unlink()
-        self._update_cron_collab_1() 
-        self._update_cron_collab_2()  
-        return employee
-    
     def _update_cron_collab_1(self):
         """ Activate the cron Premier Email Employee.
         """
         print "ACTIVE CRON notification PREMIER -----------------------------------------------------------------------------"
+        list_not_checked = self._get_not_checked_files()
         cron = self.env.ref('hr_contract_psi.ir_cron_send_email_collab_1', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
     
@@ -137,73 +131,31 @@ class Employee(models.Model):
     
     def _get_not_checked_files(self):
         list_not_checked = []
+        employee = super(Employee, self).create(vals)
+#        employee_obj = self.env['hr.employee']
+#        data = employee_obj.browse([employee_id.id])
+        employee = self.env['hr.employee']
         dict ={
-               'personal_information'       : self.personal_information,
-               'id_photos'                  : self.id_photos,
-               'certificate_residence'      : self.certificate_residence,
-               'marriage_certificate'       : self.marriage_certificate,
-               'cin'                        : self.cin,
-               'work_certificate'           : self.work_certificate,
-               'qualifications'             : self.qualifications,
-               'criminal_records'           : self.criminal_records,
-               'card_cnaps'                 : self.card_cnaps,
-               'birth_certificate_children' : self.birth_certificate_children,
-               'ethics_course_certificate'  : self.ethics_course_certificate  
+               'personal_information'       : employee.personal_information,
+               'id_photos'                  : employee.id_photos,
+               'certificate_residence'      : employee.certificate_residence,
+               'marriage_certificate'       : employee.marriage_certificate,
+               'cin'                        : employee.cin,
+               'work_certificate'           : employee.work_certificate,
+               'qualifications'             : employee.qualifications,
+               'criminal_records'           : employee.criminal_records,
+               'card_cnaps'                 : employee.card_cnaps,
+               'birth_certificate_children' : employee.birth_certificate_children,
+               'ethics_course_certificate'  : employee.ethics_course_certificate  
                }
         list(dict.keys())
         list(dict.values())
+#        print "VALUES "+str(list(dict.values()))
         for key, value in dict.items() :
             if value == False:
                 list_not_checked.append(key)    
-        print "list_not_checked "+str(list_not_checked)
+#        print "list_not_checked "+str(list_not_checked)
         return list_not_checked
-#        pj_checked = []
-#        pj_not_checked = []
-#        if self.personal_information:
-#            pj_checked.append(self.personal_information)
-#        else : 
-#            pj_not_checked.append(self.personal_information)
-#        if self.id_photos:
-#            pj_checked.append(self.id_photos)
-#        else : 
-#            pj_not_checked.append(self.id_photos)
-#        if self.certificate_residence:
-#            pj_checked.append(self.certificate_residence)
-#        else : 
-#            pj_not_checked.append(self.certificate_residence)
-#        if self.marriage_certificate:
-#            pj_checked.append(self.marriage_certificate)
-#        else : 
-#            pj_not_checked.append(self.marriage_certificate)
-#        if self.cin:
-#            pj_checked.append(self.cin)
-#        else : 
-#            pj_not_checked.append(self.cin)
-#        if self.work_certificate:
-#            pj_checked.append(self.work_certificate)
-#        else : 
-#            pj_not_checked.append(self.work_certificate)
-#        if self.qualifications:
-#            pj_checked.append(self.qualifications)
-#        else : 
-#            pj_not_checked.append(self.qualifications)
-#        if self.criminal_records:
-#            pj_checked.append(self.criminal_records)
-#        else : 
-#            pj_not_checked.append(self.criminal_records)
-#        if self.card_cnaps:
-#            pj_checked.append(self.card_cnaps)
-#        else : 
-#            pj_not_checked.append(self.card_cnaps)
-#        if self.birth_certificate_children:
-#            pj_checked.append(self.birth_certificate_children)
-#        else : 
-#            pj_not_checked.append(self.birth_certificate_children)
-#        if self.ethics_course_certificate:
-#            pj_checked.append(self.ethics_course_certificate)
-#        else : 
-#            pj_not_checked.append(self.ethics_course_certificate)
-#        return pj_checked_dict
 
     @api.multi
     def _get_attachment_number(self):
@@ -226,7 +178,7 @@ class Employee(models.Model):
     #(R6.) First Rappel – cours d’éthique
     def _send_first_email_collaborator(self, automatic=False):
         print "First rappel collaborator -----------------------------------------------------------------------------"  
-        print "Nb "+str(len(self._get_not_checked_files()))
+#        print "Nb "+str(len(self._get_not_checked_files()))
         if len(self._get_not_checked_files()) > 0:
             template = self.env.ref('hr_contract_psi.custom_template_rappel_collab_1')
             self.env['mail.template'].browse(template.id).send_mail(self.id)
