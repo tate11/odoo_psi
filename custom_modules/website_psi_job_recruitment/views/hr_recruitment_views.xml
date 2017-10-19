@@ -81,7 +81,7 @@
         
          $('#add_form_ref').click(function () {
             setTimeout(function () {
-                $('#table_ref tr:last').after('<tr> <td> <input type="text" class="form-control" name="ref_name[]"/> </td> <td> <input type="text" name="ref_function_title[]" class="form-control"/> </td> <td> <input type="text" name="ref_company[]" class="form-control"/> </td> <td> Mob : <input type="text" name="ref_mobile_phone[]" class="form-control"/> <br /> Email : <input type="text" name="ref_work_email[]" class="form-control"/> </td> </tr>');
+                $('#table_ref tr:last').after('<tr> <td> <input type="text" class="form-control" name="ref_name[]"/> </td> <td> <input type="text" name="ref_function_title[]" class="form-control"/> </td> <td> <input type="text" name="ref_company[]" class="form-control"/> </td> <td> Mobile : <input type="text" name="ref_mobile_phone[]" class="form-control"/>  Email : <input type="text" name="ref_work_email[]" class="form-control"/> </td> </tr>');
              }, 200);
         });
         
@@ -187,7 +187,7 @@
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" class="form-control o_website_form_input"
-							step="any" name="salary_expected" />
+							step="any" name="salary_expected" required="1" />
 					</div>
 				</div>
 				<div class="form-group form-field">
@@ -238,7 +238,7 @@
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="partner_name"> Nom du candidat </label>
+						<label class="control-label" for="partner_name"> Nom du candidat *</label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" class="form-control o_website_form_input"
@@ -258,21 +258,12 @@
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="birthday"> Date of Birth </label>
+						<label class="control-label" for="birthday"> Date de naissance </label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text"
 							class="form-control o_website_form_input o_website_form_date"
-							name="birthday" />
-					</div>
-				</div>
-				<div class="form-group form-field">
-					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="age"> Age </label>
-					</div>
-					<div class="col-md-7 col-sm-8">
-						<input type="text" class="form-control o_website_form_input"
-							name="age" />
+							name="birthday" required="1"/>
 					</div>
 				</div>
 				<div class="form-group form-field">
@@ -313,25 +304,25 @@
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="email_from"> Courriel </label>
+						<label class="control-label" for="email_from"> Email </label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" class="form-control o_website_form_input"
-							name="email_from" />
+							name="email_from" required="1" />
 					</div>
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="partner_mobile"> Mobile </label>
+						<label class="control-label" for="partner_mobile"> Mobile N°</label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" class="form-control o_website_form_input"
-							name="partner_mobile" />
+							name="partner_mobile" required="1" />
 					</div>
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="marital"> Marital Status </label>
+						<label class="control-label" for="marital"> Situation de famille </label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<div class="o_website_form_flex">
@@ -339,28 +330,28 @@
 								<label>
 									<input type="radio" class="o_website_form_input" name="marital"
 										value="single" />
-									<span> Single </span>
+									<span> Célibataire </span>
 								</label>
 							</div>
 							<div class="radio o_website_form_flex_item">
 								<label>
 									<input type="radio" class="o_website_form_input" name="marital"
 										value="married" />
-									<span> Married </span>
+									<span> Marié(e) </span>
 								</label>
 							</div>
 							<div class="radio o_website_form_flex_item">
 								<label>
 									<input type="radio" class="o_website_form_input" name="marital"
 										value="widower" />
-									<span> Widower </span>
+									<span> Veuf(ve) </span>
 								</label>
 							</div>
 							<div class="radio o_website_form_flex_item">
 								<label>
 									<input type="radio" class="o_website_form_input" name="marital"
 										value="divorced" />
-									<span> Divorced </span>
+									<span> Divorcé(e) </span>
 								</label>
 							</div>
 						</div>
@@ -397,7 +388,7 @@
 							renseignements suivants
 						</span>
 					
-						<table id="table_parent_information">
+						<table id="table_parent_information" class="table">
 							<tr>
 								<th>NOM ET PRENOM </th>
 								<th>DEGRE DE PARENTE </th>
@@ -480,7 +471,7 @@
 						<!-- Trigger the modal with a button -->
 					<div id="div_already_answered_application">	
 						<b>Veuillez choisir votre connaissance liguistique</b>
-						<table id="table_already_answered_application">
+						<table id="table_already_answered_application" class="table">
 							<tr>
 								<th>CONNAISSANCE LINGUISTIQUE</th>
 								<th>Ecrit</th>
@@ -609,9 +600,9 @@
 					   </div>	
 				</div>
 				<div class="form-group">
-					Veuillez donner l'intitulé exact de chaque diplôme ou titre universitaire dans la langue dans laquelle il à été établi, et non <br />une traduction ou un équivalent
+					<b>Veuillez donner l'intitulé exact de chaque diplôme ou titre universitaire dans la langue dans laquelle il à été établi, et non une traduction ou un équivalent</b>
 				<h3>A. ETUDES UNIVERSITAIRES</h3>
-				<table id="table_university_studies">
+				<table id="table_university_studies" class="table">
 					<tr>
 						<th>Nom de l'établissement</th>
 						<th>Ville</th>
@@ -650,12 +641,13 @@
 							<i class="fa fa-plus"></i>
 							Ajouter
 				</button>
-				<p>Indiquez les ouvrages importants que vous avez publiés (thèses, essai, etc...)</p>
+				<br/> <br/>
+				<p><b>Indiquez les ouvrages importants que vous avez publiés (thèses, essai, etc...)</b></p>
 				<textarea class="form-control o_website_form_input" name="book_publish"/>
 				</div>
 				<div class="form-group">
 				<h2>B. Etudes secondaires, techniques ou apprentissage</h2>
-				<table id="table_secondary">
+				<table id="table_secondary" class="table">
 					<tr>
 						<th>Nom de l'établissement</th>
 						<th>Ville</th>
@@ -700,8 +692,10 @@
 				<div class="form-group">
 				<h3>FONCTIONS ANTERIEURES</h3>
 				<p>
+					<b>
 					En partant de votre poste actuel, indiquez, dans l'ordre chronologique inverse,
 					tous les postes que vous avez occupés (si les cases ne suffisent pas, en rajouter svp)
+					</b>
 				</p>
 				<div id="div_previous_functions">
 				<table class="table">
@@ -762,6 +756,7 @@
 				<textarea class="form-control" name="description[]"></textarea>
 			</div>
 			<div id="div_functions"></div>
+				<br />
 				<button type="button" class="btn btn-success"
 							id="add_form_previous_functions">
 							<i class="fa fa-plus"></i>
@@ -783,7 +778,7 @@
                 <div class="form-group">
                 	<h3>REFERENCES PROFESSIONNELLES : </h3>
                 	<p>Donnez le nom et l'adresse des trois avec qui vous aviez travaillé étroitement, n'ayant avec vous aucun lien de parenté et connaissant votre moralité et vos valeurs professionnelles</p>
-                	<table id="table_ref">
+                	<table id="table_ref" class="table">
                 		<tr>
                 			<th>NOM ET PRENOM</th>
                 			<th>TITRE ET FONCTION</th>
@@ -801,7 +796,8 @@
                 				<input type="text" name="ref_company[]" class="form-control"/>
                 			</td>
                 			<td>
-                				Mob : <input type="text" name="ref_mobile_phone[]" class="form-control"/> <br />
+                				Mobile : <input type="text" name="ref_mobile_phone[]" class="form-control"/> 
+                			
                 				Email : <input type="text" name="ref_work_email[]" class="form-control"/>
                 			</td>
                 		</tr>
@@ -812,7 +808,7 @@
 							Ajouter
 				       </button>
 				       <p>
-				       		<b>Par la présente, j'autorise PSI Madagascar à prendre contact avec les personnes de références <br />citées i-dessus.</b>
+				       		<b>Par la présente, j'autorise PSI Madagascar à prendre contact avec les personnes de références citées i-dessus.</b>
 				       </p>
                 </div>
 				<div class="form-group form-field">
@@ -820,7 +816,7 @@
 					  Avez-vous jamais été arrêté, inculpé ou poursuivi au criminel ? Avez-vous jamais été reconnu coupable ou condamné à une autre amende ou une peine de prison pour un délit (autre qu'une infraction en matiére de circulation) ?
 					</p>
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="bridger_insight"> Bridger insight </label>
+						<label class="control-label" for="bridger_insight">  </label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="checkbox" value="Yes" class="o_website_form_input"
@@ -844,7 +840,7 @@
                 		</label>
           			</div>
           			<div class="col-md-7 col-sm-8">
-          			  	<input type="file" class="form-control o_website_form_input" name="attachment_file_ids" multiple="1"/>
+          			  	<input type="file" class="form-control o_website_form_input" name="attachment_file_ids" multiple="1" accept=".docx, .pdf"/>
           			</div>
         		</div>
 				<div class="form-group">

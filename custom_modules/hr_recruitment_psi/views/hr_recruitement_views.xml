@@ -11,10 +11,10 @@
 			<field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job" />
 			<field name="arch" type="xml">
 				<field name="partner_id" position="before">
-					<field name="birthday" />
+					<field name="birthday" attrs="{'required': True}" />
 					<field name="age" />
 					<field name="country_id" />
-					<field name="sexe" />
+					<field name="sexe" attrs="{'required': True}" />
 					<field name="marital" />
 					<field name="number_of_dependent_children" />
 					<field name="recrutement_type_id" />
@@ -22,9 +22,16 @@
 				</field>
 				<field name="source_id" position="after">
 					<group string="Avis sur la candidature">
-						<field name="correspondance_profil" />
+						<h2>
+							<label for="correspondance_profil"/>
+							<field name="correspondance_profil"/>
+						</h2>
+						<h2>
+							<label for="psi_total_note"/>
+							<field name="psi_total_note" />
+						</h2>
 						<field name="psi_note_interview" />
-						<field name="b_liste_restreinte" />
+						<field name="b_liste_restreinte" /> 
 					</group>
 					<group string="Note Shortlist">
 						<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}"/>
@@ -263,6 +270,7 @@
 					<field name="psi_average_note"/>
 					<field name="psi_average_note_test"/>
 					<field name="psi_note_interview"/>
+					<field name="psi_total_note"/>
 				</field>
 	        </field>
 	    </record>

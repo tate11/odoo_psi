@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+		<record id="hr_contract_psi.custom_template_rappel_collab_1" model="mail.template">
+			<field name="name">Premier rappel Email au collaborateur</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_employee" />
+			<field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' % (object.create_uid.name, object.create_uid.email) or '')}</field>
+			<field name="subject">Premier rappel de ${object.name_related}</field>
+			<!--  <field name="email_to"> ${object.user_id.email} </field> -->
+			<field name="email_to">mifanomezantsoa@ingenosya.mg</field>
+			<!--  <field name="email_cc"> ${object.user_id.parent_id.email} </field> -->
+			<!--  <field name="reply_to"> preferred Reply address</field> -->		
+			<field name="body_html"><![CDATA[
+<div>
+    <p>
+      	Bonjour ${object.name_related},
+     	Premier rappel Email au collaborateur                       
+	</p>
+	<h5>Listes des pieces manquantes :</h5>
+	<ul>
+			% if not object.personal_information:
+				<li>Fiche de renseignements personnels</li> 
+			% endif
+			% if not object.id_photos:
+				<li>Photos d'identité</li>
+			% endif
+			% if not object.certificate_residence:
+				<li>Certificat de résidence</li>
+			% endif
+			% if not object.marriage_certificate:
+				<li>Acte de mariage ou copie de livret de famille</li>
+			% endif
+			% if not object.cin:
+				<li>Copie CIN</li>
+			% endif
+			% if not object.work_certificate:
+				<li>Copies Certificats de travail</li>
+			% endif
+			% if not object.qualifications:
+				<li>Copies Diplômes</li>
+			% endif
+			% if not object.criminal_records:
+				<li>Casier judiciaires</li>
+			% endif
+			% if not object.card_cnaps:
+				<li>Copie Cartes CNAPS</li>
+			% endif
+			% if not object.birth_certificate_children:
+				<li>Acte de naissances des enfants </li>
+			% endif
+			% if not object.ethics_course_certificate:
+				<li>Certificat du cours d'éthique</li>
+			% endif
+	</ul>                  
+</div>   ]]>
+			</field>
+		</record>
+
+        <!-- Premier rappel RH et Collaborateur + pièces manquantes -->
+        <record id="hr_contract_psi.custom_template_rappel_rh_collab" model="mail.template">
+            <field name="name">Premier rappel à la RH</field>
+			<field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' % (object.create_uid.name, object.create_uid.email) or '')}</field>
+			<field name="subject">Premier rappel à la RH</field>
+			<field name="email_to">mifanomezantsoa@ingenosya.mg</field>			
+            <field name="model_id" ref="hr_contract_psi.model_hr_contract"/>
+            <field name="auto_delete" eval="True"/>            
+            <field name="body_html"><![CDATA[
+      
+   
+			<br\>
+			<h2>(R7.) Rappel - enregistrement du profil du collaborateur / complétude </h2>
+			<p>Un premier rappel doit être fait à la RH (Superviseur RH)
+			15 jrs après le début du contrat si le dossier n’est pas complet (cf R.2)</p>
+			<p>Et au collaborateur par mail avec la liste des pièces manquantes</p>
+			
+			<h5>Pièces manquantes :</h5>
+			<ul>
+			% if not object.employee_id.personal_information:
+				<li>Fiche de renseignements personnels</li> 
+			% endif
+			% if not object.employee_id.id_photos:
+				<li>Photos d'identité</li>
+			% endif
+			% if not object.employee_id.certificate_residence:
+				<li>Certificat de résidence</li>
+			% endif
+			% if not object.employee_id.marriage_certificate:
+				<li>Acte de mariage ou copie de livret de famille</li>
+			% endif
+			% if not object.employee_id.cin:
+				<li>Copie CIN</li>
+			% endif
+			% if not object.employee_id.work_certificate:
+				<li>Copies Certificats de travail</li>
+			% endif
+			% if not object.employee_id.qualifications:
+				<li>Copies Diplômes</li>
+			% endif
+			% if not object.employee_id.criminal_records:
+				<li>Casier judiciaires</li>
+			% endif
+			% if not object.employee_id.card_cnaps:
+				<li>Copie Cartes CNAPS</li>
+			% endif
+			% if not object.employee_id.birth_certificate_children:
+				<li>Acte de naissances des enfants </li>
+			% endif
+			% if not object.employee_id.ethics_course_certificate:
+				<li>Certificat du cours d'éthique</li>
+			% endif
+			</ul>
+<!-- 
+			<h5>Pièces manquantes</h5>
+			% for liste in object.employee_id._get_not_checked_files()
+			<ul>
+				<li>${liste.xx}</li>			
+			</ul>
+			% endfor 
+-->
+			
+			]]></field>
+        </record>
+        
+		<!-- Second rappel au collaborateur -->
+		<record id="hr_contract_psi.custom_template_rappel_collab_2" model="mail.template">
+			<field name="name">Second rappel au collaborateur</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' % (object.create_uid.name, object.create_uid.email) or '')}</field>
+			<field name="subject">Premier rappel de ${object.name}</field>
+			<!--  <field name="email_to"> ${object.user_id.email} </field> -->
+			<field name="email_to">mifanomezantsoa@ingenosya.mg</field>
+			<field name="email_cc">mifanomezantsoa@ingenosya.mg</field> <!-- cc RH -->
+			<!--  <field name="reply_to"> preferred Reply address</field> -->		
+			<field name="body_html"><![CDATA[                
+                  
+            <p>  ${object.company_id.name} </p>
+			<br\>
+			<h2>(R8.) 2d Rappel – cours d’éthique</h2>
+			<p>Un 2d rappel doit être envoyé au collaborateur par mail pour suivre le cours d’éthique, avec en copie RH, 3 semaines après l’enregistrement de son profil. S’il n’a pas enregistré son certificat de complétude du cours.
+			le cours d’éthique, avec en copie RH, 15 jrs après l’enregistrement de son profil.</p>
+        
+                  ]]>
+			</field>
+		</record>
+    </data>
+</odoo>
