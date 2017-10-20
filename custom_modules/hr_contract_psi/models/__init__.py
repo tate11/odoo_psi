@@ -1,2 +1,2 @@
 import hr_contract
-import res_partner
+import hr_wage_grid
