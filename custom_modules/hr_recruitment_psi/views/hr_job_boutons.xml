@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+	<record id="view_hr_job_form5" model="ir.ui.view">
+		<field name="name">hr.job.form5</field>
+		<field name="model">hr.job</field>
+		<field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban" />
+		<field name="arch" type="xml">
+			<field name="name" position="after">
+				<field name="recrutement_type" invisible="1" />
+			</field>
+			
+			<xpath expr="//a[@name='%(hr_recruitment.action_hr_job_applications)d']" position="replace">
+				<a class="btn btn-primary" name="%(action_permanent)d" 
+					type="action" attrs="{'invisible': [('recrutement_type', '!=', 'collaborateur')]}">Permanent</a>
+					
+				<a class="btn btn-primary" name="%(action_stagiaire)d"
+					type="action" attrs="{'invisible': [('recrutement_type', '!=', 'stagiaire')]}" >Stagiaire</a>
+			</xpath>
+		</field>
+	</record>
+</odoo>
