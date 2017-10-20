@@ -191,4 +191,12 @@ class Employee(models.Model):
         #si certificat de complétude du cours NON ENREGISTRER > mail au collab apres 3 semaines d'enregistrement
         template = self.env.ref('hr_contract_psi.custom_template_rappel_collab_2')
         self.env['mail.template'].browse(template.id).send_mail(self.id)
+
+class ContractTypeSanction(models.Model):
+
+    _name = 'hr.contract.type.sanction'
+    _description = 'Liste des sanctions'
+
+    name = fields.Char(string='Nom de la sanction')
+    
     
