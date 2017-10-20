@@ -15,27 +15,46 @@
 				</field>
 			</field>
 		</record>
+		
+		<record id="kanban_stagiaire" model="ir.ui.view">
+			<field name="name">kanban permanent</field>
+			<field name="model">hr.applicant</field>
+			<field name="mode">primary</field>
+			<field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant" />
+			<field name="arch" type="xml">
+				
+				<!-- TODO: ETAPES KANBAN à GERER selon TYPE RECRUTEMENT -->
+			
+				<kanban position="attributes">
+	                <attribute name="edit">false</attribute>
+	                <attribute name="quick_create">false</attribute>
+	            </kanban>
+			</field>
+		</record>
 			
 		<record model="ir.actions.act_window" id="action_stagiaire">
-	        <field name="name">tree stagiaire</field>
+	        <field name="name">Candidatures des Stagiaires</field>
 	        <field name="res_model">hr.applicant</field>
-	        <field name="view_mode">form</field>
-	        <!-- <field name="view_mode">kanban,tree,form,graph,calendar,pivot</field> -->
+	        <field name="view_mode">tree,form,kanban,calendar</field>
 	        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
-	        <field name="help" type="html">
-	              <p>
-	                Odoo helps you track applicants in the recruitment
-	                process and follow up all operations: meetings, interviews, etc.
-	              </p><p>
-	                Applicants and their attached CV are created automatically when an email is sent.
-	                If you install the document management modules, all resumes are indexed automatically,
-	                so that you can easily search through their content.
-	              </p>
-	         </field>
 	    </record>
 	
-	    <record model="ir.actions.act_window.view" id="action_hr_sec_form_view_act_job2">
+		<record model="ir.actions.act_window.view" id="action_tree_stagiaire">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="crm_case_tree_view_job2"/>
+	        <field name="act_window_id" ref="action_stagiaire"/>
+	    </record>
+	    
+	    <record model="ir.actions.act_window.view" id="action_kanban_stagiaire">
 	        <field name="sequence" eval="3"/>
+	        <field name="view_mode">kanban</field>
+	        <field name="view_id" ref="kanban_stagiaire"/>
+	        <field name="act_window_id" ref="action_stagiaire"/>
+	    </record>
+	    
+	    <record model="ir.actions.act_window.view" id="action_hr_sec_form_view_act_job2">
+	        <field name="sequence" eval="4"/>
 	        <field name="view_mode">form</field>
 	        <field name="view_id" ref="crm_case_form_view_job_inherit_stagiaire"/>
 	        <field name="act_window_id" ref="action_stagiaire"/>

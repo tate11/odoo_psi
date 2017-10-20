@@ -16,6 +16,8 @@
              'views/hr_recruitement_wkf.xml',
              'views/hr_recruitement_views_permanent.xml',
              'views/hr_recruitement_views_stagiaire.xml',
+             'views/hr_recruitement_views_consultant.xml',
+             'views/hr_recruitement_views_cabinet.xml',
              'views/hr_job_boutons.xml',
              ],
     'demo': [],

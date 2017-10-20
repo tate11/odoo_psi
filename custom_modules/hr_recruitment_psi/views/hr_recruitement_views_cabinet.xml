@@ -2,8 +2,8 @@
 <odoo>
 	<data>
 
-		<record id="crm_case_form_view_job_inherit_permanent" model="ir.ui.view">
-			<field name="name">form permanent</field>
+		<record id="crm_case_form_view_job_inherit_cabinet" model="ir.ui.view">
+			<field name="name">form cabinet</field>
 			<field name="model">hr.applicant</field>
 			<field name="mode">primary</field>
 			<field name="inherit_id" ref="crm_case_form_view_job_inherit1" />
@@ -11,13 +11,13 @@
 				<field name="state" position="replace">
 					<field name="state" widget="statusbar"
 						attrs="{'invisible': [('active', '=', False)]}"
-						statusbar_visible="applicant_selected,convoked_for_test,interview,professional_reference,psi_wage_proposal,notification_of_employment,contract_established" />
+						statusbar_visible="applicant_selected,notification_of_employment,contract_established" />
 				</field>
 			</field>
 		</record>
 		
-		<record id="kanban_permanent" model="ir.ui.view">
-			<field name="name">kanban permanent</field>
+		<record id="kanban_cabinet" model="ir.ui.view">
+			<field name="name">kanban cabinet</field>
 			<field name="model">hr.applicant</field>
 			<field name="mode">primary</field>
 			<field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant" />
@@ -32,32 +32,32 @@
 			</field>
 		</record>
 
-		<record model="ir.actions.act_window" id="action_permanent">
-	        <field name="name">Candidatures des Permanents</field>
+		<record model="ir.actions.act_window" id="action_cabinet">
+	        <field name="name">Candidatures des Cabinets</field>
 	        <field name="res_model">hr.applicant</field>
 	        <field name="view_mode">tree,form,kanban,calendar</field>
 	        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
 	    </record>
 	    
-	    <record model="ir.actions.act_window.view" id="action_tree_permanent">
+	    <record model="ir.actions.act_window.view" id="action_tree_cabinet">
 	        <field name="sequence" eval="2"/>
 	        <field name="view_mode">tree</field>
 	        <field name="view_id" ref="crm_case_tree_view_job2"/>
-	        <field name="act_window_id" ref="action_permanent"/>
+	        <field name="act_window_id" ref="action_cabinet"/>
 	    </record>
 	    
-	    <record model="ir.actions.act_window.view" id="action_kanban_permanent">
+	    <record model="ir.actions.act_window.view" id="action_kanban_cabinet">
 	        <field name="sequence" eval="3"/>
 	        <field name="view_mode">kanban</field>
-	        <field name="view_id" ref="kanban_permanent"/>
-	        <field name="act_window_id" ref="action_permanent"/>
+	        <field name="view_id" ref="kanban_cabinet"/>
+	        <field name="act_window_id" ref="action_cabinet"/>
 	    </record>
 	    
 	    <record model="ir.actions.act_window.view" id="action_hr_sec_form_view_act_job3">
 	        <field name="sequence" eval="4"/>
 	        <field name="view_mode">form</field>
-	        <field name="view_id" ref="crm_case_form_view_job_inherit_permanent"/>
-	        <field name="act_window_id" ref="action_permanent"/>
+	        <field name="view_id" ref="crm_case_form_view_job_inherit_cabinet"/>
+	        <field name="act_window_id" ref="action_cabinet"/>
 	    </record>
 
 	</data>
