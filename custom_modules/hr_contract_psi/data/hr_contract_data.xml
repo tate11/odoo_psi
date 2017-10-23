@@ -57,6 +57,21 @@
             <field name="doall" eval="False" />
             <field eval="'hr.employee'" name="model" />
             <field name="function" eval="'_send_second_email_collaborator'" /> 
-        </record>        
+        </record>   
+        
+	    <!-- Cron send email mentor - Fin periode d'essai -->
+        <record id="ir_cron_send_email_trial_date_end" forcecreate="True" model="ir.cron">
+            <field name="name">Fin période d'essai - Email au supérieur hierarchique</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall">1</field>
+            <field eval="'hr.contract'" name="model" />
+            <field name="function" eval="'_send_email_trial_date_end'" /> 
+            <!-- <field name="nextcall">2017-10-21 22:22:22</field> -->
+            <field name="args" eval="'(True,)'"/>
+            <field name="active" eval="True" />
+        </record>     
     </data>
 </odoo>
