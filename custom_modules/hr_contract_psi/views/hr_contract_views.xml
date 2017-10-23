@@ -21,7 +21,7 @@
 				</div>
 			</div> -->
 			<div class="oe_title" position="after">
-				<p>OK</p>
+				<p></p>
 				<!-- <button name="ir_cron_send_email_collab_1" type="object" string="Test CRON" class="btn-primary"/> -->
 			</div>
 			<!-- <field name="job_id" position="after" >

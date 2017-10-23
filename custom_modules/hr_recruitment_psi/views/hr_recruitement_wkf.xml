@@ -49,7 +49,7 @@
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
             <field name="name">notification_of_employment</field>
             <field name="kind">function</field>
-            <field name="action">write({'state':'notification_of_employment'})</field>
+            <field name="action">action_notification_of_employment()</field>
         </record>
         <record id="activity_contract_established" model="workflow.activity">
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
@@ -57,7 +57,24 @@
             <field name="kind">function</field>
             <field name="action">action_contract_established()</field>
         </record>
-        
+		 <record id="activity_honorary_proposal" model="workflow.activity">
+		    <field name="wkf_id" ref="hr_job_wkf"/>
+            <field name="name">honorary_proposal</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'honorary_proposal'})</field>
+        </record>
+        <record id="activity_benefits" model="workflow.activity">
+		    <field name="wkf_id" ref="hr_job_wkf"/>
+            <field name="name">benefits</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'benefits'})</field>
+        </record>
+         <record id="activity_internship_contract" model="workflow.activity">
+		    <field name="wkf_id" ref="hr_job_wkf"/>
+            <field name="name">internship_contract</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'internship_contract'})</field>
+        </record>        
         
 		<!-- transition -->
 		<record id="activity_draft_to_activity_convoked_for_test" model="workflow.transition">
@@ -83,13 +100,16 @@
             <field name="act_to" ref="activity_interview"/>
             <field name="signal">button_interview</field>
         </record>
-        
         <record id="activity_interview_to_activity_professional_reference" model="workflow.transition">
             <field name="act_from" ref="activity_interview"/>
             <field name="act_to" ref="activity_professional_reference"/>
             <field name="signal">button_professional_reference</field>
         </record>
-        
+        <record id="activity_interview_to_activity_bridger_insight" model="workflow.transition">
+            <field name="act_from" ref="activity_interview"/>
+            <field name="act_to" ref="activity_bridger_insight"/>
+            <field name="signal">button_bridger_insight_trainee_interview</field>
+        </record>
         <record id="activity_professional_reference_to_activity_bridger_insight" model="workflow.transition">
             <field name="act_from" ref="activity_professional_reference"/>
             <field name="act_to" ref="activity_bridger_insight"/>
@@ -101,13 +121,19 @@
             <field name="act_to" ref="activity_psi_wage_proposal"/>
             <field name="signal">button_psi_wage_proposal</field>
         </record>
-        
-        <record id="activity_brigdger_insight_to_activity_psi_honorary_proposal" model="workflow.transition">
+       
+        <record id="activity_brigdger_insight_to_activity_honorary_proposal" model="workflow.transition">
             <field name="act_from" ref="activity_bridger_insight"/>
-            <field name="act_to" ref="activity_psi_wage_proposal"/>
+            <field name="act_to" ref="activity_honorary_proposal"/>
             <field name="signal">button_psi_honorary_proposal</field>
         </record>
         
+         <record id="activity_brigdger_insight_to_activity_benefitsl" model="workflow.transition">
+            <field name="act_from" ref="activity_bridger_insight"/>
+            <field name="act_to" ref="activity_benefits"/>
+            <field name="signal">button_benefits</field>
+        </record>
+     
         <record id="activity_psi_wage_proposalt_to_activity_notification_of_employment" model="workflow.transition">
             <field name="act_from" ref="activity_psi_wage_proposal"/>
             <field name="act_to" ref="activity_notification_of_employment"/>
@@ -118,10 +144,14 @@
             <field name="act_to" ref="activity_contract_established"/>
             <field name="signal">button_contract_established</field>
         </record>
+         <record id="activity_benefits_to_activity_internship_contract" model="workflow.transition">
+            <field name="act_from" ref="activity_benefits"/>
+            <field name="act_to" ref="activity_internship_contract"/>
+            <field name="signal">button_internship_contract</field>
+        </record>
         
-        
-        <record id="activity_psi_wage_proposal_to_activity_contract_established" model="workflow.transition">
-            <field name="act_from" ref="activity_psi_wage_proposal"/>
+        <record id="activity_honorary_proposal_to_activity_contract_established" model="workflow.transition">
+            <field name="act_from" ref="activity_honorary_proposal"/>
             <field name="act_to" ref="activity_contract_established"/>
             <field name="signal">button_contract_established_consultant</field>
         </record>
