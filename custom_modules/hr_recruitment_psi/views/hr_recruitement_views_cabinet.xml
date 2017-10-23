@@ -16,22 +16,6 @@
 			</field>
 		</record>
 		
-		<record id="kanban_cabinet" model="ir.ui.view">
-			<field name="name">kanban cabinet</field>
-			<field name="model">hr.applicant</field>
-			<field name="mode">primary</field>
-			<field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant" />
-			<field name="arch" type="xml">
-			
-				<!-- TODO: ETAPES KANBAN à GERER selon TYPE RECRUTEMENT -->
-			
-				<kanban position="attributes">
-	                <attribute name="edit">false</attribute>
-	                <attribute name="quick_create">false</attribute>
-	            </kanban>
-			</field>
-		</record>
-
 		<record model="ir.actions.act_window" id="action_cabinet">
 	        <field name="name">Candidatures des Cabinets</field>
 	        <field name="res_model">hr.applicant</field>
@@ -49,7 +33,7 @@
 	    <record model="ir.actions.act_window.view" id="action_kanban_cabinet">
 	        <field name="sequence" eval="3"/>
 	        <field name="view_mode">kanban</field>
-	        <field name="view_id" ref="kanban_cabinet"/>
+	        <field name="view_id" ref="kanban_psi"/>
 	        <field name="act_window_id" ref="action_cabinet"/>
 	    </record>
 	    

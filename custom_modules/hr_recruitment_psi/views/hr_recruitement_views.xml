@@ -266,7 +266,11 @@
 					<field name="priority" invisible="1" />
 				</field>	
 				
-				<field name="stage_id" position="after">
+				<field name="stage_id" position="replace">
+					<field name="state"/>
+				</field>
+				
+				<field name="state" position="after">
 					<field name="psi_average_note"/>
 					<field name="psi_average_note_test"/>
 					<field name="psi_note_interview"/>
@@ -274,6 +278,21 @@
 				</field>
 	        </field>
 	    </record>
+	    
+	    <!-- vue kanban filtré par state -->
+	    <record id="kanban_psi" model="ir.ui.view">
+			<field name="name">kanban cabinet</field>
+			<field name="model">hr.applicant</field>
+			<field name="mode">primary</field>
+			<field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant" />
+			<field name="arch" type="xml">
+				<kanban position="attributes">
+	                <attribute name="edit">false</attribute>
+	                <attribute name="quick_create">false</attribute>
+	                <attribute name="default_group_by">state</attribute>
+	            </kanban>
+			</field>
+		</record>
 
 		<record model="ir.ui.view" id="hr_recruitment_stage_form1">
 			<field name="name">hr.recruitment.stage.form1</field>
