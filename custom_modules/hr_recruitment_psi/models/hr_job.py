@@ -53,6 +53,7 @@ class hr_job(models.Model):
     application_deadline_date = fields.Date(string=u"Délai de candidature")
     rr_approbation = fields.Boolean("Approbation par RR", default=True)
     psi_memo = fields.Boolean(u"Mémo", default=False)
+    psi_date_start = fields.Date(string='Date de prise de fonction souhaitée')
     
     @api.one
     @api.constrains('psi_contract_duration')
