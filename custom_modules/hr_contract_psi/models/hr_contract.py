@@ -99,6 +99,8 @@ class Employee(models.Model):
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments')
     
+    sanctions_data = fields.One2many('hr.contract.sanction.data', 'sanction_type_id', string='')
+    
     @api.model
     def create(self, vals):
         print "CREATE in EMPLOYEE -----------------------------------------------------------------------------"           
@@ -199,4 +201,14 @@ class ContractTypeSanction(models.Model):
 
     name = fields.Char(string='Nom de la sanction')
     
-    
+class SanctionData(models.Model):
+
+    _name = 'hr.contract.sanction.data'
+
+    name = fields.Char(string='Nom de la sanction')
+    sanction_date = fields.Date(string='Date de la sanction')
+    sanction_type_id = fields.Many2one('hr.contract.type.sanction', string='Sanction')
+    sanction_objet = fields.Char(string='Objet')
+    sanction_date_effacement = fields.Date(string='Date d\'effacement')
+    sanction_commentaire = fields.Text(string='Commentaires')
+        

@@ -44,6 +44,21 @@
 					</group>
 				</page>
 			</page>
+			<page name="hr_settings" position="after">
+				<page string="Sanctions">
+					<group>
+						<field name="sanctions_data" nolabel="1">
+							<tree string="" editable="bottom">
+								<field name="sanction_date" />
+								<field name="sanction_type_id" />
+								<field name="sanction_objet" />
+								<field name="sanction_date_effacement" />
+								<field name="sanction_commentaire" />
+							</tree>
+						</field>
+					</group>
+				</page>
+			</page>
 		</field>
 	</record>
 
