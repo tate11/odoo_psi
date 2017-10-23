@@ -11,11 +11,10 @@ class hr_contract(models.Model):
     state_of_work   = fields.Selection([
         ('cdd', 'CDD'),
         ('cdi', 'CDI')
-     ], string='Statut')
+     ], string='Statut', track_visibility='onchange')
     
     @api.model
-    def create(self, vals):
-        print "CREATE in CONTRACT -----------------------------------------------------------------------------"   
+    def create(self, vals):  
         contract = super(hr_contract, self).create(vals)
         self._update_cron_rh_1()  
         return contract
@@ -26,31 +25,57 @@ class hr_contract(models.Model):
         self._update_cron_rh_1()  
         return contract
 
-    @api.multi
-    def unlink(self):
-        contract = super(hr_contract, self).unlink()
-        self._update_cron_rh_1()  
-        return contract
-    
     def _update_cron_rh_1(self):
         """ Activate the cron First Email RH + Employee.
         """
-        print "ACTIVE CRON notification FIRST_RH -----------------------------------------------------------------------------"
         employee = self.employee_id
-        pj_not_checked = employee._get_not_checked_files()
         cron = self.env.ref('hr_contract_psi.ir_cron_send_email_rh_1', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
     
     #(R7.) Rappel - enregistrement du profil du collaborateur / complétude
-    def _send_first_email_rh(self):
-        print "First rappel RH"
-        #si dossier PAS complet > mail à la RH et collab + pieces manquantes
-        #date_start < contrat
-        print "test "+str(len(self.employee_id._get_not_checked_files()))
+    @api.one
+    @api.constrains('name')
+    def _send_first_email_rh(self, automatic=False):
         if len(self.employee_id._get_not_checked_files()) > 0:
-            template = self.env.ref('hr_contract_psi.custom_template_rappel_rh_collab')
-            self.env['mail.template'].browse(template.id).send_mail(self.id)
-    
+            template0 = self.env.ref('hr_contract_psi.custom_template_rappel_hr_missing_pieces')
+            self.env['mail.template'].browse(template0.id).send_mail(self.id)
+            template1 = self.env.ref('hr_contract_psi.custom_template_rappel_collab_missing_pieces')
+            self.env['mail.template'].browse(template1.id).send_mail(self.id)
+        if automatic:
+            self._cr.commit()
+     
+    @api.multi    
+    @api.one
+    @api.constrains('name')
+    def _send_email_trial_date_end(self, automatic=False):
+        for record in self:
+            if record.trial_date_start:
+                date_start = record.trial_date_start
+                date_start_trial = datetime.strptime(date_start,"%Y-%m-%d")
+                date_start_trial_time = datetime(
+                    year=date_start_trial.year, 
+                    month=date_start_trial.month,
+                    day=date_start_trial.day,
+                )
+                # Verification selection
+                if record.job_id.name == 'Chief Executive Officer':
+                    month_to_notif = date_start_trial_time + relativedelta(months=5)  
+                    if month_to_notif.date() == datetime.today().date():
+                         template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
+                         self.env['mail.template'].browse(template.id).send_mail(self.id)
+                elif record.job_id.name == 'Consultant':
+                    month_to_notif = date_start_trial_time + relativedelta(months=3)  
+                    if month_to_notif.date() == datetime.today().date():
+                         template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
+                         self.env['mail.template'].browse(template.id).send_mail(self.id)
+                elif record.job_id.name == 'Human Resources Manager':
+                    month_to_notif = date_start_trial_time + relativedelta(months=2)  
+                    if month_to_notif.date() == datetime.today().date():
+                         template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
+                         self.env['mail.template'].browse(template.id).send_mail(self.id)
+        if automatic:
+            self._cr.commit()
+
     def send_email_collaborator(self):
         print "The id contract is : ",self.contract_id
         template = self.env.ref('hr_contract_psi.custom_template_id')
@@ -97,66 +122,60 @@ class Employee(models.Model):
     birth_certificate_children  = fields.Boolean(default=False, string="Acte de naissances des enfants ")
     ethics_course_certificate   = fields.Boolean(default=False, string="Certificat du cours d'éthique")
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
-    attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments')
+    attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments', track_visibility='always')
     
-    sanctions_data = fields.One2many('hr.contract.sanction.data', 'sanction_type_id', string='')
+    sanctions_data = fields.One2many('hr.contract.sanction.data', 'sanction_type_id', string='', track_visibility='always')
+    
     
     @api.model
     def create(self, vals):
-        print "CREATE in EMPLOYEE -----------------------------------------------------------------------------"           
         employee = super(Employee, self).create(vals)
         self._update_cron_collab_1()    
-        self._update_cron_collab_2()     
+        self._update_cron_collab_2()    
         return employee
     
     @api.multi
     def write(self, vals):
         employee = super(Employee, self).write(vals)
-        self._update_cron_collab_1() 
+        self._update_cron_collab_1()
         self._update_cron_collab_2()
         return employee
 
     def _update_cron_collab_1(self):
         """ Activate the cron Premier Email Employee.
         """
-        print "ACTIVE CRON notification PREMIER -----------------------------------------------------------------------------"
-        list_not_checked = self._get_not_checked_files()
         cron = self.env.ref('hr_contract_psi.ir_cron_send_email_collab_1', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
     
     def _update_cron_collab_2(self):
         """ Activate the cron Second Email Employee.
         """
-        print "ACTIVE CRON notification SECOND -----------------------------------------------------------------------------"
         cron = self.env.ref('hr_contract_psi.ir_cron_send_email_collab_2', raise_if_not_found=False)
         return cron
     
-    def _get_not_checked_files(self):
+    @api.one
+    @api.constrains('personal_information')   
+    def _get_not_checked_files(self):      
         list_not_checked = []
-        employee = super(Employee, self).create(vals)
-#        employee_obj = self.env['hr.employee']
-#        data = employee_obj.browse([employee_id.id])
-        employee = self.env['hr.employee']
-        dict ={
-               'personal_information'       : employee.personal_information,
-               'id_photos'                  : employee.id_photos,
-               'certificate_residence'      : employee.certificate_residence,
-               'marriage_certificate'       : employee.marriage_certificate,
-               'cin'                        : employee.cin,
-               'work_certificate'           : employee.work_certificate,
-               'qualifications'             : employee.qualifications,
-               'criminal_records'           : employee.criminal_records,
-               'card_cnaps'                 : employee.card_cnaps,
-               'birth_certificate_children' : employee.birth_certificate_children,
-               'ethics_course_certificate'  : employee.ethics_course_certificate  
-               }
-        list(dict.keys())
-        list(dict.values())
-#        print "VALUES "+str(list(dict.values()))
-        for key, value in dict.items() :
-            if value == False:
-                list_not_checked.append(key)    
-#        print "list_not_checked "+str(list_not_checked)
+        for record in self:     
+            dict ={
+                       'personal_information'       : record.personal_information,
+                       'id_photos'                  : record.id_photos,
+                       'certificate_residence'      : record.certificate_residence,
+                       'marriage_certificate'       : record.marriage_certificate,
+                       'cin'                        : record.cin,
+                       'work_certificate'           : record.work_certificate,
+                       'qualifications'             : record.qualifications,
+                       'criminal_records'           : record.criminal_records,
+                       'card_cnaps'                 : record.card_cnaps,
+                       'birth_certificate_children' : record.birth_certificate_children,
+                       'ethics_course_certificate'  : record.ethics_course_certificate 
+                   }
+            list(dict.keys())
+            list(dict.values())
+            for key, value in dict.items() :
+                if value == False:
+                    list_not_checked.append(key)    
         return list_not_checked
 
     @api.multi
@@ -177,22 +196,24 @@ class Employee(models.Model):
         action['search_view_id'] = (self.env.ref('hr_contract.ir_attachment_view_search_inherit_hr_employee').id, )
         return action
     
-    #(R6.) First Rappel – cours d’éthique
+    #(R6.) First Rappel au cours d'éthique  
+    @api.one
+    @api.constrains('personal_information')  
     def _send_first_email_collaborator(self, automatic=False):
-        print "First rappel collaborator -----------------------------------------------------------------------------"  
-#        print "Nb "+str(len(self._get_not_checked_files()))
-        if len(self._get_not_checked_files()) > 0:
+        list_not_checked = self._get_not_checked_files()
+        if len(list_not_checked) > 0:
             template = self.env.ref('hr_contract_psi.custom_template_rappel_collab_1')
             self.env['mail.template'].browse(template.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
-            
-    #(R8.) Second Rappel – cours d’éthique
-    def _send_second_email_collaborator(self):
-        print "Second rappel collaborator"
+
+    #(R8.) Second Rappel au cours d'éthique
+    def _send_second_email_collaborator(self, automatic=False):
         #si certificat de complétude du cours NON ENREGISTRER > mail au collab apres 3 semaines d'enregistrement
         template = self.env.ref('hr_contract_psi.custom_template_rappel_collab_2')
         self.env['mail.template'].browse(template.id).send_mail(self.id)
+        if automatic:
+            self._cr.commit()
 
 class ContractTypeSanction(models.Model):
 
