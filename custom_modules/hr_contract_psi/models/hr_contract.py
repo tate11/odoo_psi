@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from datetime import timedelta
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 
 class hr_contract(models.Model):
@@ -11,7 +13,7 @@ class hr_contract(models.Model):
     state_of_work   = fields.Selection([
         ('cdd', 'CDD'),
         ('cdi', 'CDI')
-     ], string='Statut')
+     ], string='Statut', track_visibility='onchange', )
     
     @api.model
     def create(self, vals):  
