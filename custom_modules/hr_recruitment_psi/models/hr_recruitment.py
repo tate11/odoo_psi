@@ -3,7 +3,9 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 from operator import truediv
-from datetime import datetime
+from datetime import timedelta
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
@@ -155,6 +157,7 @@ class Applicant(models.Model):
     
     b_liste_restreinte = fields.Boolean(string='Dans la liste restreinte', default=False)
     
+   
     @api.multi
     def create_employee_from_applicant(self):
         """ Create an hr.employee from the hr.applicants """
@@ -167,7 +170,9 @@ class Applicant(models.Model):
             if applicant.job_id and (applicant.partner_name or contact_name):
                 applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
                 vals = {'name': applicant.partner_name or contact_name,
+                                                'birthday': applicant.birthday,
                                                'job_id': applicant.job_id.id,
+                                               'marital':applicant.marital,
                                                'address_home_id': address_id,
                                                'department_id': applicant.department_id.id or False,
                                                'address_id': applicant.company_id and applicant.company_id.partner_id and applicant.company_id.partner_id.id or False,
@@ -175,6 +180,33 @@ class Applicant(models.Model):
                                                'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False}
                 employee = self.env['hr.employee'].create(vals)
                 applicant.write({'emp_id': employee.id})
+                print "Employee ID : ",employee.id
+                date_start = applicant.job_id.psi_date_start
+                date_start_trial = datetime.strptime(date_start,"%Y-%m-%d")
+                date_start_trial_time = datetime(
+                                                     year=date_start_trial.year, 
+                                                     month=date_start_trial.month,
+                                                     day=date_start_trial.day,
+                       )
+                if applicant.job_id.psi_professional_category == 'directeur' or applicant.job_id.psi_professional_category == 'rra' :
+                    month_to_notif = date_start_trial_time + relativedelta(months=5)
+                
+                elif applicant.job_id.psi_professional_category == 'coordinateur':
+                    month_to_notif = date_start_trial_time + relativedelta(month=4)
+                    
+                else :
+                    month_to_notif = date_start_trial_time + relativedelta(months=3)
+                    
+                vals_contract = {'name': applicant.partner_name or contact_name,
+                                                'employee_id': employee.id,
+                                               'job_id': applicant.job_id.id,
+                                               'date_start': applicant.job_id.psi_date_start,
+                                               'trial_date_start':applicant.job_id.psi_date_start,
+                                               'trial_date_end': month_to_notif,
+                                               'wage':applicant.salary_proposed,
+                                               'department_id': applicant.department_id.id or False}
+                print "vals_contract : ",vals_contract
+                contract = self.env['hr.contract'].create(vals_contract)
                 applicant.job_id.message_post(
                     body=_('New Employee %s Hired') % applicant.partner_name if applicant.partner_name else applicant.name,
                     subtype="hr_recruitment.mt_job_applicant_hired")

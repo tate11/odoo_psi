@@ -211,12 +211,12 @@
 				</button>
 				<field name="stage_id" position="before">
 					<button name="button_convoked_for_test" string="Convoqué pour les tests"
-						attrs="{'invisible': ['|','|',('state','!=','applicant_selected'),('nature_recrutement_id', '=', 'conssideration_dossier'),('recrutement_type','=','collaborateur_externe')]}" />
+					attrs="{'invisible': ['|','|','|',('b_liste_restreinte','=',False),('state','!=','applicant_selected'),('nature_recrutement_id', '=', 'conssideration_dossier'),('recrutement_type','=','collaborateur_externe')]}" /> -->
 					<button name="button_interview" string="Entretiens"
-						attrs="{'invisible': ['|',('state','not in',('convoked_for_test', 'applicant_selected')),('nature_recrutement_id', '=', 'conssideration_dossier')]}" />
+						attrs="{'invisible': ['|','|',('b_liste_restreinte','=',False),('state','not in',('convoked_for_test', 'applicant_selected')),('nature_recrutement_id', '=', 'conssideration_dossier')]}" />
 					<button name="button_consultant_consideration_de_dossier"
 						string="Passer aux Références professionnelles"
-						attrs="{'invisible': ['|',('state','!=','applicant_selected'),('nature_recrutement_id', '!=', 'conssideration_dossier')]}" />
+						attrs="{'invisible': ['|','|',('b_liste_restreinte','=',False),('state','!=','applicant_selected'),('nature_recrutement_id', '!=', 'conssideration_dossier')]}" />
 					<button name="button_professional_reference" string="Références professionnelles"
 						attrs="{'invisible': ['|',('state','!=','interview'),('recrutement_type', '=', 'stagiaire')]}" />
 					<button name="button_bridger_insight_trainee_interview"

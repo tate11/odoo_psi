@@ -55,6 +55,15 @@ class hr_job(models.Model):
     psi_memo = fields.Boolean(u"Mémo", default=False)
     psi_date_start = fields.Date(string='Date de prise de fonction souhaitée')
     psi_job_equipment = fields.One2many('hr.job.equipment', 'job_id', string='Inventaire - Demande d\'equipement')
+
+    psi_professional_category  = fields.Selection([
+                                       ('appui','APPUI'),
+                                       ('execution','EXECUTION'),
+                                       ('superviseur','SUPERVISEUR'),
+                                       ('coordinateur','COORDINATEUR'),
+                                       ('directeur','DIRECTEUR'),
+                                       ('rra','RRA')])
+
     
     @api.one
     @api.constrains('psi_contract_duration')

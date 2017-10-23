@@ -37,7 +37,7 @@ class hr_contract(models.Model):
         """
         print "ACTIVE CRON notification FIRST_RH -----------------------------------------------------------------------------"
         employee = self.employee_id
-        pj_not_checked = employee._get_not_checked_files()
+        #pj_not_checked = employee._get_not_checked_files()
         cron = self.env.ref('hr_contract_psi.ir_cron_send_email_rh_1', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
     
