@@ -54,6 +54,7 @@ class hr_job(models.Model):
     rr_approbation = fields.Boolean("Approbation par RR", default=True)
     psi_memo = fields.Boolean(u"Mémo", default=False)
     psi_date_start = fields.Date(string='Date de prise de fonction souhaitée')
+    psi_job_equipment = fields.One2many('hr.job.equipment', 'job_id', string='Inventaire - Demande d\'equipement')
     
     @api.one
     @api.constrains('psi_contract_duration')
@@ -107,4 +108,18 @@ class WorkingState(models.Model):
     _name = "hr.recruitment.working.state"
     
     name = fields.Char(string="Lieu")
+    
+class JobEquipment(models.Model):
+    _name = "hr.job.equipment"
+    _description = "Inventaire - demande d\'equipement"
+    
+    name = fields.Char(string=u"Désignation")
+    
+    equipment_state = fields.Selection([
+        ('existant', 'Existant'),
+        ('inexistant', 'Inexistant'),
+        ('remplacement', 'Remplacement')
+        ], string=u'Etat équipement')
+    
+    job_id = fields.Many2one('hr.job')
     
