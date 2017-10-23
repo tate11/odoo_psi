@@ -4,6 +4,8 @@ from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 from operator import truediv
 from datetime import datetime
+from odoo.tools.translate import _
+from odoo.exceptions import UserError
 
 class RecruitmentType(models.Model):
     _name = 'hr.recruitment.type'
@@ -45,8 +47,11 @@ class Applicant(models.Model):
         ('professional_reference', u'3- Références proféssionnelles'),
         ('bridger_insight', '4- Bridger Insight'),
         ('psi_wage_proposal', '5- Proposition salariale'), 
+        ('honorary_proposal', '5- Proposition d\'honoraire'),
+        ('benefits', '5- Indemnités'), 
         ('notification_of_employment', '6- Notification d\'embauche'),
-        ('contract_established', u'7- Contrat établi')
+         ('internship_contract', u'7- Contrat de stage à faire'),
+        ('contract_established', u'7- Contrat à faire')
     ], string='Status', readonly=True, required=True, track_visibility='onchange', copy=False, default='applicant_selected', help="Set whether the recruitment process is open or closed for this job position.")
      
 
@@ -150,6 +155,40 @@ class Applicant(models.Model):
     
     b_liste_restreinte = fields.Boolean(string='Dans la liste restreinte', default=False)
     
+    @api.multi
+    def create_employee_from_applicant(self):
+        """ Create an hr.employee from the hr.applicants """
+        employee = False
+        for applicant in self:
+            address_id = contact_name = False
+            if applicant.partner_id:
+                address_id = applicant.partner_id.address_get(['contact'])['contact']
+                contact_name = applicant.partner_id.name_get()[0][1]
+            if applicant.job_id and (applicant.partner_name or contact_name):
+                applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
+                vals = {'name': applicant.partner_name or contact_name,
+                                               'job_id': applicant.job_id.id,
+                                               'address_home_id': address_id,
+                                               'department_id': applicant.department_id.id or False,
+                                               'address_id': applicant.company_id and applicant.company_id.partner_id and applicant.company_id.partner_id.id or False,
+                                               'work_email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
+                                               'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False}
+                employee = self.env['hr.employee'].create(vals)
+                applicant.write({'emp_id': employee.id})
+                applicant.job_id.message_post(
+                    body=_('New Employee %s Hired') % applicant.partner_name if applicant.partner_name else applicant.name,
+                    subtype="hr_recruitment.mt_job_applicant_hired")
+                employee._broadcast_welcome()
+            else:
+                raise UserError(_('You must define an Applied Job and a Contact Name for this applicant.'))
+
+        employee_action = self.env.ref('hr.open_view_employee_list')
+        dict_act_window = employee_action.read([])[0]
+        if employee:
+            dict_act_window['res_id'] = employee.id
+        dict_act_window['view_mode'] = 'form,tree'
+        return dict_act_window
+    
     @api.model
     def _calcul_total_note(self):
         for record in self:
@@ -187,7 +226,31 @@ class Applicant(models.Model):
     def mail_refuse_applicant(self):
         template = self.env.ref('hr_recruitment_psi.custom_template_refus')
         self.write({'state':'applicant_selected'})
-
+    
+    def action_notification_of_employment(self):
+        '''
+        This function opens a window to compose an email
+        '''
+        self.ensure_one()
+        ir_model_data = self.env['ir.model.data']
+        try:
+            template_id = ir_model_data.get_object_reference('hr_recruitment_psi', 'email_template_notification_employment')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False
+        ctx = dict()
+        ctx.update({
+            'default_model': 'hr.applicant',
+            'default_res_id': self.ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_so_as_sent': True,
+        })
+        self.write({'state':'notification_of_employment'})
     @api.multi
     def button_notification_of_employment(self):
         '''
@@ -282,7 +345,7 @@ class LinguisticKnowledge(models.Model):
         ('Current', 'Courant')
        ], string=u'Parlé')
     listen      = fields.Selection([
-                                     ('langue_maternelle', 'Langue maternelle'),
+        ('langue_maternelle', 'Langue maternelle'),
         ('basic', 'Basique'),
         ('intermediate', 'Intermédiaire'),
         ('good', 'Bon'),

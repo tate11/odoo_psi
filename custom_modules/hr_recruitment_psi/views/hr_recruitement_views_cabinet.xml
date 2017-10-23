@@ -11,7 +11,7 @@
 				<field name="state" position="replace">
 					<field name="state" widget="statusbar"
 						attrs="{'invisible': [('active', '=', False)]}"
-						statusbar_visible="applicant_selected,notification_of_employment,contract_established" />
+						statusbar_visible="applicant_selected,interview,professional_reference,bridger_insight,psi_wage_proposal,notification_of_employment,contract_established" />
 				</field>
 			</field>
 		</record>
@@ -37,7 +37,7 @@
 	        <field name="act_window_id" ref="action_cabinet"/>
 	    </record>
 	    
-	    <record model="ir.actions.act_window.view" id="action_hr_sec_form_view_act_job3">
+	    <record model="ir.actions.act_window.view" id="action_form_cabinet">
 	        <field name="sequence" eval="4"/>
 	        <field name="view_mode">form</field>
 	        <field name="view_id" ref="crm_case_form_view_job_inherit_cabinet"/>

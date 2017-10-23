@@ -23,23 +23,23 @@
 				<field name="source_id" position="after">
 					<group string="Avis sur la candidature">
 						<h2>
-							<label for="correspondance_profil"/>
-							<field name="correspondance_profil"/>
+							<label for="correspondance_profil" />
+							<field name="correspondance_profil" />
 						</h2>
 						<h2>
-							<label for="psi_total_note"/>
+							<label for="psi_total_note" />
 							<field name="psi_total_note" />
 						</h2>
 						<field name="psi_note_interview" />
-						<field name="b_liste_restreinte" /> 
+						<field name="b_liste_restreinte" />
 					</group>
 					<group string="Note Shortlist">
-						<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}"/>
-						<field name="psi_note_candidate" attrs="{'required': [('state','in',('interview'))]}"/>
+						<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}" />
+						<field name="psi_note_candidate" attrs="{'required': [('state','in',('interview'))]}" />
 						<field name="psi_average_note" />
 					</group>
 					<group string="Note Test">
-						<field name="psi_note_test_rh"/>
+						<field name="psi_note_test_rh" />
 						<field name="psi_note_test_candidate" />
 						<field name="psi_average_note_test" />
 					</group>
@@ -104,7 +104,8 @@
 					<h2>ETUDES</h2>
 					<p>Veuillez donner l'intitulé exact de chaque diplôme ou titre
 						universitaire dans la langue dans laquelle il a été établi, et non
-						une traduction ou un équivalent.</p>
+						une traduction ou un équivalent.
+					</p>
 					<h2>A. Etudes Universitaires</h2>
 					<field name="university_studies">
 						<tree string="" editable="bottom">
@@ -131,15 +132,16 @@
 					</field>
 					<h2>FONCTIONS ANTERIEURES :</h2>
 					<p>En partant de votre poste actuel, indiquez, dans l'ordre
-						chronologique inverse, tous les postes que vous avez occupés</p>
+						chronologique inverse, tous les postes que vous avez occupés
+					</p>
 					<field name="previous_functions">
 						<tree colspan="2">
 							<field name="begin_date" />
 							<field name="end_date" />
 							<field name="last_basic_salary" />
 							<field name="title_function" />
-							<field name="employer" />	
-							<field name="type_of_activity" />	
+							<field name="employer" />
+							<field name="type_of_activity" />
 							<field name="address" />
 							<field name="name_of_supervisor" />
 							<field name="number_of_supervised" />
@@ -147,7 +149,7 @@
 							<field name="mobile_phone" />
 							<field name="work_email" />
 							<field name="description" />
-							<field name="psi_applicant_id" invisible="1"/>
+							<field name="psi_applicant_id" invisible="1" />
 						</tree>
 					</field>
 					<label for="current_employer_report" />
@@ -155,8 +157,10 @@
 					<h2>REFERENCES PROFESSIONNELLES</h2>
 					<p>
 						Donnez le nom et l'adresse des trois personnes avec qui vous
-						avez travaillé étroitement, n'ayant avec vous aucun lien de parenté
-						et connaissant votre moralité et vos valeurs professionnelles
+						avez travaillé étroitement, n'ayant avec vous aucun lien de
+						parenté
+						et connaissant votre moralité et vos valeurs
+						professionnelles
 					</p>
 					<field name="professional_references">
 						<tree string="" editable="bottom">
@@ -168,19 +172,24 @@
 						</tree>
 					</field>
 					<b attrs="{'invisible': [('current_employer_report', '=', False)]}">
-						Par la présente, j'autorise PSI Madagascar à prendre contact avec le personnes
+						Par la présente, j'autorise PSI Madagascar à prendre
+						contact avec le personnes
 						de références citées ci-dessus.
 					</b>
 					<p>
-					  Avez-vous jamais été arrêté, inculpé ou poursuivi au criminel ? Avez-vous jamais été reconnu coupable ou condamné à une autre amende ou une peine de prison pour un délit (autre qu'une infraction en matiére de circulation) ?
+						Avez-vous jamais été arrêté, inculpé ou poursuivi au criminel ? Avez-vous
+						jamais été reconnu coupable ou condamné à une autre amende ou une
+						peine de prison pour un délit (autre qu'une infraction en matiére
+						de circulation) ?
 					</p>
-					<field name="bridger_insight"></field><br />
+					<field name="bridger_insight"></field>
+					<br />
 					<label for="affirmative_bridger_insight"></label>
 					<field name="affirmative_bridger_insight"></field>
 				</field>
 
 				<field name="type_id" position="after">
-				
+
 					<field name="experiences" placeholder="Resumé de votre experience (250 mots)"
 						invisible="1" />
 
@@ -193,7 +202,7 @@
 					<field name="psi_salary_type" />
 					<field name="psi_salary_negotiable" />
 				</field>
-				
+
 				<button name="create_employee_from_applicant" position="replace">
 					<button string="Create Employee" name="create_employee_from_applicant"
 						type="object" class="oe_highlight"
@@ -202,33 +211,38 @@
 				</button>
 				<field name="stage_id" position="before">
 					<button name="button_convoked_for_test" string="Convoqué pour les tests"
-						attrs="{'invisible': ['|',('state','!=','applicant_selected'),('nature_recrutement_id', '=', 'conssideration_dossier')]}" />
+						attrs="{'invisible': ['|','|',('state','!=','applicant_selected'),('nature_recrutement_id', '=', 'conssideration_dossier'),('recrutement_type','=','collaborateur_externe')]}" />
 					<button name="button_interview" string="Entretiens"
 						attrs="{'invisible': ['|',('state','not in',('convoked_for_test', 'applicant_selected')),('nature_recrutement_id', '=', 'conssideration_dossier')]}" />
 					<button name="button_consultant_consideration_de_dossier"
 						string="Passer aux Références professionnelles"
 						attrs="{'invisible': ['|',('state','!=','applicant_selected'),('nature_recrutement_id', '!=', 'conssideration_dossier')]}" />
 					<button name="button_professional_reference" string="Références professionnelles"
-						attrs="{'invisible': [('state','!=','interview')]}" />
+						attrs="{'invisible': ['|',('state','!=','interview'),('recrutement_type', '=', 'stagiaire')]}" />
+					<button name="button_bridger_insight_trainee_interview"
+						string="Brider Insight Trainee"
+						attrs="{'invisible': ['|',('state','!=','interview'),('recrutement_type','!=','stagiaire')]}" />
 					<button name="button_bridger_insight" string="Brider Insight"
 						attrs="{'invisible': [('state','!=','professional_reference')]}" />
 					<button name="button_psi_wage_proposal" string="Proposition salariale"
-						attrs="{'invisible': ['|',('state','!=','bridger_insight'),('recrutement_type', '=', 'consultant')]}" />
+						attrs="{'invisible': ['|','|',('state','!=','bridger_insight'),('recrutement_type', '=', 'consultant'),('recrutement_type', '=', 'stagiaire')]}" />
+					<button name="button_benefits" string="Indeminites"
+						attrs="{'invisible': ['|',('state','!=','bridger_insight'),('recrutement_type', '!=', 'stagiaire')]}" />
 					<button name="button_psi_honorary_proposal" string="Proposition honoraire"
-						attrs="{'invisible': ['|',('state','!=','bridger_insight'),('recrutement_type', '!=', 'consultant')]}" />											
-					<button name="button_notification_of_employment" 
+						attrs="{'invisible': ['|',('state','!=','bridger_insight'),('recrutement_type', '!=', 'consultant')]}" />
+					<button name="button_notification_of_employment" string="Notification d'embauche"
 						attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '=', 'consultant')]}" />
-					<button name="button_notification_of_employment" 
-							string="Notification d'embauche" 
-							states="psi_wage_proposal" type="object"  
-							class="oe_highlight"/>				
+					<!-- <button name="button_notification_of_employment" string="Notification 
+						d'embauche" states="psi_wage_proposal" type="object" class="oe_highlight"/> -->
 					<button name="button_contract_established_consultant"
 						string="Etablir contrat"
-						attrs="{'invisible': ['|',('state','!=','psi_wage_proposal'),('recrutement_type', '!=', 'consultant')]}" />
+						attrs="{'invisible': ['|',('state','!=','honorary_proposal'),('recrutement_type', '!=', 'consultant')]}" />
 					<button string="Refuser" name="mail_refuse_applicant" type="object"
 						attrs="{'invisible': [('state','not in',('interview', 'professional_reference', 'bridger_insight', 'psi_wage_proposal'))]}" />
 					<button name="button_contract_established" string="Etablir contrat"
 						attrs="{'invisible': [('state','!=','notification_of_employment')]}" />
+					<button name="button_internship_contract" string="Etablir Contrat de stagiaire"
+						attrs="{'invisible': [('state','!=','benefits')]}" />
 				</field>
 				<field name="stage_id" position="replace">
 					<field name="state" widget="statusbar"
@@ -238,32 +252,33 @@
 
 				<button name="archive_applicant" position="replace" type='object'>
 					<button name="archive_applicant"
-						attrs="{'invisible': [('state', '=', 'contract_established')]}" />
+						attrs="{'invisible': ['|',('state', '=', 'contract_established'),('state', '=', 'internship_contract')]}" />
 				</button>
 			</field>
 		</record>
 
 		<record model="ir.ui.view" id="crm_case_tree_view_job2">
-	        <field name="name">Applicants</field>
-	        <field name="model">hr.applicant</field>
-	        <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job" />
-	        <field name="arch" type="xml">
-	        	<field name="partner_name" position="after">
-	        		<field name="age" />
-	        	</field>
-	        	<field name="job_id" position="after">
-	        		<field name="application_deadline_date" />
-	        		<field name="university_studies_degree" />
-	        	</field>
-				
+			<field name="name">Applicants</field>
+			<field name="model">hr.applicant</field>
+			<field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job" />
+			<field name="arch" type="xml">
+				<field name="partner_name" position="after">
+					<field name="age" />
+				</field>
+				<field name="job_id" position="after">
+					<field name="application_deadline_date" />
+					<field name="university_studies_degree" />
+				</field>
+
 				<field name="medium_id" position="replace">
 					<field name="medium_id" invisible="1" />
 				</field>
 				<field name="source_id" position="replace">
-					<field name="source_id" invisible="1"/>
-				</field>	
+					<field name="source_id" invisible="1" />
+				</field>
 				<field name="priority" position="replace">
 					<field name="priority" invisible="1" />
+
 				</field>	
 				
 				<field name="stage_id" position="replace">
@@ -291,6 +306,7 @@
 	                <attribute name="quick_create">false</attribute>
 	                <attribute name="default_group_by">state</attribute>
 	            </kanban>
+
 			</field>
 		</record>
 
@@ -372,36 +388,38 @@
 				</search>
 			</field>
 		</record>
-        
-        <record id="hr_applicant_liste_restreinte_add_action" model="ir.actions.server">
-            <field name="name">Ajouter a la liste restreinte</field>
-            <field name="model_id" ref="model_hr_applicant" />
-            <field name="state">code</field>
-            <field name="code">record.set_to_liste_restreinte(True)</field>
-        </record>
-        <record id="hr_applicant_liste_restreinte_remove_action" model="ir.actions.server">
-            <field name="name">Enlever de la liste restreinte</field>
-            <field name="model_id" ref="model_hr_applicant" />
-            <field name="state">code</field>
-            <field name="code">record.set_to_liste_restreinte(False)</field>
-        </record>
-        
-        <record id="hr_applicant_liste_restreinte_action_multi" model="ir.values">
-	        <field name="model_id" ref="model_hr_applicant" />
-	        <field name="name">add liste restreinte</field>
-	        <field name="key2">client_action_multi</field>
-	        <field name="key">action</field>
-	        <field name="model">hr.applicant</field>
-	        <field name="value" eval="'ir.actions.server,' + str(ref('hr_applicant_liste_restreinte_add_action'))" />
-	    </record>
-	    <record id="hr_applicant_liste_restreinte_remove_multi" model="ir.values">
-	        <field name="model_id" ref="model_hr_applicant" />
-	        <field name="name">remove liste restreinte</field>
-	        <field name="key2">client_action_multi</field>
-	        <field name="key">action</field>
-	        <field name="model">hr.applicant</field>
-	        <field name="value" eval="'ir.actions.server,' + str(ref('hr_applicant_liste_restreinte_remove_action'))" />
-	    </record>
+
+		<record id="hr_applicant_liste_restreinte_add_action" model="ir.actions.server">
+			<field name="name">Ajouter a la liste restreinte</field>
+			<field name="model_id" ref="model_hr_applicant" />
+			<field name="state">code</field>
+			<field name="code">record.set_to_liste_restreinte(True)</field>
+		</record>
+		<record id="hr_applicant_liste_restreinte_remove_action" model="ir.actions.server">
+			<field name="name">Enlever de la liste restreinte</field>
+			<field name="model_id" ref="model_hr_applicant" />
+			<field name="state">code</field>
+			<field name="code">record.set_to_liste_restreinte(False)</field>
+		</record>
+
+		<record id="hr_applicant_liste_restreinte_action_multi" model="ir.values">
+			<field name="model_id" ref="model_hr_applicant" />
+			<field name="name">add liste restreinte</field>
+			<field name="key2">client_action_multi</field>
+			<field name="key">action</field>
+			<field name="model">hr.applicant</field>
+			<field name="value"
+				eval="'ir.actions.server,' + str(ref('hr_applicant_liste_restreinte_add_action'))" />
+		</record>
+		<record id="hr_applicant_liste_restreinte_remove_multi" model="ir.values">
+			<field name="model_id" ref="model_hr_applicant" />
+			<field name="name">remove liste restreinte</field>
+			<field name="key2">client_action_multi</field>
+			<field name="key">action</field>
+			<field name="model">hr.applicant</field>
+			<field name="value"
+				eval="'ir.actions.server,' + str(ref('hr_applicant_liste_restreinte_remove_action'))" />
+		</record>
 
 	</data>
 </odoo>

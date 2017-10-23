@@ -102,6 +102,7 @@ class Employee(models.Model):
     @api.model
     def create(self, vals):
         print "CREATE in EMPLOYEE -----------------------------------------------------------------------------"           
+        print "\n",vals
         employee = super(Employee, self).create(vals)
         self._update_cron_collab_1()    
         self._update_cron_collab_2()     
@@ -118,7 +119,7 @@ class Employee(models.Model):
         """ Activate the cron Premier Email Employee.
         """
         print "ACTIVE CRON notification PREMIER -----------------------------------------------------------------------------"
-        list_not_checked = self._get_not_checked_files()
+        #list_not_checked = self._get_not_checked_files()
         cron = self.env.ref('hr_contract_psi.ir_cron_send_email_collab_1', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
     
