@@ -109,11 +109,16 @@ class WorkingState(models.Model):
     
     name = fields.Char(string="Lieu")
     
+class Equipment(models.Model):
+    _name = "hr.equipment"
+    
+    name = fields.Char(string=u'Désignation')
+
 class JobEquipment(models.Model):
     _name = "hr.job.equipment"
     _description = "Inventaire - demande d\'equipement"
     
-    name = fields.Char(string=u"Désignation")
+    name = fields.Char(string='Nom')
     
     equipment_state = fields.Selection([
         ('existant', 'Existant'),
@@ -121,5 +126,5 @@ class JobEquipment(models.Model):
         ('remplacement', 'Remplacement')
         ], string=u'Etat équipement')
     
+    equipment_id = fields.Many2one('hr.equipment', string=u"Désignation")
     job_id = fields.Many2one('hr.job')
-    

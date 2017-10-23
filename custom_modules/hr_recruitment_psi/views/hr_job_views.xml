@@ -22,7 +22,7 @@
 				<field name="psi_motif" attrs="{'required': [('state', 'in', ('open'))]}"/>
 				<field name="psi_job_equipment" colspan="2">
 					<tree string="psi_job_equipment" editable="bottom">
-						<field name="name" />
+						<field name="equipment_id" />
 						<field name="equipment_state" />
 					</tree>
 				</field>
