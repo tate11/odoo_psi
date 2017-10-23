@@ -8,12 +8,13 @@ class hr_job(models.Model):
     
     _inherit = "hr.job"
     
-    name = fields.Char(size=28, required=True)
+    name = fields.Char(size=50, required=True)
     
     psi_contract_type = fields.Selection([
         ('cdd', 'CDD'),
         ('cdi', 'CDI'),
-        ('prestataire',u'Préstataire')
+        ('prestataire',u'Préstataire'),
+        ('convention_stage','Convention de stage')
     ], string='Type de contrat', help="Type de contrat")
     
     website_published = fields.Boolean(default=False)
@@ -24,7 +25,6 @@ class hr_job(models.Model):
       
     state = fields.Selection([
         ('open', '1- Demande d\'embauche'),
-        #('tdr_redaction', '2- Rédaction TDR'),
         ('validation_finance','2- Validation Finance'),
         ('analyse', '3- Analyse de la demande'),
         ('rr_validation', '4- Approbation par RR'), 
