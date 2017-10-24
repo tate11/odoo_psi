@@ -14,6 +14,7 @@ class hr_contract(models.Model):
         ('cdd', 'CDD'),
         ('cdi', 'CDI')
      ], string='Statut', track_visibility='onchange')
+
     
     @api.model
     def create(self, vals):  
@@ -82,7 +83,39 @@ class hr_contract(models.Model):
         print "The id contract is : ",self.contract_id
         template = self.env.ref('hr_contract_psi.custom_template_id')
         self.env['mail.template'].browse(template.id).send_mail(self.id)
-
+    
+    @api.multi    
+    @api.one
+    @api.constrains('name')
+    def _send_email_trial_date_end(self, automatic=False):
+        for record in self:
+            if record.trial_date_start:
+                date_start = record.trial_date_start
+                date_start_trial = datetime.strptime(date_start,"%Y-%m-%d")
+                date_start_trial_time = datetime(
+                    year=date_start_trial.year, 
+                    month=date_start_trial.month,
+                    day=date_start_trial.day,
+                )
+                # Verification selection
+                if record.job_id.name == 'Chief Executive Officer':
+                    month_to_notif = date_start_trial_time + relativedelta(months=5)  
+                    if month_to_notif.date() == datetime.today().date():
+                         template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
+                         self.env['mail.template'].browse(template.id).send_mail(self.id)
+                elif record.job_id.name == 'Consultant':
+                    month_to_notif = date_start_trial_time + relativedelta(months=3)  
+                    if month_to_notif.date() == datetime.today().date():
+                         template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
+                         self.env['mail.template'].browse(template.id).send_mail(self.id)
+                elif record.job_id.name == 'Human Resources Manager':
+                    month_to_notif = date_start_trial_time + relativedelta(months=2)  
+                    if month_to_notif.date() == datetime.today().date():
+                         template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
+                         self.env['mail.template'].browse(template.id).send_mail(self.id)
+        if automatic:
+            self._cr.commit()
+            
     @api.one
     @api.constrains('state_of_work')
     def _check_state_of_work(self):
@@ -153,7 +186,7 @@ class Employee(models.Model):
         """ Activate the cron Second Email Employee.
         """
         cron = self.env.ref('hr_contract_psi.ir_cron_send_email_collab_2', raise_if_not_found=False)
-        return cron
+        return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
     
     @api.one
     @api.constrains('personal_information')   
