@@ -20,6 +20,12 @@
 				<field name="place_of_employment" />
 				<field name="application_deadline_date" attrs="{'required': [('state', 'in', ('open'))]}"/>
 				<field name="psi_motif" attrs="{'required': [('state', 'in', ('open'))]}"/>
+				<field name="psi_job_equipment" colspan="2">
+					<tree string="psi_job_equipment" editable="bottom">
+						<field name="equipment_id" />
+						<field name="equipment_state" />
+					</tree>
+				</field>
 				<field name="nature_recrutement" attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': [('recrutement_type', '=', 'consultant')]}" />
 				<field name="psi_budget_code_distribution" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'required': [('state', '=', 'validation_finance')]}"/>
 				<field name="subordination_link_id" />
@@ -41,6 +47,8 @@
 			<field name="department_id" position="after">
 				<field name="recrutement_type_id" />
 				<field name="recrutement_type" invisible="1" />
+				<field name="psi_professional_category" />
+				<field name="psi_date_start" />
 				<field name="level_of_education_id" />
 				<field name="experience_required_ids" colspan="2">
 					<tree string="Experience requise" editable="bottom">

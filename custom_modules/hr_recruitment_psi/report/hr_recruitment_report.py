@@ -39,7 +39,7 @@ class HrRecruitmentReportPsi(models.Model):
                      s.medium_id,
                      s.source_id,
                      s.sexe,
-                     (sum(age)/count(*)) as age_avg,
+                     
                      sum(salary_proposed) as salary_prop,
                      (sum(salary_proposed)/count(*)) as salary_prop_avg,
                      sum(salary_expected) as salary_exp,

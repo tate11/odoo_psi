@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+	<record id="view_hr_job_form5" model="ir.ui.view">
+		<field name="name">hr.job.form5</field>
+		<field name="model">hr.job</field>
+		<field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban" />
+		<field name="arch" type="xml">
+			<field name="name" position="after">
+				<field name="recrutement_type" invisible="1" />
+			</field>
+			
+			<xpath expr="//a[@name='set_open']" position="replace">
+				<a t-if="record.state.raw_value == 'recruit'" name="set_open" type="object" invisible="1"/>
+			</xpath>
+			
+			<xpath expr="//button[@name='%(hr_recruitment.action_hr_job_applications)d']" position="replace">
+				<button class="btn btn-primary" name="%(action_permanent)d" 
+					type="action" attrs="{'invisible': [('recrutement_type', '!=', 'collaborateur')]}">Candidatures Permanents</button>
+					
+				<button class="btn btn-primary" name="%(action_consultant)d" 
+					type="action" attrs="{'invisible': [('recrutement_type', '!=', 'consultant')]}">Candidatures Consultants</button>
+					
+				<button class="btn btn-primary" name="%(action_stagiaire)d"
+					type="action" attrs="{'invisible': [('recrutement_type', '!=', 'stagiaire')]}" >Candidatures Stagiaires</button>
+					
+				<button class="btn btn-primary" name="%(action_cabinet)d"
+					type="action" attrs="{'invisible': [('recrutement_type', '!=', 'collaborateur_externe')]}" >Candidatures Cabinets</button>
+			</xpath>
+		</field>
+	</record>
+</odoo>

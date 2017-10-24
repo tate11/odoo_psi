@@ -32,6 +32,9 @@ class hr_contract(models.Model):
         """ Activate the cron First Email RH + Employee.
         """
         employee = self.employee_id
+
+        #pj_not_checked = employee._get_not_checked_files()
+
         cron = self.env.ref('hr_contract_psi.ir_cron_send_email_rh_1', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
     
@@ -179,6 +182,9 @@ class Employee(models.Model):
     def _update_cron_collab_1(self):
         """ Activate the cron Premier Email Employee.
         """
+
+        #list_not_checked = self._get_not_checked_files()
+
         cron = self.env.ref('hr_contract_psi.ir_cron_send_email_collab_1', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
     

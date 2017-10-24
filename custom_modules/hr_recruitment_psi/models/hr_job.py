@@ -8,12 +8,13 @@ class hr_job(models.Model):
     
     _inherit = "hr.job"
     
-    name = fields.Char(size=28, required=True)
+    name = fields.Char(size=50, required=True)
     
     psi_contract_type = fields.Selection([
         ('cdd', 'CDD'),
         ('cdi', 'CDI'),
-        ('prestataire',u'Préstataire')
+        ('prestataire',u'Préstataire'),
+        ('convention_stage','Convention de stage')
     ], string='Type de contrat', help="Type de contrat")
     
     website_published = fields.Boolean(default=False)
@@ -24,7 +25,6 @@ class hr_job(models.Model):
       
     state = fields.Selection([
         ('open', '1- Demande d\'embauche'),
-        #('tdr_redaction', '2- Rédaction TDR'),
         ('validation_finance','2- Validation Finance'),
         ('analyse', '3- Analyse de la demande'),
         ('rr_validation', '4- Approbation par RR'), 
@@ -53,6 +53,17 @@ class hr_job(models.Model):
     application_deadline_date = fields.Date(string=u"Délai de candidature")
     rr_approbation = fields.Boolean("Approbation par RR", default=True)
     psi_memo = fields.Boolean(u"Mémo", default=False)
+    psi_date_start = fields.Date(string='Date de prise de fonction souhaitée')
+    psi_job_equipment = fields.One2many('hr.job.equipment', 'job_id', string='Inventaire - Demande d\'equipement')
+
+    psi_professional_category  = fields.Selection([
+                                       ('appui','APPUI'),
+                                       ('execution','EXECUTION'),
+                                       ('superviseur','SUPERVISEUR'),
+                                       ('coordinateur','COORDINATEUR'),
+                                       ('directeur','DIRECTEUR'),
+                                       ('rra','RRA')])
+
     
     @api.one
     @api.constrains('psi_contract_duration')
@@ -107,3 +118,22 @@ class WorkingState(models.Model):
     
     name = fields.Char(string="Lieu")
     
+class Equipment(models.Model):
+    _name = "hr.equipment"
+    
+    name = fields.Char(string=u'Désignation')
+
+class JobEquipment(models.Model):
+    _name = "hr.job.equipment"
+    _description = "Inventaire - demande d\'equipement"
+    
+    name = fields.Char(string='Nom')
+    
+    equipment_state = fields.Selection([
+        ('existant', 'Existant'),
+        ('inexistant', 'Inexistant'),
+        ('remplacement', 'Remplacement')
+        ], string=u'Etat équipement')
+    
+    equipment_id = fields.Many2one('hr.equipment', string=u"Désignation")
+    job_id = fields.Many2one('hr.job')

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record id="crm_case_form_view_job_inherit_cabinet" model="ir.ui.view">
+			<field name="name">form cabinet</field>
+			<field name="model">hr.applicant</field>
+			<field name="mode">primary</field>
+			<field name="inherit_id" ref="crm_case_form_view_job_inherit1" />
+			<field name="arch" type="xml">
+				<field name="state" position="replace">
+					<field name="state" widget="statusbar"
+						attrs="{'invisible': [('active', '=', False)]}"
+						statusbar_visible="applicant_selected,interview,professional_reference,bridger_insight,psi_wage_proposal,notification_of_employment,contract_established" />
+				</field>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="action_cabinet">
+	        <field name="name">Candidatures des Cabinets</field>
+	        <field name="res_model">hr.applicant</field>
+	        <field name="view_mode">tree,form,kanban,calendar</field>
+	        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
+	    </record>
+	    
+	    <record model="ir.actions.act_window.view" id="action_tree_cabinet">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="crm_case_tree_view_job2"/>
+	        <field name="act_window_id" ref="action_cabinet"/>
+	    </record>
+	    
+	    <record model="ir.actions.act_window.view" id="action_kanban_cabinet">
+	        <field name="sequence" eval="3"/>
+	        <field name="view_mode">kanban</field>
+	        <field name="view_id" ref="kanban_psi"/>
+	        <field name="act_window_id" ref="action_cabinet"/>
+	    </record>
+	    
+	    <record model="ir.actions.act_window.view" id="action_form_cabinet">
+	        <field name="sequence" eval="4"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="crm_case_form_view_job_inherit_cabinet"/>
+	        <field name="act_window_id" ref="action_cabinet"/>
+	    </record>
+
+	</data>
+</odoo>
