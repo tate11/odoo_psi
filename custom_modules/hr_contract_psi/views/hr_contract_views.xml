@@ -5,155 +5,198 @@
 		<field name="model">hr.contract</field>
 		<field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
 		<field name="arch" type="xml">
-			<!-- <div class="oe_title" position="before">
-				<div class="oe_button_box" name="button_box">
-					<button name="action_get_attachment_tree_view" class="oe_stat_button" icon="fa-book" type="object">
-						<field name="attachment_number" widget="statinfo" string="Documents" modifiers="{'readonly': true}"/>
-					</button>
-					<button name="test" class="oe_stat_button" icon="fa-calendar" type="object" help="Planifier un entretien avec ce candidat">
-						<div class="o_form_field o_stat_info">
-							<span class="o_stat_text">
-								Rendez-vous
-							</span>
-						</div>
-					</button>
-					
-				</div>
-			</div> -->
+			
 			<div class="oe_title" position="after">
-				<p></p>
-				<!-- <button name="ir_cron_send_email_collab_1" type="object" string="Test CRON" class="btn-primary"/> -->
+        <p></p>
 			</div>
-			<!-- <field name="job_id" position="after" >
-        		<field name="place_of_work" />
-        	</field>
-        	<field name="type_id" position="after" >
-        		<field name="state_of_work"/>
-        	</field> -->
-        	
-		    <!-- <page name="information" position="after">
-		        <page string="Dossier à fournir">
-                	<group>                        	        		
-                   		<field name="personal_information"/>
-                   		<field name="id_photos"/>
-                   		<field name="certificate_residence"/>
-                   		<field name="marriage_certificate"/>
-                   		<field name="cin"/>
-                   		<field name="work_certificate"/>
-                   		<field name="qualifications"/>
-                   		<field name="criminal_records"/>
-                   		<field name="card_cnaps"/>
-                   		<field name="birth_certificate_children"/>
-                   		<field name="ethics_course_certificate"/>
-               		</group>
-				</page>
-		    </page>  -->
-		    
+			
 		</field>
 	</record>
-	
+
 	<record id="hr_hr_employee_view_form_psi" model="ir.ui.view">
 		<field name="name">hr.hr.employee.view.form.psi</field>
 		<field name="model">hr.employee</field>
-		<field name="inherit_id" ref="hr.view_employee_form"/>
-        <field name="arch" type="xml">
-            <div name="button_box" position="inside">
-                <button name="action_get_attachment_tree_view" class="oe_stat_button" icon="fa-book" type="object">
-					<field name="attachment_number" widget="statinfo" string="Documents" modifiers="{'readonly': true}"/>
+		<field name="inherit_id" ref="hr.view_employee_form" />
+		<field name="arch" type="xml">
+			<div name="button_box" position="inside">
+				<button name="action_get_attachment_tree_view" class="oe_stat_button"
+					icon="fa-book" type="object">
+					<field name="attachment_number" widget="statinfo" string="Documents"
+						modifiers="{'readonly': true}" />
 				</button>
-            </div>
-            
-			
-		    <page name="public" position="after">
-		        <page string="Pièces à fournir">
-                	<group>                        	        		
-                   		<field name="personal_information"/>
-                   		<field name="id_photos"/>
-                   		<field name="certificate_residence"/>
-                   		<field name="marriage_certificate"/>
-                   		<field name="cin"/>
-                   		<field name="work_certificate"/>
-                   		<field name="qualifications"/>
-                   		<field name="criminal_records"/>
-                   		<field name="card_cnaps"/>
-                   		<field name="birth_certificate_children"/>
-                   		<field name="ethics_course_certificate"/>
-               		</group>
+			</div>
+
+
+			<page name="public" position="after">
+				<page string="Pièces à fournir">
+					<group>
+						<field name="personal_information" />
+						<field name="id_photos" />
+						<field name="certificate_residence" />
+						<field name="marriage_certificate" />
+						<field name="cin" />
+						<field name="work_certificate" />
+						<field name="qualifications" />
+						<field name="criminal_records" />
+						<field name="card_cnaps" />
+						<field name="birth_certificate_children" />
+						<field name="ethics_course_certificate" />
+					</group>
 				</page>
-		    </page> 
+			</page>
+			<!-- <page name="hr_settings" position="after">
+				<page string="Sanctions">
+					<group>
+						<field name="sanctions_data" nolabel="1">
+							<tree string="" editable="bottom">
+								<field name="sanction_date" />
+								<field name="sanction_type_id" />
+								<field name="sanction_objet" />
+								<field name="sanction_date_effacement" />
+								<field name="sanction_commentaire" />
+							</tree>
+						</field>
+					</group>
+				</page>
+			</page> -->
 		</field>
-   </record>
-        
+	</record>
+
 	<!-- Resume and Letters -->
-    <record id="hr_contract.ir_attachment_view_search_inherit_hr_employee" model="ir.ui.view">
-        <field name="name">ir.attachment.search.inherit.contract</field>
-        <field name="model">ir.attachment</field>
-        <field name="mode">primary</field>
-        <field name="inherit_id" ref="base.view_attachment_search"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='create_date']" position="after">
-                <field name="index_content" string="Content"/>
-            </xpath>
-            <xpath expr="//filter[@name='my_documents_filter']" position="attributes">
-                <attribute name='invisible'>1</attribute>
-            </xpath>
-            <xpath expr="//filter[@name='url_filter']" position="attributes">
-                <attribute name='invisible'>1</attribute>
-            </xpath>
-            <xpath expr="//filter[@name='binary_filter']" position="attributes">
-                <attribute name='invisible'>1</attribute>
-            </xpath>
-        </field>
-    </record>
-    <!-- <record id="hr_contract.ir_attachment_view_form_inherit" model="ir.ui.view">
-    	<field name="name">ir.attachment.view.form.inherit</field>
-    	<field name="model">ir.attachment</field>
-    	<field name="inherit_id" ref="base.view_attachment_form"/>
-    	<field name="arch" type="xml">
-    		<xpath expr="//field[@name='name']" position="replace">
-    			<field name="name" widget="selection">
-    				<option value="Information">Information</option>
-    				<option value="test">Test</option>
-    				<option value="test">Test</option>
-    			</field>
-    		</xpath>
-    	</field>
-    </record> -->
-    
-    <record model="ir.actions.act_window" id="hr_contract_resumes">
-        <field name="name">Resumes and Letters</field>
-        <field name="res_model">ir.attachment</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="view_id" ref="mail.view_document_file_kanban"/>
-        <field name="search_view_id" ref="hr_contract.ir_attachment_view_search_inherit_hr_employee"/>
-        <field name="domain">[('res_model','=','hr.employee')]</field>
-        <field name="context">{'create': False}</field>
-        <field name="help" type="html">
-            <p>
-                No document yet.
-            </p><p>
-                This menu helps you search through resumes and motivation
-                letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT
-                files so that you can search keywords from the content of these
-                files.
-            </p>
-        </field>
-    </record>
+	<record id="hr_contract.ir_attachment_view_search_inherit_hr_employee"
+		model="ir.ui.view">
+		<field name="name">ir.attachment.search.inherit.contract</field>
+		<field name="model">ir.attachment</field>
+		<field name="mode">primary</field>
+		<field name="inherit_id" ref="base.view_attachment_search" />
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='create_date']" position="after">
+				<field name="index_content" string="Content" />
+			</xpath>
+			<xpath expr="//filter[@name='my_documents_filter']" position="attributes">
+				<attribute name='invisible'>1</attribute>
+			</xpath>
+			<xpath expr="//filter[@name='url_filter']" position="attributes">
+				<attribute name='invisible'>1</attribute>
+			</xpath>
+			<xpath expr="//filter[@name='binary_filter']" position="attributes">
+				<attribute name='invisible'>1</attribute>
+			</xpath>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="hr_contract_resumes">
+		<field name="name">Resumes and Letters</field>
+		<field name="res_model">ir.attachment</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">kanban,tree,form</field>
+		<field name="view_id" ref="mail.view_document_file_kanban" />
+		<field name="search_view_id"
+			ref="hr_contract.ir_attachment_view_search_inherit_hr_employee" />
+		<field name="domain">[('res_model','=','hr.employee')]</field>
+		<field name="context">{'create': False}</field>
+		<field name="help" type="html">
+			<p>
+				No document yet.
+			</p>
+			<p>
+				This menu helps you search through resumes and motivation
+				letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT
+				files so that you can search keywords from the content of these
+				files.
+			</p>
+		</field>
+	</record>
+
+	<record id="hr_contract_wage_grid_form" model="ir.ui.view">
+		<field name="name">hr.wage.grid.form</field>
+		<field name="model">hr.wage.grid</field>
+		<field name="arch" type="xml">
+			<form string="form grille salariale">
+
+				<field name="wage_grid_details">
+					<tree string="Wage Grid Details" editable="bottom">
+						<field name="professional_category" />
+						<field name="job_id" />
+						<field name="category" />
+						<field name="sub_category" />
+						<field name="echelon_1" />
+						<field name="echelon_2" />
+						<field name="echelon_3" />
+						<field name="echelon_4" />
+						<field name="echelon_5" />
+						<field name="echelon_6" />
+						<field name="echelon_7" />
+						<field name="echelon_8" />
+						<field name="echelon_9" />
+						<field name="echelon_10" />
+						<field name="echelon_11" />
+						<field name="echelon_12" />
+						<field name="echelon_13" />
+						<field name="echelon_14" />
+						<field name="echelon_15" />
+						<field name="echelon_16" />
+						<field name="echelon_17" />
+						<field name="echelon_18" />
+						<field name="echelon_19" />
+						<field name="echelon_20" />
+						<field name="echelon_hc" />
+					</tree>
+				</field>
+			</form>
+		</field>
+	</record>
+
+
+	<record id="open_contract_wage_grid" model="ir.actions.act_window">
+		<field name="name">Grille salariale</field>
+		<field name="res_model">hr.wage.grid</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="hr_contract_wage_grid_form" />
+	</record>
+
 	
-	<!-- <data noupdate="1">
-        <record id="ir_cron_scheduler_send_email_action" model="ir.cron">
-            <field name="name">send_email_one_collaborator</field>
-            <field name="active" eval="False" />
-            <field name="user_id" ref="base.user_root" />
-            <field name="interval_number">1</field>
-            <field name="interval_type">minutes</field>
-            <field name="numbercall">1</field>
-            <field name="doal">1</field>
-            <field name="nextcall" >2016-12-31 23:59:59</field>
-            <field eval="'hr.contract'" name="model" /> 
-            <field name="function" eval="'send_email_collaborator'" /> 
-            <field name="priority" eval="5" />
-        </record>
-    </data> -->
+
+  <record id="hr_contract_type_view_form" model="ir.ui.view">
+         <field name="name">hr.contract.type.sanction.form</field>
+         <field name="model">hr.contract.type.sanction</field>
+         <field name="arch" type="xml">
+             <form string="Liste des sanctions">
+                 <group col="4">
+                     <field colspan="4" name="name"/>
+                 </group>
+             </form>
+         </field>
+     </record>
+        
+    <record id="hr_contract_sanction_view_tree" model="ir.ui.view">
+        <field name="name">hr.contract.type.sanction.tree</field>
+        <field name="model">hr.contract.type.sanction</field>
+        <field name="arch" type="xml">
+            <tree string="Liste des sanctions">
+                <field colspan="4" name="name"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="action_hr_contract_type_sanction" model="ir.actions.act_window">
+        <field name="name">Liste des sanctions</field>
+        <field name="res_model">hr.contract.type.sanction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="hr_contract_sanction_view_tree"/>
+    </record>
+
+    <menuitem
+        id="hr_menu_contract_type_sanction"
+        action="action_hr_contract_type_sanction"
+        parent="hr.menu_human_resources_configuration"
+        sequence="4"
+        groups="base.group_no_one"/>
+
+    <menuitem id="menu_contract_wage_grid" action="open_contract_wage_grid"
+		parent="hr.menu_human_resources_configuration" sequence="5"
+		groups="base.group_no_one" />
+
 </odoo>
