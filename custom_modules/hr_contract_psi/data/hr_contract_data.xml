@@ -19,20 +19,6 @@
 	    </record>
 		<!-- Fin liste sanctions -->
 	
-	    <!-- Cron send first email collaborator -->
-        <record id="ir_cron_send_email_collab_1" forcecreate="True" model="ir.cron">
-            <field name="name">Collaborateur - Premier rappel Email au collaborateur</field>
-            <field name="user_id" ref="base.user_root" />
-            <field name="interval_number">1</field>
-            <field name="interval_type">minutes</field> <!-- 15 days -->
-            <field name="numbercall">1</field>
-            <field name="doall" eval="False" />
-            <field eval="'hr.employee'" name="model" />
-            <field name="function" eval="'_send_first_email_collaborator'" /> 
-            <field name="args" eval="'(True,)'"/>
-            <field name="active" eval="False" />
-        </record>        
-  
         <!-- Cron send first email RH & collaborator -->
         <record id="ir_cron_send_email_rh_1" model="ir.cron">
             <field name="name">Collaborateur - Premier rappel Email à la RH</field>
@@ -45,19 +31,6 @@
             <field eval="'hr.contract'" name="model" />
             <field name="function" eval="'_send_first_email_rh'" /> 
         </record>
-        
-        <!-- Cron send second email collaborator -->
-        <record id="ir_cron_send_email_collab_2" model="ir.cron">
-            <field name="name">Collaborateur - Second rappel au collaborateur</field>
-            <field name="active" eval="False" />
-            <field name="user_id" ref="base.user_root" />
-            <field name="interval_number">2</field>
-            <field name="interval_type">minutes</field>	<!-- 15 days -->
-            <field name="numbercall">1</field>
-            <field name="doall" eval="False" />
-            <field eval="'hr.employee'" name="model" />
-            <field name="function" eval="'_send_second_email_collaborator'" /> 
-        </record>  
         
 	    <!-- Cron send email mentor - Fin periode d'essai -->
         <record id="ir_cron_send_email_trial_date_end" forcecreate="True" model="ir.cron">

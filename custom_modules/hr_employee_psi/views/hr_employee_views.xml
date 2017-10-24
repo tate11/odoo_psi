@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-	<record id="hr_employee_view_form2" model="ir.ui.view">
-		<field name="name">hr.employee.form1</field>
+	
+	<record id="hr_hr_employee_view_form_psi" model="ir.ui.view">
+		<field name="name">hr.hr.employee.view.form.psi</field>
 		<field name="model">hr.employee</field>
 		<field name="inherit_id" ref="hr.view_employee_form" />
 		<field name="arch" type="xml">
-		    <xpath expr="//field[@name='identification_id']" position='before'>
+			<div name="button_box" position="inside">
+				<button name="action_get_attachment_tree_view" class="oe_stat_button"
+					icon="fa-book" type="object">
+					<field name="attachment_number" widget="statinfo" string="Documents"
+						modifiers="{'readonly': true}" />
+				</button>
+			</div>
+			
+			<xpath expr="//field[@name='identification_id']" position='before'>
            		<field name="information_cin_id"/>
         	</xpath> 
         	<xpath expr="//field[@name='gender']" position='replace'>
@@ -24,6 +33,39 @@
            		<field name="emergency_contact_id" />
            		<field name="beneficiary_of_death_benefit_id" />
        		</xpath>
-	   </field>
+			
+			<page name="public" position="after">
+				<page string="Pièces à fournir">
+					<group>
+						<field name="personal_information" />
+						<field name="id_photos" />
+						<field name="certificate_residence" />
+						<field name="marriage_certificate" />
+						<field name="cin" />
+						<field name="work_certificate" />
+						<field name="qualifications" />
+						<field name="criminal_records" />
+						<field name="card_cnaps" />
+						<field name="birth_certificate_children" />
+						<field name="ethics_course_certificate" />
+					</group>
+				</page>
+			</page>
+			<page name="hr_settings" position="after">
+				<page string="Sanctions">
+					<group>
+						<field name="sanctions_data" nolabel="1">
+							<tree string="" editable="bottom">
+								<field name="sanction_date" />
+								<field name="sanction_type_id" />
+								<field name="sanction_objet" />
+								<field name="sanction_date_effacement" />
+								<field name="sanction_commentaire" />
+							</tree>
+						</field>
+					</group>
+				</page>
+			</page>
+		</field>
 	</record>
 </odoo>
