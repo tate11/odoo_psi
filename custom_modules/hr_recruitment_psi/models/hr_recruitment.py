@@ -170,7 +170,10 @@ class Applicant(models.Model):
             if applicant.job_id and (applicant.partner_name or contact_name):
                 applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
                 vals = {'name': applicant.partner_name or contact_name,
+                                                'children' : applicant.number_of_dependent_children,
+                                                'country_id' : applicant.country_id.id,
                                                 'birthday': applicant.birthday,
+                                                'sexe': applicant.sexe,
                                                'job_id': applicant.job_id.id,
                                                'marital':applicant.marital,
                                                'address_home_id': address_id,

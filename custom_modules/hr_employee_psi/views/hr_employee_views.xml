@@ -8,6 +8,12 @@
 		    <xpath expr="//field[@name='identification_id']" position='before'>
            		<field name="information_cin_id"/>
         	</xpath> 
+        	<xpath expr="//field[@name='gender']" position='replace'>
+           		<field name="gender" invisible="1"/>
+        	</xpath>
+        	<xpath expr="//field[@name='marital']" position='after'>
+           		<field name="sexe"/>
+        	</xpath> 
 			<xpath expr="//field[@name='address_home_id']" position='before'>
            		<field name="father_name" />
            		<field name="mother_name" />

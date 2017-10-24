@@ -20,6 +20,11 @@ class hr_employee(models.Model):
     
     information_cin_id              = fields.Many2one('hr.information.cin', string='Information sur CIN',help='Information about CIN')
     
+    sexe = fields.Selection([
+        ('masculin', 'Masculin'),
+        ('feminin', u'Féminin')
+     ], string='Sexe') 
+    
     def _send_email_birthday_date_tracking(self):
         employees = self.env['hr.employee']
         
