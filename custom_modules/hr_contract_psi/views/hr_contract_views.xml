@@ -44,7 +44,7 @@
 					</group>
 				</page>
 			</page>
-			<page name="hr_settings" position="after">
+			<!-- <page name="hr_settings" position="after">
 				<page string="Sanctions">
 					<group>
 						<field name="sanctions_data" nolabel="1">
@@ -58,7 +58,7 @@
 						</field>
 					</group>
 				</page>
-			</page>
+			</page> -->
 		</field>
 	</record>
 
