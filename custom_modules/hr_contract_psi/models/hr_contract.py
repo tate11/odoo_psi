@@ -13,7 +13,8 @@ class hr_contract(models.Model):
     state_of_work   = fields.Selection([
         ('cdd', 'CDD'),
         ('cdi', 'CDI')
-     ], string='Statut', track_visibility='onchange', )
+     ], string='Statut', track_visibility='onchange')
+
     
     @api.model
     def create(self, vals):  
@@ -45,7 +46,39 @@ class hr_contract(models.Model):
             self.env['mail.template'].browse(template1.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
-            
+     
+    @api.multi    
+    @api.one
+    @api.constrains('name')
+    def _send_email_trial_date_end(self, automatic=False):
+        for record in self:
+            if record.trial_date_start:
+                date_start = record.trial_date_start
+                date_start_trial = datetime.strptime(date_start,"%Y-%m-%d")
+                date_start_trial_time = datetime(
+                    year=date_start_trial.year, 
+                    month=date_start_trial.month,
+                    day=date_start_trial.day,
+                )
+                # Verification selection
+                if record.job_id.name == 'Chief Executive Officer':
+                    month_to_notif = date_start_trial_time + relativedelta(months=5)  
+                    if month_to_notif.date() == datetime.today().date():
+                         template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
+                         self.env['mail.template'].browse(template.id).send_mail(self.id)
+                elif record.job_id.name == 'Consultant':
+                    month_to_notif = date_start_trial_time + relativedelta(months=3)  
+                    if month_to_notif.date() == datetime.today().date():
+                         template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
+                         self.env['mail.template'].browse(template.id).send_mail(self.id)
+                elif record.job_id.name == 'Human Resources Manager':
+                    month_to_notif = date_start_trial_time + relativedelta(months=2)  
+                    if month_to_notif.date() == datetime.today().date():
+                         template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
+                         self.env['mail.template'].browse(template.id).send_mail(self.id)
+        if automatic:
+            self._cr.commit()
+
     def send_email_collaborator(self):
         print "The id contract is : ",self.contract_id
         template = self.env.ref('hr_contract_psi.custom_template_id')
@@ -124,9 +157,10 @@ class Employee(models.Model):
     birth_certificate_children  = fields.Boolean(default=False, string="Acte de naissances des enfants ")
     ethics_course_certificate   = fields.Boolean(default=False, string="Certificat du cours d'éthique")
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
-    attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments')
+    attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments', track_visibility='always')
     
-    sanctions_data = fields.One2many('hr.contract.sanction.data', 'sanction_type_id', string='')
+    sanctions_data = fields.One2many('hr.contract.sanction.data', 'sanction_type_id', string='', track_visibility='always')
+    
     
     @api.model
     def create(self, vals):
