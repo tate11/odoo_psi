@@ -199,10 +199,11 @@
 				</field>
 
 				<field name="availability" position="after">
-					<field name="psi_salary_type" />
-					<field name="psi_salary_negotiable" />
+				    <field name="psi_allowance" attrs="{'invisible': [('recrutement_type', '!=', 'stagiaire')]}" />
+					<field name="psi_salary_type"  />
+					<field name="psi_salary_negotiable" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
 				</field>
-
+				
 				<button name="create_employee_from_applicant" position="replace">
 					<button string="Create Employee" name="create_employee_from_applicant"
 						type="object" class="oe_highlight"

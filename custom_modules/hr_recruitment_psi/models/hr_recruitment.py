@@ -89,6 +89,7 @@ class Applicant(models.Model):
     psi_average_note = fields.Float(string="Moyenne Short List", readonly=True)
     
     #Note test
+    psi_allowance = fields.Integer(string="Indemnité de stage")
     psi_note_test_rh = fields.Integer(string="Note Test RH")
     psi_note_test_candidate = fields.Integer(string="Note Test Demandeur")
     psi_average_note_test = fields.Float(string="Moyenne Test", readonly=True)
@@ -201,7 +202,8 @@ class Applicant(models.Model):
                     month_to_notif = date_start_trial_time + relativedelta(months=3)
                     
                 vals_contract = {'name': applicant.partner_name or contact_name,
-                                                'psi_contract_type' : applicant.psi_contract_type,
+                                                'psi_contract_type' : applicant.job_id.psi_contract_type,
+                                                'place_of_work' : applicant.job_id.place_of_employment,
                                                'employee_id': employee.id,
                                                'job_id': applicant.job_id.id,
                                                'date_start': applicant.job_id.psi_date_start,
