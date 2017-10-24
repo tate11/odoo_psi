@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from datetime import timedelta
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 
 class hr_contract(models.Model):
