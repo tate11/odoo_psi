@@ -188,15 +188,18 @@
         <field name="view_id" ref="hr_contract_sanction_view_tree"/>
     </record>
 
-    <menuitem
+	<!-- MENUS -->
+   	<menuitem
         id="hr_menu_contract_type_sanction"
         action="action_hr_contract_type_sanction"
-        parent="hr.menu_human_resources_configuration"
+        parent="hr.menu_hr_root"
         sequence="4"
-        groups="base.group_no_one"/>
-
-    <menuitem id="menu_contract_wage_grid" action="open_contract_wage_grid"
-		parent="hr.menu_human_resources_configuration" sequence="5"
-		groups="base.group_no_one" />
+        />
+        
+    <menuitem id="menu_contract_wage_grid" 
+    	action="open_contract_wage_grid"
+		parent="hr.menu_hr_root"
+		sequence="5"
+		/>
 
 </odoo>
