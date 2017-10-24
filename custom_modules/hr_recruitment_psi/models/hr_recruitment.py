@@ -201,7 +201,8 @@ class Applicant(models.Model):
                     month_to_notif = date_start_trial_time + relativedelta(months=3)
                     
                 vals_contract = {'name': applicant.partner_name or contact_name,
-                                                'employee_id': employee.id,
+                                                'psi_contract_type' : applicant.psi_contract_type,
+                                               'employee_id': employee.id,
                                                'job_id': applicant.job_id.id,
                                                'date_start': applicant.job_id.psi_date_start,
                                                'trial_date_start':applicant.job_id.psi_date_start,

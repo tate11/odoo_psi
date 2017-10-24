@@ -9,11 +9,12 @@ class hr_contract(models.Model):
     _inherit = 'hr.contract'
     
     place_of_work   = fields.Char(string='Lieu d\'affectaction') #lieu d'affectation
-#    contract_id     = 0
-    state_of_work   = fields.Selection([
+
+    psi_contract_type = fields.Selection([
         ('cdd', 'CDD'),
-        ('cdi', 'CDI')
-     ], string='Statut', track_visibility='onchange')
+        ('cdi', 'CDI'),
+        ('convention_stage','Convention de stage')
+    ], string='Type de contrat', help="Type de contrat")
 
     
     @api.model
