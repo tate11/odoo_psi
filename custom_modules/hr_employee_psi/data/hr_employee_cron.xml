@@ -54,7 +54,7 @@
             <field name="model" eval="'hr.employee'" />
             <field name="function" eval="'_remove_sanction_data'" /> 
             <field name="args" eval="'(1,)'"/>
-            <field name="active" eval="False" />
+            <field name="active" eval="True" />
         </record>      
     </data>
 </odoo>
