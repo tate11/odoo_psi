@@ -12,7 +12,6 @@ class hr_contract(models.Model):
 
     psi_contract_type = fields.Selection([
         ('cdd', 'CDD'),
-        ('cdi', 'CDI')
         ('cdi', 'CDI'),
         ('convention_stage','Convention de stage')
     ], string='Type de contrat', help="Type de contrat", track_visibility='onchange')
