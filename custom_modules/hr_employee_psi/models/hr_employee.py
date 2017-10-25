@@ -43,7 +43,7 @@ class hr_employee(models.Model):
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments', track_visibility='always')
     
-    sanctions_data = fields.One2many('hr.contract.sanction.data', 'sanction_type_id', string='', track_visibility='always')
+    sanctions_data = fields.One2many('hr.contract.sanction.data', 'employee_id', string='', track_visibility='always')
     
     @api.model
     def create(self, vals):
@@ -58,9 +58,20 @@ class hr_employee(models.Model):
         self._update_cron_collab_1()
         self._update_cron_collab_2()
         return employee
-
-    def _remove_sanction_data(self):
-        print ""
+    
+    # fonction remove sanction after period MONTHS
+    def _remove_sanction_data(self, period): #period en mois
+        employee_obj = self.env["hr.employee"]
+        employees = employee_obj.search([])
+        sanctions_data_obj = self.env["hr.contract.sanction.data"]
+        today = datetime.today()
+        n = 0
+        for employee in employees:
+            list_sanction = sanctions_data_obj.search([('employee_id', '=', employee.id)])
+            for sanction in list_sanction:
+                s_date = datetime.strptime(sanction.sanction_date,"%Y-%m-%d")
+                if (today.year - s_date.year) * 12 + today.month - s_date.month >= period:
+                    sanction.write({'sanction_date_effacement' : today})
     
     def _update_cron_collab_1(self):
         """ Activate the cron Premier Email Employee.
@@ -216,8 +227,12 @@ class SanctionData(models.Model):
 
     name = fields.Char(string='Nom de la sanction')
     sanction_date = fields.Date(string='Date de la sanction')
+    
     sanction_type_id = fields.Many2one('hr.contract.type.sanction', string='Sanction')
+    
     sanction_objet = fields.Char(string='Objet')
-    sanction_date_effacement = fields.Date(string='Date d\'effacement')
+    sanction_date_effacement = fields.Date(string='Date d\'effacement', readonly=True)
     sanction_commentaire = fields.Text(string='Commentaires')
- 
+
+    employee_id = fields.Many2one('hr.employee')
+    
