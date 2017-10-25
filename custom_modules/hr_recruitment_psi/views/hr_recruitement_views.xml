@@ -13,10 +13,10 @@
 				<field name="partner_id" position="before">
 					<field name="birthday" attrs="{'required': True}" />
 					<field name="age" />
-					<field name="country_id" />
+					<field name="country_id" attrs="{'required': True}" />
 					<field name="sexe" attrs="{'required': True}" />
-					<field name="marital" />
-					<field name="number_of_dependent_children" />
+					<field name="marital" attrs="{'required': True}" />
+					<field name="number_of_dependent_children" attrs="{'required': True}" />
 					<field name="recrutement_type_id" />
 					<field name="recrutement_type" invisible="1" />
 				</field>

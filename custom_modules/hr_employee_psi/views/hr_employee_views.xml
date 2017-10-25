@@ -20,7 +20,7 @@
         	<xpath expr="//field[@name='gender']" position='replace'>
            		<field name="gender" invisible="1"/>
         	</xpath>
-        	<xpath expr="//field[@name='marital']" position='after'>
+        	<xpath expr="//field[@name='marital']" position='before'>
            		<field name="sexe"/>
         	</xpath> 
 			<xpath expr="//field[@name='address_home_id']" position='before'>

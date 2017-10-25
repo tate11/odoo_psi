@@ -9,6 +9,12 @@ class hr_contract(models.Model):
     _inherit = 'hr.contract'
     
     place_of_work   = fields.Char(string='Lieu d\'affectaction') #lieu d'affectation
+    
+    #rupture
+    date_rupture = fields.Date(string='Date rupture de contrat')
+    motif_rupture = fields.Text(string='Motif de rupture de contrat')
+    
+    work_years = fields.Integer(compute="_calculate_work_years", string=u'Année de travail')
 
     psi_contract_type = fields.Selection([
         ('cdd', 'CDD'),
@@ -34,6 +40,12 @@ class hr_contract(models.Model):
         contract = super(hr_contract, self).write(vals)
         self._update_cron_rh_1()  
         return contract
+    
+    @api.depends('date_start')
+    def _calculate_work_years(self):
+        for record in self:
+            if record.date_start:
+                record.work_years = datetime.today().year - datetime.strptime(record.date_start, "%Y-%m-%d").year
         
     @api.one
     @api.constrains('name')

@@ -22,7 +22,14 @@ class hr_employee(models.Model):
     information_about_children_id   = fields.Many2one('hr.person', string=' Informations sur les enfants',help='Information about children')
     
     information_cin_id              = fields.Many2one('hr.information.cin', string='Information sur CIN',help='Information about CIN')
-    
+
+    marital = fields.Selection([
+        ('single', u'Célibataire'),
+        ('married', u'Marié(e)'),
+        ('separated', u'Séparé(e)'),
+        ('widower', 'Veuf(ve)'),
+        ('divorced', u'Divorcé(e)')
+    ], string='Situation de famille')
 
     sexe = fields.Selection([
         ('masculin', 'Masculin'),
