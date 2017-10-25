@@ -55,8 +55,7 @@ class hr_contract(models.Model):
                 weeks = (monday2 - monday1).days / 7
                
                 if weeks == 1 :
-                    print "1 : ",employee.employee_id.work_email
-                    print "\n 2 : ",employee.create_uid.email
+                    
                     template_collaborator = self.env.ref('hr_contract_psi.template_collaborator_id')
                     self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id)
                     template_rh = self.env.ref('hr_contract_psi.template_rh_id')

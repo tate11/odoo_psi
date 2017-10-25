@@ -5,8 +5,7 @@
 		<record id="template_collaborator_id" model="mail.template">
 			<field name="name">Template email - rappel sur collaborateur</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
-			<field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' %
-				(object.create_uid.name, object.create_uid.email) or '')}</field>
+			<field name="email_from">${object.create_uid.email}</field>
 			<field name="subject">Rappel de suivi d'anniversaire</field>
 			<field name="email_to">${object.employee_id.work_email}</field>
 			<field name="body_html"><![CDATA[
@@ -25,8 +24,7 @@
 		<record id="template_rh_id" model="mail.template">
 			<field name="name">Template email - rappel sur rh</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
-			<field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' %
-				(object.create_uid.name, object.create_uid.email) or '')}</field>
+			<field name="email_from">${object.create_uid.email}</field>
 			<field name="subject">Rappel de suivi d'anniversaire de l'employée
 				${object.name}</field>
 			<field name="email_to">arandriamoravelo@ingenosya.mg</field>
@@ -48,8 +46,7 @@
 			<field name="name">Template email employee - Rappel Email au
 				collaborateur</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_employee" />
-			<field name="email_from">${(object.user_id.email and '%s &lt;%s&gt;' %
-				(object.user_id.name, object.user_id.email) or '')}</field>
+			<field name="email_from">${object.create_uid.email}</field>
 			<field name="subject">Premier rappel de ${object.name_related or 'n/a' }
 			</field>
 			<!-- <field name="email_to"> ${object.user_id.email} </field> -->
@@ -71,8 +68,7 @@
 			model="mail.template">
 			<field name="name">Template email contrat - Premier rappel à la RH
 			</field>
-			<field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' %
-				(object.create_uid.name, object.create_uid.email) or '')}</field>
+			<field name="email_from">${object.create_uid.email}</field>
 			<field name="subject">Rappel pour l'enregistrement du profil</field>
 			<field name="email_to">${object.employee_id.coach_id.email}</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
@@ -90,8 +86,7 @@
 			model="mail.template">
 			<field name="name">Template email contrat - Rappel collab + pieces
 				manquantes</field>
-			<field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' %
-				(object.create_uid.name, object.create_uid.email) or '')}</field>
+			<field name="email_from">${object.create_uid.email}</field>
 			<field name="subject">Rappel pour l'enregistrement du profil</field>
 			<field name="email_to">${object.employee_id.work_email}</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
@@ -145,8 +140,7 @@
 			<field name="name">Template email contrat - fin période d'essai
 			</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
-			<field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' %
-				(object.create_uid.name, object.create_uid.email) or '')}</field>
+			<field name="email_from">${object.create_uid.email}</field>
 			<field name="subject">Rappel fin periode d'essai de ${object.name}
 			</field>
 			<!-- <field name="email_to"> ${object.user_id.email} </field> -->
@@ -171,8 +165,7 @@
 			model="mail.template">
 			<field name="name">Second rappel au collaborateur</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_employee" />
-			<field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' %
-				(object.create_uid.name, object.create_uid.email) or '')}</field>
+			<field name="email_from">${object.create_uid.email}</field>
 			<field name="subject">Premier rappel de ${object.name}</field>
 			<!-- <field name="email_to"> ${object.user_id.email} </field> -->
 			<field name="email_to">${object.work_email}</field>
@@ -194,8 +187,7 @@
 			model="mail.template">
 			<field name="name">Template email contrat - fin contrat</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
-			<field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' %
-				(object.create_uid.name, object.create_uid.email) or '')}</field>
+			<field name="email_from">${object.create_uid.email}</field>
 			<field name="subject">Rappel fin contrat de ${object.name}</field>
 			<!-- <field name="email_to"> ${object.user_id.email} </field> -->
 			<field name="email_to">${object.work_email}</field>
