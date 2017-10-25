@@ -89,13 +89,13 @@ class hr_employee(models.Model):
 
         #list_not_checked = self._get_not_checked_files()
 
-        cron = self.env.ref('hr_contract_psi.ir_cron_send_email_collab_1', raise_if_not_found=False)
+        cron = self.env.ref('hr_employee_psi.ir_cron_send_email_collab_1', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
     
     def _update_cron_collab_2(self):
         """ Activate the cron Second Email Employee.
         """
-        cron = self.env.ref('hr_contract_psi.ir_cron_send_email_collab_2', raise_if_not_found=False)
+        cron = self.env.ref('hr_employee_psi.ir_cron_send_email_collab_2', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
     
     @api.one
@@ -147,14 +147,14 @@ class hr_employee(models.Model):
     def _send_first_email_collaborator(self, automatic=False):
         list_not_checked = self._get_not_checked_files()
         if len(list_not_checked) > 0:
-            template = self.env.ref('hr_contract_psi.custom_template_rappel_collab_1')
+            template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_1')
             self.env['mail.template'].browse(template.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
 
     #(R8.) Second Rappel au cours d'éthique
     def _send_second_email_collaborator(self, automatic=False):
-        template = self.env.ref('hr_contract_psi.custom_template_rappel_collab_2')
+        template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_2')
         self.env['mail.template'].browse(template.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
