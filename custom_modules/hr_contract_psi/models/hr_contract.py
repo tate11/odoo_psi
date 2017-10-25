@@ -12,15 +12,22 @@ class hr_contract(models.Model):
 
     psi_contract_type = fields.Selection([
         ('cdd', 'CDD'),
+        ('cdi', 'CDI')
         ('cdi', 'CDI'),
         ('convention_stage','Convention de stage')
-    ], string='Type de contrat', help="Type de contrat")
-
+    ], string='Type de contrat', help="Type de contrat", track_visibility='onchange')
+   
+    end_deadline_without_renewal= fields.Boolean(default=False, string="Arrivée de l'échéance sans reconduction")
+    conventional_break          = fields.Boolean(default=False, string="Rupture conventionnelle")
+    resignation                 = fields.Boolean(default=False, string="Lettre de démission")
+    dismissal                   = fields.Boolean(default=False, string="Licenciement")
+    death                       = fields.Boolean(default=False, string="Décès")
+    retreat                     = fields.Boolean(default=False, string="Retraite")
     
     @api.model
     def create(self, vals):  
         contract = super(hr_contract, self).create(vals)
-        self._update_cron_rh_1()  
+        self._update_cron_rh_1()
         return contract
     
     @api.multi
@@ -28,6 +35,19 @@ class hr_contract(models.Model):
         contract = super(hr_contract, self).write(vals)
         self._update_cron_rh_1()  
         return contract
+        
+    @api.one
+    @api.constrains('name')
+    def set_employee_inactif(self):
+        """ Set employee inactif
+        """
+        for record in self:
+            contract_obj = self.env['hr.contract']
+            employee = record.employee_id
+            #employee readonly
+            contract = contract_obj.browse([record.id])
+        
+        return {'type': 'ir.actions.act_window_close'}
 
     def _update_cron_rh_1(self):
         """ Activate the cron First Email RH + Employee.
@@ -47,7 +67,7 @@ class hr_contract(models.Model):
             self.env['mail.template'].browse(template1.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
-       
+
     @api.one
     @api.constrains('name')
     def _send_email_trial_date_end(self, automatic=False):
@@ -103,5 +123,3 @@ class hr_contract(models.Model):
         print "The id contract is : ",self.contract_id
         template = self.env.ref('hr_contract_psi.custom_template_id')
         self.env['mail.template'].browse(template.id).send_mail(self.id)
-    
-   

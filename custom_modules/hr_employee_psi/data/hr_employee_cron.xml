@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
+        
 		<!-- Cron send email collaborateur and RH - Suivi date d’anniversaire - rappel -->
         <record id="ir_cron_suivi_date_d_anniversaire" forcecreate="True" model="ir.cron">
             <field name="name">Suivi date d'anniversaire rappel a Collaborateur et RH</field>

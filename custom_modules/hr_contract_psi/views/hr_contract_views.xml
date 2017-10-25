@@ -4,8 +4,11 @@
 		<field name="name">hr.contract.form.psi</field>
 		<field name="model">hr.contract</field>
 		<field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
-		<field name="arch" type="xml">
-			<xpath expr="//field[@name='type_id']" position='replace'>
+		<field name="arch" type="xml">	
+			<xpath expr="//field[@name='job_id']" position="after">
+				<field name="state_of_work" />
+			</xpath>	
+      <xpath expr="//field[@name='type_id']" position='replace'>
 				<field name="type_id" invisible="1" />
 			</xpath>
 
@@ -13,6 +16,25 @@
 				<field name="psi_contract_type" />
 				<field name="place_of_work" />
 			</xpath>
+			<xpath expr="//notebook" position="inside">				
+				<page string="Séparation – événements">
+					<group>
+						<field name="end_deadline_without_renewal" attrs="{'invisible': [('state_of_work', '=', 'cdi')]}" />
+						<!-- <field name="conventional_break" on_change="set_employee_close"/> -->
+						<field name="conventional_break"/>
+						<field name="resignation" />
+						<field name="dismissal" />
+						<field name="death" />
+						<field name="retreat" attrs="{'invisible': [('state_of_work', '=', 'cdd')]}" />
+						<button name="set_employee_inactif" 
+								type="object" 
+								string="Mettre inactif cet employé" 
+								class="oe_highlight"
+								attrs="{'invisible': ['|',('end_deadline_without_renewal','=','' or False),('conventional_break','=','' or False),('resignation','=','' or False),('dismissal','=','' or False),('death','=','' or False),('retreat','=','' or False)]}"
+								/>
+					</group>
+				</page>
+			</xpath>			
 		</field>
 	</record>
 
