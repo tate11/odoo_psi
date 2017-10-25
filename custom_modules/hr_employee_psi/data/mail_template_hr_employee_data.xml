@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
 		<!-- Template email - rappel sur collaborateur -->
-		<record id="hr_contract_psi.template_collaborator_id" model="mail.template">
+		<record id="template_collaborator_id" model="mail.template">
 			<field name="name">Template email - rappel sur collaborateur</field>
 			<field name="model_id" ref="hr_employee_psi.model_hr_employee" />
 			<field name="email_from">${object.user_id.email}</field>
@@ -21,7 +21,7 @@
 		</record>
 		
 		<!-- Template email - rappel sur rh -->
-		<record id="hr_contract_psi.template_rh_id" model="mail.template">
+		<record id="template_rh_id" model="mail.template">
 			<field name="name">Template email - rappel sur rh</field>
 			<field name="model_id" ref="hr_employee_psi.model_hr_employee" />
 			<field name="email_from">${object.user_id.email}</field>
