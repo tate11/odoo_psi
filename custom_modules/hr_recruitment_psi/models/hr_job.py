@@ -62,9 +62,8 @@ class hr_job(models.Model):
                                        ('superviseur','SUPERVISEUR'),
                                        ('coordinateur','COORDINATEUR'),
                                        ('directeur','DIRECTEUR'),
-                                       ('rra','RRA')])
-
-    
+                                       ('rra','RRA')], string="Catégorie professionnelle")
+  
     @api.one
     @api.constrains('psi_contract_duration')
     def _check_psi_contract_duration(self):

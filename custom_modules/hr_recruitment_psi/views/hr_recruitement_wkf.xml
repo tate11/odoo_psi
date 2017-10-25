@@ -73,7 +73,7 @@
 		    <field name="wkf_id" ref="hr_job_wkf"/>
             <field name="name">internship_contract</field>
             <field name="kind">function</field>
-            <field name="action">write({'state':'internship_contract'})</field>
+            <field name="action">action_internship_contract()</field>
         </record>        
         
 		<!-- transition -->
