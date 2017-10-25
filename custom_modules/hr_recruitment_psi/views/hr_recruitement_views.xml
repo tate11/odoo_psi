@@ -275,7 +275,7 @@
 
 				<button name="archive_applicant" position="replace" type='object'>
 					<button name="archive_applicant"
-						attrs="{'invisible': ['|',('state', '=', 'contract_established'),('state', '=', 'internship_contract')]}" />
+						attrs="{'invisible': ['|','|',('state', '=', 'contract_established'),('state', '=', 'internship_contract'),('state', '=', 'contract_established_consultant')]}" />
 				</button>
 			</field>
 		</record>

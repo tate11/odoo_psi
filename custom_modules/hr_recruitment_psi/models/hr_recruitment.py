@@ -53,7 +53,8 @@ class Applicant(models.Model):
         ('benefits', '5- Indemnités'), 
         ('notification_of_employment', '6- Notification d\'embauche'),
          ('internship_contract', u'7- Contrat de stage à faire'),
-        ('contract_established', u'7- Contrat à faire')
+        ('contract_established', u'7- Contrat à faire'),
+         ('contract_established_consultant', u'7- Contrat à faire')
     ], string='Status', readonly=True, required=True, track_visibility='onchange', copy=False, default='applicant_selected', help="Set whether the recruitment process is open or closed for this job position.")
      
 
