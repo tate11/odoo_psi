@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Gestion des Employées',
+    'name': 'Gestion des Employées PSI',
     'version': '1.0',
     'category': 'Contract',
     'sequence': 0,
-    'description': """Gestion des Employées sur le PSI""",
+    'description': """Gestion des Employées chez PSI-M""",
     'website': 'https://www.ingenosya.mg',
     'depends': ['hr'],
     'data':  [
               'data/mail_template_hr_employee_data.xml',
               'data/hr_employee_data.xml',
+              'data/hr_employee_cron.xml',
               'views/hr_employee_views.xml',
              ],
     'demo': [],
