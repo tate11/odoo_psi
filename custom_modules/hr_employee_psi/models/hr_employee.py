@@ -139,31 +139,36 @@ class hr_employee(models.Model):
             self._cr.commit()
     
     def _send_email_birthday_date_tracking(self):
-        employees = self.env['hr.employee']
+        employee_obj = self.env['hr.employee']
+        employees = employee_obj.search([])
         
         for employee in employees : 
+           
             date_birthday = employee.birthday
-            datetime_now =  datetime.datetime.now()
-            date_now = datetime(
+            if date_birthday != False :
+                datetime_now =  datetime.today()
+                date_now = datetime(
                     year=datetime_now.year, 
                     month=datetime_now.month,
                     day=datetime_now.day,
                 )
-            datetime_birthday = datetime.strptime(date_birthday,"%Y-%m-%d")
-            date_birthday_time = datetime(
-                    year=datetime_birthday.year, 
+                datetime_birthday = datetime.strptime(date_birthday,"%Y-%m-%d")
+                date_birthday_time = datetime(
+                    year=datetime_now.year, 
                     month=datetime_birthday.month,
                     day=datetime_birthday.day,
                 )
-            monday1 = (date_now - timedelta(days=date_now.weekday()))
-            monday2 = (date_birthday_time - timedelta(days=date_birthday_time.weekday()))
+                monday1 = (date_now - timedelta(days=date_now.weekday()))
+                monday2 = (date_birthday_time - timedelta(days=date_birthday_time.weekday()))
 
-            weeks = (monday2 - monday1).days / 7
-            if weeks == 1 :
-               template_collaborator = self.env.ref('hr_employee_psi.template_collaborator_id')
-               self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id)
-               template_rh = self.env.ref('hr_employee_psi.template_rh_id')
-               self.env['mail.template'].browse(template_rh.id).send_mail(employee.id)
+                weeks = (monday2 - monday1).days / 7
+               
+                if weeks == 1 :
+                    
+                    template_collaborator = self.env.ref('hr_employee_psi.template_collaborator_id')
+                    self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id)
+                    template_rh = self.env.ref('hr_employee_psi.template_rh_id')
+                    self.env['mail.template'].browse(template_rh.id).send_mail(employee.id)
 
 class Person(models.Model):
 
