@@ -14,12 +14,19 @@ class hr_contract(models.Model):
         ('cdd', 'CDD'),
         ('cdi', 'CDI')
      ], string='Statut', track_visibility='onchange')
+   
+    end_deadline_without_renewal= fields.Boolean(default=False, string="Arrivée de l'échéance sans reconduction")
+    conventional_break          = fields.Boolean(default=False, string="Rupture conventionnelle")
+    resignation                 = fields.Boolean(default=False, string="Lettre de démission")
+    dismissal                   = fields.Boolean(default=False, string="Licenciement")
+    death                       = fields.Boolean(default=False, string="Décès")
+    retreat                     = fields.Boolean(default=False, string="Retraite")
 
     
     @api.model
     def create(self, vals):  
         contract = super(hr_contract, self).create(vals)
-        self._update_cron_rh_1()  
+        self._update_cron_rh_1()
         return contract
     
     @api.multi
@@ -27,6 +34,19 @@ class hr_contract(models.Model):
         contract = super(hr_contract, self).write(vals)
         self._update_cron_rh_1()  
         return contract
+        
+    @api.one
+    @api.constrains('name')
+    def set_employee_inactif(self):
+        """ Set employee inactif
+        """
+        for record in self:
+            contract_obj = self.env['hr.contract']
+            employee = record.employee_id
+            #employee readonly
+            contract = contract_obj.browse([record.id])
+        
+        return {'type': 'ir.actions.act_window_close'}
 
     def _update_cron_rh_1(self):
         """ Activate the cron First Email RH + Employee.
@@ -46,7 +66,7 @@ class hr_contract(models.Model):
             self.env['mail.template'].browse(template1.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
-       
+
     @api.one
     @api.constrains('name')
     def _send_email_trial_date_end(self, automatic=False):
@@ -103,17 +123,17 @@ class hr_contract(models.Model):
         template = self.env.ref('hr_contract_psi.custom_template_id')
         self.env['mail.template'].browse(template.id).send_mail(self.id)
     
-    @api.one
-    @api.constrains('state_of_work')
-    def _check_state_of_work(self):
-        for record in self:
-            self.contract_id = record.id
-       
-        cron = self.env['ir.cron'].browse(9)
-        cron.write({'active':True})
-        cron.active = True
-        cron.sudo(user=1)._callback(cron.model, cron.function, cron.args, cron.id)        
-        cron.write({'active':False})
+#    @api.one
+#    @api.constrains('state_of_work')
+#    def _check_state_of_work(self):
+#        for record in self:
+#            self.contract_id = record.id
+#       
+#        cron = self.env['ir.cron'].browse(9)
+#        cron.write({'active':True})
+#        cron.active = True
+#        cron.sudo(user=1)._callback(cron.model, cron.function, cron.args, cron.id)        
+#        cron.write({'active':False})
         
     def send_email(self):
         sender = 'xxxxx@gmail.com'
@@ -147,7 +167,8 @@ class Employee(models.Model):
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments', track_visibility='always')
     
     sanctions_data = fields.One2many('hr.contract.sanction.data', 'sanction_type_id', string='', track_visibility='always')
-    
+  
+    reason_end_id = fields.Many2one('hr.employee.reason.separation', 'Raison')
     
     @api.model
     def create(self, vals):
@@ -166,9 +187,6 @@ class Employee(models.Model):
     def _update_cron_collab_1(self):
         """ Activate the cron Premier Email Employee.
         """
-
-        #list_not_checked = self._get_not_checked_files()
-
         cron = self.env.ref('hr_contract_psi.ir_cron_send_email_collab_1', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
     
@@ -256,4 +274,11 @@ class SanctionData(models.Model):
     sanction_objet = fields.Char(string='Objet')
     sanction_date_effacement = fields.Date(string='Date d\'effacement')
     sanction_commentaire = fields.Text(string='Commentaires')
+    
+class hr_employee_reason_separation(models.Model):
+    
+    _name           = 'hr.employee.reason.separation'
+    _description    = 'Séparation – événements'
+    
+    name            = fields.Char('Evénement', required=True)
         
