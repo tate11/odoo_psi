@@ -236,6 +236,7 @@ class ContractTypeSanction(models.Model):
 class SanctionData(models.Model):
 
     _name = 'hr.contract.sanction.data'
+    _order = 'sanction_date desc'
 
     name = fields.Char(string='Nom de la sanction')
     sanction_date = fields.Date(string='Date de la sanction')
