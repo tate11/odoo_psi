@@ -197,7 +197,29 @@
 
 					<field name="nature_recrutement_id" invisible="1" />
 				</field>
-
+				
+				<field name="availability" position="replace">
+				   	<field name="availability" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
+				</field>
+				<xpath expr="//label[@for='salary_expected']" position='replace'>
+					<label for="salary_expected" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
+				</xpath>
+				<xpath expr="//field[@name='salary_expected']" position='replace'>
+					<field name="salary_expected" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
+				</xpath>
+				<xpath expr="//field[@name='salary_expected_extra']" position='replace'>
+					<field name="salary_expected_extra" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
+				</xpath>
+				<xpath expr="//label[@for='salary_proposed']" position='replace'>
+					<label for="salary_proposed" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
+				</xpath>
+				<xpath expr="//field[@name='salary_proposed']" position='replace'>
+					<field name="salary_proposed" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}"/>
+				</xpath>
+				<xpath expr="//field[@name='salary_proposed_extra']" position='replace'>
+					<field name="salary_proposed_extra" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}"/>
+				</xpath>
+				
 				<field name="availability" position="after">
 				    <field name="psi_allowance" attrs="{'invisible': [('recrutement_type', '!=', 'stagiaire')]}" />
 					<field name="psi_salary_type"  />

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models, api
+from datetime import timedelta
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
+from odoo import api, fields, models, _
 
 class hr_employee(models.Model):
     
@@ -44,14 +47,14 @@ class hr_employee(models.Model):
     
     @api.model
     def create(self, vals):
-        employee = super(Employee, self).create(vals)
+        employee = super(hr_employee, self).create(vals)
         self._update_cron_collab_1()    
         self._update_cron_collab_2()    
         return employee
     
     @api.multi
     def write(self, vals):
-        employee = super(Employee, self).write(vals)
+        employee = super(hr_employee, self).write(vals)
         self._update_cron_collab_1()
         self._update_cron_collab_2()
         return employee

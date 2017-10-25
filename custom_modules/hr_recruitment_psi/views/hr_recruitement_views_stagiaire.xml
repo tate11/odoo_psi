@@ -8,6 +8,9 @@
 			<field name="mode">primary</field>
 			<field name="inherit_id" ref="crm_case_form_view_job_inherit1" />
 			<field name="arch" type="xml">
+			   <field name="psi_salary_type" position="replace">
+					<field name="psi_salary_type" readonly="1" />
+				</field>
 				<field name="state" position="replace">
 					<field name="state" widget="statusbar"
 						attrs="{'invisible': [('active', '=', False)]}"
@@ -20,7 +23,7 @@
 	        <field name="name">Candidatures des Stagiaires</field>
 	        <field name="res_model">hr.applicant</field>
 	        <field name="view_mode">tree,form,kanban,calendar</field>
-	        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
+	        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'default_psi_salary_type':'net'}</field>
 	    </record>
 	
 		<record model="ir.actions.act_window.view" id="action_tree_stagiaire">

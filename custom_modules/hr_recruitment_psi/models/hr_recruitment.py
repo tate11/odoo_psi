@@ -89,7 +89,7 @@ class Applicant(models.Model):
     psi_average_note = fields.Float(string="Moyenne Short List", readonly=True)
     
     #Note test
-    psi_allowance = fields.Integer(string="Indemnité de stage")
+    psi_allowance = fields.Float(string='Indemnité de stage', digits=(16, 2), required=True, help="Basic Salary of the employee")
     psi_note_test_rh = fields.Integer(string="Note Test RH")
     psi_note_test_candidate = fields.Integer(string="Note Test Demandeur")
     psi_average_note_test = fields.Float(string="Moyenne Test", readonly=True)
@@ -159,6 +159,8 @@ class Applicant(models.Model):
     b_liste_restreinte = fields.Boolean(string='Dans la liste restreinte', default=False)
     
    
+   
+   
     @api.multi
     def create_employee_from_applicant(self):
         """ Create an hr.employee from the hr.applicants """
@@ -203,13 +205,12 @@ class Applicant(models.Model):
                     
                 vals_contract = {'name': applicant.partner_name or contact_name,
                                                 'psi_contract_type' : applicant.job_id.psi_contract_type,
-                                                'place_of_work' : applicant.job_id.place_of_employment,
-                                               'employee_id': employee.id,
+                                                'employee_id': employee.id,
                                                'job_id': applicant.job_id.id,
                                                'date_start': applicant.job_id.psi_date_start,
                                                'trial_date_start':applicant.job_id.psi_date_start,
                                                'trial_date_end': month_to_notif,
-                                               'wage':applicant.salary_proposed,
+                                               'wage': applicant.psi_allowance if applicant.recrutement_type == 'stagiaire' else applicant.salary_proposed,
                                                'department_id': applicant.department_id.id or False}
                 print "vals_contract : ",vals_contract
                 contract = self.env['hr.contract'].create(vals_contract)
@@ -259,7 +260,11 @@ class Applicant(models.Model):
     def action_contract_established(self) :
         self.create_employee_from_applicant()
         self.write({ 'state': 'contract_established'})
-       
+    
+    def action_internship_contract(self):
+        self.create_employee_from_applicant()
+        self.write({ 'state': 'internship_contract'})
+    
     @api.multi
     def mail_refuse_applicant(self):
         template = self.env.ref('hr_recruitment_psi.custom_template_refus')
@@ -335,6 +340,7 @@ class Applicant(models.Model):
         for record in self:
             if record.birthday:
                 record.age = datetime.today().year - datetime.strptime(record.birthday, "%Y-%m-%d").year
+   
 
 class ParentInformationEmployed(models.Model):
       _name = 'hr.recruitement.parent.information'
