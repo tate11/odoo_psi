@@ -98,7 +98,7 @@
 			<field name="auto_delete" eval="True" />
 			<field name="body_html"><![CDATA[
 			<br\>
-			<h2>(R7.) Rappel - enregistrement du profil du collaborateur / complétude </h2>
+			<h2>Rappel - enregistrement du profil du collaborateur / complétude </h2>
 			
 			<h5>Pièces manquantes :</h5>
 			<ul>
@@ -181,7 +181,7 @@
 			<field name="body_html"><![CDATA[                
                   
 			<br\>
-			<h2>(R8.) 2d Rappel – cours d’éthique</h2>
+			<h2>2d Rappel – cours d’éthique</h2>
 			<p>Un 2d rappel doit être envoyé au collaborateur par mail pour suivre le cours d’éthique, avec en copie RH, 3 semaines après l’enregistrement de son profil. S’il n’a pas enregistré son certificat de complétude du cours.
 			le cours d’éthique, avec en copie RH, 15 jrs après l’enregistrement de son profil.</p>
         
