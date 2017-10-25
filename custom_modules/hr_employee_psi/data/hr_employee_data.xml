@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data noupdate="1">
+
 		<!-- Cron send email collaborateur and RH - Suivi date d’anniversaire - rappel -->
         <record id="ir_cron_suivi_date_d_anniversaire" forcecreate="True" model="ir.cron">
             <field name="name">Suivi date d'anniversaire rappel a Collaborateur et RH</field>
@@ -14,5 +15,23 @@
             <field name="args" eval=""/>
             <field name="active" eval="True" />
         </record>     
+
+		<!-- Liste des sanctions -->
+		<record model="hr.contract.type.sanction" id="rappel_ordre">
+	        <field name="name">Rappel à l’ordre</field>
+	    </record>
+	    <record model="hr.contract.type.sanction" id="sanction_legere">
+	        <field name="name">Sanctions légères</field>
+	    </record>
+	    <record model="hr.contract.type.sanction" id="sanction_severe">
+	        <field name="name">Sanctions sévères</field>
+	    </record>
+	    <record model="hr.contract.type.sanction" id="sanction_grave">
+	        <field name="name">Sanctions graves</field>
+	    </record>
+	    <record model="hr.contract.type.sanction" id="faute_lourde">
+	        <field name="name">Fautes lourdes</field>
+	    </record>
+		<!-- Fin liste sanctions -->     
     </data>
 </odoo>

@@ -4,61 +4,37 @@
 		<field name="name">hr.contract.form.psi</field>
 		<field name="model">hr.contract</field>
 		<field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
-		<field name="arch" type="xml">
-			
-			<div class="oe_title" position="after">
-        <p></p>
-			</div>
-			
-		</field>
-	</record>
+		<field name="arch" type="xml">	
+			<xpath expr="//field[@name='job_id']" position="after">
+				<field name="state_of_work" />
+			</xpath>	
+      <xpath expr="//field[@name='type_id']" position='replace'>
+				<field name="type_id" invisible="1" />
+			</xpath>
 
-	<record id="hr_hr_employee_view_form_psi" model="ir.ui.view">
-		<field name="name">hr.hr.employee.view.form.psi</field>
-		<field name="model">hr.employee</field>
-		<field name="inherit_id" ref="hr.view_employee_form" />
-		<field name="arch" type="xml">
-			<div name="button_box" position="inside">
-				<button name="action_get_attachment_tree_view" class="oe_stat_button"
-					icon="fa-book" type="object">
-					<field name="attachment_number" widget="statinfo" string="Documents"
-						modifiers="{'readonly': true}" />
-				</button>
-			</div>
-
-
-			<page name="public" position="after">
-				<page string="Pièces à fournir">
+			<xpath expr="//field[@name='department_id']" position='after'>
+				<field name="psi_contract_type" />
+				<field name="place_of_work" />
+			</xpath>
+			<xpath expr="//notebook" position="inside">				
+				<page string="Séparation – événements">
 					<group>
-						<field name="personal_information" />
-						<field name="id_photos" />
-						<field name="certificate_residence" />
-						<field name="marriage_certificate" />
-						<field name="cin" />
-						<field name="work_certificate" />
-						<field name="qualifications" />
-						<field name="criminal_records" />
-						<field name="card_cnaps" />
-						<field name="birth_certificate_children" />
-						<field name="ethics_course_certificate" />
+						<field name="end_deadline_without_renewal" attrs="{'invisible': [('state_of_work', '=', 'cdi')]}" />
+						<!-- <field name="conventional_break" on_change="set_employee_close"/> -->
+						<field name="conventional_break"/>
+						<field name="resignation" />
+						<field name="dismissal" />
+						<field name="death" />
+						<field name="retreat" attrs="{'invisible': [('state_of_work', '=', 'cdd')]}" />
+						<button name="set_employee_inactif" 
+								type="object" 
+								string="Mettre inactif cet employé" 
+								class="oe_highlight"
+								attrs="{'invisible': ['|',('end_deadline_without_renewal','=','' or False),('conventional_break','=','' or False),('resignation','=','' or False),('dismissal','=','' or False),('death','=','' or False),('retreat','=','' or False)]}"
+								/>
 					</group>
 				</page>
-			</page>
-			<!-- <page name="hr_settings" position="after">
-				<page string="Sanctions">
-					<group>
-						<field name="sanctions_data" nolabel="1">
-							<tree string="" editable="bottom">
-								<field name="sanction_date" />
-								<field name="sanction_type_id" />
-								<field name="sanction_objet" />
-								<field name="sanction_date_effacement" />
-								<field name="sanction_commentaire" />
-							</tree>
-						</field>
-					</group>
-				</page>
-			</page> -->
+			</xpath>			
 		</field>
 	</record>
 
@@ -85,6 +61,7 @@
 		</field>
 	</record>
 
+	<!-- TODO: What is this ??? -->
 	<record model="ir.actions.act_window" id="hr_contract_resumes">
 		<field name="name">Resumes and Letters</field>
 		<field name="res_model">ir.attachment</field>
@@ -101,8 +78,10 @@
 			</p>
 			<p>
 				This menu helps you search through resumes and motivation
-				letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT
-				files so that you can search keywords from the content of these
+				letters.
+				Odoo automatically indexes .PDF, .DOC, DOCX, .TXT
+				files so that you
+				can search keywords from the content of these
 				files.
 			</p>
 		</field>
@@ -147,7 +126,6 @@
 		</field>
 	</record>
 
-
 	<record id="open_contract_wage_grid" model="ir.actions.act_window">
 		<field name="name">Grille salariale</field>
 		<field name="res_model">hr.wage.grid</field>
@@ -156,47 +134,7 @@
 		<field name="view_id" ref="hr_contract_wage_grid_form" />
 	</record>
 
-	
-
-  <record id="hr_contract_type_view_form" model="ir.ui.view">
-         <field name="name">hr.contract.type.sanction.form</field>
-         <field name="model">hr.contract.type.sanction</field>
-         <field name="arch" type="xml">
-             <form string="Liste des sanctions">
-                 <group col="4">
-                     <field colspan="4" name="name"/>
-                 </group>
-             </form>
-         </field>
-     </record>
-        
-    <record id="hr_contract_sanction_view_tree" model="ir.ui.view">
-        <field name="name">hr.contract.type.sanction.tree</field>
-        <field name="model">hr.contract.type.sanction</field>
-        <field name="arch" type="xml">
-            <tree string="Liste des sanctions">
-                <field colspan="4" name="name"/>
-            </tree>
-        </field>
-    </record>
-    
-    <record id="action_hr_contract_type_sanction" model="ir.actions.act_window">
-        <field name="name">Liste des sanctions</field>
-        <field name="res_model">hr.contract.type.sanction</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="hr_contract_sanction_view_tree"/>
-    </record>
-
-    <menuitem
-        id="hr_menu_contract_type_sanction"
-        action="action_hr_contract_type_sanction"
-        parent="hr.menu_human_resources_configuration"
-        sequence="4"
-        groups="base.group_no_one"/>
-
-    <menuitem id="menu_contract_wage_grid" action="open_contract_wage_grid"
-		parent="hr.menu_human_resources_configuration" sequence="5"
-		groups="base.group_no_one" />
+	<menuitem id="menu_contract_wage_grid" action="open_contract_wage_grid"
+		parent="hr.menu_hr_root" sequence="5" />
 
 </odoo>

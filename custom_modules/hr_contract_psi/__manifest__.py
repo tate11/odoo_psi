@@ -4,7 +4,7 @@
     'version': '1.0',
     'category': 'Contract',
     'sequence': 0,
-    'description': """Gestion ds contrats sur le PSI""",
+    'description': """Gestion des contrats chez PSI""",
     'website': 'https://www.ingenosya.mg',
     'depends': ['base','hr','hr_contract','mail','contacts'],
     'data':  [
