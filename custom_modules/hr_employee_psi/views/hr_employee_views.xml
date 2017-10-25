@@ -24,6 +24,7 @@
            		<field name="sexe"/>
         	</xpath> 
 			<xpath expr="//field[@name='address_home_id']" position='before'>
+           		<field name="personal_phone" />
            		<field name="father_name" />
            		<field name="mother_name" />
            		<field name="spouse_s_name" />

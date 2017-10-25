@@ -9,14 +9,14 @@ class hr_employee(models.Model):
     
     _inherit                        = 'hr.employee'
     
-    father_name                     = fields.Char(string='Nom du pére')
-    mother_name                     = fields.Char(string='Nom de la mére')
+    father_name                     = fields.Char(string=u'Nom du père')
+    mother_name                     = fields.Char(string=u'Nom de la mère')
     spouse_s_name                   = fields.Char(string='Nom du conjoint')
     
-    emergency_contact_id            = fields.Many2one('hr.person.information', string='Personne à contacter en cas d\'urgence',
+    emergency_contact_id            = fields.Many2one('hr.person.information', string=u'Personne à contacter en cas d\'urgence',
          help='Person to contact in case of emergency')
     
-    beneficiary_of_death_benefit_id = fields.Many2one('hr.person.information', string='Bénéficiaire d\'indemnité en cas de décéss',
+    beneficiary_of_death_benefit_id = fields.Many2one('hr.person.information', string=u'Bénéficiaire d\'indemnité en cas de décès',
          help='Beneficiary of death benefit')
     
     information_about_children_id   = fields.Many2one('hr.person', string=' Informations sur les enfants',help='Information about children')
@@ -29,24 +29,27 @@ class hr_employee(models.Model):
         ('separated', u'Séparé(e)'),
         ('widower', 'Veuf(ve)'),
         ('divorced', u'Divorcé(e)')
-    ], string='Situation de famille')
+    ], string='Situation de famille', track_visibility='always')
 
+    address_home_id = fields.Many2one('res.partner', string='Home Address', track_visibility='always')
+    personal_phone = fields.Char(string='Téléphone personnel', track_visibility='always')
+    
     sexe = fields.Selection([
         ('masculin', 'Masculin'),
         ('feminin', u'Féminin')
      ], string='Sexe') 
 
     personal_information        = fields.Boolean(default=False, string="Fiche de renseignements personnels")
-    id_photos                   = fields.Boolean(default=False, string="Photos d'identité")
+    id_photos                   = fields.Boolean(default=False, string=u"Photos d'identité")
     certificate_residence       = fields.Boolean(default=False, string="Certificat de résidence")
     marriage_certificate        = fields.Boolean(default=False, string="Acte de mariage ou copie de livret de famille")
     cin                         = fields.Boolean(default=False, string="Copie CIN")
     work_certificate            = fields.Boolean(default=False, string="Copies Certificats de travail")
-    qualifications              = fields.Boolean(default=False, string="Copies Diplômes ")
+    qualifications              = fields.Boolean(default=False, string=u"Copies Diplômes ")
     criminal_records            = fields.Boolean(default=False, string="Casier judiciaires")
     card_cnaps                  = fields.Boolean(default=False, string="Copie Cartes CNAPS ")
     birth_certificate_children  = fields.Boolean(default=False, string="Acte de naissances des enfants ")
-    ethics_course_certificate   = fields.Boolean(default=False, string="Certificat du cours d'éthique")
+    ethics_course_certificate   = fields.Boolean(default=False, string=u"Certificat du cours d'éthique")
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments', track_visibility='always')
     
