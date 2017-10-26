@@ -143,14 +143,14 @@
             	<div class="oe_button_box" name="button_box">
 	           		<button class="oe_stat_button"
 	                    icon="fa-file-o"
-	                    name="281"
+	                    name="%(hr_recruitment.action_hr_job_applications)d"
 	                    context="{'default_user_id': user_id}"
 	                    type="action">
 	                    <field name="application_count" widget="statinfo" string="Applications"/>
 	                </button>
 	                <button class="oe_stat_button"
 	                    icon="fa-users"
-	                    name="283"
+	                    name="%(hr_recruitment.action_hr_job_no_employee)d"
 	                    type="action">
 	                    <field name="no_of_employee" widget="statinfo" string="Employees"/>
 	                </button>
@@ -161,7 +161,7 @@
 	                    <field name="documents_count" widget="statinfo" string="Documents"/>
 	                </button>
 	                <button class="oe_stat_button" type="action"
-	                    name="282" icon="fa-share"
+	                    name="%(hr_recruitment.action_hr_job_sources)d" icon="fa-share"
 	                    context="{'default_job_id': active_id}">
 	                    <div class="o_form_field o_stat_info">
 	                        <span class="o_stat_text">Trackers</span>
