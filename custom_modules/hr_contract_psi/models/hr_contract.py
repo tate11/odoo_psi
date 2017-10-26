@@ -60,6 +60,16 @@ class hr_contract(models.Model):
                     self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id)
                     template_rh = self.env.ref('hr_contract_psi.template_rh_id')
                     self.env['mail.template'].browse(template_rh.id).send_mail(employee.id)
+                    
+    employment_termination = fields.Selection([
+                                             ('end_deadline_without_renewal',"Arrivée de l'échéance sans reconduction"),
+                                             ('conventional_break',"Rupture conventionnelle"),
+                                             ('resignation',"Lettre de démission"),
+                                             ('dismissal',"Licenciement"),
+                                             ('death',"Décès"),
+                                             ('retreat',"Retraite")
+                                             ], string="Séparation événement", track_visibility="onchange")
+
     
     @api.model
     def create(self, vals):  
@@ -96,7 +106,7 @@ class hr_contract(models.Model):
             contract.update({
                              'state':'close'
             })
-
+            
     def _update_cron_rh_1(self):
         """ Activate the cron First Email RH + Employee.
         """
@@ -124,7 +134,7 @@ class hr_contract(models.Model):
                 date_start = record.trial_date_start
                 date_start_trial = datetime.strptime(date_start,"%Y-%m-%d")
                 date_start_trial_time = datetime(
-                    year=date_start_trial.year, 
+                    year=date_start_trial.year,
                     month=date_start_trial.month,
                     day=date_start_trial.day,
                 )
@@ -164,6 +174,26 @@ class hr_contract(models.Model):
                 if month_to_notif.date() == datetime.today().date():
                     template = self.env.ref('hr_contract_psi.custom_template_end_contract')
                     self.env['mail.template'].browse(template.id).send_mail(self.id)
+        if automatic:
+            self._cr.commit()
+            
+    @api.one
+    @api.constrains('name')
+    def _close_collabo_end_contract(self, automatic=False):
+        for record in self:
+            if record.date_end:
+                date_end = record.date_end
+                date_end_contract = datetime.strptime(date_end,"%Y-%m-%d")
+                date_end_contract_time = datetime(
+                    year=date_end_contract.year, 
+                    month=date_end_contract.month,
+                    day=date_end_contract.day,
+                )
+                month_to_notif = date_end_contract_time - relativedelta(months=1)  
+                if month_to_notif.date() == datetime.today().date():
+                    contract.update({
+                             'state':'close'
+                             })
         if automatic:
             self._cr.commit()
             
