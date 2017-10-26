@@ -12,7 +12,14 @@ class hr_contract(models.Model):
     
     #rupture
     date_rupture = fields.Date(string='Date rupture de contrat')
-    motif_rupture = fields.Text(string='Motif de rupture de contrat')
+    motif_rupture = fields.Selection([
+                                      ('end_deadline_without_renewal',"Arrivée de l'échéance sans reconduction"),
+                                      ('conventional_break',"Rupture conventionnelle"),
+                                      ('resignation',"Lettre de démission"),
+                                      ('dismissal',"Licenciement"),
+                                      ('death',"Décès"),
+                                      ('retreat',"Retraite")
+                                      ], string="Motif de rupture de contrat", track_visibility="onchange")
     
     work_years = fields.Integer(compute="_calculate_work_years", string=u'Année de travail')
 
@@ -21,14 +28,7 @@ class hr_contract(models.Model):
         ('cdi', 'CDI'),
         ('convention_stage','Convention de stage')
     ], string='Type de contrat', help="Type de contrat", track_visibility='onchange')
-   
-    end_deadline_without_renewal= fields.Boolean(default=False, string="Arrivée de l'échéance sans reconduction")
-    conventional_break          = fields.Boolean(default=False, string="Rupture conventionnelle")
-    resignation                 = fields.Boolean(default=False, string="Lettre de démission")
-    dismissal                   = fields.Boolean(default=False, string="Licenciement")
-    death                       = fields.Boolean(default=False, string="Décès")
-    retreat                     = fields.Boolean(default=False, string="Retraite")
-    
+
     def _send_email_birthday_date_tracking(self):
         employee_obj = self.env['hr.contract']
         employees = employee_obj.search([])
@@ -78,7 +78,11 @@ class hr_contract(models.Model):
         for record in self:
             if record.date_start:
                 record.work_years = datetime.today().year - datetime.strptime(record.date_start, "%Y-%m-%d").year
-        
+
+#    def __init__(self, cr, uid, context=None):
+#        super(hr_contract, self).__init__(cr, uid, context)
+#        self._columns['name'].readonly = True
+
     @api.one
     @api.constrains('name')
     def set_employee_inactif(self):
@@ -89,8 +93,9 @@ class hr_contract(models.Model):
             employee = record.employee_id
             #employee readonly
             contract = contract_obj.browse([record.id])
-        
-        return {'type': 'ir.actions.act_window_close'}
+            contract.update({
+                             'state':'close'
+            })
 
     def _update_cron_rh_1(self):
         """ Activate the cron First Email RH + Employee.
@@ -124,21 +129,21 @@ class hr_contract(models.Model):
                     day=date_start_trial.day,
                 )
                 # Verification selection
-                if record.job_id.name == 'Chief Executive Officer':
-                    month_to_notif = date_start_trial_time + relativedelta(months=5)  
+                if record.job_id.psi_professional_category == 'directeur':
+                    month_to_notif = date_start_trial_time + relativedelta(months=5)
                     if month_to_notif.date() == datetime.today().date():
-                         template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
-                         self.env['mail.template'].browse(template.id).send_mail(self.id)
-                elif record.job_id.name == 'Consultant':
+                        template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
+                        self.env['mail.template'].browse(template.id).send_mail(self.id)
+                elif record.job_id.psi_professional_category == 'coordinateur':
                     month_to_notif = date_start_trial_time + relativedelta(months=3)  
                     if month_to_notif.date() == datetime.today().date():
-                         template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
-                         self.env['mail.template'].browse(template.id).send_mail(self.id)
-                elif record.job_id.name == 'Human Resources Manager':
+                        template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
+                        self.env['mail.template'].browse(template.id).send_mail(self.id)
+                else:
                     month_to_notif = date_start_trial_time + relativedelta(months=2)  
                     if month_to_notif.date() == datetime.today().date():
-                         template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
-                         self.env['mail.template'].browse(template.id).send_mail(self.id)
+                        template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
+                        self.env['mail.template'].browse(template.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
 

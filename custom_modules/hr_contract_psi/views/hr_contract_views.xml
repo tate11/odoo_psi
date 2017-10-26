@@ -19,28 +19,19 @@
 				<field name="place_of_work" />
 			</xpath>
 			<xpath expr="//notebook" position="inside">				
-				<page string="Séparation – événements">
-					<group>
-						<field name="end_deadline_without_renewal" attrs="{'invisible': [('psi_contract_type', '=', 'cdi')]}" />
-						<!-- <field name="conventional_break" on_change="set_employee_close"/> -->
-						<field name="conventional_break"/>
-						<field name="resignation" />
-						<field name="dismissal" />
-						<field name="death" />
-						<field name="retreat" attrs="{'invisible': [('psi_contract_type', '=', 'cdd')]}" />
-						<button name="set_employee_inactif" 
-								type="object" 
-								string="Mettre inactif cet employé" 
-								class="oe_highlight"
-								attrs="{'invisible': ['|',('end_deadline_without_renewal','=','' or False),('conventional_break','=','' or False),('resignation','=','' or False),('dismissal','=','' or False),('death','=','' or False),('retreat','=','' or False)]}"
-								/>
-					</group>
-				</page>
+			
 			</xpath>
 			<group name="duration_group" position="after">
 				<group name="rupture" string="Rupture de contrat">
 					<field name="date_rupture" />
 					<field name="motif_rupture" />
+					<button name="set_employee_inactif" 
+  								type="object" 
+								string="Mettre inactif l'employé correspondant"
+  								class="oe_highlight"
+  								attrs="{'invisible': [('motif_rupture','=',False)]}"
+  								onClick="$(this).prop('disabled', true);"
+  								/>
 				</group>
 			</group>			
 		</field>
