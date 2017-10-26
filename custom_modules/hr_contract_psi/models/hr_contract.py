@@ -192,13 +192,13 @@ class hr_contract(models.Model):
                 monday2 = (date_birthday_time - timedelta(days=date_birthday_time.weekday()))
 
                 weeks = (monday2 - monday1).days / 7
-               
+                print weeks
                 if weeks == 2 :
                     
                     template_collaborator = self.env.ref('hr_contract_psi.template_collaborator_id')
-                    self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id)
+                    self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id, force_send=True)
                     template_rh = self.env.ref('hr_contract_psi.template_rh_id')
-                    self.env['mail.template'].browse(template_rh.id).send_mail(employee.id)
+                    self.env['mail.template'].browse(template_rh.id).send_mail(employee.id, force_send=True)
                     
     employment_termination = fields.Selection([
                                              ('end_deadline_without_renewal',"Arrivée de l'échéance sans reconduction"),
