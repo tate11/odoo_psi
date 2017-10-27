@@ -4,42 +4,107 @@
 		<field name="name">hr.contract.form.psi</field>
 		<field name="model">hr.contract</field>
 		<field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
-		<field name="arch" type="xml">
-
-			<field name="type_id" position='replace'>
-
+		<field name="arch" type="xml">	
+			<!-- <xpath expr="//field[@name='job_id']" position="after">
+				<field name="psi_contract_type" />
+			</xpath> -->	
+      		<xpath expr="//field[@name='type_id']" position='replace'>
 				<field name="type_id" invisible="1" />
-			</field>
-
+			</xpath>
+			
 			<field name="working_hours" position="before">
-				<field name="work_years" />
+				<field name="work_years"/>
 			</field>
 
 			<xpath expr="//field[@name='department_id']" position='after'>
 				<field name="psi_contract_type" />
 				<field name="place_of_work" />
 			</xpath>
-			<xpath expr="//notebook" position="inside">
-				<page string="Séparation – événements">
-					<group>
 
-						<field name="employment_termination" />
-						<button name="set_employee_inactif" 
-								type="object" 
-								string="Mettre inactif cet employé"
-								class="oe_highlight"
-								attrs="{'invisible': [('employment_termination','=',False)]}"
-								/>
-
-					</group>
-				</page>
+			<xpath expr="//notebook" position="inside">				
+			</xpath>
+			<xpath expr="//group[@name='duration_group']" position="after">
+				<group name="result_evaluation" string="Résultat de l'évaluation" > <!-- Condition if date_end_trial terminé -->
+					<field name="result_evaluation" />
+					<!-- <field name="scan_version_file" attrs="{'invisible': [('result_evaluation','=',False)]}"/> -->
+					<button string="" class="hidden" /> 
+					<button name="action_result_evaluation_send" 
+						string="Envoyer le resultat par mail" 
+						type="object" 
+						class="btn-primary right"
+						attrs="{'invisible': [('result_evaluation','=',False)]}"
+						/>
+				</group>
 			</xpath>
 			<group name="duration_group" position="after">
 				<group name="rupture" string="Rupture de contrat">
 					<field name="date_rupture" />
 					<field name="motif_rupture" />
+					<button name="set_employee_inactif" 
+  								type="object" 
+								string="Mettre inactif l'employé correspondant"
+  								class="oe_highlight"
+  								attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}"
+  								onClick="$(this).prop('disabled', true);"
+  								/>
 				</group>
 			</group>
+			
+			<!-- Contract close - READONLY -->			
+			<field name='name' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='employee_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='job_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='department_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='psi_contract_type' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='place_of_work' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='wage' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='trial_date_start' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='trial_date_end' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='date_start' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>	
+			<field name='date_end' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='working_hours' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='result_evaluation' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='date_rupture' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='motif_rupture' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>	
+			<field name='visa_no' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>	
+			<field name='visa_expire' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>	
+			<field name='permit_no' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>	
 		</field>
 	</record>
 

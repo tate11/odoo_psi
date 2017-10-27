@@ -39,13 +39,14 @@
 		</div>   ]]>
 			</field>
 		</record>
-		
+
 		<!-- Template email - rappel sur rh -->
 		<record id="template_rh_id" model="mail.template">
-			<field name="name">Template email - rappel sur rh</field>
+			<field name="name">PSI Template email - rappel sur rh</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
 			<field name="email_from">${object.create_uid.email}</field>
-			<field name="subject">Rappel de suivi d'anniversaire de l'employée ${object.employee_id.name}</field>
+			<field name="subject">Rappel de suivi d'anniversaire de l'employée
+				${object.name}</field>
 			<field name="email_to">arandriamoravelo@ingenosya.mg</field>
 			<field name="body_html"><![CDATA[
 		<div>
@@ -65,11 +66,12 @@
 
 		<!-- Premier rappel à la RH (pièces manquantes) -->
 
-        <record id="hr_contract_psi.custom_template_rappel_hr_missing_pieces" model="mail.template">
-            <field name="name">Template email contrat - Premier rappel à la RH</field>
-
+		<record id="hr_contract_psi.custom_template_rappel_hr_missing_pieces"
+			model="mail.template">
+			<field name="name">PSI Template email contrat - Premier rappel à la RH
+			</field>
 			<field name="email_from">${object.create_uid.email}</field>
-			<field name="subject">Rappel pour l'enregistrement du profil</field>
+			<field name="subject">Rappel pour l'enregistrement du profil de ${object.name} - RH</field>
 			<field name="email_to">${object.employee_id.coach_id.email}</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
 			<field name="body_html"><![CDATA[
@@ -82,12 +84,12 @@
 		</record>
 
 		<!-- Premier rappel au Collaborateur + pièces manquantes -->
-
-        <record id="hr_contract_psi.custom_template_rappel_collab_missing_pieces" model="mail.template">
-            <field name="name">Template email contrat - Rappel collab + pieces manquantes</field>
-
+		<record id="hr_contract_psi.custom_template_rappel_collab_missing_pieces"
+			model="mail.template">
+			<field name="name">PSI Template email contrat - Rappel collab + pieces
+				manquantes</field>
 			<field name="email_from">${object.create_uid.email}</field>
-			<field name="subject">Rappel pour l'enregistrement du profil</field>
+			<field name="subject">Rappel pour l'enregistrement du profil de ${object.name}</field>
 			<field name="email_to">${object.employee_id.work_email}</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
 			<field name="auto_delete" eval="True" />
@@ -135,8 +137,7 @@
 		</record>
 
 		<!-- Template email - fin période d'essai -->
-		<record id="hr_contract_psi.custom_template_trial_date_end"
-			model="mail.template">
+		<record id="hr_contract_psi.custom_template_trial_date_end" model="mail.template">
 			<field name="name">PSI Template email contrat - fin période d'essai
 			</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
@@ -152,16 +153,15 @@
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
-		      	Bonjour,
-		     	Premier rappel Email au collaborateur                       
-			</p>
-			<h5> Email - fin période d'essai</h5>
+		      	Bonjour ${object.employee_id.name},
+		    </p>
+		      	<p> Categorie professionnel : ${object.job_id.psi_professional_category} </p>
+			<h5> Email - fin période d'essai dans un mois</h5>
 		                 
 		</div>   ]]>
 			</field>
 		</record>
 
-		
 		<!-- Template email - fin contrat -->
 		<record id="hr_contract_psi.custom_template_end_contract"
 			model="mail.template">
@@ -170,19 +170,35 @@
 			<field name="email_from">${object.create_uid.email}</field>
 			<field name="subject">Rappel fin contrat de ${object.name}</field>
 			<!-- <field name="email_to"> ${object.user_id.email} </field> -->
-			<field name="email_to">${object.work_email}</field>
-			<field name="email_to">${object.coach_id.work_email}</field>
-			<!-- <field name="email_cc"> ${object.user_id.parent_id.email} </field> -->
-			<!-- <field name="reply_to"> preferred Reply address</field> -->
+			<field name="email_to">${object.employee_id.work_email}</field>
+			<!-- <field name="email_to">${object.employee_id.coach_id.work_email or 'n/a'}</field> -->
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
 		      	Bonjour,                      
 			</p>
-			<h5> Email - fin contrat</h5>
+			<p>JOB : ${object.job_id.name}</p>
+			<h5>Fin du contrat de ${object.employee_id.name} dans un mois</h5>
+			
 
 		</div>   ]]>
 			</field>
 		</record>
+		
+		<!--Email template -->
+        <record id="email_template_for_result_evaluation" model="mail.template">
+            <field name="name">Evaluation - Resultat test evaluation</field>
+            <field name="email_from">${(object.user_id.email}</field>
+            <field name="subject">Resultat évaluation de ${object.employee_id.name}</field>
+            <field name="model_id" ref="hr_contract_psi.model_hr_contract"/>
+            <field name="email_to">${object.employee_id.work_email}</field>
+            <field name="body_html"><![CDATA[
+<p>Bonjour ${object.employee_id.name}
+</br>
+<p>		Vous êtes invité à renouveler la période d'essai pour le poste de ${object.job_id.name}</p>
+<p>Invitation renouvelement essai</p>
+<p>Vous trouverez en pièce jointe le version scannée ...
+]]></field>
+        </record>
 	</data>
 </odoo>

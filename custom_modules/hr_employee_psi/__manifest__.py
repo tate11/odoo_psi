@@ -8,7 +8,6 @@
     'website': 'https://www.ingenosya.mg',
     'depends': ['hr'],
     'data':  [
-              
               'data/hr_employee_cron.xml',
               'data/mail_template_hr_employee_data.xml',
               'data/hr_employee_data.xml',

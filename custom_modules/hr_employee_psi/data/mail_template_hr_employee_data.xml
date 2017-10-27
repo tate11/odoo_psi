@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <data>
-    
-    <record id="hr_employee_psi.custom_template_rappel_collab_1" model="mail.template">
-			<field name="name">Template email employee - Rappel Email au collaborateur</field>
+	<data>
+		<record id="hr_employee_psi.custom_template_rappel_collab_1"
+			model="mail.template">
+			<field name="name">PSI Template email employee - Rappel Email au
+				collaborateur</field>
 			<field name="model_id" ref="hr_employee_psi.model_hr_employee" />
-			<field name="email_from">${object.user_id.email}</field>
-			<field name="subject">Premier rappel de ${object.name_related or 'n/a' }</field>
-			<!--  <field name="email_to"> ${object.user_id.email} </field> -->
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Premier rappel de ${object.name_related or 'n/a' }
+			</field>
+			<!-- <field name="email_to"> ${object.user_id.email} </field> -->
 			<field name="email_to">${object.work_email}</field>
-			 <field name="email_cc">${object.coach_id.email}</field>
-			<!--  <field name="reply_to"> preferred Reply address</field> -->		
+			<field name="email_cc">${object.coach_id.email}</field>
+			<!-- <field name="reply_to"> preferred Reply address</field> -->
 			<field name="body_html"><![CDATA[
 <div>
     <p>
@@ -22,26 +23,26 @@
 			</field>
 		</record>
 
-	<!-- Second rappel au collaborateur -->
-		<record id="hr_employee_psi.custom_template_rappel_collab_2" model="mail.template">
-			<field name="name">Second rappel au collaborateur</field>
+		<!-- Second rappel au collaborateur -->
+		<record id="hr_employee_psi.custom_template_rappel_collab_2"
+			model="mail.template">
+			<field name="name">PSI Second rappel au collaborateur</field>
 			<field name="model_id" ref="hr_employee_psi.model_hr_employee" />
 			<field name="email_from">${object.create_uid.email}</field>
 			<field name="subject">Premier rappel de ${object.name}</field>
-			<!--  <field name="email_to"> ${object.user_id.email} </field> -->
+			<!-- <field name="email_to"> ${object.user_id.email} </field> -->
 			<field name="email_to">${object.work_email}</field>
-			 <field name="email_cc">${object.coach_id.email}</field> <!-- cc RH -->
-			<!--  <field name="reply_to"> preferred Reply address</field> -->		
+			<field name="email_cc">${object.coach_id.email}</field> <!-- cc RH -->
+			<!-- <field name="reply_to"> preferred Reply address</field> -->
 			<field name="body_html"><![CDATA[                
                   
 			<br\>
-			<h2>(R8.) 2d Rappel – cours d’éthique</h2>
+			<h2>2d Rappel – cours d’éthique</h2>
 			<p>Un 2d rappel doit être envoyé au collaborateur par mail pour suivre le cours d’éthique, avec en copie RH, 3 semaines après l’enregistrement de son profil. S’il n’a pas enregistré son certificat de complétude du cours.
 			le cours d’éthique, avec en copie RH, 15 jrs après l’enregistrement de son profil.</p>
         
                   ]]>
 			</field>
 		</record>
-		
     </data>
 </odoo>
