@@ -33,9 +33,8 @@
 	    		<field name="information_about_children_id" />
            		<field name="emergency_contact_id" />
            		<field name="beneficiary_of_death_benefit_id" />
-       		</xpath>
-			<notebook>
-				
+       		</xpath>			
+			<notebook>			
 				<page string="Pièces à fournir">
 					<group>
 						<field name="state" invisible="1" />
