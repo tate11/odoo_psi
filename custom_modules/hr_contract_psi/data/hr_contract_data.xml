@@ -56,7 +56,7 @@
             <field eval="'hr.contract'" name="model" />
             <field name="function" eval="'_send_email_birthday_date_tracking'" /> 
             <field name="args" eval=""/>
-            <field name="active" eval="True" />
+            <field name="active" eval="False" />
         </record>  
     </data>
 </odoo>

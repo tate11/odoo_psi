@@ -8,6 +8,7 @@
     'website': 'https://www.ingenosya.mg',
     'depends': ['base','hr','hr_contract','mail','contacts'],
     'data':  [
+              'data/hr_wage_grid_data.xml',
               'data/mail_template_hr_contract_data.xml',
               'data/hr_contract_data.xml',
               'views/hr_contract_views.xml',

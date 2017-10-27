@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models, _
+from odoo import fields, models, _, api
 
 class hr_wage_grid(models.Model):
         _name ='hr.wage.grid'
@@ -9,29 +9,32 @@ class hr_wage_grid(models.Model):
       
 class hr_wage_grid_details(models.Model):
     _name = 'hr.wage.grid.details'
-    professional_category  = fields.Selection([
-                                       ('appui','APPUI'),
-                                       ('execution','EXECUTION'),
-                                       ('superviseur','SUPERVISEUR'),
-                                       ('coordinateur','COORDINATEUR'),
+    
+    psi_professional_category  = fields.Selection([
+                                        ('appui','APPUI'),
+                                        ('execution','EXECUTION'),
+                                        ('superviseur','SUPERVISEUR'),
+                                        ('coordinateur','COORDINATEUR'),
                                        ('directeur','DIRECTEUR'),
-                                       ('rra','RRA')
-                               ])
-    job_id                  = fields.Many2one('hr.job', "Job ID")
-    category                = fields.Selection([
+                                       ('rra','RRA')], string="Titre de Catégorie")
+    
+    name       = fields.Char(string='')
+    
+    psi_category                = fields.Selection([
                                        ('a','A'),
                                        ('b','B'),
                                        ('c','C'),
                                        ('d','D'),
                                        ('e','E'),
                                        ('hc','HC')
-                               ])
-    sub_category            = fields.Selection([
+                               ], string="CAT")
+    
+    psi_sub_category            = fields.Selection([
                                        ('1','1'),
                                        ('2','2'),
                                        ('3','3'),
                                        ('4','4')
-                               ])
+                               ], string="Sous Cat")
     
     echelon_1                = fields.Integer(string='1')
     echelon_2                = fields.Integer(string='2')
@@ -53,7 +56,6 @@ class hr_wage_grid_details(models.Model):
     echelon_18               = fields.Integer(string='18')
     echelon_19               = fields.Integer(string='19')
     echelon_20               = fields.Integer(string='20')
-    echelon_hc               = fields.Integer(string='21')
-    
-    
+    echelon_hc               = fields.Integer(string='HC')
+
     wage_grid_id             = fields.Many2one('hr.wage.grid','Wage Grid ID')
