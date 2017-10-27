@@ -8,9 +8,9 @@
 			<!-- <xpath expr="//field[@name='job_id']" position="after">
 				<field name="psi_contract_type" />
 			</xpath> -->	
-      <xpath expr="//field[@name='type_id']" position='replace'>
+      		<xpath expr="//field[@name='type_id']" position='replace'>
 				<field name="type_id" invisible="1" />
-			</field>
+			</xpath>
 			
 			<field name="working_hours" position="before">
 				<field name="work_years"/>
@@ -21,6 +21,19 @@
 				<field name="place_of_work" />
 			</xpath>
 			<xpath expr="//notebook" position="inside">				
+			</xpath>
+			<xpath expr="//group[@name='duration_group']" position="after">
+				<group name="result_evaluation" string="Résultat de l'évaluation" > <!-- Condition if date_end_trial terminé -->
+					<field name="result_evaluation" />
+					<!-- <field name="scan_version_file" attrs="{'invisible': [('result_evaluation','=',False)]}"/> -->
+					<button string="" class="hidden" /> 
+					<button name="action_result_evaluation_send" 
+						string="Envoyer le resultat par mail" 
+						type="object" 
+						class="btn-primary right"
+						attrs="{'invisible': [('result_evaluation','=',False)]}"
+						/>
+				</group>
 			</xpath>
 			<group name="duration_group" position="after">
 				<group name="rupture" string="Rupture de contrat">

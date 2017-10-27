@@ -70,5 +70,6 @@
             <field name="args" eval=""/>
             <field name="active" eval="True" />
         </record> 
+       
     </data>
 </odoo>
