@@ -20,10 +20,11 @@
         	<xpath expr="//field[@name='gender']" position='replace'>
            		<field name="gender" invisible="1"/>
         	</xpath>
-        	<xpath expr="//field[@name='marital']" position='after'>
+        	<xpath expr="//field[@name='marital']" position='before'>
            		<field name="sexe"/>
         	</xpath> 
 			<xpath expr="//field[@name='address_home_id']" position='before'>
+           		<field name="personal_phone" />
            		<field name="father_name" />
            		<field name="mother_name" />
            		<field name="spouse_s_name" />
@@ -32,11 +33,11 @@
 	    		<field name="information_about_children_id" />
            		<field name="emergency_contact_id" />
            		<field name="beneficiary_of_death_benefit_id" />
-       		</xpath>
-			
+       		</xpath>			
 			<notebook>			
 				<page string="Pièces à fournir">
 					<group>
+						<field name="state" invisible="1" />
 						<field name="personal_information" />
 						<field name="id_photos" />
 						<field name="certificate_residence" />
@@ -62,8 +63,52 @@
 							</tree>
 						</field>
 					</group>
-				</page>
+				</page>	
 			</notebook>
+			
+			<!-- Collaborator close - READONLY -->			
+			<field name='name' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='category_ids' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='address_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='mobile_phone' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='work_location' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='work_email' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='work_phone' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='department_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='job_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='parent_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='notes' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='coach_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>			
+			<field name='calendar_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='notes' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>	        
 		</field>
 	</record>
 	

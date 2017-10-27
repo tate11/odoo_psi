@@ -1,30 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<data noupdate="1">
-		<!-- Liste des sanctions -->
-		<record model="hr.contract.type.sanction" id="rappel_ordre">
-	        <field name="name">Rappel à l’ordre</field>
-	    </record>
-	    <record model="hr.contract.type.sanction" id="sanction_legere">
-	        <field name="name">Sanctions légères</field>
-	    </record>
-	    <record model="hr.contract.type.sanction" id="sanction_severe">
-	        <field name="name">Sanctions sévères</field>
-	    </record>
-	    <record model="hr.contract.type.sanction" id="sanction_grave">
-	        <field name="name">Sanctions graves</field>
-	    </record>
-	    <record model="hr.contract.type.sanction" id="faute_lourde">
-	        <field name="name">Fautes lourdes</field>
-	    </record>
-		<!-- Fin liste sanctions -->
+	<data>
 	
         <!-- Cron send first email RH & collaborator -->
         <record id="ir_cron_send_email_rh_1" model="ir.cron">
             <field name="name">Collaborateur - Premier rappel Email à la RH</field>
             <field name="active" eval="False" />
             <field name="user_id" ref="base.user_root" />
-            <field name="interval_number">2</field>
+            <field name="interval_number">1</field>
             <field name="interval_type">minutes</field>	<!-- 3 weeks -->
             <field name="numbercall">1</field>
             <field name="doall" eval="False" />
@@ -60,8 +43,7 @@
             <field name="active" eval="True" />
         </record>      
         
-        
-	    <!-- Cron cloture profil collabo - Fin contrat -->
+       <!-- Cron cloture profil collabo - Fin contrat -->
         <record id="ir_cron_close_collabo_end_contract" forcecreate="True" model="ir.cron">
             <field name="name">Contrat - Rappel fin contrat/ Cloture fin collaborateur</field>
             <field name="user_id" ref="base.user_root" />
@@ -73,7 +55,7 @@
             <field name="function" eval="'_close_collabo_end_contract'" />
             <field name="args" eval="'(True,)'"/>
             <field name="active" eval="True" />
-        </record>   
+          </record>  
         
         
 		<!-- Cron send email collaborateur and RH - Suivi date d’anniversaire - rappel -->

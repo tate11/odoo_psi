@@ -63,6 +63,12 @@
             <field name="kind">function</field>
             <field name="action">write({'state':'honorary_proposal'})</field>
         </record>
+         <record id="activity_contract_established_consultant" model="workflow.activity">
+		    <field name="wkf_id" ref="hr_job_wkf"/>
+            <field name="name">contract_established_consultant</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'contract_established_consultant'})</field>
+        </record>
         <record id="activity_benefits" model="workflow.activity">
 		    <field name="wkf_id" ref="hr_job_wkf"/>
             <field name="name">benefits</field>
@@ -152,7 +158,7 @@
         
         <record id="activity_honorary_proposal_to_activity_contract_established" model="workflow.transition">
             <field name="act_from" ref="activity_honorary_proposal"/>
-            <field name="act_to" ref="activity_contract_established"/>
+            <field name="act_to" ref="activity_contract_established_consultant"/>
             <field name="signal">button_contract_established_consultant</field>
         </record>
         
