@@ -38,6 +38,7 @@
 				
 				<page string="Pièces à fournir">
 					<group>
+						<field name="state" invisible="1" />
 						<field name="personal_information" />
 						<field name="id_photos" />
 						<field name="certificate_residence" />
@@ -66,6 +67,49 @@
 				</page>	
 			</notebook>
 			
+			<!-- Collaborator close - READONLY -->			
+			<field name='name' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='category_ids' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='address_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='mobile_phone' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='work_location' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='work_email' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='work_phone' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='department_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='job_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='parent_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='notes' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='coach_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>			
+			<field name='calendar_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='notes' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>	        
 		</field>
 	</record>
 	

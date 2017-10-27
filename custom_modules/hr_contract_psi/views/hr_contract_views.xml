@@ -43,11 +43,67 @@
   								type="object" 
 								string="Mettre inactif l'employé correspondant"
   								class="oe_highlight"
-  								attrs="{'invisible': [('motif_rupture','=',False)]}"
+  								attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}"
   								onClick="$(this).prop('disabled', true);"
   								/>
 				</group>
-			</group>			
+			</group>
+			
+			<!-- Contract close - READONLY -->			
+			<field name='name' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='employee_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='job_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='department_id' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='psi_contract_type' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='place_of_work' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='wage' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='trial_date_start' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='trial_date_end' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='date_start' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>	
+			<field name='date_end' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='working_hours' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='result_evaluation' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='date_rupture' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>		
+			<field name='motif_rupture' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>	
+			<field name='visa_no' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>	
+			<field name='visa_expire' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>	
+			<field name='permit_no' position="attributes">
+	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>	
 		</field>
 	</record>
 

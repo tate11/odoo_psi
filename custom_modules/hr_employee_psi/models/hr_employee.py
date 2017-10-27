@@ -30,6 +30,11 @@ class hr_employee(models.Model):
         ('widower', 'Veuf(ve)'),
         ('divorced', u'Divorcé(e)')
     ], string='Situation de famille', track_visibility='always')
+    
+    state = fields.Selection([
+                              ('open','Open'),
+                              ('close','Close')
+                              ],track_visibility='always')
 
     address_home_id = fields.Many2one('res.partner', string='Home Address', track_visibility='always')
     personal_phone = fields.Char(string='Téléphone personnel', track_visibility='always')

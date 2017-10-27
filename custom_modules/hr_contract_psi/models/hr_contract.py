@@ -132,19 +132,22 @@ class hr_contract(models.Model):
 #        super(hr_contract, self).__init__(cr, uid, context)
 #        self._columns['name'].readonly = True
 
-    @api.one
-    @api.constrains('name')
     def set_employee_inactif(self):
         """ Set employee inactif
         """
+        print "SET EMPLOYEE INACTIF"
         for record in self:
             contract_obj = self.env['hr.contract']
+            employee_obj = self.env['hr.employee']
             employee = record.employee_id
             #employee readonly
             contract = contract_obj.browse([record.id])
             contract.update({
                              'state':'close'
             })
+            employee.update({
+                             'state':'close'
+                             })
             
     def _update_cron_rh_1(self):
         """ Activate the cron First Email RH + Employee.
@@ -215,7 +218,7 @@ class hr_contract(models.Model):
                     self.env['mail.template'].browse(template.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
-            
+
     @api.one
     @api.constrains('name')
     def _close_collabo_end_contract(self, automatic=False):
@@ -230,9 +233,17 @@ class hr_contract(models.Model):
                 )
                 month_to_notif = date_end_contract_time - relativedelta(months=1)  
                 if month_to_notif.date() == datetime.today().date():
-                    contract.update({
-                             'state':'close'
-                             })
+                    record.set_employee_inactif()
+            elif record.date_rupture:
+                date_rupture = record.date_rupture
+                date_rupture_contract = datetime.strptime(date_rupture,"%Y-%m-%d")
+                date_rupture_contract_time = datetime(
+                    year=date_rupture_contract.year, 
+                    month=date_rupture_contract.month,
+                    day=date_rupture_contract.day,
+                )
+                if date_rupture_contract_time.date() == datetime.today().date():
+                    record.set_employee_inactif()                  
         if automatic:
             self._cr.commit()
             
