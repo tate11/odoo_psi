@@ -34,8 +34,9 @@
            		<field name="emergency_contact_id" />
            		<field name="beneficiary_of_death_benefit_id" />
        		</xpath>
-			<notebook>
-				
+
+			
+			<notebook>			
 				<page string="Pièces à fournir">
 					<group>
 						<field name="personal_information" />
@@ -63,9 +64,8 @@
 							</tree>
 						</field>
 					</group>
-				</page>	
+				</page>
 			</notebook>
-			
 		</field>
 	</record>
 	

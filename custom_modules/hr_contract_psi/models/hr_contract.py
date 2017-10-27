@@ -22,12 +22,46 @@ class hr_contract(models.Model):
         ('convention_stage','Convention de stage')
     ], string='Type de contrat', help="Type de contrat", track_visibility='onchange')
    
-    end_deadline_without_renewal= fields.Boolean(default=False, string="Arrivée de l'échéance sans reconduction")
-    conventional_break          = fields.Boolean(default=False, string="Rupture conventionnelle")
-    resignation                 = fields.Boolean(default=False, string="Lettre de démission")
-    dismissal                   = fields.Boolean(default=False, string="Licenciement")
-    death                       = fields.Boolean(default=False, string="Décès")
-    retreat                     = fields.Boolean(default=False, string="Retraite")
+    employment_termination = fields.Selection([
+                                             ('end_deadline_without_renewal',"Arrivée de l'échéance sans reconduction"),
+                                             ('conventional_break',"Rupture conventionnelle"),
+                                             ('resignation',"Lettre de démission"),
+                                             ('dismissal',"Licenciement"),
+                                             ('death',"Décès"),
+                                             ('retreat',"Retraite")
+                                             ], string="Séparation événement", track_visibility="onchange")
+    
+    def _send_email_birthday_date_tracking(self):
+        employee_obj = self.env['hr.contract']
+        employees = employee_obj.search([])
+        
+        for employee in employees : 
+           
+            date_birthday = employee.date_start
+            if date_birthday != False :
+                datetime_now =  datetime.today()
+                date_now = datetime(
+                    year=datetime_now.year, 
+                    month=datetime_now.month,
+                    day=datetime_now.day,
+                )
+                datetime_birthday = datetime.strptime(date_birthday,"%Y-%m-%d")
+                date_birthday_time = datetime(
+                    year=datetime_now.year, 
+                    month=datetime_birthday.month,
+                    day=datetime_birthday.day,
+                )
+                monday1 = (date_now - timedelta(days=date_now.weekday()))
+                monday2 = (date_birthday_time - timedelta(days=date_birthday_time.weekday()))
+
+                weeks = (monday2 - monday1).days / 7
+               
+                if weeks == 1 :
+                    
+                    template_collaborator = self.env.ref('hr_contract_psi.template_collaborator_id')
+                    self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id)
+                    template_rh = self.env.ref('hr_contract_psi.template_rh_id')
+                    self.env['mail.template'].browse(template_rh.id).send_mail(employee.id)
     
     def _send_email_birthday_date_tracking(self):
         employee_obj = self.env['hr.contract']
@@ -89,7 +123,9 @@ class hr_contract(models.Model):
             employee = record.employee_id
             #employee readonly
             contract = contract_obj.browse([record.id])
-        
+            contract.update({
+                             'state':'close'
+                             })        
         return {'type': 'ir.actions.act_window_close'}
 
     def _update_cron_rh_1(self):
@@ -119,7 +155,7 @@ class hr_contract(models.Model):
                 date_start = record.trial_date_start
                 date_start_trial = datetime.strptime(date_start,"%Y-%m-%d")
                 date_start_trial_time = datetime(
-                    year=date_start_trial.year, 
+                    year=date_start_trial.year,
                     month=date_start_trial.month,
                     day=date_start_trial.day,
                 )
@@ -159,6 +195,26 @@ class hr_contract(models.Model):
                 if month_to_notif.date() == datetime.today().date():
                     template = self.env.ref('hr_contract_psi.custom_template_end_contract')
                     self.env['mail.template'].browse(template.id).send_mail(self.id)
+        if automatic:
+            self._cr.commit()
+            
+    @api.one
+    @api.constrains('name')
+    def _close_collabo_end_contract(self, automatic=False):
+        for record in self:
+            if record.date_end:
+                date_end = record.date_end
+                date_end_contract = datetime.strptime(date_end,"%Y-%m-%d")
+                date_end_contract_time = datetime(
+                    year=date_end_contract.year, 
+                    month=date_end_contract.month,
+                    day=date_end_contract.day,
+                )
+                month_to_notif = date_end_contract_time - relativedelta(months=1)  
+                if month_to_notif.date() == datetime.today().date():
+                    contract.update({
+                             'state':'close'
+                             })
         if automatic:
             self._cr.commit()
             

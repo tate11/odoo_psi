@@ -7,6 +7,7 @@
 		<field name="arch" type="xml">
 
 			<field name="type_id" position='replace'>
+
 				<field name="type_id" invisible="1" />
 			</field>
 
@@ -21,18 +22,15 @@
 			<xpath expr="//notebook" position="inside">
 				<page string="Séparation – événements">
 					<group>
-						<field name="end_deadline_without_renewal"
-							attrs="{'invisible': [('psi_contract_type', '=', 'cdi')]}" />
-						<!-- <field name="conventional_break" on_change="set_employee_close"/> -->
-						<field name="conventional_break" />
-						<field name="resignation" />
-						<field name="dismissal" />
-						<field name="death" />
-						<field name="retreat"
-							attrs="{'invisible': [('psi_contract_type', '=', 'cdd')]}" />
-						<button name="set_employee_inactif" type="object"
-							string="Mettre inactif cet employé" class="oe_highlight"
-							attrs="{'invisible': ['|',('end_deadline_without_renewal','=','' or False),('conventional_break','=','' or False),('resignation','=','' or False),('dismissal','=','' or False),('death','=','' or False),('retreat','=','' or False)]}" />
+
+						<field name="employment_termination" />
+						<button name="set_employee_inactif" 
+								type="object" 
+								string="Mettre inactif cet employé"
+								class="oe_highlight"
+								attrs="{'invisible': [('employment_termination','=',False)]}"
+								/>
+
 					</group>
 				</page>
 			</xpath>
