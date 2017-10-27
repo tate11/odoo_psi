@@ -125,7 +125,7 @@
 				<field name="name" position="after">
 					<field name="recrutement_type_id" />
 					<field name="recrutement_type" invisible="1" />
-					<field name="tdr_file" attrs="{'required': True}"/>
+					<field name="tdr_file" />
 				</field>
 			</data>
 		</field>
