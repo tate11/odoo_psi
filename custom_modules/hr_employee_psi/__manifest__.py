@@ -6,7 +6,7 @@
     'sequence': 0,
     'description': """Gestion des Employées chez PSI-M""",
     'website': 'https://www.ingenosya.mg',
-    'depends': ['hr'],
+    'depends': ['hr', 'hr_recruitment_psi'],
     'data':  [
               'data/hr_employee_cron.xml',
               'data/mail_template_hr_employee_data.xml',

@@ -109,6 +109,9 @@
 	        </field>		
 			<field name='notes' position="attributes">
 	            <attribute name="attrs">{'readonly':[('state','=','close')]}</attribute>
+	        </field>
+	        <field name='job_id' position="after">
+	            <field name="psi_budget_code_distribution"/>
 	        </field>	        
 		</field>
 	</record>

@@ -63,6 +63,8 @@ class hr_employee(models.Model):
     
     sanctions_data = fields.One2many('hr.contract.sanction.data', 'employee_id', string='', track_visibility='always')
     
+    psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution")
+    
     @api.model
     def create(self, vals):
         employee = super(hr_employee, self).create(vals)
@@ -201,7 +203,7 @@ class InformationCin(models.Model):
     
     _name               = 'hr.information.cin'
     
-    num_cin             = fields.Char(u'Numéro', size=64, required=True)
+    name             = fields.Char(u'Numéro', size=64, required=True)
     date_of_issue       = fields.Date(string="Date d’émission")
     place_of_issue      = fields.Char(string='Lieu d’émission')
     end_of_validity     = fields.Date(string="Fin de validité")
