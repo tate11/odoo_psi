@@ -13,6 +13,7 @@
 				<field name="partner_id" position="before">
 					<field name="birthday" attrs="{'required': True}" />
 					<field name="age" />
+					<field name="date_verification_bridger_insight" invisible="1" />
 					<field name="country_id" attrs="{'required': True}" />
 					<field name="sexe" attrs="{'required': True}" />
 					<field name="marital" attrs="{'required': True}" />

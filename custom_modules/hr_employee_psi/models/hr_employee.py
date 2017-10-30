@@ -62,6 +62,9 @@ class hr_employee(models.Model):
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments', track_visibility='always')
     
     sanctions_data = fields.One2many('hr.contract.sanction.data', 'employee_id', string='', track_visibility='always')
+    psi_bridger_insight = fields.One2many('hr.employee.bridger.insight', 'employee_id',"Bridger insight")
+    
+    psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution")
     
     details_certificate_ethics = fields.One2many('hr.certificate.ethics', 'employee_id', string="Details", track_visibility="onchange")
     
@@ -214,7 +217,7 @@ class InformationCin(models.Model):
     
     _name               = 'hr.information.cin'
     
-    num_cin             = fields.Char(u'Numéro', size=64, required=True)
+    name             = fields.Char(u'Numéro', size=64, required=True)
     date_of_issue       = fields.Date(string="Date d’émission")
     place_of_issue      = fields.Char(string='Lieu d’émission')
     end_of_validity     = fields.Date(string="Fin de validité")
@@ -271,3 +274,12 @@ class hr_certificate_ethics(models.Model):
         if self.declaration_interest:
             self.checked = True
         
+class BrigerInsight(models.Model):
+    _name = 'hr.employee.bridger.insight'
+    
+    date = fields.Date('Date de verification')
+    result = fields.Selection([
+        ('oui', 'OUI'),
+        ('non', 'NON')
+       ], string='Résultat')    
+    employee_id = fields.Many2one('hr.employee')
