@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<data>
+		<!-- Template email - avancement échelon -->
+		<record id="template_avancement_echelon_id" model="mail.template">
+			<field name="name">PSI Template email - Notification avancement échelon</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Avancement échelon</field>
+			<field name="email_to">${object.employee_id.work_email}</field>
+
+			<field name="body_html"><![CDATA[
+		<div>
+		    <p>
+		      	Bonjour ${object.employee_id.name},
+		     	Votre échelon est changer au ${object.psi_echelon}.                  
+			</p>
+			<h5> Email - Notification avancement échelon</h5>
+		                 
+		</div>   ]]>
+			</field>
+		</record>
+		
+				<!-- Template email - changement de statut de CDD à CDI -->
+		<record id="template_changement_statut_id" model="mail.template">
+			<field name="name">PSI Template email - Notification Changement de statut de CDD à CDI</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Changement de statut</field>
+			<field name="email_to">${object.employee_id.work_email}</field>
+
+			<field name="body_html"><![CDATA[
+		<div>
+		    <p>
+		      	Bonjour ${object.employee_id.name},
+		     	Votre statut CDD et changer au statut CDI.                  
+			</p>
+			<h5> Email - Notification de changement de statut</h5>
+		                 
+		</div>   ]]>
+			</field>
+		</record>
+		
+		<!-- Template email - Augmentation générale des salaires -->
+		<record id="template_augmentation_salaire_id" model="mail.template">
+			<field name="name">PSI Template email - Notification Augmentation générale des salaires</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Augmentation générale des salaires</field>
+			<field name="email_to">${object.employee_id.work_email}</field>
+
+			<field name="body_html"><![CDATA[
+		<div>
+		    <p>
+		      	Bonjour ${object.employee_id.name},
+		     	Votre salaire est augmenter.                  
+			</p>
+			<h5> Email - Notification de l'Augmentation générale des salaires</h5>
+		                 
+		</div>   ]]>
+			</field>
+		</record>
+		
+		<!-- Template email - Affectation -->
+		<record id="template_affectation_id" model="mail.template">
+			<field name="name">PSI Template email - Notification Affectation</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Affectation</field>
+			<field name="email_to">${object.employee_id.work_email}</field>
+
+			<field name="body_html"><![CDATA[
+		<div>
+		    <p>
+		      	Bonjour ${object.employee_id.name},
+		     	Affectation.                  
+			</p>
+			<h5> Email - Notification de l'Affectation</h5>
+		                 
+		</div>   ]]>
+			</field>
+		</record>
+		
+		<!-- Template email - Changement de departement -->
+		<record id="template_changement_de_departement_id" model="mail.template">
+			<field name="name">PSI Template email - Changement de departement</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Affectation</field>
+			<field name="email_to">${object.employee_id.work_email}</field>
+
+			<field name="body_html"><![CDATA[
+		<div>
+		    <p>
+		      	Bonjour ${object.employee_id.name},
+		     	Changement de departement                
+			</p>
+			<h5> Email - Notification de Changement de departement</h5>
+		                 
+		</div>   ]]>
+			</field>
+		</record>
+		
+	</data>
+</odoo>

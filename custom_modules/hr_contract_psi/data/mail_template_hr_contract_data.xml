@@ -30,7 +30,9 @@
 			<field name="subject">Rappel de suivi d'anniversaire de l'employée
 				${object.name}</field>
 			<field name="email_to">arandriamoravelo@ingenosya.mg</field>
-
+		<field name="body_html"><![CDATA[
+		<div>
+		    <p>
 
 		     	Il faut mettre à jour la déclaration conflit d’intérêt (par an), l’attestation de cours d’éthique (tous les 2 ans).                      
 			</p>
