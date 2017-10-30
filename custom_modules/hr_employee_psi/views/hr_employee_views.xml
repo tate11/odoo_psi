@@ -65,6 +65,16 @@
 						</field>
 					</group>
 				</page>	
+				<page string="Bridger">
+					<group>
+						<field name="psi_bridger_insight" nolabel="1">
+							<tree string="" editable="bottom">
+								<field name="date" />
+								<field name="result" />
+							</tree>
+						</field>
+					</group>
+				</page>	
 			</notebook>
 			
 			<!-- Collaborator close - READONLY -->			

@@ -62,6 +62,7 @@ class hr_employee(models.Model):
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments', track_visibility='always')
     
     sanctions_data = fields.One2many('hr.contract.sanction.data', 'employee_id', string='', track_visibility='always')
+    psi_bridger_insight = fields.One2many('hr.employee.bridger.insight', 'employee_id',"Bridger insight")
     
     psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution")
     
@@ -234,4 +235,13 @@ class SanctionData(models.Model):
     sanction_commentaire = fields.Text(string='Commentaires')
 
     employee_id = fields.Many2one('hr.employee')
+
+class BrigerInsight(models.Model):
+    _name = 'hr.employee.bridger.insight'
     
+    date = fields.Date('Date de verification')
+    result = fields.Selection([
+        ('oui', 'OUI'),
+        ('non', 'NON')
+       ], string='Résultat')    
+    employee_id = fields.Many2one('hr.employee')

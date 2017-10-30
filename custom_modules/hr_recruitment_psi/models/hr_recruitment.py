@@ -159,7 +159,10 @@ class Applicant(models.Model):
     
     b_liste_restreinte = fields.Boolean(string='Dans la liste restreinte', default=False)
     
+    date_verification_bridger_insight = fields.Date(string="date verification bridger insight")
    
+    def action_briger_insight(self):
+        self.write({'state':'bridger_insight','date_verification_bridger_insight': fields.Date().today()})
    
    
     @api.multi
@@ -174,6 +177,7 @@ class Applicant(models.Model):
             if applicant.job_id and (applicant.partner_name or contact_name):
                 applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
                 vals = {'name': applicant.partner_name or contact_name,
+                                                'psi_bridger_insight' : [(0, 0,{'date':applicant.date_verification_bridger_insight,'result':'oui'})],
                                                 'children' : applicant.number_of_dependent_children,
                                                 'country_id' : applicant.country_id.id,
                                                 'birthday': applicant.birthday,
