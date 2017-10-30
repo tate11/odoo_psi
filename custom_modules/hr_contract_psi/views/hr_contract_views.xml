@@ -1,25 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+	<record model="ir.actions.act_window" id="action_historical_contract_view_tree">
+		<field name="name">Historique Contrat Tree</field>
+		<field name="res_model">psi.contract.historical</field>
+		<field name="view_type">tree</field>
+        <field name="view_mode">tree</field>
+	</record>
+	<record id="view_historical_contract_tree" model="ir.ui.view">
+		<field name="name">Historique Contrat</field>
+		<field name="model">psi.contract.historical</field>
+		<field name="arch" type="xml">
+			<tree string="Historical Contract">
+				<field name="date" />
+				<field name="ancien" />
+				<field name="nouveau" />
+				<field name="historical" />
+				<field name="debut" />
+				<field name="fin" />
+			</tree>
+		</field>
+	</record>
 	<record id="hr_contract_view_form_psi" model="ir.ui.view">
 		<field name="name">hr.contract.form.psi</field>
 		<field name="model">hr.contract</field>
 		<field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
-		<field name="arch" type="xml">	
-			<!-- <xpath expr="//field[@name='job_id']" position="after">
-				<field name="psi_contract_type" />
-			</xpath> -->	
-      		<xpath expr="//field[@name='type_id']" position='replace'>
-				<field name="type_id" invisible="1" />
+
+		<field name="arch" type="xml">
+			<xpath expr="//label" position="before">
+				<div class="oe_button_box" name="button_box">
+					<button class="oe_inline oe_stat_button" type="action"
+						name="%(action_historical_contract_view_tree)d" icon="fa-history">
+						<field string="Historique" name="historical_count" widget="statinfo" />
+					</button>
+				</div>
 			</xpath>
-			
+			<field name="type_id" position='replace'>
+				<field name="type_id" invisible="1" />
+			</field>
+
+			<field name="wage" position='after'>
+				<field name="psi_professional_category" />
+				<field name="psi_sub_category" required="1" />
+				<field name="psi_echelon"/>
+			</field>
+
 			<field name="working_hours" position="before">
-				<field name="work_years"/>
+				<field name="work_years" />
+
+
 			</field>
 
 			<xpath expr="//field[@name='department_id']" position='after'>
 				<field name="psi_contract_type" />
 				<field name="place_of_work" />
 			</xpath>
+
 
 			<xpath expr="//notebook" position="inside">				
 			</xpath>
@@ -108,6 +143,8 @@
 		</field>
 	</record>
 
+
+
 	<!-- Resume and Letters -->
 	<record id="hr_contract.ir_attachment_view_search_inherit_hr_employee"
 		model="ir.ui.view">
@@ -137,7 +174,8 @@
 		<field name="arch" type="xml">
 			<form string="form grille salariale">
 				<field name="wage_grid_details">
-					<tree string="Wage Grid Details" editable="bottom" create="false" delete="false">
+					<tree string="Wage Grid Details" editable="bottom" create="false"
+						delete="false">
 						<field name="psi_professional_category" />
 						<field name="name" />
 						<field name="psi_category" />
@@ -167,62 +205,23 @@
 				</field>
 			</form>
 		</field>
-	</record>
-	
-	   <record id="hr_contract_kanban_view_wage_grids" model="ir.ui.view">
-        <field name="name">hr.wage.grid.kanban</field>
-        <field name="model">hr.wage.grid</field>
-        <field name="priority">10</field>
-        <field name="arch" type="xml">
-            <kanban class="o_hr_employee_kanban">
-                <templates>
-                    <t t-name="kanban-box">
-                    <div class="oe_kanban_global_click">
-                        
-                        <div class="o_kanban_image">
-                            
-                            <div class="o_employee_summary_icons">
-                                <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/></span>
-                                <span title='Messages'><i class='fa fa-comments'/></span>
-                                <span title='Followers'><i class='fa fa-users'/></span>
-                            </div>
-                        </div>
-                        <div class="oe_kanban_details">
-                            <strong>
-                                <field name="name"/>
-                            </strong>
-                            <ul>
-                                <li id="last_login"/>
-                                <li ></li>
-                                <li ></li>
-                                <li ><i class="fa fa-envelope"></i> </li>
-                                <li ><i class="fa fa-phone"></i> </li>
-                                <li ><i class="fa fa-mobile"></i></li>
-                            </ul>
-                          
-                        </div>
-                    </div>
-                    </t>
-                </templates>
-            </kanban>
+	</record>	
 
-        </field>
-    </record>
-	
 	<record id="open_contract_wage_grid" model="ir.actions.act_window">
-            <field name="name">Grille Salariale</field>
-            <field name="res_model">hr.wage.grid</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,form</field>
-            <field name="domain">[]</field>
-            <field name="context">{}</field>
-            <field name="view_id" eval="False"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                 Grille Salariale
-              </p>
-            </field>
-        </record>
+		<field name="name">Grille Salariale</field>
+		<field name="res_model">hr.wage.grid</field>
+		<field name="res_id" eval="ref('grid-salariale')" />
+		<field name="view_type">form</field>
+		<field name="view_mode">form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+		<field name="view_id" eval="False" />
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+				Grille Salariale
+			</p>
+		</field>
+	</record>
 
 	<menuitem id="menu_contract_wage_grid" action="open_contract_wage_grid"
 		parent="hr.menu_hr_root" sequence="5" />
