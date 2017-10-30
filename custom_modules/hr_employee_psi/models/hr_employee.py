@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from datetime import timedelta
 from datetime import date, datetime
+from datetime import timedelta
+
 from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, _
+
 
 class hr_employee(models.Model):
     
@@ -84,9 +87,10 @@ class hr_employee(models.Model):
         for employee in employees:
             list_sanction = sanctions_data_obj.search([('employee_id', '=', employee.id)])
             for sanction in list_sanction:
-                s_date = datetime.strptime(sanction.sanction_date,"%Y-%m-%d")
-                if (today.year - s_date.year) * 12 + today.month - s_date.month >= period:
-                    sanction.write({'sanction_date_effacement' : today})
+                if sanction.sanction_date != False:
+                    s_date = datetime.strptime(sanction.sanction_date,"%Y-%m-%d")
+                    if (today.year - s_date.year) * 12 + today.month - s_date.month >= period:
+                        sanction.write({'sanction_date_effacement' : today})
     
     def _update_cron_collab_1(self):
         """ Activate the cron Premier Email Employee.
