@@ -168,32 +168,6 @@
 		</field>
 	</record>
 
-	<!-- TODO: What is this ??? -->
-	<record model="ir.actions.act_window" id="hr_contract_resumes">
-		<field name="name">Resumes and Letters</field>
-		<field name="res_model">ir.attachment</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">kanban,tree,form</field>
-		<field name="view_id" ref="mail.view_document_file_kanban" />
-		<field name="search_view_id"
-			ref="hr_contract.ir_attachment_view_search_inherit_hr_employee" />
-		<field name="domain">[('res_model','=','hr.employee')]</field>
-		<field name="context">{'create': False}</field>
-		<field name="help" type="html">
-			<p>
-				No document yet.
-			</p>
-			<p>
-				This menu helps you search through resumes and motivation
-				letters.
-				Odoo automatically indexes .PDF, .DOC, DOCX, .TXT
-				files so that you
-				can search keywords from the content of these
-				files.
-			</p>
-		</field>
-	</record>
-
 	<record id="hr_contract_form_view_wage_grids" model="ir.ui.view">
 		<field name="name">hr.wage.grid.form</field>
 		<field name="model">hr.wage.grid</field>

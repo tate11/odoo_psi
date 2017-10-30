@@ -2,7 +2,6 @@
 <odoo>
 	<data>
 		<!-- Grille Salariale -->
-
 		<record model="hr.wage.grid.details" id="grid1">
 			<field name="psi_professional_category">appui</field>
 			<field name="psi_category">a</field>
@@ -129,6 +128,5 @@
 			<field name="wage_grid_details"
 				eval="[(6, 0, [ref('grid1'),ref('grid2'),ref('grid3'),ref('grid4'),ref('grid5'),ref('grid6'),ref('grid7'),ref('grid8'),ref('grid9'),ref('grid10'),ref('grid11'),ref('grid12'),ref('grid13'),ref('grid14'),ref('grid15')])]" />
 		</record>
-
 	</data>
 </odoo>
