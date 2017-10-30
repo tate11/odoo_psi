@@ -14,7 +14,7 @@
 		<div>
 		    <p>
 		      	Bonjour ${object.employee_id.name},
-		     	Votre échelon est changer au ${object.psi_echelon}.                  
+		     	Votre nouvel échelon est ${object.psi_echelon}.                  
 			</p>
 			<h5> Email - Notification avancement échelon</h5>
 		                 
@@ -34,7 +34,7 @@
 		<div>
 		    <p>
 		      	Bonjour ${object.employee_id.name},
-		     	Votre statut CDD et changer au statut CDI.                  
+		     	Votre statut CDD a changé au statut CDI.                  
 			</p>
 			<h5> Email - Notification de changement de statut</h5>
 		                 
@@ -54,7 +54,7 @@
 		<div>
 		    <p>
 		      	Bonjour ${object.employee_id.name},
-		     	Votre salaire est augmenter.                  
+		     	Votre salaire est augmenté.                  
 			</p>
 			<h5> Email - Notification de l'Augmentation générale des salaires</h5>
 		                 
@@ -74,7 +74,7 @@
 		<div>
 		    <p>
 		      	Bonjour ${object.employee_id.name},
-		     	Affectation.                  
+		     	Vous êtes affecté a ${object.place_of_work}              
 			</p>
 			<h5> Email - Notification de l'Affectation</h5>
 		                 
@@ -93,8 +93,8 @@
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
-		      	Bonjour ${object.employee_id.name},
-		     	Changement de departement                
+		      	Bonjour ${object.employee_id.name}, 
+		     	Vous avez changé de departement a ${object.department_id.name}     
 			</p>
 			<h5> Email - Notification de Changement de departement</h5>
 		                 

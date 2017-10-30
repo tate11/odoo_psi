@@ -232,14 +232,21 @@ class hr_contract(models.Model):
             sanction_env = self.env['hr.contract.sanction.data'] 
             sanctions = sanction_env.search([('employee_id', '=', self.employee_id.id)])
             today = datetime.today()
+            sanction_type = []
+            data = self.browse(self.id) 
             for sanction_obj in sanctions :
                 s_date = datetime.strptime(sanction_obj.sanction_date,"%Y-%m-%d")
                 if today.year == s_date.year : 
-                    str = u"Vous n'est peut pas avancer sont échelon parce qu'il y a eu une sanction ce 12 mois précédentes, Ce le sanction "+sanction_obj.sanction_type_id.name
-                    raise ValidationError(str.encode('utf-8'))
+                    sanction_type.append(sanction_obj.sanction_type_id.name)
+            if len(sanction_type) > 0:
+                str_sanct = ''
+                for sanction_str in sanction_type :
+                    str_sanct += "- "+sanction_str +"\n"
+                str = u"L'employé "+data.employee_id.name+u" a eu des sanctions ces 12 derniers mois précédents: \n"+str_sanct+u"\nDonc l'employé ne peut pas changer d'échelon."
+                raise ValidationError(str.encode('utf-8'))
                  
             #traitement de historique de changement d'échelon
-            data = self.browse(self.id) 
+            
             date = fields.Date().today()
             ancien = data.psi_echelon if data.psi_echelon != '' else ''
             nouveau = vals['psi_echelon']
@@ -261,7 +268,7 @@ class hr_contract(models.Model):
             echelon = 0
             for wage_grid in wage_grids :
                 echelon = wage_grid._get_echelon(vals['psi_echelon'])
-            vals['wage'] = data.wage + echelon
+            vals['wage'] = echelon if echelon != 0 else data.wage
             template0 = self.env.ref('hr_contract_psi.template_avancement_echelon_id')
             self.env['mail.template'].browse(template0.id).send_mail(self.id)
          
@@ -336,6 +343,8 @@ class hr_contract(models.Model):
             self.env['psi.contract.historical'].create(vals_historical)
             template1 = self.env.ref('hr_contract_psi.template_changement_de_departement_id')
             self.env['mail.template'].browse(template1.id).send_mail(self.id)
+            
+            
             
         contract = super(hr_contract, self).write(vals)
         self._update_cron_rh_1()  

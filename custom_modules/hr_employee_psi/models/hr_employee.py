@@ -150,17 +150,19 @@ class hr_employee(models.Model):
     @api.one
     @api.constrains('personal_information')  
     def _send_first_email_collaborator(self, automatic=False):
-        list_not_checked = self._get_not_checked_files()
-        if len(list_not_checked) > 0:
-            template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_1')
-            self.env['mail.template'].browse(template.id).send_mail(self.id)
+        if self.id != False :
+            list_not_checked = self._get_not_checked_files()
+            if len(list_not_checked) > 0:
+                template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_1')
+                self.env['mail.template'].browse(template.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
 
     #(R8.) Second Rappel au cours d'éthique
     def _send_second_email_collaborator(self, automatic=False):
-        template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_2')
-        self.env['mail.template'].browse(template.id).send_mail(self.id)
+        if self.id != False :
+            template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_2')
+            self.env['mail.template'].browse(template.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
     
