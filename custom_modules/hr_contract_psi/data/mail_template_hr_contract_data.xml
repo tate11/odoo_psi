@@ -28,8 +28,7 @@
 			<field name="subject">Rappel de suivi d'anniversaire de l'employée
 				${object.name}
 			</field>
-			<field name="email_to">arandriamoravelo@ingenosya.mg</field>
-
+			<field name="email_to">psi.rh@yopmail.com</field>
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
@@ -49,7 +48,7 @@
 			<field name="subject">Rappel de suivi d'anniversaire de l'employée
 				${object.name}
 			</field>
-			<field name="email_to">arandriamoravelo@ingenosya.mg</field>
+			<field name="email_to">psi.rh@yopmail.com</field>
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
