@@ -59,3 +59,48 @@ class hr_wage_grid_details(models.Model):
     echelon_hc               = fields.Integer(string='HC')
 
     wage_grid_id             = fields.Many2one('hr.wage.grid','Wage Grid ID')
+    
+    def _get_echelon(self,method):
+        if method == 'echelon_1' :
+            return self.echelon_1
+        if method == 'echelon_2' :
+            return self.echelon_2
+        if method == 'echelon_3' :
+            return self.echelon_3
+        if method == 'echelon_4' :
+            return self.echelon_4
+        if method == 'echelon_5' :
+            return self.echelon_5
+        if method == 'echelon_6' :
+            return self.echelon_6
+        if method == 'echelon_7' :
+            return self.echelon_7
+        if method == 'echelon_8' :
+            return self.echelon_8
+        if method == 'echelon_9' :
+            return self.echelon_9
+        if method == 'echelon_10' :
+            return self.echelon_10
+        if method == 'echelon_11' :
+            return self.echelon_11
+        if method == 'echelon_12' :
+            return self.echelon_12
+        if method == 'echelon_13' :
+            return self.echelon_13
+        if method == 'echelon_14' :
+            return self.echelon_14
+        if method == 'echelon_15' :
+            return self.echelon_15
+        if method == 'echelon_16' :
+            return self.echelon_16
+        if method == 'echelon_17' :
+            return self.echelon_17
+        if method == 'echelon_18' :
+            return self.echelon_18
+        if method == 'echelon_19' :
+            return self.echelon_19
+        if method == 'echelon_20' :
+            return self.echelon_20
+        if method == 'echelon_hc' :
+            return self.echelon_hc
+        return 0

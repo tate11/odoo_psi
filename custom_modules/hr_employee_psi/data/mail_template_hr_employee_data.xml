@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
-		<record id="hr_employee_psi.custom_template_rappel_collab_1"
+		<record id="custom_template_rappel_collab_1"
 			model="mail.template">
 			<field name="name">PSI Template email employee - Rappel Email au
 				collaborateur</field>
@@ -24,7 +24,7 @@
 		</record>
 
 		<!-- Second rappel au collaborateur -->
-		<record id="hr_employee_psi.custom_template_rappel_collab_2"
+		<record id="custom_template_rappel_collab_2"
 			model="mail.template">
 			<field name="name">PSI Second rappel au collaborateur</field>
 			<field name="model_id" ref="hr_employee_psi.model_hr_employee" />

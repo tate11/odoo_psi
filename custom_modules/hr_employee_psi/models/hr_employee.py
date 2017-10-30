@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from datetime import timedelta
 from datetime import date, datetime
+from datetime import timedelta
+
 from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, _
+
 
 class hr_employee(models.Model):
     
@@ -84,9 +87,10 @@ class hr_employee(models.Model):
         for employee in employees:
             list_sanction = sanctions_data_obj.search([('employee_id', '=', employee.id)])
             for sanction in list_sanction:
-                s_date = datetime.strptime(sanction.sanction_date,"%Y-%m-%d")
-                if (today.year - s_date.year) * 12 + today.month - s_date.month >= period:
-                    sanction.write({'sanction_date_effacement' : today})
+                if sanction.sanction_date != False:
+                    s_date = datetime.strptime(sanction.sanction_date,"%Y-%m-%d")
+                    if (today.year - s_date.year) * 12 + today.month - s_date.month >= period:
+                        sanction.write({'sanction_date_effacement' : today})
     
     def _update_cron_collab_1(self):
         """ Activate the cron Premier Email Employee.
@@ -150,17 +154,19 @@ class hr_employee(models.Model):
     @api.one
     @api.constrains('personal_information')  
     def _send_first_email_collaborator(self, automatic=False):
-        list_not_checked = self._get_not_checked_files()
-        if len(list_not_checked) > 0:
-            template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_1')
-            self.env['mail.template'].browse(template.id).send_mail(self.id)
+        if self.id != False :
+            list_not_checked = self._get_not_checked_files()
+            if len(list_not_checked) > 0:
+                template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_1')
+                self.env['mail.template'].browse(template.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
 
     #(R8.) Second Rappel au cours d'éthique
     def _send_second_email_collaborator(self, automatic=False):
-        template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_2')
-        self.env['mail.template'].browse(template.id).send_mail(self.id)
+        if self.id != False :
+            template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_2')
+            self.env['mail.template'].browse(template.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
     
