@@ -24,9 +24,9 @@
 		<field name="name">hr.contract.form.psi</field>
 		<field name="model">hr.contract</field>
 		<field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
-
 		<field name="arch" type="xml">
 			<xpath expr="//label" position="before">
+				<field name="response_evaluation" invisible="1" />
 				<div class="oe_button_box" name="button_box">
 					<button class="oe_inline oe_stat_button" type="action"
 						name="%(action_historical_contract_view_tree)d" icon="fa-history">
@@ -61,13 +61,37 @@
 			<xpath expr="//group[@name='duration_group']" position="after">
 				<group name="result_evaluation" string="Résultat de l'évaluation" > <!-- Condition if date_end_trial terminé -->
 					<field name="result_evaluation" />
-					<!-- <field name="scan_version_file" attrs="{'invisible': [('result_evaluation','=',False)]}"/> -->
-					<button string="" class="hidden" /> 
-					<button name="action_result_evaluation_send" 
-						string="Envoyer le resultat par mail" 
+					<label string="Vous voulez renouveler la période d'essai ?" attrs="{'invisible':['|',('result_evaluation','not in','ko')]}" />
+					<div>
+						<button name="action_renew_trial_accept"
+							string="OUI"
+							type="object"
+							class="btn-primary"
+							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=',True)]}"
+							onClick="$(this).prop('disabled', true);"
+							/>-   
+						<button name="action_renew_trial_decline"
+							string="NON"
+							type="object"
+							class="btn-primary"
+							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=',True)]}"
+							confirm="Vous ne voulez pas la renouveler?"
+							onClick="$(this).prop('disabled', true);"
+						/>
+					</div>
+					
+					<button name="action_result_evaluation_send_ok" 
+						string="Envoyer une notification par mail" 
 						type="object" 
 						class="btn-primary right"
-						attrs="{'invisible': [('result_evaluation','=',False)]}"
+						attrs="{'invisible': [('result_evaluation','not in','ok')]}"
+						/>
+	
+					<button name="action_result_evaluation_send_ko" 
+						string="Envoyer une notification" 
+						type="object" 
+						class="btn-primary right"
+						attrs="{'invisible': ['|',('response_evaluation','=',False),('result_evaluation','not in','ko')]}"
 						/>
 				</group>
 			</xpath>

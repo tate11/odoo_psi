@@ -29,8 +29,11 @@ class hr_contract(models.Model):
     result_evaluation = fields.Selection([
                                           ('ok','OK'),
                                           ('ko','KO')
-                                          ], string="Résultat de l'évaluation")
-    
+                                          ], string="Résultat de l'évaluation", track_visibility="onchange")
+    response_evaluation = fields.Selection([
+                                            ('accept','Accepter'),
+                                            ('decline','Refuser')
+                                            ])    
     scan_version_file = fields.Binary(string=u'Attacher le version scanner')
 
     psi_contract_type = fields.Selection([
@@ -40,11 +43,11 @@ class hr_contract(models.Model):
     ], string='Type de contrat', help="Type de contrat", track_visibility='onchange')
 
     @api.multi
-    def action_result_evaluation_send(self):
+    def action_result_evaluation_send_ok(self):
         self.ensure_one()
         ir_model_data = self.env['ir.model.data']
         try:
-            template_id = ir_model_data.get_object_reference('hr_contract', 'email_template_for_result_evaluation')[1]
+            template_id = ir_model_data.get_object_reference('hr_contract', 'email_template_for_result_evaluation_ok')[1]
         except ValueError:
             template_id = False
         try:
@@ -70,7 +73,38 @@ class hr_contract(models.Model):
             'target': 'new',
             'context': ctx,
         }
-
+        
+    @api.multi
+    def action_result_evaluation_send_ko(self):
+        self.ensure_one()
+        ir_model_data = self.env['ir.model.data']
+        try:
+            template_id = ir_model_data.get_object_reference('hr_contract', 'email_template_for_result_evaluation_ko')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False
+        ctx = dict()
+        ctx.update({
+            'default_model': 'hr.contract',
+            'default_res_id': self.ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_so_as_sent': True
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }
     def _send_email_birthday_date_tracking(self):
         employee_obj = self.env['hr.contract']
         employees = employee_obj.search([])
@@ -372,7 +406,21 @@ class hr_contract(models.Model):
             employee.update({
                              'state':'close'
                              })
+           
+    def action_renew_trial_accept(self):
+#        reprise processus
+        print "reprise processus"
+        for record in self:
+            contract_obj = self.env['hr.contract']
+            contract = contract_obj.browse([record.id])
+            contract.update({
+                             'response_evaluation':'accept'
+            })
             
+    def action_renew_trial_decline(self):
+        print "Séparation"
+        self.set_employee_inactif()    
+    
     def _update_cron_rh_1(self):
         """ Activate the cron First Email RH + Employee.
         """

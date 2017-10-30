@@ -178,15 +178,14 @@
 			</p>
 			<p>JOB : ${object.job_id.name}</p>
 			<h5>Fin du contrat de ${object.employee_id.name} dans un mois</h5>
-			
-
 		</div>   ]]>
 			</field>
 		</record>
-		<!--Email template -->
-		<record id="email_template_for_result_evaluation" model="mail.template">
-			<field name="name">Evaluation - Resultat test evaluation</field>
-			<field name="email_from">${(object.user_id.email}</field>
+		
+		<!--Email template evaluation test ok-->
+		<record id="email_template_for_result_evaluation_ok" model="mail.template">
+			<field name="name">Evaluation - Resultat test evaluation si OK</field>
+			<field name="email_from">${object.create_uid.email}</field>
 			<field name="subject">Resultat évaluation de ${object.employee_id.name}
 			</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
@@ -194,9 +193,25 @@
 			<field name="body_html"><![CDATA[
 			<p>Bonjour ${object.employee_id.name}
 			</br>
-			<p>		Vous êtes invité à renouveler la période d'essai pour le poste de ${object.job_id.name}</p>
+			<p>Resultat fin essai - OK</p>
+			<p>Vous trouverez en pièce jointe ...]]>
+			</field>
+		</record>
+		
+		<!--Email template evaluation test ko-->
+		<record id="email_template_for_result_evaluation_ko" model="mail.template">
+			<field name="name">Evaluation - Resultat test evaluation si KO</field>
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Resultat évaluation de ${object.employee_id.name}
+			</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_to">${object.employee_id.work_email}</field>
+			<field name="body_html"><![CDATA[
+			<p>Bonjour ${object.employee_id.name}
+			</br>
+			<p>Vous êtes invité à renouveler la période d'essai pour le poste de ${object.job_id.name}</p>
 			<p>Invitation renouvelement essai</p>
-			<p>Vous trouverez en pièce jointe le version scannée ...]]>
+			<p>Vous trouverez en pièce jointe le ...]]>
 			</field>
 		</record>
 	</data>
