@@ -142,7 +142,6 @@
 				</field>
 			</field>
 		</record>
-
 	
 		<record id="hr_contract_type_view_form" model="ir.ui.view">
 			<field name="name">hr.contract.type.sanction.form</field>
@@ -175,6 +174,7 @@
 			<field name="view_id" ref="hr_contract_sanction_view_tree" />
 		</record>
 
+
 	<record id="hr_contract_sanction_view_tree" model="ir.ui.view">
 		<field name="name">hr.contract.type.sanction.tree</field>
 		<field name="model">hr.contract.type.sanction</field>
@@ -187,23 +187,35 @@
 	
  	<!--Search in hr.employee-->
 	<record id="hr_employee_filter_inherit" model="ir.ui.view">
-            <field name="name">hr.employee.filter.inherit</field>
-            <field name="model">hr.employee</field>
-			<field name="inherit_id" ref="hr.view_employee_filter" />
-            <field name="arch" type="xml">
-                <xpath expr="filter[@name='message_needaction']" position="after">
-                	<filter string="Profil non complet"
-                        domain="[('all_files_checked','=',False)]"/>
-                        <filter string="Profil complet"
-                        domain="[('all_files_checked','=',True)]"/> 
-                  <xpath expr="//field[@name='department_id']" position="after">
-                <filter string="CDD vs CDI" icon="terp-personal+" domain="[]" context="{'group_by':'psi_contract_type'}" />
+        <field name="name">hr.employee.filter.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="filter[@name='message_needaction']" position="after">
+              <filter string="Profil non complet"
+                    domain="[('all_files_checked','=',False)]"/>
+                    <filter string="Profil complet"
+                    domain="[('all_files_checked','=',True)]"/> 
+              <xpath expr="//field[@name='department_id']" position="after">
+            <filter string="CDD vs CDI" icon="terp-personal+" domain="[]" context="{'group_by':'psi_contract_type'}" />
+        </xpath>
             </xpath>
-                </xpath>
-            </field>
+        </field>
     </record>
-
-
+    
+    <record id="declaration_interest_view_form" model="ir.ui.view">
+      <field name="name">hr.declaration.interest.form</field>
+      <field name="model">hr.declaration.interest</field>
+      <field name="arch" type="xml">
+        <form string="Declaration d'intérêt">
+          <group col="4">
+            <field name="name" />
+            <field name="date_add" />
+            <field name="employee_id" />
+          </group>
+        </form>
+      </field>
+    </record>
 
 		<!-- MENUS -->
 		<menuitem id="hr_menu_contract_type_sanction" action="action_hr_contract_type_sanction"

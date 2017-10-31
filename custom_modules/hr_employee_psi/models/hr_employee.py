@@ -67,9 +67,10 @@ class hr_employee(models.Model):
     psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution")
 
     psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat",store=True)
+    
+    details_certificate_ethics = fields.One2many('hr.certificate.ethics', 'employee_id', string="Details", track_visibility="onchange")
 
     all_files_checked = fields.Boolean(compute='_all_checked_files', string="Pièces complet")
-
     
     @api.model
     def create(self, vals):
@@ -185,6 +186,15 @@ class hr_employee(models.Model):
         if automatic:
             self._cr.commit()
     
+    def action_get_declaration_interest(self, cr, uid, ids, context=None):
+
+            return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'hr_employee_psi.declaration_interest_view_form',
+                'type': 'ir.actions.act_window',
+                'context': context
+            }
     
 
 class Person(models.Model):
@@ -247,7 +257,34 @@ class SanctionData(models.Model):
     sanction_commentaire = fields.Text(string='Commentaires')
 
     employee_id = fields.Many2one('hr.employee')
+    
+class hr_declaration_interest(models.Model):
+    
+    _name = "hr.declaration.interest"
+    _description = "Declaration d'intérêt - Cours d'éthique"
+    
+    name = fields.Char(string=u'Nom')
+    date_add = fields.Date(string=u'Date d\'ajout')
+    employee_id = fields.Many2one('hr.employee', string='Employé', required=True)
+    
+class hr_certificate_ethics(models.Model):
+    _name = "hr.certificate.ethics"
+    _description = "Certificat du cours d'ethique"
+    
+    date_add = fields.Datetime(string="Date",default=lambda *a: datetime.now())
+    checked = fields.Boolean(string=u"Checked", default=False)
+    year =  fields.Selection([
+                              (num, str(num)) for num in range(2010, (datetime.now().year)+1 
+                                                               )], string=u'Année', required="True")
+    employee_id = fields.Many2one('hr.employee')
+    declaration_interest = fields.Many2one('hr.declaration.interest', string=u'Declaration d\'intérêt', required="True", track_visibility="onchange")
 
+    @api.one
+    @api.constrains('declaration_interest')
+    def checked_if_exist(self):
+        if self.declaration_interest:
+            self.checked = True
+        
 class BrigerInsight(models.Model):
     _name = 'hr.employee.bridger.insight'
     
