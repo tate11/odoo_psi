@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from datetime import timedelta
 from datetime import date, datetime
+from datetime import timedelta
+
 from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+
 
 class hr_contract(models.Model):
     _inherit = 'hr.contract'
@@ -50,7 +53,21 @@ class hr_contract(models.Model):
     state_mail = fields.Selection([
         ('draft', 'RFQ'),
         ('sent', 'RFQ Sent')], default='draft')
-
+    
+    anniversary = fields.Date(compute="_get_anniversary")
+    
+    @api.depends('date_start')
+    def _get_anniversary(self):
+        
+        for rec in self:
+            datetime_date_start = datetime.strptime(rec.date_start,"%Y-%m-%d")
+            today = datetime.today()
+            rec.anniversary = datetime(
+                     year=today.year, 
+                     month=datetime_date_start.month,
+                     day=datetime_date_start.day,
+                    )
+        
     @api.multi
     def action_result_evaluation_send_ok(self):
         self.ensure_one()
