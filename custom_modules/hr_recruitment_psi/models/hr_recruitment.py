@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models, api
-from odoo.exceptions import ValidationError
-from operator import truediv
-from datetime import timedelta
 from datetime import date, datetime
+from datetime import timedelta
+from operator import truediv
+
 from dateutil.relativedelta import relativedelta
-from odoo.tools.translate import _
+
+from odoo import fields, models, api
 from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
+from odoo.tools.translate import _
+
 
 class RecruitmentType(models.Model):
     _name = 'hr.recruitment.type'
@@ -272,8 +275,10 @@ class Applicant(models.Model):
     
     @api.multi
     def mail_refuse_applicant(self):
-        template = self.env.ref('hr_recruitment_psi.custom_template_refus')
-        self.write({'state':'applicant_selected'})
+        if self.id != False :
+            self.write({'state':'applicant_selected'})
+            template = self.env.ref('hr_recruitment_psi.custom_template_refus')
+            msg_id = self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)
     
     def action_notification_of_employment(self):
         '''
