@@ -12,8 +12,7 @@
               'data/mail_template_hr_contract_data.xml',
               'data/hr_contract_data.xml',
               'data/mail_template_evenement_professionnel.xml',
-              'views/hr_contract_views.xml',
-             
+              'views/hr_contract_views.xml',          
              ],
     'demo': [],
     'test': [],

@@ -42,6 +42,9 @@ class hr_contract(models.Model):
         ('convention_stage','Convention de stage')
     ], string='Type de contrat', help="Type de contrat", track_visibility='onchange')
 
+    name_employee = fields.Char(related='employee_id.name')
+    job_name = fields.Char(related='employee_id.job_id.name')
+    
     @api.multi
     def action_result_evaluation_send_ok(self):
         self.ensure_one()

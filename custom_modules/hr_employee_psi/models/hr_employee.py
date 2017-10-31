@@ -66,6 +66,8 @@ class hr_employee(models.Model):
     
     psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution")
     
+    psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat",store=True)
+    
     @api.model
     def create(self, vals):
         employee = super(hr_employee, self).create(vals)
