@@ -264,25 +264,13 @@
 		</field>
 	</record>
 
-<!-- 	<record id="hr_contract_birthday_view_gantt" model="ir.ui.view">
-		<field name="name">Gantt des dates d'anniversaire de l'employés
-		</field>
-		<field name="model">hr.contract</field>
-
-		<field name="arch" type="xml">
-			<gantt type="consolidate" date_start="date_start"
-				fold_last_level="true" round_dnd_dates="true" consolidation="name_employee"
-				string="Day(s)" />
-		</field>
-	</record>
- -->
 	<!-- ACTIONS -->
 	<record id="action_hr_employee_reporting_birthday" model="ir.actions.act_window">
 		<field name="name">Calendrier des dates d'anniversaire</field>
 		<field name="res_model">hr.contract</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="hr_contract_birthday_view_gantt" />
+		<field name="view_id" ref="hr_contract_birthday_view_calendar" />
 	</record>
 
 	<menuitem id="menu_contract_wage_grid" action="open_contract_wage_grid"
