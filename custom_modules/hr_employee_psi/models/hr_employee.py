@@ -67,6 +67,8 @@ class hr_employee(models.Model):
     psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution")
     
     details_certificate_ethics = fields.One2many('hr.certificate.ethics', 'employee_id', string="Details", track_visibility="onchange")
+
+    all_files_checked = fields.Boolean(compute='_all_checked_files', string="Pièces complet")
     
     @api.model
     def create(self, vals):
@@ -137,6 +139,13 @@ class hr_employee(models.Model):
                     list_not_checked.append(key)    
         return list_not_checked
 
+    @api.one
+    @api.constrains('name') 
+    def _all_checked_files(self):
+        list_not_checked = self._get_not_checked_files()
+        if len(list_not_checked) == 0:
+            return True
+            
     @api.multi
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment'].read_group(

@@ -171,6 +171,21 @@
 			</tree>
 		</field>
 	</record>
+	
+ 	<!--Search in hr.employee-->
+	<record id="hr_employee_filter_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.filter.inherit</field>
+            <field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_filter" />
+            <field name="arch" type="xml">
+                <xpath expr="filter[@name='message_needaction']" position="after">
+                	<filter string="Profil non complet"
+                        domain="[('all_files_checked','=',False)]"/>
+                        <filter string="Profil complet"
+                        domain="[('all_files_checked','=',True)]"/> 
+                </xpath>
+            </field>
+    </record>
 
 	<!-- ACTIONS -->
 	<record id="action_hr_contract_type_sanction" model="ir.actions.act_window">
