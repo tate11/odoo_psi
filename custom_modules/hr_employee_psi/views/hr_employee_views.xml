@@ -143,22 +143,7 @@
 			</field>
 		</record>
 
-		<!--Hr Employee inherit search view-->
-    <record id="hr_employee_view_psi_search" model="ir.ui.view">
-        <field name="name">hr.employee.search.psi.inherit</field>
-        <field name="model">hr.employee</field>
-        
-        <field name="inherit_id" ref="hr.view_employee_filter"/>
-        <field name="arch" type="xml">
-            
-            <xpath expr="//field[@name='department_id']" position="after">
-                <filter string="Profil incomplète" name="profil_filter" domain="['|','|','|','|','|','|',('personal_information','=',False),('id_photos','=',False),('certificate_residence','=',False),('marriage_certificate','=',False),
-('cin','=',False),('work_certificate','=',False),('qualifications','=',False),('criminal_records','=',False),
-('card_cnaps','=',False),('birth_certificate_children','=',False),('ethics_course_certificate','=',False)]"/>
-                <filter string="CDD vs CDI" icon="terp-personal+" domain="[]" context="{'group_by':'psi_contract_type'}" />
-            </xpath>
-        </field>
-    </record>
+	
 		<record id="hr_contract_type_view_form" model="ir.ui.view">
 			<field name="name">hr.contract.type.sanction.form</field>
 			<field name="model">hr.contract.type.sanction</field>
@@ -189,6 +174,35 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="hr_contract_sanction_view_tree" />
 		</record>
+
+	<record id="hr_contract_sanction_view_tree" model="ir.ui.view">
+		<field name="name">hr.contract.type.sanction.tree</field>
+		<field name="model">hr.contract.type.sanction</field>
+		<field name="arch" type="xml">
+			<tree string="Liste des sanctions">
+				<field colspan="4" name="name" />
+			</tree>
+		</field>
+	</record>
+	
+ 	<!--Search in hr.employee-->
+	<record id="hr_employee_filter_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.filter.inherit</field>
+            <field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_filter" />
+            <field name="arch" type="xml">
+                <xpath expr="filter[@name='message_needaction']" position="after">
+                	<filter string="Profil non complet"
+                        domain="[('all_files_checked','=',False)]"/>
+                        <filter string="Profil complet"
+                        domain="[('all_files_checked','=',True)]"/> 
+                  <xpath expr="//field[@name='department_id']" position="after">
+                <filter string="CDD vs CDI" icon="terp-personal+" domain="[]" context="{'group_by':'psi_contract_type'}" />
+            </xpath>
+                </xpath>
+            </field>
+    </record>
+
 
 
 		<!-- MENUS -->
