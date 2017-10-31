@@ -25,6 +25,18 @@
 		<field name="model">hr.contract</field>
 		<field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
 		<field name="arch" type="xml">
+			<field name="state" position="after">
+				<button name="set_employee_inactif" type="object"
+						context="{'send_rfq':True}" 
+						string="Fin de contrat et notification" class="oe_highlight"
+						attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}"
+						/>
+				<button name="set_employee_inactif" type="object"
+						context="{'send_rfq':True}" 
+						string="Ré-envoyer la notification - Fin du contrat"
+						attrs="{'invisible': ['|',('motif_rupture','=',False),('state_mail','=','draft')]}"
+						/>
+			</field>
 			<xpath expr="//label" position="before">
 				<field name="response_evaluation" invisible="1" />
 				<div class="oe_button_box" name="button_box">
@@ -36,6 +48,7 @@
 			</xpath>
 			<field name="type_id" position='replace'>
 				<field name="type_id" invisible="1" />
+				<field name="state_mail" invisible="1" />
 			</field>
 
 			<field name="wage" position='after'>
@@ -87,11 +100,7 @@
 			<group name="duration_group" position="after">
 				<group name="rupture" string="Rupture de contrat">
 					<field name="date_rupture" />
-					<field name="motif_rupture" />
-					<button name="set_employee_inactif" type="object"
-						string="Mettre inactif l'employé correspondant" class="oe_highlight"
-						attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}"
-						onClick="$(this).prop('disabled', true);" />
+					<field name="motif_rupture" />					
 				</group>
 			</group>
 

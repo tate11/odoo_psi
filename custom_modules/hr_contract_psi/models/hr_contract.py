@@ -45,6 +45,10 @@ class hr_contract(models.Model):
     name_employee = fields.Char(related='employee_id.name')
     job_name = fields.Char(related='employee_id.job_id.name')
     
+    state_mail = fields.Selection([
+        ('draft', 'RFQ'),
+        ('sent', 'RFQ Sent')], default='draft')
+
     @api.multi
     def action_result_evaluation_send_ok(self):
         self.ensure_one()
@@ -413,7 +417,8 @@ class hr_contract(models.Model):
             #employee readonly
             contract = contract_obj.browse([record.id])
             contract.update({
-                             'state':'close'
+                             'state':'close',
+                             'state_mail':'sent'
             })
             employee.update({
                              'state':'close'
