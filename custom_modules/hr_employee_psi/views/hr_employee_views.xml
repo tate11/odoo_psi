@@ -35,6 +35,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="view_action_add_declaration" />
 			<field name="target">new</field>
+			<field name="context">{'default_employee_id': active_id}</field>
 		</record>
 		
 		<record id="hr_hr_employee_view_form_psi" model="ir.ui.view">
@@ -96,12 +97,11 @@
 							<field name="card_cnaps" />
 							<field name="birth_certificate_children" />
 							<field name="details_certificate_ethics" nolabel="1">
-								<tree string="Details" editable="bottom">
-									<field name="name" />
+								<tree create="false" delete="false" editable="false">
+									<field name="name"/>
 									<field name="date_add" />
 									<field name="year" />
-									<field name="certificate_ethics_file"/>
-									<field name="checked_current_year" attrs="{'readonly':1}" onchange="checked_condition()"/>
+									<!-- <field name="checked_current_year" attrs="{'readonly':1}" onchange="checked_condition()"/> -->
 								</tree>
 							</field>
 						</group>						

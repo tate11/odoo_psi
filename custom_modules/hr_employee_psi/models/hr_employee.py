@@ -262,7 +262,7 @@ class hr_declaration_interest(models.Model):
     _description = u"Declaration d'intérêt - Cours d'éthique"
     
     name = fields.Char(string=u'Nom', required=True)
-    employee_id = fields.Many2one('hr.employee', string='Employé', required=True)
+    employee_id = fields.Many2one('hr.employee', string=u'Employé', required=True)
     date_add = fields.Date(string=u'Date d\'ajout',default=lambda *a: datetime.now())
     year =  fields.Selection([
                               (num, str(num)) for num in range(2010, (datetime.now().year)+1 
@@ -270,20 +270,20 @@ class hr_declaration_interest(models.Model):
     certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
     checked_current_year = fields.Boolean(string='Check')
 
-    @api.model
-    def create(self, vals):
-        today = datetime.today()
+    @api.multi
+    def write(self, vals):
         for record in self:
-            print "dfd"
             print record.year
-#            declaration_obj = self.env["hr.declaration.interest"]
-#            declarations = declaration_obj.search([])  
-#            if declarations:      
-#                for declaration in declarations:
-#                    if record.year == declaration.year:
-#                        raise Warning(_('Vous avez déjà rempli le formulaire de déclaration cette année'))
-#                    else:                       
-        return super(hr_declaration_interest, self).create(vals)
+            declaration_obj = self.env["hr.declaration.interest"]
+            declarations = declaration_obj.search([])  
+            if declarations:      
+                for declaration in declarations:
+                    date_str = declaration.date_add
+                    date = datetime.strptime(date_str,"%Y-%m-%d")
+                    if record.year == date.year:
+                        raise Warning(_('Vous avez déjà rempli le formulaire de déclaration cette année'))
+                    else:                
+                        return super(hr_declaration_interest, self).write(vals)
     
     @api.one
     @api.constrains('name')
