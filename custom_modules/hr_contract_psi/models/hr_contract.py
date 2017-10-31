@@ -263,8 +263,7 @@ class hr_contract(models.Model):
             historical = "Augmentation générale des salaires "
             vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':self.id}
             self.env['psi.contract.historical'].create(vals_historical)
-            template1 = self.env.ref('hr_contract_psi.template_augmentation_salaire_id')
-            self.env['mail.template'].browse(template1.id).send_mail(self.id)
+            
         if vals.has_key('psi_echelon') :
             sanction_env = self.env['hr.contract.sanction.data'] 
             sanctions = sanction_env.search([('employee_id', '=', self.employee_id.id)])
@@ -306,8 +305,7 @@ class hr_contract(models.Model):
             for wage_grid in wage_grids :
                 echelon = wage_grid._get_echelon(vals['psi_echelon'])
             vals['wage'] = echelon if echelon != 0 else data.wage
-            template0 = self.env.ref('hr_contract_psi.template_avancement_echelon_id')
-            self.env['mail.template'].browse(template0.id).send_mail(self.id)
+            
          
          #traitement de changement de statut    
         if vals.has_key('psi_contract_type') :
@@ -329,9 +327,7 @@ class hr_contract(models.Model):
             historical = "Changement de statut"
             vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':self.id}
             self.env['psi.contract.historical'].create(vals_historical)
-            template1 = self.env.ref('hr_contract_psi.template_changement_statut_id')
-            self.env['mail.template'].browse(template1.id).send_mail(self.id)
-          
+            
      
         
         #traitement de l'affectation
@@ -354,8 +350,7 @@ class hr_contract(models.Model):
             historical = "Affectation"
             vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':self.id}
             self.env['psi.contract.historical'].create(vals_historical)
-            template1 = self.env.ref('hr_contract_psi.template_affectation_id')
-            self.env['mail.template'].browse(template1.id).send_mail(self.id)   
+              
        
        #traitement de changement de département de rattachement
         if vals.has_key('department_id') :
@@ -378,14 +373,28 @@ class hr_contract(models.Model):
             historical = "Changement de departement"
             vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':self.id}
             self.env['psi.contract.historical'].create(vals_historical)
-            template1 = self.env.ref('hr_contract_psi.template_changement_de_departement_id')
-            self.env['mail.template'].browse(template1.id).send_mail(self.id)
             
             
-            
-        contract = super(hr_contract, self).write(vals)
+        contract_obj = super(hr_contract, self).write(vals)
+        contract = self.browse(self.id)
+        if vals.has_key('wage') :
+           template1 = self.env.ref('hr_contract_psi.template_augmentation_salaire_id')
+           self.env['mail.template'].browse(template1.id).send_mail(contract.id,force_send=True) 
+        if vals.has_key('psi_echelon') :
+            template0 = self.env.ref('hr_contract_psi.template_avancement_echelon_id')
+            self.env['mail.template'].browse(template0.id).send_mail(contract.id,force_send=True)
+        if vals.has_key('psi_contract_type') :
+            template2 = self.env.ref('hr_contract_psi.template_changement_statut_id')
+            self.env['mail.template'].browse(template2.id).send_mail(contract.id,force_send=True)
+        if vals.has_key('place_of_work') : 
+             template3 = self.env.ref('hr_contract_psi.template_affectation_id')
+             self.env['mail.template'].browse(template3.id).send_mail(contract.id, force_send=True) 
+        if vals.has_key('department_id') :
+             template4 = self.env.ref('hr_contract_psi.template_changement_de_departement_id')
+             self.env['mail.template'].browse(template4.id).send_mail(contract.id,force_send=True)
+             
         self._update_cron_rh_1()  
-        return contract
+        return contract_obj
     
     @api.depends('date_start')
     def _calculate_work_years(self):
