@@ -52,6 +52,14 @@
 							<field name="card_cnaps" />
 							<field name="birth_certificate_children" />
 							<field name="ethics_course_certificate" />
+							<field name="details_certificate_ethics" nolabel="1">
+	 							<tree string="Details" editable="bottom">
+	 								<field name="date_add" />
+	 								<field name="checked" attrs="{'readonly':1}" onchange="checked_if_exist()"/>
+	 								<field name="declaration_interest" />
+	 								<field name="year" />
+	 							</tree>
+ 							</field>
 						</group>
 					</page>
 					<page string="Sanctions">
