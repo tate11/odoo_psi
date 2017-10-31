@@ -65,6 +65,8 @@ class hr_employee(models.Model):
     psi_bridger_insight = fields.One2many('hr.employee.bridger.insight', 'employee_id',"Bridger insight")
     
     psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution")
+
+    psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat",store=True)
     
     details_certificate_ethics = fields.One2many('hr.certificate.ethics', 'employee_id', string="Details", track_visibility="onchange")
 
