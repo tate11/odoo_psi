@@ -2,7 +2,8 @@
 
 from datetime import date, datetime
 from datetime import timedelta
-
+from odoo import exceptions
+from odoo.exceptions import Warning
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
@@ -57,7 +58,8 @@ class hr_employee(models.Model):
     criminal_records            = fields.Boolean(default=False, string="Casier judiciaires")
     card_cnaps                  = fields.Boolean(default=False, string="Copie Cartes CNAPS ")
     birth_certificate_children  = fields.Boolean(default=False, string="Acte de naissances des enfants ")
-    ethics_course_certificate   = fields.Boolean(default=False, string=u"Certificat du cours d'éthique")
+    details_certificate_ethics = fields.One2many('hr.declaration.interest', 'employee_id', string=u"Declaration d'intérêt et cours d\'éthique", track_visibility="onchange")
+#    ethics_course_certificate   = fields.Boolean(default=False, string=u"Certificat du cours d'éthique")
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments', track_visibility='always')
     
@@ -68,8 +70,9 @@ class hr_employee(models.Model):
 
     psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat",store=True)
     
-    details_certificate_ethics = fields.One2many('hr.certificate.ethics', 'employee_id', string="Details", track_visibility="onchange")
+    all_files_checked = fields.Boolean(compute='_all_checked_files', string="Pièces complet")
 
+    details_certificate_ethics = fields.One2many('hr.certificate.ethics', 'employee_id', string="Details", track_visibility="onchange")
     @api.model
     def create(self, vals):
         employee = super(hr_employee, self).create(vals)
@@ -102,9 +105,6 @@ class hr_employee(models.Model):
     def _update_cron_collab_1(self):
         """ Activate the cron Premier Email Employee.
         """
-
-        #list_not_checked = self._get_not_checked_files()
-
         cron = self.env.ref('hr_employee_psi.ir_cron_send_email_collab_1', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
     
@@ -130,7 +130,7 @@ class hr_employee(models.Model):
                        'criminal_records'           : record.criminal_records,
                        'card_cnaps'                 : record.card_cnaps,
                        'birth_certificate_children' : record.birth_certificate_children,
-                       'ethics_course_certificate'  : record.ethics_course_certificate 
+                       'details_certificate_ethics' : record.details_certificate_ethics.checked_current_year 
                    }
             
             for key, value in dict.items() :
@@ -177,17 +177,18 @@ class hr_employee(models.Model):
         if automatic:
             self._cr.commit()
     
-    def action_get_declaration_interest(self, cr, uid, ids, context=None):
-
-            return {
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'hr_employee_psi.declaration_interest_view_form',
-                'type': 'ir.actions.act_window',
-                'context': context
-            }
-    
-
+    # add declaration interest every 2 years
+    def _add_declaration_interest(self, automatic=False):
+        if self.id != False:
+            template = self.env.ref('hr_employee_psi.custom_template_add_declaration_interest')
+            self.env['mail.template'].browse(template.id).send_mail(self.id)
+            #test
+            mail_failed_list = self.env['mail.mail'].search([('state', '=', 'exception')])
+            for failed_mail in mail_failed_list:
+                failed_mail.state = 'outgoing'
+        if automatic:
+            self._cr.commit()
+                
 class Person(models.Model):
 
      _name         = 'hr.person'
@@ -252,29 +253,38 @@ class SanctionData(models.Model):
 class hr_declaration_interest(models.Model):
     
     _name = "hr.declaration.interest"
-    _description = "Declaration d'intérêt - Cours d'éthique"
+    _description = u"Declaration d'intérêt - Cours d'éthique"
     
-    name = fields.Char(string=u'Nom')
-    date_add = fields.Date(string=u'Date d\'ajout')
-    employee_id = fields.Many2one('hr.employee', string='Employé', required=True)
-    
-class hr_certificate_ethics(models.Model):
-    _name = "hr.certificate.ethics"
-    _description = "Certificat du cours d'ethique"
-    
-    date_add = fields.Datetime(string="Date",default=lambda *a: datetime.now())
-    checked = fields.Boolean(string=u"Checked", default=False)
+    name = fields.Char(string=u'Nom', required=True)
+    employee_id = fields.Many2one('hr.employee', string=u'Employé', required=True)
+    date_add = fields.Date(string=u'Date d\'ajout',default=lambda *a: datetime.now())
     year =  fields.Selection([
                               (num, str(num)) for num in range(2010, (datetime.now().year)+1 
-                                                               )], string=u'Année', required="True")
-    employee_id = fields.Many2one('hr.employee')
-    declaration_interest = fields.Many2one('hr.declaration.interest', string=u'Declaration d\'intérêt', required="True", track_visibility="onchange")
+                                                             )], string=u'Année', required="True")
+    certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
+    checked_current_year = fields.Boolean(string='Check')
 
+    @api.multi
+    def write(self, vals):
+        for record in self:
+            print record.year
+            declaration_obj = self.env["hr.declaration.interest"]
+            declarations = declaration_obj.search([])  
+            if declarations:      
+                for declaration in declarations:
+                    date_str = declaration.date_add
+                    date = datetime.strptime(date_str,"%Y-%m-%d")
+                    if record.year == date.year:
+                        raise Warning(_('Vous avez déjà rempli le formulaire de déclaration cette année'))
+                    else:                
+                        return super(hr_declaration_interest, self).write(vals)
+    
     @api.one
-    @api.constrains('declaration_interest')
-    def checked_if_exist(self):
-        if self.declaration_interest:
-            self.checked = True
+    @api.constrains('name')
+    def checked_condition(self):
+        print "Checked condition"
+        if self.id:
+            self.checked_current_year = True
         
 class BrigerInsight(models.Model):
     _name = 'hr.employee.bridger.insight'
