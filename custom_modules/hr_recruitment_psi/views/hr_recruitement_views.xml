@@ -10,6 +10,7 @@
 			<field name="model">hr.applicant</field>
 			<field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job" />
 			<field name="arch" type="xml">
+			  
 				<field name="partner_id" position="before">
 					<field name="birthday" attrs="{'required': True}" />
 					<field name="age" />

@@ -64,7 +64,7 @@
 			</field>
 
 			<xpath expr="//field[@name='department_id']" position='after'>
-				<field name="psi_contract_type" />
+				<field name="psi_contract_type" readonly="1" />
 				<field name="place_of_work" />
 			</xpath>
 
@@ -265,8 +265,12 @@
 		</field>
 		<field name="model">hr.contract</field>
 		<field name="arch" type="xml">
-			<calendar date_start="date_start" color="employee_id"
-				display="[name_employee], Poste [job_name]" mode="month">
+			<calendar date_start="anniversary" 
+				color="employee_id"
+				display="[name_employee], [job_name]" 
+				mode="month"
+				>
+				
 				<field name="name_employee" />
 				<field name="job_name" />
 			</calendar>

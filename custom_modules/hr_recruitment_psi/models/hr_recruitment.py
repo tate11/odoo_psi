@@ -38,8 +38,10 @@ class Applicant(models.Model):
     def _default_stage_id(self):
         return self.env.ref('hr_recruitment_psi.applicant_selected').id
     
-    attachment_file_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], ondelete='cascade',string='Attachments')
-
+    #attachment_file_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], ondelete='cascade',string='Attachments')
+    #attachment_file_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')],string='Attachments')
+    attachment_file_ids = fields.Many2one('ir.attachment',string='Attachments')
+    
     recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement', readonly=True)
     recrutement_type = fields.Selection(related='job_id.recrutement_type_id.recrutement_type',string='Type de recrutement selection')
     
@@ -93,7 +95,7 @@ class Applicant(models.Model):
     psi_average_note = fields.Float(string="Moyenne Short List", readonly=True)
     
     #Note test
-    psi_allowance = fields.Float(string='Indemnité de stage', digits=(16, 2), required=True, help="Basic Salary of the employee")
+    psi_allowance = fields.Float(string='Indemnité de stage', digits=(16, 2),help="Basic Salary of the employee")
     psi_note_test_rh = fields.Integer(string="Note Test RH")
     psi_note_test_candidate = fields.Integer(string="Note Test Demandeur")
     psi_average_note_test = fields.Float(string="Moyenne Test", readonly=True)

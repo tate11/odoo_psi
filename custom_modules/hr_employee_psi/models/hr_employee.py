@@ -66,12 +66,13 @@ class hr_employee(models.Model):
     sanctions_data = fields.One2many('hr.contract.sanction.data', 'employee_id', string='', track_visibility='always')
     psi_bridger_insight = fields.One2many('hr.employee.bridger.insight', 'employee_id',"Bridger insight")
     
-    psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution")
+    psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution", store=True)
 
     psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat",store=True)
     
     all_files_checked = fields.Boolean(compute='_all_checked_files', string="Pièces complet")
-    
+
+    details_certificate_ethics = fields.One2many('hr.certificate.ethics', 'employee_id', string="Details", track_visibility="onchange")
     @api.model
     def create(self, vals):
         employee = super(hr_employee, self).create(vals)
@@ -131,20 +132,13 @@ class hr_employee(models.Model):
                        'birth_certificate_children' : record.birth_certificate_children,
                        'details_certificate_ethics' : record.details_certificate_ethics.checked_current_year 
                    }
-            list(dict.keys())
-            list(dict.values())
+            
             for key, value in dict.items() :
                 if value == False:
-                    list_not_checked.append(key)    
+                    list_not_checked.append(key)
+        
         return list_not_checked
 
-    @api.one
-    @api.constrains('name') 
-    def _all_checked_files(self):
-        list_not_checked = self._get_not_checked_files()
-        if len(list_not_checked) == 0:
-            return True
-            
     @api.multi
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment'].read_group(
