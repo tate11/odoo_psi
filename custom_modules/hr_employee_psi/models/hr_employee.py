@@ -70,8 +70,6 @@ class hr_employee(models.Model):
     
     details_certificate_ethics = fields.One2many('hr.certificate.ethics', 'employee_id', string="Details", track_visibility="onchange")
 
-    all_files_checked = fields.Boolean(compute='_all_checked_files', string="Pièces complet")
-    
     @api.model
     def create(self, vals):
         employee = super(hr_employee, self).create(vals)
@@ -134,20 +132,13 @@ class hr_employee(models.Model):
                        'birth_certificate_children' : record.birth_certificate_children,
                        'ethics_course_certificate'  : record.ethics_course_certificate 
                    }
-            list(dict.keys())
-            list(dict.values())
+            
             for key, value in dict.items() :
                 if value == False:
-                    list_not_checked.append(key)    
+                    list_not_checked.append(key)
+        
         return list_not_checked
 
-    @api.one
-    @api.constrains('name') 
-    def _all_checked_files(self):
-        list_not_checked = self._get_not_checked_files()
-        if len(list_not_checked) == 0:
-            return True
-            
     @api.multi
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment'].read_group(

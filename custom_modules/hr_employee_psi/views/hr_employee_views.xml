@@ -200,8 +200,15 @@
 			<field name="inherit_id" ref="hr.view_employee_filter" />
 			<field name="arch" type="xml">
 				<xpath expr="filter[@name='message_needaction']" position="after">
-					<filter string="Profil non complet" domain="[('all_files_checked','=',False)]" />
-					<filter string="Profil complet" domain="[('all_files_checked','=',True)]" />
+					
+					<filter string="Profil non complet" domain="['|','|','|','|','|','|', ('personal_information','=',False),('id_photos','=',False),('certificate_residence','=',False),('marriage_certificate','=',False),
+('cin','=',False),('work_certificate','=',False),('qualifications','=',False),('criminal_records','=',False),
+('card_cnaps','=',False),('birth_certificate_children','=',False),('ethics_course_certificate','=',False)]" />
+					
+					<filter string="Profil complet" domain="['&amp;','&amp;','&amp;','&amp;','&amp;','&amp;', ('personal_information','=',True),('id_photos','=',True),('certificate_residence','=',True),('marriage_certificate','=',True),
+('cin','=',True),('work_certificate','=',True),('qualifications','=',True),('criminal_records','=',True),
+('card_cnaps','=',True),('birth_certificate_children','=',True),('ethics_course_certificate','=',True)]" />
+				
 				</xpath>
 				<xpath expr="//field[@name='department_id']" position="after">
 						<filter string="CDD vs CDI" icon="terp-personal+" domain="[]"
