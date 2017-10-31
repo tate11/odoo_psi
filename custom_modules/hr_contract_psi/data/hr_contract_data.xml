@@ -3,7 +3,7 @@
 	<data>
 		<!-- Cron send first email RH & collaborator -->
 		<record id="ir_cron_send_email_rh_1" model="ir.cron">
-			<field name="name">Collaborateur - Premier rappel Email à la RH
+			<field name="name">PSI Collaborateur - Premier rappel Email à la RH
 			</field>
 			<field name="active" eval="False" />
 			<field name="user_id" ref="base.user_root" />
@@ -17,7 +17,7 @@
 		<!-- Cron send email mentor - Fin periode d'essai -->
 		<record id="ir_cron_send_email_trial_date_end" forcecreate="True"
 			model="ir.cron">
-			<field name="name">Contrat - Rappel fin période d'essai</field>
+			<field name="name">PSI Contrat - Rappel fin période d'essai</field>
 			<field name="user_id" ref="base.user_root" />
 			<field name="interval_number">1</field>
 			<field name="interval_type">months</field>
@@ -31,7 +31,7 @@
 		<!-- Cron send email mentor - Fin contrat -->
 		<record id="ir_cron_send_email_end_contract" forcecreate="True"
 			model="ir.cron">
-			<field name="name">Contrat - Rappel fin contrat</field>
+			<field name="name">PSI Contrat - Rappel fin contrat</field>
 			<field name="user_id" ref="base.user_root" />
 			<field name="interval_number">1</field>
 			<field name="interval_type">months</field>
@@ -46,7 +46,7 @@
 			rappel -->
 		<record id="ir_cron_suivi_date_d_anniversaire" forcecreate="True"
 			model="ir.cron">
-			<field name="name">Suivi date d'anniversaire rappel a Collaborateur et
+			<field name="name">PSI Suivi date d'anniversaire rappel a Collaborateur et
 				RH</field>
 			<field name="user_id" ref="base.user_root" />
 			<field name="interval_number">1</field>
@@ -61,7 +61,7 @@
 		<!-- Cron cloture profil collabo - Fin contrat -->
 		<record id="ir_cron_close_collabo_end_contract" forcecreate="True"
 			model="ir.cron">
-			<field name="name">Contrat - Rappel fin contrat/ Cloture fin
+			<field name="name">PSI Contrat - Rappel fin contrat/ Cloture fin
 				collaborateur</field>
 			<field name="user_id" ref="base.user_root" />
 			<field name="interval_number">1</field>
