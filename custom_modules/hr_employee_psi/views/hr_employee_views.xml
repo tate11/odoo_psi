@@ -206,6 +206,8 @@
 				<xpath expr="//field[@name='department_id']" position="after">
 						<filter string="CDD vs CDI" icon="terp-personal+" domain="[]"
 							context="{'group_by':'psi_contract_type'}" />
+						<filter string="Bailleur/Projet" icon="terp-personal+" domain="[]"
+						context="{'group_by':'psi_budget_code_distribution'}" />
 				</xpath>
 			</field>
 		</record>
