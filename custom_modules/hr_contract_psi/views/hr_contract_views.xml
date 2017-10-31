@@ -264,8 +264,6 @@
 		</field>
 	</record>
 
-	
-
 	<!-- ACTIONS -->
 	<record id="action_hr_employee_reporting_birthday" model="ir.actions.act_window">
 		<field name="name">Calendrier des dates d'anniversaire</field>
