@@ -1,12 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 	<data>
+		<!-- Form declaration - cours d'ethique -->
+		<record id="view_action_add_declaration" model="ir.ui.view">
+			<field name="name">hr.declaration.interest.form</field>
+			<field name="model">hr.declaration.interest</field>
+			<field name="arch" type="xml">
+				<form string="Declaration d'intérêt">
+						<div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="Nom du déclaration"/>
+                            </h1>
+                        </div>
+                        <group>
+	                        <group>
+	                            <field name="date_add"/>
+	                            <field name="employee_id"/>
+	                        </group>
+	                        <group>
+	                            <field name="year"/>
+	                            <field name="certificate_ethics_file"/>
+	                        </group>
+	                    </group>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Action add declaration - cours ethique -->
+		<record id="action_add_declaration" model="ir.actions.act_window">
+			<field name="name">Ajouter un declaration d'intérêt</field>
+			<field name="res_model">hr.declaration.interest</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_action_add_declaration" />
+			<field name="target">new</field>
+			<field name="context">{'default_employee_id': active_id}</field>
+		</record>
+		
 		<record id="hr_hr_employee_view_form_psi" model="ir.ui.view">
 			<field name="name">hr.hr.employee.view.form.psi</field>
 			<field name="model">hr.employee</field>
 			<field name="inherit_id" ref="hr.view_employee_form" />
 			<field name="arch" type="xml">
-
+				<xpath expr="//sheet" position='before'>
+					<header>
+						<button name="%(action_add_declaration)d"
+								type="action"
+								string="Ajouter un déclaration d'intérêt" 
+								class="btn-primary"
+								/>
+					</header>
+				</xpath>
 				<div name="button_box" position="inside">
 					<button name="action_get_attachment_tree_view" class="oe_stat_button"
 						icon="fa-book" type="object">
@@ -51,8 +96,15 @@
 							<field name="criminal_records" />
 							<field name="card_cnaps" />
 							<field name="birth_certificate_children" />
-							<field name="ethics_course_certificate" />
-						</group>
+							<field name="details_certificate_ethics" nolabel="1">
+								<tree create="false" delete="false" editable="false">
+									<field name="name"/>
+									<field name="date_add" />
+									<field name="year" />
+									<!-- <field name="checked_current_year" attrs="{'readonly':1}" onchange="checked_condition()"/> -->
+								</tree>
+							</field>
+						</group>						
 					</page>
 					<page string="Sanctions">
 						<group>
@@ -192,29 +244,25 @@
 			<field name="inherit_id" ref="hr.view_employee_filter" />
 			<field name="arch" type="xml">
 				<xpath expr="filter[@name='message_needaction']" position="after">
-					<filter string="Profil non complet" domain="[('all_files_checked','=',False)]" />
-					<filter string="Profil complet" domain="[('all_files_checked','=',True)]" />
+					
+					<filter string="Profil non complet" domain="['|','|','|','|','|','|', ('personal_information','=',False),('id_photos','=',False),('certificate_residence','=',False),('marriage_certificate','=',False),
+('cin','=',False),('work_certificate','=',False),('qualifications','=',False),('criminal_records','=',False),
+('card_cnaps','=',False),('birth_certificate_children','=',False),('ethics_course_certificate','=',False)]" />
+					
+					<filter string="Profil complet" domain="['&amp;','&amp;','&amp;','&amp;','&amp;','&amp;', ('personal_information','=',True),('id_photos','=',True),('certificate_residence','=',True),('marriage_certificate','=',True),
+('cin','=',True),('work_certificate','=',True),('qualifications','=',True),('criminal_records','=',True),
+('card_cnaps','=',True),('birth_certificate_children','=',True),('ethics_course_certificate','=',True)]" />
+				
 				</xpath>
 				<xpath expr="//field[@name='department_id']" position="after">
 						<filter string="CDD vs CDI" icon="terp-personal+" domain="[]"
 							context="{'group_by':'psi_contract_type'}" />
+						<filter string="Bailleur/Projet" icon="terp-personal+" domain="[]"
+						context="{'group_by':'psi_budget_code_distribution'}" />
 				</xpath>
 			</field>
 		</record>
-
-		<record id="declaration_interest_view_form" model="ir.ui.view">
-			<field name="name">hr.declaration.interest.form</field>
-			<field name="model">hr.declaration.interest</field>
-			<field name="arch" type="xml">
-				<form string="Declaration d'intérêt">
-					<group col="4">
-						<field name="name" />
-						<field name="date_add" />
-						<field name="employee_id" />
-					</group>
-				</form>
-			</field>
-		</record>
+		
 
 		<!-- MENUS -->
 		<menuitem id="hr_menu_contract_type_sanction" action="action_hr_contract_type_sanction"

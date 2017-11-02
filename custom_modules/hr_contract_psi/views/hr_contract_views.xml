@@ -34,6 +34,7 @@
 					string="Ré-envoyer la notification - Fin du contrat"
 					attrs="{'invisible': ['|',('motif_rupture','=',False),('state_mail','=','draft')]}" />
 			</field>
+			
 			<xpath expr="//label" position="before">
 				<field name="response_evaluation" invisible="1" />
 				<div class="oe_button_box" name="button_box">
@@ -49,22 +50,24 @@
 			</field>
 
 			<field name="wage" position='after'>
-				<field name="psi_professional_category" readonly="1" />
-				<field name="psi_sub_category" required="1" />
-				<field name="psi_echelon" />
+				<field name="psi_professional_category" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="psi_sub_category" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="psi_echelon" attrs="{'readonly' : [('state','=','close')]}"/>
 			</field>
 
 			<field name="working_hours" position="before">
 				<field name="work_years" />
-
-
 			</field>
 
 			<xpath expr="//field[@name='department_id']" position='after'>
-				<field name="psi_contract_type" readonly="1" />
-				<field name="place_of_work" />
+				<field name="psi_contract_type" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="place_of_work" attrs="{'readonly' : [('state','=','close')]}"/>
+				
 			</xpath>
 
+			<field name="date_end" position="after">
+				<field name="indetermine" class="oe_inline" attrs="{'invisible': [('psi_contract_type','=','cdd')]}" />
+			</field>
 
 			<xpath expr="//notebook" position="inside" />
 			<notebook>
@@ -81,7 +84,7 @@
 			</notebook>
 			<xpath expr="//group[@name='duration_group']" position="after">
 				<group name="result_evaluation" string="Résultat de l'évaluation"> <!-- Condition if date_end_trial terminé -->
-					<field name="result_evaluation" />
+					<field name="result_evaluation" attrs="{'readonly' : [('state','=','close')]}"/>
 					<label string="Vous voulez renouveler la période d'essai ?"
 						attrs="{'invisible':['|',('result_evaluation','not in','ko')]}" />
 					<div>
@@ -107,83 +110,68 @@
 			</xpath>
 			<group name="duration_group" position="after">
 				<group name="rupture" string="Rupture de contrat">
-					<field name="date_rupture" />
-					<field name="motif_rupture" />
+					<field name="date_rupture" attrs="{'readonly' : [('state','=','close')]}" />
+					<field name="motif_rupture" attrs="{'readonly' : [('state','=','close')]}" />					
 				</group>
 			</group>
 
 			<!-- Contract close - READONLY -->
-			<field name='name' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name='name' position="replace">
+				<field name="name" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='employee_id' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name='employee_id' position="replace">
+				<field name="employee_id" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='job_id' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name='job_id' position="replace">
+				<field name="job_id" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='department_id' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<!-- <field name="struct_id" position="replace">
+				<field name="struct_id" attrs="{'readonly' : [('state','=','close')]}" />
+			</field> -->
+			<!-- <field name="schedule_pay" position="replace">
+				<field name="schedule_pay" attrs="{'readonly' : [('state','=','close')]}" />
+			</field> -->
+			<field name="notes" position="replace">
+				<field name="notes" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='psi_contract_type' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name="advantages" position="replace">
+				<field name="advantages" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='place_of_work' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name="visa_expire" position="replace">
+				<field name="visa_expire" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='wage' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name='department_id' position="replace">
+				<field name="department_id" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='trial_date_start' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name='wage' position="replace">
+				<field name="wage" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='trial_date_end' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name='trial_date_start' position="replace">
+				<field name="trial_date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"></field>
 			</field>
-			<field name='date_start' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name='trial_date_end' position="replace">
+				- <field name="trial_date_end" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='date_end' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name='date_start' position="replace">
+				<field name="date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"></field>
 			</field>
-			<field name='working_hours' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name='date_end' position="replace">
+				- <field name="date_end" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='result_evaluation' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name='working_hours' position="replace">
+				<field name="working_hours" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='date_rupture' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name="working_hours" position="before">
+				<field name="work_years" attrs="{'readonly' : [('state','=','close')]}"/>
 			</field>
-			<field name='motif_rupture' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name='visa_no' position="replace">
+				<field name="visa_expire" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='visa_no' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name='visa_expire' position="replace">
+				<field name="visa_expire" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='visa_expire' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
-			</field>
-			<field name='permit_no' position="attributes">
-				<attribute name="attrs">{'readonly':[('state','=','close')]}
-				</attribute>
+			<field name='permit_no' position="replace">
+				<field name="permit_no" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
 		</field>
 	</record>
@@ -307,8 +295,12 @@
 		</field>
 		<field name="model">hr.contract</field>
 		<field name="arch" type="xml">
-			<calendar date_start="date_start" color="employee_id"
-				display="[name_employee], Poste [job_name]" mode="month">
+			<calendar date_start="anniversary" 
+				color="employee_id"
+				display="[name_employee], [job_name]" 
+				mode="month"
+				>
+				
 				<field name="name_employee" />
 				<field name="job_name" />
 			</calendar>
