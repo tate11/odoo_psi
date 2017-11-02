@@ -193,6 +193,7 @@ class hr_contract(models.Model):
     job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
     
     psi_professional_category = fields.Many2one(related='job_id.psi_category',string='Catégorie professionnelle')
+    psi_category = fields.Selection(related='psi_professional_category.psi_professional_category',string='Catégorie professionnelle')
     
     psi_sub_category            = fields.Selection([
                                         ('1','1'),
@@ -332,7 +333,7 @@ class hr_contract(models.Model):
             historical = "Changement d'echelon"
             vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':self.id}
             self.env['psi.contract.historical'].create(vals_historical)
-            wage_grids = self.env['hr.wage.grid.details'].search([('psi_professional_category', '=', self.psi_professional_category),('psi_sub_category', '=', self.psi_sub_category)])
+            wage_grids = self.env['hr.wage.grid.details'].search([('psi_professional_category', '=', self.psi_category),('psi_sub_category', '=', self.psi_sub_category)])
             echelon = 0
             for wage_grid in wage_grids :
                 echelon = wage_grid._get_echelon(vals['psi_echelon'])
