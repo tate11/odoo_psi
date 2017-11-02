@@ -3,7 +3,7 @@
 from odoo import api, models
 
 class report_certificat_travail(models.AbstractModel):
-    _name = 'hr.contract_psi.report_certificat_travail'
+    _name = 'hr_contract_psi.report_certificat_travail'
    
     @api.multi
     def render_html(self, docids, data=None):
@@ -18,4 +18,4 @@ class report_certificat_travail(models.AbstractModel):
             'docs': self.env['hr.contract'].browse(docids),
             'data': data,
         }
-        return self.env['report'].render('hr.contract_psi.report_certificat_travail', docargs)
+        return self.env['report'].render('hr_contract_psi.report_certificat_travail', docargs)

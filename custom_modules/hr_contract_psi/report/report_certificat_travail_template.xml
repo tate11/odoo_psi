@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-	<template id="report_cnaps">
+	<template id="report_certificat_travail">
 	    <t t-call="report.html_container">
             <t t-call="report.external_layout">
                 <div class="page">

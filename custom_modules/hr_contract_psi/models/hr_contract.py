@@ -61,7 +61,7 @@ class hr_contract(models.Model):
     def action_report_certificat(self):
         return {
                'type': 'ir.actions.report.xml',
-               'report_name': 'hr.contract_psi.report_certificat_travail'
+               'report_name': 'hr_contract_psi.report_certificat_travail'
            }
     
     @api.depends('date_start')
@@ -164,7 +164,7 @@ class hr_contract(models.Model):
 
                 weeks = (monday2 - monday1).days / 7
                
-                if weeks == 1 :
+                if weeks == 2 :
                     
                     template_collaborator = self.env.ref('hr_contract_psi.template_collaborator_id')
                     self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id)
@@ -204,69 +204,7 @@ class hr_contract(models.Model):
     
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
     
-    def _send_email_birthday_date_tracking(self):
-        employee_obj = self.env['hr.contract']
-        employees = employee_obj.search([])
-        
-        for employee in employees : 
-           
-            date_birthday = employee.date_start
-            if date_birthday != False :
-                datetime_now =  datetime.today()
-                date_now = datetime(
-                    year=datetime_now.year, 
-                    month=datetime_now.month,
-                    day=datetime_now.day,
-                )
-                datetime_birthday = datetime.strptime(date_birthday,"%Y-%m-%d")
-                date_birthday_time = datetime(
-                    year=datetime_now.year, 
-                    month=datetime_birthday.month,
-                    day=datetime_birthday.day,
-                )
-                monday1 = (date_now - timedelta(days=date_now.weekday()))
-                monday2 = (date_birthday_time - timedelta(days=date_birthday_time.weekday()))
-
-                weeks = (monday2 - monday1).days / 7
-               
-                if weeks == 1 :
-                    
-                    template_collaborator = self.env.ref('hr_contract_psi.template_collaborator_id')
-                    self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id)
-                    template_rh = self.env.ref('hr_contract_psi.template_rh_id')
-                    self.env['mail.template'].browse(template_rh.id).send_mail(employee.id)
-    
-    def _send_email_birthday_date_tracking(self):
-        employee_obj = self.env['hr.contract']
-        employees = employee_obj.search([])
-        
-        for employee in employees : 
-           
-            date_birthday = employee.date_start
-            if date_birthday != False :
-                datetime_now =  datetime.today()
-                date_now = datetime(
-                    year=datetime_now.year, 
-                    month=datetime_now.month,
-                    day=datetime_now.day,
-                )
-                datetime_birthday = datetime.strptime(date_birthday,"%Y-%m-%d")
-                date_birthday_time = datetime(
-                    year=datetime_now.year, 
-                    month=datetime_birthday.month,
-                    day=datetime_birthday.day,
-                )
-                monday1 = (date_now - timedelta(days=date_now.weekday()))
-                monday2 = (date_birthday_time - timedelta(days=date_birthday_time.weekday()))
-
-                weeks = (monday2 - monday1).days / 7
-               
-                if weeks == 2 :
-                    
-                    template_collaborator = self.env.ref('hr_contract_psi.template_collaborator_id')
-                    self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id)
-                    template_rh = self.env.ref('hr_contract_psi.template_rh_id')
-                    self.env['mail.template'].browse(template_rh.id).send_mail(employee.id)
+   
     
     @api.model
     def create(self, vals):  

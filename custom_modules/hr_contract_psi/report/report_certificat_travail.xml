@@ -11,8 +11,8 @@
             id="action_report_certificat" 
             model="hr.contract" 
             report_type="qweb-pdf"
-            name="hr.contract_psi.report_certificat_travail" 
-            file="hr.contract_psi.report_certificat_travail"
+            name="hr_contract_psi.report_certificat_travail" 
+            file="hr_contract_psi.report_certificat_travail"
             paperformat="certificat_paysage"
         />
 </odoo>
