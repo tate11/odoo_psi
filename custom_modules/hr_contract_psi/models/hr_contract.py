@@ -58,6 +58,12 @@ class hr_contract(models.Model):
     
     indetermine = fields.Char(default='Indéterminé', readonly=True)
     
+    def action_report_certificat(self):
+        return {
+               'type': 'ir.actions.report.xml',
+               'report_name': 'hr.contract_psi.report_certificat_travail'
+           }
+    
     @api.depends('date_start')
     def _get_anniversary(self):
         

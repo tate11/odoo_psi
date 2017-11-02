@@ -73,7 +73,7 @@
 			<notebook>
 				<page string="Chekout" attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}">
 					<group>
-						<button name="action_report_certificat" type="action" string="Génerer certificat de travail" class="oe_highlight" />
+						<button name="action_report_certificat" type="object" string="Génerer certificat de travail" class="oe_highlight" />
 						<field name="psi_certificat" readonly="1">
 						     <field name="nouveau"/>
 						     <field name="debut"/>
