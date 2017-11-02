@@ -29,7 +29,7 @@
 		
 		<!-- Action add declaration - cours ethique -->
 		<record id="action_add_declaration" model="ir.actions.act_window">
-			<field name="name">Ajouter un declaration d'intérêt</field>
+			<field name="name">Ajouter une déclaration d'intérêt</field>
 			<field name="res_model">hr.declaration.interest</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -47,7 +47,7 @@
 					<header>
 						<button name="%(action_add_declaration)d"
 								type="action"
-								string="Ajouter un déclaration d'intérêt" 
+								string="Ajouter une déclaration d'intérêt" 
 								class="btn-primary"
 								/>
 					</header>

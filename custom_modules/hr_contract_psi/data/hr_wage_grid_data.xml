@@ -4,19 +4,19 @@
 		<!-- Grille Salariale -->
 		<record model="hr.wage.grid.details" id="grid1">
 			<field name="psi_professional_category">appui</field>
-			<field name="psi_category">a</field>
+			<field name="psi_category">A</field>
 			<field name="name">Femme de ménage</field>
 			<field name="psi_sub_category">1</field>
 		</record>
 		<record model="hr.wage.grid.details" id="grid2">
 			<field name="psi_professional_category">execution</field>
-			<field name="psi_category">b</field>
+			<field name="psi_category">B</field>
 			<field name="name">Chauffeur</field>
 			<field name="psi_sub_category">1</field>
 		</record>
 		<record model="hr.wage.grid.details" id="grid3">
 			<field name="psi_professional_category">execution</field>
-			<field name="psi_category">b</field>
+			<field name="psi_category">B</field>
 			<field name="psi_sub_category">2</field>
 			<field name="name">
 				Standardiste réceptionniste, secrétaire
@@ -24,7 +24,7 @@
 		</record>
 		<record model="hr.wage.grid.details" id="grid4">
 			<field name="psi_professional_category">execution</field>
-			<field name="psi_category">b</field>
+			<field name="psi_category">B</field>
 			<field name="name">
 				Chauffeur Animateur, 
 				Chauffeur, Chauffeur Livreur, SPD
@@ -33,7 +33,7 @@
 		</record>
 		<record model="hr.wage.grid.details" id="grid5">
 			<field name="psi_professional_category">execution</field>
-			<field name="psi_category">b</field>
+			<field name="psi_category">B</field>
 			<field name="psi_sub_category">4</field>
 			<field name="name">
 				Délégué Commercial, Quality Controller,
@@ -42,7 +42,7 @@
 		</record>
 		<record model="hr.wage.grid.details" id="grid6">
 			<field name="psi_professional_category">superviseur</field>
-			<field name="psi_category">c</field>
+			<field name="psi_category">C</field>
 			<field name="name">
 				Data Base Manager, Inventory control, comptable
 			</field>
@@ -50,7 +50,7 @@
 		</record>
 		<record model="hr.wage.grid.details" id="grid7">
 			<field name="psi_professional_category">superviseur</field>
-			<field name="psi_category">c</field>
+			<field name="psi_category">C</field>
 			<field name="psi_sub_category">2</field>
 			<field name="name">
 				Promoteur Formateur, ATR
@@ -58,7 +58,7 @@
 		</record>
 		<record model="hr.wage.grid.details" id="grid8">
 			<field name="psi_professional_category">superviseur</field>
-			<field name="psi_category">c</field>
+			<field name="psi_category">C</field>
 			<field name="psi_sub_category">3</field>
 			<field name="name">
 				Superviseur, Assistant de Représentation,
@@ -67,7 +67,7 @@
 		</record>
 		<record model="hr.wage.grid.details" id="grid9">
 			<field name="psi_professional_category">coordinateur</field>
-			<field name="psi_category">d</field>
+			<field name="psi_category">D</field>
 			<field name="psi_sub_category">1</field>
 			<field name="name">
 				Junior Coordinateur
@@ -75,7 +75,7 @@
 		</record>
 		<record model="hr.wage.grid.details" id="grid10">
 			<field name="psi_professional_category">coordinateur</field>
-			<field name="psi_category">d</field>
+			<field name="psi_category">D</field>
 			<field name="psi_sub_category">2</field>
 			<field name="name">
 				Coordinateur, Analyste Financier, Administrateur Data Winners,
@@ -84,7 +84,7 @@
 		</record>
 		<record model="hr.wage.grid.details" id="grid11">
 			<field name="psi_professional_category">coordinateur</field>
-			<field name="psi_category">d</field>
+			<field name="psi_category">D</field>
 			<field name="psi_sub_category">3</field>
 			<field name="name">
 				Senior Coordinateur
@@ -92,7 +92,7 @@
 		</record>
 		<record model="hr.wage.grid.details" id="grid12">
 			<field name="psi_professional_category">directeur</field>
-			<field name="psi_category">e</field>
+			<field name="psi_category">E</field>
 			<field name="psi_sub_category">1</field>
 			<field name="name">
 				Auditeur Interne
@@ -100,7 +100,7 @@
 		</record>
 		<record model="hr.wage.grid.details" id="grid13">
 			<field name="psi_professional_category">directeur</field>
-			<field name="psi_category">e</field>
+			<field name="psi_category">E</field>
 			<field name="psi_sub_category">2</field>
 			<field name="name">
 				Directeur Interrégional
@@ -108,7 +108,7 @@
 		</record>
 		<record model="hr.wage.grid.details" id="grid14">
 			<field name="psi_professional_category">directeur</field>
-			<field name="psi_category">e</field>
+			<field name="psi_category">E</field>
 			<field name="psi_sub_category">3</field>
 			<field name="name">
 				Directeur Central
@@ -116,7 +116,7 @@
 		</record>
 		<record model="hr.wage.grid.details" id="grid15">
 			<field name="psi_professional_category">rra</field>
-			<field name="psi_category">hc</field>
+			<field name="psi_category">HC</field>
 			<field name="psi_sub_category">1</field>
 			<field name="name">
 				Adjoint Représentant Résident

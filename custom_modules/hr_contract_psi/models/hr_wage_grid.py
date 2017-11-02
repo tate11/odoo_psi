@@ -10,24 +10,13 @@ class hr_wage_grid(models.Model):
 class hr_wage_grid_details(models.Model):
     _name = 'hr.wage.grid.details'
     
-    psi_professional_category  = fields.Selection([
-                                        ('appui','APPUI'),
-                                        ('execution','EXECUTION'),
-                                        ('superviseur','SUPERVISEUR'),
-                                        ('coordinateur','COORDINATEUR'),
-                                       ('directeur','DIRECTEUR'),
-                                       ('rra','RRA')], string="Titre de Catégorie")
     
-    name       = fields.Char(string='')
+    psi_category_details  = fields.Many2one('hr.psi.category.details')
+    psi_professional_category  = fields.Selection(related='psi_category_details.psi_professional_category', store=True)
     
-    psi_category                = fields.Selection([
-                                       ('a','A'),
-                                       ('b','B'),
-                                       ('c','C'),
-                                       ('d','D'),
-                                       ('e','E'),
-                                       ('hc','HC')
-                               ], string="CAT")
+    name = fields.Char(string='')
+    
+    psi_category                = fields.Char(related='psi_category_details.psi_cat', store=True)
     
     psi_sub_category            = fields.Selection([
                                        ('1','1'),
