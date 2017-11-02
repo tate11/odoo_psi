@@ -96,7 +96,7 @@
 							<field name="criminal_records" />
 							<field name="card_cnaps" />
 							<field name="birth_certificate_children" />
-							<field name="details_certificate_ethics" nolabel="1">
+							<field name="details_certificate_ethics">
 								<tree create="false" delete="false" editable="false">
 									<field name="name"/>
 									<field name="date_add" />

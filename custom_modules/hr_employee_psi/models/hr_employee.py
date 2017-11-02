@@ -2,11 +2,12 @@
 
 from datetime import date, datetime
 from datetime import timedelta
-from odoo import exceptions
-from odoo.exceptions import Warning
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
+from odoo import exceptions
+from odoo.exceptions import Warning
 
 
 class hr_employee(models.Model):
@@ -59,7 +60,8 @@ class hr_employee(models.Model):
     card_cnaps                  = fields.Boolean(default=False, string="Copie Cartes CNAPS ")
     birth_certificate_children  = fields.Boolean(default=False, string="Acte de naissances des enfants ")
     details_certificate_ethics = fields.One2many('hr.declaration.interest', 'employee_id', string=u"Declaration d'intérêt et cours d\'éthique", track_visibility="onchange")
-#    ethics_course_certificate   = fields.Boolean(default=False, string=u"Certificat du cours d'éthique")
+	#TODO verification certficats
+    ethics_course_certificate   = fields.Boolean(default=False, string=u"Certificat du cours d'éthique")
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments', track_visibility='always')
     
@@ -72,7 +74,6 @@ class hr_employee(models.Model):
     
     all_files_checked = fields.Boolean(compute='_all_checked_files', string="Pièces complet")
 
-    #details_certificate_ethics = fields.One2many('hr.certificate.ethics', 'employee_id', string="Details", track_visibility="onchange")
     @api.model
     def create(self, vals):
         employee = super(hr_employee, self).create(vals)
@@ -130,7 +131,7 @@ class hr_employee(models.Model):
                        'criminal_records'           : record.criminal_records,
                        'card_cnaps'                 : record.card_cnaps,
                        'birth_certificate_children' : record.birth_certificate_children,
-                       'details_certificate_ethics' : record.details_certificate_ethics.checked_current_year 
+                       #'details_certificate_ethics' : record.details_certificate_ethics.checked_current_year 
                    }
             
             for key, value in dict.items() :
@@ -264,20 +265,34 @@ class hr_declaration_interest(models.Model):
     certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
     checked_current_year = fields.Boolean(string='Check')
 
-    @api.multi
-    def write(self, vals):
+    @api.model
+    def create(self, vals):
+        daclaration = True
+        #self.verify_year_declaration()
+        if daclaration == True:                  
+            decl = super(hr_declaration_interest, self).create(vals)
+            return decl
+        else : 
+            raise Warning(_('Vous avez déjà rempli le formulaire de déclaration cette année'))
+        
+                
+    @api.one
+    @api.constrains('name')
+    def verify_year_declaration(self):
+        res = False
         for record in self:
             print record.year
             declaration_obj = self.env["hr.declaration.interest"]
-            declarations = declaration_obj.search([])  
-            if declarations:      
+            declarations = declaration_obj.search([('employee_id','=',record.employee_id.name)])  
+            if declarations:    
                 for declaration in declarations:
-                    date_str = declaration.date_add
-                    date = datetime.strptime(date_str,"%Y-%m-%d")
-                    if record.year == date.year:
-                        raise Warning(_('Vous avez déjà rempli le formulaire de déclaration cette année'))
-                    else:                
-                        return super(hr_declaration_interest, self).write(vals)
+                    if declaration.year:
+                        date_str = str(declaration.year)
+                        if int(record.year) == int(date_str):
+                            res = False
+                        else: 
+                            res = True
+            return res
     
     @api.one
     @api.constrains('name')
@@ -285,6 +300,7 @@ class hr_declaration_interest(models.Model):
         print "Checked condition"
         if self.id:
             self.checked_current_year = True
+
         
 class BrigerInsight(models.Model):
     _name = 'hr.employee.bridger.insight'

@@ -57,12 +57,18 @@ class hr_contract(models.Model):
     anniversary = fields.Date(compute="_get_anniversary")
     
     indetermine = fields.Char(default='Indéterminé', readonly=True)
-    
+
+    debauchage_cnaps = fields.Boolean(string="Débauchage CNAPS", default=False)
+    debauchage_ostie = fields.Boolean(string="Débauchage OSTIE", default=False)
+    debauchage_assurance = fields.Boolean(string="Débauchage Assurance Santé", default=False)
+
+
     def action_report_certificat(self):
         return {
                'type': 'ir.actions.report.xml',
                'report_name': 'hr_contract_psi.report_certificat_travail'
            }
+
     
     @api.depends('date_start')
     def _get_anniversary(self):
@@ -242,9 +248,10 @@ class hr_contract(models.Model):
             sanction_type = []
             data = self.browse(self.id) 
             for sanction_obj in sanctions :
-                s_date = datetime.strptime(sanction_obj.sanction_date,"%Y-%m-%d")
-                if today.year == s_date.year : 
-                    sanction_type.append(sanction_obj.sanction_type_id.name)
+                if sanction_obj.sanction_date != False:
+                    s_date = datetime.strptime(sanction_obj.sanction_date,"%Y-%m-%d")
+                    if today.year == s_date.year : 
+                        sanction_type.append(sanction_obj.sanction_type_id.name)
             if len(sanction_type) > 0:
                 str_sanct = ''
                 for sanction_str in sanction_type :

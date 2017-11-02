@@ -55,30 +55,33 @@
 				<field name="psi_echelon" attrs="{'readonly' : [('state','=','close')]}"/>
 			</field>
 
-			<field name="working_hours" position="before">
-				<field name="work_years" />
-			</field>
-
 			<xpath expr="//field[@name='department_id']" position='after'>
 				<field name="psi_contract_type" attrs="{'readonly' : [('state','=','close')]}"/>
 				<field name="place_of_work" attrs="{'readonly' : [('state','=','close')]}"/>
 				
 			</xpath>
 
-			<field name="date_end" position="after">
+<!-- 			<field name="date_end" position="after">
 				<field name="indetermine" class="oe_inline" attrs="{'invisible': [('psi_contract_type','=','cdd')]}" />
 			</field>
-
+ -->
 			<xpath expr="//notebook" position="inside" />
 			<notebook>
-				<page string="Chekout" attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}">
+				<page string="Checkout" attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}">
 					<group>
 						<button name="action_report_certificat" type="object" string="Génerer certificat de travail" class="oe_highlight" />
+
+						<!-- <button  type="action" string="Demande désactivation flottes" class="oe_highlight" />
+						<button  type="action" string="Demande désactivation mail, etc" class="oe_highlight" /> -->
+						
+						<field name="debauchage_cnaps"/>
+						<field name="debauchage_ostie"/>
+						<field name="debauchage_assurance"/>
 					</group>
 				</page>
 			</notebook>
 			<xpath expr="//group[@name='duration_group']" position="after">
-				<group name="result_evaluation" string="Résultat de l'évaluation"> <!-- Condition if date_end_trial terminé -->
+				<group name="result_evaluation" string="Evaluation Période d'essai"> <!-- Condition if date_end_trial terminé -->
 					<field name="result_evaluation" attrs="{'readonly' : [('state','=','close')]}"/>
 					<label string="Vous voulez renouveler la période d'essai ?"
 						attrs="{'invisible':['|',('result_evaluation','not in','ko')]}" />
