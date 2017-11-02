@@ -211,7 +211,14 @@ class hr_contract(models.Model):
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
     
    
+    def action_send_email_desactivate_flottes(self):
+        template = self.env.ref('hr_contract_psi.template_desactivate_flottes_id')
+        self.env['mail.template'].browse(template.id).send_mail(self.id,force_send=True) 
     
+    def action_send_email_desactivate_account(self):
+        template = self.env.ref('hr_contract_psi.template_desactivate_account_id')
+        self.env['mail.template'].browse(template.id).send_mail(self.id,force_send=True)
+           
     @api.model
     def create(self, vals):  
         contract = super(hr_contract, self).create(vals)
