@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
+		<!-- Template email - Séparation - démission -->
+		<record id="template_separation_demission_id" model="mail.template">
+			<field name="name">PSI Template email - Séparation - démission
+			</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Séparation - démission</field>
+			<field name="email_to">${object.employee_id.work_email}</field>
+			<field name="body_html"><![CDATA[
+		<div>
+		    <p>
+		      	Bonjour, 
+		      	<ul>
+		      	 		<li>Nombre de jours de préavis : ${object.psi_professional_category.prior_notice}</li>
+		      	 	% if object.date_demission != False:
+		      	 		<li>Date de démission : ${object.date_demission}</li>
+		      	 	% endif
+		      	 	% if object.date_rupture != False:
+						<li>Date effective de la rupture de contrat : ${object.date_rupture}</li>
+					% endif
+		      	</ul> 
+		     	                     
+			</p>
+			<h5> Email - Séparation - démission</h5>
+		                 
+		</div>   ]]>
+			</field>
+		</record>
 		<!-- Template email - desactivate flottes -->
 		<record id="template_desactivate_flottes_id" model="mail.template">
 			<field name="name">PSI Template email - demande désactivation

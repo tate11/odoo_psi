@@ -14,6 +14,7 @@ class hr_contract(models.Model):
     
     place_of_work   = fields.Char(string='Lieu d\'affectaction') #lieu d'affectation
     
+    date_demission = fields.Date(string=u'Date de démission')
     #rupture
     date_rupture = fields.Date(string='Date rupture de contrat')
 
@@ -61,7 +62,20 @@ class hr_contract(models.Model):
     debauchage_cnaps = fields.Boolean(string="Débauchage CNAPS", default=False)
     debauchage_ostie = fields.Boolean(string="Débauchage OSTIE", default=False)
     debauchage_assurance = fields.Boolean(string="Débauchage Assurance Santé", default=False)
-
+    
+    job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
+    
+    psi_professional_category = fields.Many2one(related='job_id.psi_category',string='Catégorie professionnelle')
+    psi_category = fields.Selection(related='psi_professional_category.psi_professional_category',string='Catégorie professionnelle')
+    
+    psi_sub_category            = fields.Selection([
+                                        ('1','1'),
+                                        ('2','2'),
+                                        ('3','3'),
+                                        ('4','4')
+                                ], string="Sous Cat")
+    
+    historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
 
     def action_report_certificat(self):
         return {
@@ -195,21 +209,6 @@ class hr_contract(models.Model):
                                     ('echelon_16','ECHELON 16'),('echelon_17','ECHELON 17'),('echelon_18','ECHELON 18'),
                                     ('echelon_19','ECHELON 19'),('echelon_20','ECHELON 20'),('echelon_hc','ECHELON HC')
                                     ],string="Echelon",track_visibility="onchange" )
-    
-    job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
-    
-    psi_professional_category = fields.Many2one(related='job_id.psi_category',string='Catégorie professionnelle')
-    psi_category = fields.Selection(related='psi_professional_category.psi_professional_category',string='Catégorie professionnelle')
-    
-    psi_sub_category            = fields.Selection([
-                                        ('1','1'),
-                                        ('2','2'),
-                                        ('3','3'),
-                                        ('4','4')
-                                ], string="Sous Cat")
-    
-    historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
-    
    
     def action_send_email_desactivate_flottes(self):
         template = self.env.ref('hr_contract_psi.template_desactivate_flottes_id')
@@ -422,6 +421,12 @@ class hr_contract(models.Model):
             contract_obj = self.env['hr.contract']
             employee_obj = self.env['hr.employee']
             employee = record.employee_id
+            
+            if record.motif_rupture == 'resignation':
+                template = self.env.ref('hr_contract_psi.template_separation_demission_id')
+                self.env['mail.template'].browse(template.id).send_mail(self.id)
+                print "EMAIL SENT"
+            
             #employee readonly
             contract = contract_obj.browse([record.id])
             contract.update({
