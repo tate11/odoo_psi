@@ -72,7 +72,7 @@ class hr_employee(models.Model):
     
     all_files_checked = fields.Boolean(compute='_all_checked_files', string="Pièces complet")
 
-    details_certificate_ethics = fields.One2many('hr.certificate.ethics', 'employee_id', string="Details", track_visibility="onchange")
+    #details_certificate_ethics = fields.One2many('hr.certificate.ethics', 'employee_id', string="Details", track_visibility="onchange")
     @api.model
     def create(self, vals):
         employee = super(hr_employee, self).create(vals)

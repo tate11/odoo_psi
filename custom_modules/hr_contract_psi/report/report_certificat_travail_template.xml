@@ -46,10 +46,10 @@
 						    </tr>
 						  </thead>
 						  <tbody>
-						    <tr align="center" t-foreach="docs" t-as="line">
-						      <td><span t-esc="line.psi_certificat.nouveau"/></td>
-						      <td><span t-field="line.psi_certificat.debut"/></td>
-						      <td><span t-field="line.psi_certificat.fin"/></td>
+						    <tr align="center" t-foreach="docs.psi_certificat" t-as="line">
+						      <td><span t-esc="line.nouveau"/></td>
+						      <td><span t-field="line.debut"/></td>
+						      <td><span t-field="line.fin"/></td>
 						    </tr>
 						  </tbody>
 						</table>
