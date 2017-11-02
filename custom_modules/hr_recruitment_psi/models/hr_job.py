@@ -63,7 +63,10 @@ class hr_job(models.Model):
                                        ('coordinateur','COORDINATEUR'),
                                        ('directeur','DIRECTEUR'),
                                        ('rra','RRA')], string="Catégorie professionnelle")
-  
+    
+    
+    psi_category = fields.Many2one('hr.psi.category.details','Catégorie professionnelle')
+    
     @api.one
     @api.constrains('psi_contract_duration')
     def _check_psi_contract_duration(self):
