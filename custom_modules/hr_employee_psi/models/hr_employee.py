@@ -119,7 +119,19 @@ class hr_employee(models.Model):
     @api.constrains('personal_information')   
     def _get_not_checked_files(self):      
         list_not_checked = []
-        for record in self:     
+        for record in self:  
+            certificate_ethics = False
+            declaration_obj = self.env["hr.declaration.interest"]
+            declarations = declaration_obj.search([('employee_id','=',record.id)])
+            
+            for declaration in declarations:               
+                date_str = str(declaration.year)
+                if date_str:
+                    if date_str == str(datetime.now().year):
+                        certificate_ethics = True
+                        break
+                    else:
+                        certificate_ethics = False
             dict ={
                        'personal_information'       : record.personal_information,
                        'id_photos'                  : record.id_photos,
@@ -131,13 +143,12 @@ class hr_employee(models.Model):
                        'criminal_records'           : record.criminal_records,
                        'card_cnaps'                 : record.card_cnaps,
                        'birth_certificate_children' : record.birth_certificate_children,
-                       #'details_certificate_ethics' : record.details_certificate_ethics.checked_current_year 
+                       'details_certificate_ethics' : certificate_ethics
                    }
             
             for key, value in dict.items() :
                 if value == False:
                     list_not_checked.append(key)
-        
         return list_not_checked
 
     @api.multi
@@ -257,50 +268,40 @@ class hr_declaration_interest(models.Model):
     _description = u"Declaration d'intérêt - Cours d'éthique"
     
     name = fields.Char(string=u'Nom', required=True)
-    employee_id = fields.Many2one('hr.employee', string=u'Employé', required=True)
+    employee_id = fields.Many2one('hr.employee', string=u'Employé', readonly=True)
     date_add = fields.Date(string=u'Date d\'ajout',default=lambda *a: datetime.now())
     year =  fields.Selection([
                               (num, str(num)) for num in range(2010, (datetime.now().year)+1 
-                                                             )], string=u'Année', required="True")
+                                                             )], string=u'Année', required="True", default=datetime.now().year)
     certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
     checked_current_year = fields.Boolean(string='Check')
 
-    @api.model
-    def create(self, vals):
-        daclaration = True
-        #self.verify_year_declaration()
-        if daclaration == True:                  
-            decl = super(hr_declaration_interest, self).create(vals)
-            return decl
+    @api.multi
+    def write(self, vals):
+        declaration = self.verify_year_declaration()
+        if declaration == True:                  
+            super(hr_declaration_interest, self).write(vals)
         else : 
             raise Warning(_(u'Vous avez déjà rempli le formulaire de déclaration cette année'))
         
-                
-    @api.one
-    @api.constrains('name')
     def verify_year_declaration(self):
         res = False
         for record in self:
-            print record.year
             declaration_obj = self.env["hr.declaration.interest"]
-            declarations = declaration_obj.search([('employee_id','=',record.employee_id.name)])  
-            if declarations:    
-                for declaration in declarations:
-                    if declaration.year:
-                        date_str = str(declaration.year)
-                        if int(record.year) == int(date_str):
+            declarations = declaration_obj.search([('employee_id','=',record.employee_id.name)]) 
+            print declarations
+            if len(declarations) == 1:
+                res = True
+            else:
+                for declaration in declarations[:-1]:               
+                    date_str = str(declaration.year)
+                    if date_str:
+                        if str(record.year) == date_str:
                             res = False
                         else: 
                             res = True
-            return res
+        return res
     
-    @api.one
-    @api.constrains('name')
-    def checked_condition(self):
-        print "Checked condition"
-        if self.id:
-            self.checked_current_year = True
-
         
 class BrigerInsight(models.Model):
     _name = 'hr.employee.bridger.insight'

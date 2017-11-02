@@ -15,12 +15,11 @@
                         </div>
                         <group>
 	                        <group>
-	                            <field name="date_add"/>
 	                            <field name="employee_id"/>
 	                        </group>
 	                        <group>
 	                            <field name="year"/>
-	                            <!-- <field name="certificate_ethics_file"/>  -->
+	                            <field name="certificate_ethics_file"/> 
 	                        </group>
 	                    </group>
 				</form>
