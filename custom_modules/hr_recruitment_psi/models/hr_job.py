@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from pychart.arrow import default
+
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
-from pychart.arrow import default
+
 
 class hr_job(models.Model):
     

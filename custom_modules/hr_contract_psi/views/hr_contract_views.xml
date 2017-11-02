@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 	<record model="ir.actions.act_window" id="action_historical_contract_view_tree">
-		<field name="name">Historique Contrat Tree</field>
+		<field name="name">Historiques de Contrat</field>
 		<field name="res_model">psi.contract.historical</field>
 		<field name="view_type">tree</field>
 		<field name="view_mode">tree</field>
@@ -50,9 +50,10 @@
 			</field>
 
 			<field name="wage" position='after'>
-				<field name="psi_professional_category" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="psi_category_details" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="psi_cat_cat" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 				<field name="psi_sub_category" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
-				<field name="psi_echelon" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="psi_echelon" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 			</field>
 
 			<xpath expr="//field[@name='department_id']" position='after'>
@@ -218,7 +219,7 @@
 	</record>
 
 	<record id="open_contract_category" model="ir.actions.act_window">
-		<field name="name">Categorie professionnelle</field>
+		<field name="name">Catégories proféssionnelles</field>
 		<field name="res_model">hr.psi.category</field>
 		<field name="res_id" eval="ref('hr_recruitment_psi.psi-category')" />
 		<field name="view_type">form</field>
@@ -228,7 +229,7 @@
 		<field name="view_id" ref="hr_contract_form_view_psi_category" />
 		<field name="help" type="html">
 			<p class="oe_view_nocontent_create">
-				Catégorie professionnelle
+				Catégories proféssionnelles
 			</p>
 		</field>
 	</record>
