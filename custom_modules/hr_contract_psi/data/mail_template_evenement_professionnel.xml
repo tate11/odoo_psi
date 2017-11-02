@@ -2,6 +2,25 @@
 <odoo>
 
 	<data>
+		<!-- Template email - Séparation - demission -->
+		<record id="template_separation_demission_id" model="mail.template">
+			<field name="name">PSI Template email - Séparation demission</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Séparation demission</field>
+			<field name="email_to">${object.employee_id.work_email}</field>
+
+			<field name="body_html"><![CDATA[
+		<div>
+		    <p>
+		      	Bonjour ${object.employee_id.name},
+		      	   
+			</p>
+			<h5> Email - Séparation démission</h5>
+		                 
+		</div>   ]]>
+			</field>
+		</record>	
 		<!-- Template email - avancement échelon -->
 		<record id="template_avancement_echelon_id" model="mail.template">
 			<field name="name">PSI Template email - Notification avancement échelon</field>
@@ -101,6 +120,27 @@
 		</div>   ]]>
 			</field>
 		</record>
+		
+		<!-- Template email - Changement de grille salariale -->
+		<record id="template_changement_de_grille_salariale_id" model="mail.template">
+			<field name="name">PSI Template email - Changement de grille salariale</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Changement de grille salariale</field>
+			<field name="email_to">${object.employee_id.work_email}</field>
+
+			<field name="body_html"><![CDATA[
+		<div>
+		    <p>
+		      	Bonjour ${object.employee_id.name}, 
+		     	Vous avez changé de poste a ${object.job_id.name}     
+			</p>
+			<h5> Email - Notification de Changement de grille salariale</h5>
+		                 
+		</div>   ]]>
+			</field>
+		</record>
+		
 		
 	</data>
 </odoo>

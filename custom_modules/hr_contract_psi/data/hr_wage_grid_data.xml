@@ -107,7 +107,7 @@
 			</field>
 		</record>
 		<record model="hr.wage.grid.details" id="grid14">
-			<field name="psi_professional_category">coordinateur</field>
+			<field name="psi_professional_category">directeur</field>
 			<field name="psi_category">e</field>
 			<field name="psi_sub_category">3</field>
 			<field name="name">

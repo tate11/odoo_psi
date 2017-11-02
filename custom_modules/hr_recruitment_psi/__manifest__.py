@@ -9,6 +9,7 @@
     'depends': ['hr','hr_recruitment','mail','contacts'],
     'data': [
              'data/hr_recruitment_data.xml',
+			 'data/hr_psi_category_data.xml',
              'data/mail_template_data.xml',
              'views/hr_job_views.xml',
              'views/hr_job_wkf.xml',

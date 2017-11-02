@@ -49,7 +49,7 @@ class hr_contract(models.Model):
     
     name_employee = fields.Char(related='employee_id.name')
     job_name = fields.Char(related='employee_id.job_id.name')
-    
+    psi_certificat = fields.One2many('psi.contract.historical','contract_id',domain=[('index', '=', 'changement_de_grille_salariale')], string='Certificat')
     state_mail = fields.Selection([
         ('draft', 'RFQ'),
         ('sent', 'RFQ Sent')], default='draft')
@@ -185,8 +185,9 @@ class hr_contract(models.Model):
                                     ],string="Echelon",track_visibility="onchange" )
     
     job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
-    psi_professional_category = fields.Selection(related='job_id.psi_professional_category',string='Catégorie professionnelle')
- 
+    
+    psi_professional_category = fields.Many2one(related='job_id.psi_category',string='Catégorie professionnelle')
+    
     psi_sub_category            = fields.Selection([
                                         ('1','1'),
                                         ('2','2'),
@@ -253,7 +254,7 @@ class hr_contract(models.Model):
 
                 weeks = (monday2 - monday1).days / 7
                
-                if weeks == 1 :
+                if weeks == 2 :
                     
                     template_collaborator = self.env.ref('hr_contract_psi.template_collaborator_id')
                     self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id)
@@ -399,6 +400,27 @@ class hr_contract(models.Model):
             vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':self.id}
             self.env['psi.contract.historical'].create(vals_historical)
             
+         #traitement de changement de grille salariale
+        if vals.has_key('job_id') :
+            data = self.browse(self.id) 
+            date = fields.Date().today()
+            job_id = self.env['hr.job'].browse(vals['job_id'])
+            ancien = data.job_id.name if data.job_id.name != '' else ''
+            nouveau = job_id.name
+            debut = fields.Date().today()
+            psi_contract_historicals = self.env['psi.contract.historical'].search([('contract_id', '=', self.id)])
+            date_changement_epsilon_last = False
+            if ancien != '':
+                historical_old_id = 0
+                for historical_obj in psi_contract_historicals :
+                    historical_old_id = historical_obj.id
+                historical_env = self.env['psi.contract.historical']
+                historical_obj = historical_env.browse(historical_old_id)
+                historical_obj.write({'fin':debut})
+            index = "changement_de_grille_salariale"
+            historical = "Changement de Grille salariale"
+            vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':self.id}
+            self.env['psi.contract.historical'].create(vals_historical)    
             
         contract_obj = super(hr_contract, self).write(vals)
         contract = self.browse(self.id)
@@ -417,6 +439,9 @@ class hr_contract(models.Model):
         if vals.has_key('department_id') :
              template4 = self.env.ref('hr_contract_psi.template_changement_de_departement_id')
              self.env['mail.template'].browse(template4.id).send_mail(contract.id,force_send=True)
+        if vals.has_key('job_id') :
+             template5 = self.env.ref('hr_contract_psi.template_changement_de_grille_salariale_id')
+             self.env['mail.template'].browse(template5.id).send_mail(contract.id,force_send=True)
              
         self._update_cron_rh_1()  
         return contract_obj
@@ -426,7 +451,10 @@ class hr_contract(models.Model):
         for record in self:
             if record.date_start:
                 record.work_years = datetime.today().year - datetime.strptime(record.date_start, "%Y-%m-%d").year
-
+    
+    def generate_certificat_travail(self):
+        print "GENERATE CERTIFICAT TRAVAIL"
+    
     def set_employee_inactif(self):
         """ Set employee inactif
         """
@@ -577,3 +605,5 @@ class ContractHistorical(models.Model):
      fin = fields.Char("Fin")
      ancien  = fields.Char('Ancien')
      nouveau = fields.Char('Nouveau')
+     
+     contract_id = fields.Many2one('hr.contract')

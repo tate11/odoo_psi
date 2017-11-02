@@ -204,14 +204,8 @@ class Applicant(models.Model):
                                                      month=date_start_trial.month,
                                                      day=date_start_trial.day,
                        )
-                if applicant.job_id.psi_professional_category == 'directeur' or applicant.job_id.psi_professional_category == 'rra' :
-                    month_to_notif = date_start_trial_time + relativedelta(months=5)
                 
-                elif applicant.job_id.psi_professional_category == 'coordinateur':
-                    month_to_notif = date_start_trial_time + relativedelta(month=4)
-                    
-                else :
-                    month_to_notif = date_start_trial_time + relativedelta(months=3)
+                month_to_notif = date_start_trial_time + relativedelta(months=applicant.job_id.psi_professional_category.test_duration)
                     
                 vals_contract = {'name': applicant.partner_name or contact_name,
                                                 'psi_contract_type' : applicant.job_id.psi_contract_type,
