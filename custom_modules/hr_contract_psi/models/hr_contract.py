@@ -56,6 +56,8 @@ class hr_contract(models.Model):
     
     anniversary = fields.Date(compute="_get_anniversary")
     
+    indetermine = fields.Char(default='Indéterminé', readonly=True)
+    
     @api.depends('date_start')
     def _get_anniversary(self):
         
