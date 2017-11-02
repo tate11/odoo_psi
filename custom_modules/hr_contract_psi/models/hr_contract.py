@@ -12,7 +12,11 @@ from odoo.exceptions import ValidationError
 class hr_contract(models.Model):
     _inherit = 'hr.contract'
     
-    place_of_work   = fields.Char(string='Lieu d\'affectaction') #lieu d'affectation
+    place_of_work   = fields.Char(string='Lieu d\'affectaction', track_visibility='onchange') #lieu d'affectation
+    date_start = fields.Date('Start Date', required=True, default=fields.Date.today, track_visibility='onchange')
+    date_end = fields.Date('End Date', track_visibility='onchange')
+    job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
+    department_id = fields.Many2one('hr.department', string="Department", track_visibility='onchange')
     
     #rupture
     date_rupture = fields.Date(string='Date rupture de contrat')
