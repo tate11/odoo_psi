@@ -206,23 +206,29 @@ class WebsiteHrRecruitment(http.Controller):
 
     # Link all files attached on the form
     def insert_attachment(self, model, id_record, files, values):
+        
         orphan_attachment_ids = []
         record = model.env[model.model].browse(id_record)
+        
         authorized_fields = model.sudo()._get_form_writable_fields()
+        
         for file in files:
+           
             custom_field = file.field_name not in authorized_fields
             attachment_value = {
                 'name': "CV_"+values.get('name'),
                 'datas': base64.encodestring(file.read()),
                 'datas_fname': file.filename,
-                'res_model': model.model,
+                'res_model': 'hr.applicant',
                 'res_id': record.id,
             }
+            print attachment_value['res_model']
             attachment_id = request.env['ir.attachment'].sudo().create(attachment_value)
             if attachment_id and not custom_field:
                 record.sudo()[file.field_name] = [(4, attachment_id.id)]
             else:
                 orphan_attachment_ids.append(attachment_id.id)
+            
 
         # If some attachments didn't match a field on the model,
         # we create a mail.message to link them to the record

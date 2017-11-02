@@ -37,7 +37,7 @@
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
             <field name="name">bridger_insight</field>
             <field name="kind">function</field>
-            <field name="action">write({'state':'bridger_insight'})</field>
+            <field name="action">action_briger_insight()</field>
         </record>
         <record id="activity_psi_wage_proposal" model="workflow.activity">
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>

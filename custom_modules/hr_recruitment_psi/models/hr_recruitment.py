@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models, api
-from odoo.exceptions import ValidationError
-from operator import truediv
-from datetime import timedelta
 from datetime import date, datetime
+from datetime import timedelta
+from operator import truediv
+
 from dateutil.relativedelta import relativedelta
-from odoo.tools.translate import _
+
+from odoo import fields, models, api
 from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
+from odoo.tools.translate import _
+
 
 class RecruitmentType(models.Model):
     _name = 'hr.recruitment.type'
@@ -35,8 +38,10 @@ class Applicant(models.Model):
     def _default_stage_id(self):
         return self.env.ref('hr_recruitment_psi.applicant_selected').id
     
-    attachment_file_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], ondelete='cascade',string='Attachments')
-
+    #attachment_file_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], ondelete='cascade',string='Attachments')
+    #attachment_file_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')],string='Attachments')
+    attachment_file_ids = fields.Many2one('ir.attachment',string='Attachments')
+    
     recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement', readonly=True)
     recrutement_type = fields.Selection(related='job_id.recrutement_type_id.recrutement_type',string='Type de recrutement selection')
     
@@ -90,7 +95,7 @@ class Applicant(models.Model):
     psi_average_note = fields.Float(string="Moyenne Short List", readonly=True)
     
     #Note test
-    psi_allowance = fields.Float(string='Indemnité de stage', digits=(16, 2), required=True, help="Basic Salary of the employee")
+    psi_allowance = fields.Float(string='Indemnité de stage', digits=(16, 2),help="Basic Salary of the employee")
     psi_note_test_rh = fields.Integer(string="Note Test RH")
     psi_note_test_candidate = fields.Integer(string="Note Test Demandeur")
     psi_average_note_test = fields.Float(string="Moyenne Test", readonly=True)
@@ -159,7 +164,10 @@ class Applicant(models.Model):
     
     b_liste_restreinte = fields.Boolean(string='Dans la liste restreinte', default=False)
     
+    date_verification_bridger_insight = fields.Date(string="date verification bridger insight")
    
+    def action_briger_insight(self):
+        self.write({'state':'bridger_insight','date_verification_bridger_insight': fields.Date().today()})
    
    
     @api.multi
@@ -174,6 +182,7 @@ class Applicant(models.Model):
             if applicant.job_id and (applicant.partner_name or contact_name):
                 applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
                 vals = {'name': applicant.partner_name or contact_name,
+                                                'psi_bridger_insight' : [(0, 0,{'date':applicant.date_verification_bridger_insight,'result':'oui'})],
                                                 'children' : applicant.number_of_dependent_children,
                                                 'country_id' : applicant.country_id.id,
                                                 'birthday': applicant.birthday,
@@ -195,14 +204,8 @@ class Applicant(models.Model):
                                                      month=date_start_trial.month,
                                                      day=date_start_trial.day,
                        )
-                if applicant.job_id.psi_professional_category == 'directeur' or applicant.job_id.psi_professional_category == 'rra' :
-                    month_to_notif = date_start_trial_time + relativedelta(months=5)
                 
-                elif applicant.job_id.psi_professional_category == 'coordinateur':
-                    month_to_notif = date_start_trial_time + relativedelta(month=4)
-                    
-                else :
-                    month_to_notif = date_start_trial_time + relativedelta(months=3)
+                month_to_notif = date_start_trial_time + relativedelta(months=applicant.job_id.psi_professional_category.test_duration)
                     
                 vals_contract = {'name': applicant.partner_name or contact_name,
                                                 'psi_contract_type' : applicant.job_id.psi_contract_type,
@@ -268,8 +271,10 @@ class Applicant(models.Model):
     
     @api.multi
     def mail_refuse_applicant(self):
-        template = self.env.ref('hr_recruitment_psi.custom_template_refus')
-        self.write({'state':'applicant_selected'})
+        if self.id != False :
+            self.write({'state':'applicant_selected'})
+            template = self.env.ref('hr_recruitment_psi.custom_template_refus')
+            msg_id = self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)
     
     def action_notification_of_employment(self):
         '''

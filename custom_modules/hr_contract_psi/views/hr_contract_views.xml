@@ -1,50 +1,181 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+	<record model="ir.actions.act_window" id="action_historical_contract_view_tree">
+		<field name="name">Historiques de Contrat</field>
+		<field name="res_model">psi.contract.historical</field>
+		<field name="view_type">tree</field>
+		<field name="view_mode">tree</field>
+		<field name="domain">[('contract_id','=',active_id)]</field>
+	</record>
+	<record id="view_historical_contract_tree" model="ir.ui.view">
+		<field name="name">Historique Contrat</field>
+		<field name="model">psi.contract.historical</field>
+		<field name="arch" type="xml">
+			<tree string="Historical Contract">
+				<field name="date" />
+				<field name="ancien" />
+				<field name="nouveau" />
+				<field name="historical" />
+				<field name="debut" />
+				<field name="fin" />
+			</tree>
+		</field>
+	</record>
 	<record id="hr_contract_view_form_psi" model="ir.ui.view">
 		<field name="name">hr.contract.form.psi</field>
 		<field name="model">hr.contract</field>
 		<field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
-		<field name="arch" type="xml">	
-			
-      		<field name="type_id" position='replace'>
-				<field name="type_id" invisible="1" />
+		<field name="arch" type="xml">
+			<field name="state" position="after">
+				<button name="set_employee_inactif" type="object" context="{'send_rfq':True}"
+					string="Fin de contrat et notification" class="oe_highlight"
+					attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}" />
+				<button name="set_employee_inactif" type="object" context="{'send_rfq':True}"
+					string="Ré-envoyer la notification - Fin du contrat"
+					attrs="{'invisible': ['|',('motif_rupture','=',False),('state_mail','=','draft')]}" />
 			</field>
 			
-			<field name="working_hours" position="before">
-				<field name="work_years"/>
+			<xpath expr="//label" position="before">
+				<field name="response_evaluation" invisible="1" />
+				<div class="oe_button_box" name="button_box">
+					<button class="oe_inline oe_stat_button" type="action"
+						name="%(action_historical_contract_view_tree)d" icon="fa-history">
+						<field string="Historique" name="historical_count" widget="statinfo" />
+					</button>
+				</div>
+			</xpath>
+			<field name="type_id" position='replace'>
+				<field name="type_id" invisible="1" />
+				<field name="state_mail" invisible="1" />
+			</field>
+
+			<field name="wage" position='after'>
+				<field name="psi_category_details" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="psi_cat_cat" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="psi_sub_category" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="psi_echelon" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 			</field>
 
 			<xpath expr="//field[@name='department_id']" position='after'>
-				<field name="psi_contract_type" />
-				<field name="place_of_work" />
+				<field name="psi_contract_type" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="place_of_work" attrs="{'readonly' : [('state','=','close')]}"/>
+				
 			</xpath>
-			<xpath expr="//notebook" position="inside">				
-				<page string="Séparation – événements">
+
+<!-- 			<field name="date_end" position="after">
+				<field name="indetermine" class="oe_inline" attrs="{'invisible': [('psi_contract_type','=','cdd')]}" />
+			</field>
+ -->
+			<xpath expr="//notebook" position="inside" />
+			<notebook>
+				<page string="Checkout" attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}">
 					<group>
-						<field name="end_deadline_without_renewal" attrs="{'invisible': [('psi_contract_type', '=', 'cdi')]}" />
-						<!-- <field name="conventional_break" on_change="set_employee_close"/> -->
-						<field name="conventional_break"/>
-						<field name="resignation" />
-						<field name="dismissal" />
-						<field name="death" />
-						<field name="retreat" attrs="{'invisible': [('psi_contract_type', '=', 'cdd')]}" />
-						<button name="set_employee_inactif" 
-								type="object" 
-								string="Mettre inactif cet employé" 
-								class="oe_highlight"
-								attrs="{'invisible': ['|',('end_deadline_without_renewal','=','' or False),('conventional_break','=','' or False),('resignation','=','' or False),('dismissal','=','' or False),('death','=','' or False),('retreat','=','' or False)]}"
-								/>
+						<button name="action_report_certificat" type="object" string="Génerer certificat de travail" class="oe_highlight" />
+
+						<!-- <button  type="action" string="Demande désactivation flottes" class="oe_highlight" />
+						<button  type="action" string="Demande désactivation mail, etc" class="oe_highlight" /> -->
+						
+						<field name="debauchage_cnaps"/>
+						<field name="debauchage_ostie"/>
+						<field name="debauchage_assurance"/>
 					</group>
 				</page>
+			</notebook>
+			<xpath expr="//group[@name='duration_group']" position="after">
+				<group name="result_evaluation" string="Evaluation Période d'essai"> <!-- Condition if date_end_trial terminé -->
+					<field name="result_evaluation" attrs="{'readonly' : [('state','=','close')]}"/>
+					<label string="Vous voulez renouveler la période d'essai ?"
+						attrs="{'invisible':['|',('result_evaluation','not in','ko')]}" />
+					<div>
+						<button name="action_renew_trial_accept" string="OUI" type="object"
+							class="btn-primary"
+							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=',True)]}"
+							onClick="$(this).prop('disabled', true);" />
+						-
+						<button name="action_renew_trial_decline" string="NON"
+							type="object" class="btn-primary"
+							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=',True)]}"
+							confirm="Vous ne voulez pas la renouveler?" onClick="$(this).prop('disabled', true);" />
+					</div>
+
+					<button name="action_result_evaluation_send_ok" string="Envoyer une notification par mail"
+						type="object" class="btn-primary right"
+						attrs="{'invisible': [('result_evaluation','not in','ok')]}" />
+
+					<button name="action_result_evaluation_send_ko" string="Envoyer une notification"
+						type="object" class="btn-primary right"
+						attrs="{'invisible': ['|',('response_evaluation','=',False),('result_evaluation','not in','ko')]}" />
+				</group>
 			</xpath>
 			<group name="duration_group" position="after">
 				<group name="rupture" string="Rupture de contrat">
-					<field name="date_rupture" />
-					<field name="motif_rupture" />
+					<field name="date_rupture" attrs="{'readonly' : [('state','=','close')]}" />
+					<field name="motif_rupture" attrs="{'readonly' : [('state','=','close')]}" />					
 				</group>
-			</group>			
+			</group>
+
+			<!-- Contract close - READONLY -->
+			<field name='name' position="replace">
+				<field name="name" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
+			<field name='employee_id' position="replace">
+				<field name="employee_id" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
+			<field name='job_id' position="replace">
+				<field name="job_id" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
+			<!-- <field name="struct_id" position="replace">
+				<field name="struct_id" attrs="{'readonly' : [('state','=','close')]}" />
+			</field> -->
+			<!-- <field name="schedule_pay" position="replace">
+				<field name="schedule_pay" attrs="{'readonly' : [('state','=','close')]}" />
+			</field> -->
+			<field name="notes" position="replace">
+				<field name="notes" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
+			<field name="advantages" position="replace">
+				<field name="advantages" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
+			<field name="visa_expire" position="replace">
+				<field name="visa_expire" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
+			<field name='department_id' position="replace">
+				<field name="department_id" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
+			<field name='wage' position="replace">
+				<field name="wage" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
+			<field name='trial_date_start' position="replace">
+				<field name="trial_date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"></field>
+			</field>
+			<field name='trial_date_end' position="replace">
+				- <field name="trial_date_end" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
+			<field name='date_start' position="replace">
+				<field name="date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"></field>
+			</field>
+			<field name='date_end' position="replace">
+				- <field name="date_end" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
+			<field name='working_hours' position="replace">
+				<field name="working_hours" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
+			<field name="working_hours" position="before">
+				<field name="work_years" attrs="{'readonly' : [('state','=','close')]}"/>
+			</field>
+			<field name='visa_no' position="replace">
+				<field name="visa_expire" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
+			<field name='visa_expire' position="replace">
+				<field name="visa_expire" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
+			<field name='permit_no' position="replace">
+				<field name="permit_no" attrs="{'readonly' : [('state','=','close')]}" />
+			</field>
 		</field>
 	</record>
+
+
 
 	<!-- Resume and Letters -->
 	<record id="hr_contract.ir_attachment_view_search_inherit_hr_employee"
@@ -69,44 +200,52 @@
 		</field>
 	</record>
 
-	<!-- TODO: What is this ??? -->
-	<record model="ir.actions.act_window" id="hr_contract_resumes">
-		<field name="name">Resumes and Letters</field>
-		<field name="res_model">ir.attachment</field>
+
+	<record id="hr_contract_form_view_psi_category" model="ir.ui.view">
+		<field name="name">hr.psi.category.form</field>
+		<field name="model">hr.psi.category</field>
+		<field name="arch" type="xml">
+			<form string="Form psi category">
+				<field name="psi_category_ids">
+					<tree string="PSI Category" editable="bottom" create="false"
+						delete="false">
+						<field name="psi_professional_category" readonly="1" />
+						<field name="prior_notice" />
+						<field name="test_duration" />
+					</tree>
+				</field>
+			</form>
+		</field>
+	</record>
+
+	<record id="open_contract_category" model="ir.actions.act_window">
+		<field name="name">Catégories proféssionnelles</field>
+		<field name="res_model">hr.psi.category</field>
+		<field name="res_id" eval="ref('hr_recruitment_psi.psi-category')" />
 		<field name="view_type">form</field>
-		<field name="view_mode">kanban,tree,form</field>
-		<field name="view_id" ref="mail.view_document_file_kanban" />
-		<field name="search_view_id"
-			ref="hr_contract.ir_attachment_view_search_inherit_hr_employee" />
-		<field name="domain">[('res_model','=','hr.employee')]</field>
-		<field name="context">{'create': False}</field>
+		<field name="view_mode">form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+		<field name="view_id" ref="hr_contract_form_view_psi_category" />
 		<field name="help" type="html">
-			<p>
-				No document yet.
-			</p>
-			<p>
-				This menu helps you search through resumes and motivation
-				letters.
-				Odoo automatically indexes .PDF, .DOC, DOCX, .TXT
-				files so that you
-				can search keywords from the content of these
-				files.
+			<p class="oe_view_nocontent_create">
+				Catégories proféssionnelles
 			</p>
 		</field>
 	</record>
 
-	<record id="hr_contract_wage_grid_form" model="ir.ui.view">
+	<record id="hr_contract_form_view_wage_grids" model="ir.ui.view">
 		<field name="name">hr.wage.grid.form</field>
 		<field name="model">hr.wage.grid</field>
 		<field name="arch" type="xml">
 			<form string="form grille salariale">
-
 				<field name="wage_grid_details">
-					<tree string="Wage Grid Details" editable="bottom">
-						<field name="professional_category" />
-						<field name="job_id" />
-						<field name="category" />
-						<field name="sub_category" />
+					<tree string="Wage Grid Details" editable="bottom" create="false"
+						delete="false">
+						<field name="psi_professional_category" readonly="1" />
+						<field name="name" readonly="1" />
+						<field name="psi_category" readonly="1" />
+						<field name="psi_sub_category" readonly="1" />
 						<field name="echelon_1" />
 						<field name="echelon_2" />
 						<field name="echelon_3" />
@@ -135,14 +274,56 @@
 	</record>
 
 	<record id="open_contract_wage_grid" model="ir.actions.act_window">
-		<field name="name">Grille salariale</field>
+		<field name="name">Grille Salariale</field>
 		<field name="res_model">hr.wage.grid</field>
+		<field name="res_id" eval="ref('grid-salariale')" />
 		<field name="view_type">form</field>
 		<field name="view_mode">form</field>
-		<field name="view_id" ref="hr_contract_wage_grid_form" />
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+		<field name="view_id" eval="False" />
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+				Grille Salariale
+			</p>
+		</field>
 	</record>
 
-	<menuitem id="menu_contract_wage_grid" action="open_contract_wage_grid"
-		parent="hr.menu_hr_root" sequence="5" />
+	<record id="hr_contract_birthday_view_calendar" model="ir.ui.view">
+		<field name="name">Calendrier des dates d'anniversaire de l'employés
+		</field>
+		<field name="model">hr.contract</field>
+		<field name="arch" type="xml">
+			<calendar date_start="anniversary" 
+				color="employee_id"
+				display="[name_employee], [job_name]" 
+				mode="month"
+				>
+				
+				<field name="name_employee" />
+				<field name="job_name" />
+			</calendar>
+		</field>
+	</record>
 
+	<!-- ACTIONS -->
+	<record id="action_hr_employee_reporting_birthday" model="ir.actions.act_window">
+		<field name="name">Calendrier des dates d'anniversaire</field>
+		<field name="res_model">hr.contract</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">calendar</field>
+		<field name="view_id" ref="hr_contract_birthday_view_calendar" />
+	</record>
+
+
+	<menuitem id="hr_menu_contract_psi_config" parent="hr.menu_hr_root"
+		sequence="6" name="PSI Configuration" />
+	<menuitem id="menu_contract_wage_grid" action="open_contract_wage_grid"
+		parent="hr_menu_contract_psi_config" sequence="5" />
+	<menuitem id="menu_contract_category" action="open_contract_category"
+		parent="hr_menu_contract_psi_config" sequence="11" />
+	<menuitem id="hr_menu_contract_rapport" parent="hr.menu_hr_root"
+		sequence="7" name="Rapports" />
+	<menuitem id="hr_menu_contract_rapport_anniversaire" action="action_hr_employee_reporting_birthday"
+		parent="hr_menu_contract_rapport" sequence="8" />
 </odoo>

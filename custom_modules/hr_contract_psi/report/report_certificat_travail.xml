@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+		<record id="certificat_paysage" model="report.paperformat">
+		    <field name="name">format paysage</field>
+		    <field name="default" eval="True"/>
+		    <field name="format">A3</field>
+		    <field name="orientation">Landscape</field>
+		</record>
+        <report 
+            string="Certificat de travail" 
+            id="action_report_certificat" 
+            model="hr.contract" 
+            report_type="qweb-pdf"
+            name="hr_contract_psi.report_certificat_travail" 
+            file="hr_contract_psi.report_certificat_travail"
+            paperformat="certificat_paysage"
+        />
+</odoo>

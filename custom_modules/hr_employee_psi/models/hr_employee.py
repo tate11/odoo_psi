@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from datetime import timedelta
 from datetime import date, datetime
+from datetime import timedelta
+
 from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, _
+from odoo import exceptions
+from odoo.exceptions import Warning
+
 
 class hr_employee(models.Model):
     
@@ -30,6 +35,11 @@ class hr_employee(models.Model):
         ('widower', 'Veuf(ve)'),
         ('divorced', u'Divorcé(e)')
     ], string='Situation de famille', track_visibility='always')
+    
+    state = fields.Selection([
+                              ('open','Open'),
+                              ('close','Close')
+                              ],track_visibility='always')
 
     address_home_id = fields.Many2one('res.partner', string='Home Address', track_visibility='always')
     personal_phone = fields.Char(string='Téléphone personnel', track_visibility='always')
@@ -41,20 +51,29 @@ class hr_employee(models.Model):
 
     personal_information        = fields.Boolean(default=False, string="Fiche de renseignements personnels")
     id_photos                   = fields.Boolean(default=False, string=u"Photos d'identité")
-    certificate_residence       = fields.Boolean(default=False, string="Certificat de résidence")
+    certificate_residence       = fields.Boolean(default=False, string=u"Certificat de résidence")
     marriage_certificate        = fields.Boolean(default=False, string="Acte de mariage ou copie de livret de famille")
     cin                         = fields.Boolean(default=False, string="Copie CIN")
     work_certificate            = fields.Boolean(default=False, string="Copies Certificats de travail")
     qualifications              = fields.Boolean(default=False, string=u"Copies Diplômes ")
     criminal_records            = fields.Boolean(default=False, string="Casier judiciaires")
-    card_cnaps                  = fields.Boolean(default=False, string="Copie Cartes CNAPS ")
-    birth_certificate_children  = fields.Boolean(default=False, string="Acte de naissances des enfants ")
+    card_cnaps                  = fields.Boolean(default=False, string="Copie Carte CNAPS ")
+    birth_certificate_children  = fields.Boolean(default=False, string="Acte de naissance des enfants ")
+    details_certificate_ethics = fields.One2many('hr.declaration.interest', 'employee_id', string=u"Déclaration d'intérêt et cours d\'éthique", track_visibility="onchange")
+	#TODO verification certficats
     ethics_course_certificate   = fields.Boolean(default=False, string=u"Certificat du cours d'éthique")
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments', track_visibility='always')
     
     sanctions_data = fields.One2many('hr.contract.sanction.data', 'employee_id', string='', track_visibility='always')
+    psi_bridger_insight = fields.One2many('hr.employee.bridger.insight', 'employee_id',"Bridger insight")
     
+    psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution", store=True)
+
+    psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat",store=True)
+    
+    all_files_checked = fields.Boolean(compute='_all_checked_files', string=u"Pièces completes")
+
     @api.model
     def create(self, vals):
         employee = super(hr_employee, self).create(vals)
@@ -79,16 +98,14 @@ class hr_employee(models.Model):
         for employee in employees:
             list_sanction = sanctions_data_obj.search([('employee_id', '=', employee.id)])
             for sanction in list_sanction:
-                s_date = datetime.strptime(sanction.sanction_date,"%Y-%m-%d")
-                if (today.year - s_date.year) * 12 + today.month - s_date.month >= period:
-                    sanction.write({'sanction_date_effacement' : today})
+                if sanction.sanction_date != False:
+                    s_date = datetime.strptime(sanction.sanction_date,"%Y-%m-%d")
+                    if (today.year - s_date.year) * 12 + today.month - s_date.month >= period:
+                        sanction.write({'sanction_date_effacement' : today})
     
     def _update_cron_collab_1(self):
         """ Activate the cron Premier Email Employee.
         """
-
-        #list_not_checked = self._get_not_checked_files()
-
         cron = self.env.ref('hr_employee_psi.ir_cron_send_email_collab_1', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
     
@@ -102,7 +119,19 @@ class hr_employee(models.Model):
     @api.constrains('personal_information')   
     def _get_not_checked_files(self):      
         list_not_checked = []
-        for record in self:     
+        for record in self:  
+            certificate_ethics = False
+            declaration_obj = self.env["hr.declaration.interest"]
+            declarations = declaration_obj.search([('employee_id','=',record.id)])
+            
+            for declaration in declarations:               
+                date_str = str(declaration.year)
+                if date_str:
+                    if date_str == str(datetime.now().year):
+                        certificate_ethics = True
+                        break
+                    else:
+                        certificate_ethics = False
             dict ={
                        'personal_information'       : record.personal_information,
                        'id_photos'                  : record.id_photos,
@@ -114,13 +143,12 @@ class hr_employee(models.Model):
                        'criminal_records'           : record.criminal_records,
                        'card_cnaps'                 : record.card_cnaps,
                        'birth_certificate_children' : record.birth_certificate_children,
-                       'ethics_course_certificate'  : record.ethics_course_certificate 
+                       'details_certificate_ethics' : certificate_ethics
                    }
-            list(dict.keys())
-            list(dict.values())
+            
             for key, value in dict.items() :
                 if value == False:
-                    list_not_checked.append(key)    
+                    list_not_checked.append(key)
         return list_not_checked
 
     @api.multi
@@ -145,22 +173,34 @@ class hr_employee(models.Model):
     @api.one
     @api.constrains('personal_information')  
     def _send_first_email_collaborator(self, automatic=False):
-        list_not_checked = self._get_not_checked_files()
-        if len(list_not_checked) > 0:
-            template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_1')
-            self.env['mail.template'].browse(template.id).send_mail(self.id)
+        if self.id != False :
+            list_not_checked = self._get_not_checked_files()
+            if len(list_not_checked) > 0:
+                template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_1')
+                self.env['mail.template'].browse(template.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
 
     #(R8.) Second Rappel au cours d'éthique
     def _send_second_email_collaborator(self, automatic=False):
-        template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_2')
-        self.env['mail.template'].browse(template.id).send_mail(self.id)
+        if self.id != False :
+            template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_2')
+            self.env['mail.template'].browse(template.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
     
-    
-
+    # add declaration interest every 2 years
+    def _add_declaration_interest(self, automatic=False):
+        if self.id != False:
+            template = self.env.ref('hr_employee_psi.custom_template_add_declaration_interest')
+            self.env['mail.template'].browse(template.id).send_mail(self.id)
+            #test
+            mail_failed_list = self.env['mail.mail'].search([('state', '=', 'exception')])
+            for failed_mail in mail_failed_list:
+                failed_mail.state = 'outgoing'
+        if automatic:
+            self._cr.commit()
+                
 class Person(models.Model):
 
      _name         = 'hr.person'
@@ -169,7 +209,7 @@ class Person(models.Model):
      date_of_birth = fields.Date(string="Date de naissance",required=True)    
      sex           = fields.Selection([
         ('M', 'Masculin'),
-        ('F', 'Feminin')
+        ('F', u'Féminin')
      ], string='Genre')    
 
     
@@ -192,10 +232,10 @@ class InformationCin(models.Model):
     
     _name               = 'hr.information.cin'
     
-    num_cin             = fields.Char(u'Numéro', size=64, required=True)
-    date_of_issue       = fields.Date(string="Date d’émission")
-    place_of_issue      = fields.Char(string='Lieu d’émission')
-    end_of_validity     = fields.Date(string="Fin de validité")
+    name             = fields.Char(u'Numéro', size=64, required=True)
+    date_of_issue       = fields.Date(string=u"Date d’émission")
+    place_of_issue      = fields.Char(string=u'Lieu d’émission')
+    end_of_validity     = fields.Date(string=u"Fin de validité")
     duplicata           = fields.Boolean(string="Duplicata (O/N)")
     date_of_duplicata   = fields.Date(string="Date de duplicata")
     
@@ -217,8 +257,58 @@ class SanctionData(models.Model):
     sanction_type_id = fields.Many2one('hr.contract.type.sanction', string='Sanction')
     
     sanction_objet = fields.Char(string='Objet')
-    sanction_date_effacement = fields.Date(string='Date d\'effacement', readonly=True)
+    sanction_date_effacement = fields.Date(string=u'Date d\'éffacement', readonly=True)
     sanction_commentaire = fields.Text(string='Commentaires')
 
     employee_id = fields.Many2one('hr.employee')
     
+class hr_declaration_interest(models.Model):
+    
+    _name = "hr.declaration.interest"
+    _description = u"Declaration d'intérêt - Cours d'éthique"
+    
+    name = fields.Char(string=u'Nom', required=True)
+    employee_id = fields.Many2one('hr.employee', string=u'Employé', readonly=True)
+    date_add = fields.Date(string=u'Date d\'ajout',default=lambda *a: datetime.now())
+    year =  fields.Selection([
+                              (num, str(num)) for num in range(2010, (datetime.now().year)+1 
+                                                             )], string=u'Année', required="True", default=datetime.now().year)
+    certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
+    checked_current_year = fields.Boolean(string='Check')
+
+    @api.multi
+    def write(self, vals):
+        declaration = self.verify_year_declaration()
+        if declaration == True:                  
+            super(hr_declaration_interest, self).write(vals)
+        else : 
+            raise Warning(_(u'Vous avez déjà rempli le formulaire de déclaration cette année'))
+        
+    def verify_year_declaration(self):
+        res = False
+        for record in self:
+            declaration_obj = self.env["hr.declaration.interest"]
+            declarations = declaration_obj.search([('employee_id','=',record.employee_id.name)]) 
+            print declarations
+            if len(declarations) == 1:
+                res = True
+            else:
+                for declaration in declarations[:-1]:               
+                    date_str = str(declaration.year)
+                    if date_str:
+                        if str(record.year) == date_str:
+                            res = False
+                        else: 
+                            res = True
+        return res
+    
+        
+class BrigerInsight(models.Model):
+    _name = 'hr.employee.bridger.insight'
+    
+    date = fields.Date(u'Date de vérification')
+    result = fields.Selection([
+        ('oui', 'OUI'),
+        ('non', 'NON')
+       ], string=u'Résultat')    
+    employee_id = fields.Many2one('hr.employee')

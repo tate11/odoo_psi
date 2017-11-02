@@ -10,9 +10,11 @@
 			<field name="model">hr.applicant</field>
 			<field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job" />
 			<field name="arch" type="xml">
+			  
 				<field name="partner_id" position="before">
 					<field name="birthday" attrs="{'required': True}" />
 					<field name="age" />
+					<field name="date_verification_bridger_insight" invisible="1" />
 					<field name="country_id" attrs="{'required': True}" />
 					<field name="sexe" attrs="{'required': True}" />
 					<field name="marital" attrs="{'required': True}" />

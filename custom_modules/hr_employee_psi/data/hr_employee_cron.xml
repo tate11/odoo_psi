@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
-     
-        
         <!-- Cron send second email collaborator -->
         <record id="ir_cron_send_email_collab_2" model="ir.cron">
             <field name="name">Collaborateur - Second rappel au collaborateur</field>
@@ -10,7 +8,7 @@
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">15</field>
             <field name="interval_type">days</field>	<!-- 15 days -->
-            <field name="numbercall">1</field>
+            <field name="numbercall">-1</field>
             <field name="doall" eval="False" />
             <field eval="'hr.employee'" name="model" />
             <field name="function" eval="'_send_second_email_collaborator'" /> 
@@ -22,26 +20,41 @@
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">15</field>
             <field name="interval_type">days</field> <!-- 15 days -->
-            <field name="numbercall">1</field>
+            <field name="numbercall">-1</field>
             <field name="doall" eval="False" />
             <field eval="'hr.employee'" name="model" />
             <field name="function" eval="'_send_first_email_collaborator'" /> 
             <field name="args" eval="'(True,)'"/>
             <field name="active" eval="False" />
         </record>
-        
+
         <!-- Cron send first email collaborator -->
         <record id="ir_cron_remove_sanction" forcecreate="True" model="ir.cron">
             <field name="name">PSI - Suppression données de sanction</field>
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">1</field>
-            <field name="interval_type">minutes</field> <!-- 15 days -->
+            <field name="interval_type">months</field> <!-- 15 days -->
             <field name="numbercall">-1</field>
             <field name="doall" eval="False" />
             <field name="model" eval="'hr.employee'" />
             <field name="function" eval="'_remove_sanction_data'" /> 
             <field name="args" eval="'(1,)'"/>
-            <field name="active" eval="False" />
-        </record>      
+            <field name="active" eval="True" />
+        </record>    
+        
+        <!-- Cron add declaration interest every 2 years -->
+        <record id="ir_cron_notif_add_declaration" forcecreate="True" model="ir.cron">
+            <field name="name">PSI - Ajouter le déclaration d'intérêt</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">24</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False" />
+            <field name="model" eval="'hr.employee'" />
+            <field name="function" eval="'_add_declaration_interest'" /> 
+            <field name="args" eval="'(True,)'"/>
+            <field name="active" eval="True" />
+        </record>    
+
     </data>
 </odoo>
