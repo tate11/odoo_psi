@@ -72,6 +72,11 @@
 				<page string="Séparation" attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}">
 					<group>
 						<button name="action_report_certificat" type="object" string="Génerer certificat de travail" class="oe_highlight" />
+            <br />
+						<button name="action_send_email_desactivate_flottes" string="Demande de la désactivation des flottes " type="object"  class="oe_highlight" />
+						<br />
+						<button name="action_send_email_desactivate_account" type="object" class="oe_highlight" string="Demande de la désactivation de compte (email,etc...)"/>
+						<br />
 					</group>
 					<group>
 						<field name="debauchage_cnaps"/>
@@ -110,6 +115,12 @@
 						attrs="{'invisible': ['|',('response_evaluation','=',False),('result_evaluation','not in','ko')]}" />
 				</group>
 			</xpath>
+
+			<group name="duration_group" position="after">
+				<group name="rupture" string="Rupture de contrat">
+					<field name="date_demission" attrs="{'readonly' : [('state','=','close')]}" />			
+				</group>
+			</group>
 
 			<!-- Contract close - READONLY -->
 			<field name='name' position="replace">
