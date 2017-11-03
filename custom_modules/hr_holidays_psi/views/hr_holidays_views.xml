@@ -8,8 +8,8 @@
 			<field name="inherit_id" ref="hr_holidays.edit_holiday_new" />
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='holiday_status_id']" position="after">
-					<field name="justificatif_file" attrs="{'invisible': [('holiday_status_id','not in','Congé maladie')]}"/>
-					<field name="justificatif_file"/>
+					<field name="justificatif_file" />
+					<!-- <field name="justificatif_file" attrs="{'invisible': [('color_name_holidays_status','=','blue')]}"/> -->
 				</xpath>
 			</field>
 		</record>
