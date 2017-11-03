@@ -51,7 +51,20 @@ class hr_holidays_psi(models.Model):
                date_now = datetime.strptime(fields.Date().today(),"%Y-%m-%d")
                between = date_from.day - date_now.day
                if between < 3 :
-                  raise ValidationError(u"Vous devez faire le demande de congeés avant 3jours de depart")
+                  raise ValidationError(u"Vous devez faire le demande de congés avant 3jours de depart")
+     
+    @api.constrains('date_from')
+    def _check_date_from_conge_sans_solde(self):
+       print "_check_date_from"
+       for record in self :
+           if record.date_from != False and record.holiday_status_id.color_name == 'red':
+               date_from_time = datetime.strptime(record.date_from,"%Y-%m-%d %H:%M:%S")
+               date_from = date_from_time.date()
+               date_now = datetime.strptime(fields.Date().today(),"%Y-%m-%d")
+               between = date_from.day - date_now.day
+               config = self.env['hr.holidays.configuration'].search([])[0]
+               if between > config.conges_sans_solde :
+                  raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes")
      
     @api.multi
     def action_validate(self):
