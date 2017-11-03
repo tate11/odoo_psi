@@ -8,16 +8,16 @@
 			<field name="name">Absences pour conge annuel</field>
 		</record>
 		<record model="hr.holidays.status" id="type_maladie">
-			<field name="name">Congé maladie</field>
+			<field name="name">Congés maladies</field>
 		</record>
 		<record model="hr.holidays.status" id="type_permission">
 			<field name="name">Absences pour permission</field>
 		</record>
 		<record model="hr.holidays.status" id="type_maternite">
-			<field name="name">Congé de maternité</field>
+			<field name="name">Congés de maternité</field>
 		</record>
 		<record model="hr.holidays.status" id="type_solde">
-			<field name="name">Congé sans solde</field>
+			<field name="name">Congés sans soldes</field>
 		</record>
 	</data>
 </odoo>
