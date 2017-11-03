@@ -6,7 +6,7 @@
     'sequence': 0,
     'description': """Gestion des absences PSI""",
     'website': 'https://www.ingenosya.mg',
-    'depends': ['hr_holidays','hr_recruitment'],
+    'depends': ['hr_holidays','hr_recruitment','hr_employee_psi'],
     'data': [
              'data/hr_holidays_data.xml',
              'views/hr_holidays_views.xml',
