@@ -24,17 +24,22 @@ class hr_holidays_psi(models.Model):
     @api.model
     def create(self, values):
         got_droit = self.check_droit(values)
-        
-        #holidays = super(hr_holidays_psi, self).create()
-        #return holidays
+        if got_droit == False:
+            raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
+        else:
+            holidays = super(hr_holidays_psi, self).create()
+            return holidays
     
     def check_droit(self, values):
         current_employee = self.env['hr.contract'].search([('employee_id', '=', values['employee_id'])])
         date_start = datetime.strptime(current_employee.date_start,"%Y-%m-%d")
         date_from = datetime.strptime(values['date_from'],"%Y-%m-%d %H:%M:%S")
-        delta = date_from - date_start
-        print delta.days
-        return False     
+        config = self.env['hr.holidays.configuration'].search([])[0]
+        diff = (date_from.year - date_start.year) * 12 + date_from.month - date_start.month
+        
+        if diff <= config.droit_conge:
+            return False
+        return True     
     
     @api.constrains('date_from')
     def _check_date_from(self):
