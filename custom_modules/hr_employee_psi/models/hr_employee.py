@@ -51,15 +51,15 @@ class hr_employee(models.Model):
 
     personal_information        = fields.Boolean(default=False, string="Fiche de renseignements personnels")
     id_photos                   = fields.Boolean(default=False, string=u"Photos d'identité")
-    certificate_residence       = fields.Boolean(default=False, string="Certificat de résidence")
+    certificate_residence       = fields.Boolean(default=False, string=u"Certificat de résidence")
     marriage_certificate        = fields.Boolean(default=False, string="Acte de mariage ou copie de livret de famille")
     cin                         = fields.Boolean(default=False, string="Copie CIN")
     work_certificate            = fields.Boolean(default=False, string="Copies Certificats de travail")
     qualifications              = fields.Boolean(default=False, string=u"Copies Diplômes ")
     criminal_records            = fields.Boolean(default=False, string="Casier judiciaires")
-    card_cnaps                  = fields.Boolean(default=False, string="Copie Cartes CNAPS ")
-    birth_certificate_children  = fields.Boolean(default=False, string="Acte de naissances des enfants ")
-    details_certificate_ethics = fields.One2many('hr.declaration.interest', 'employee_id', string=u"Declaration d'intérêt et cours d\'éthique", track_visibility="onchange")
+    card_cnaps                  = fields.Boolean(default=False, string="Copie Carte CNAPS ")
+    birth_certificate_children  = fields.Boolean(default=False, string="Acte de naissance des enfants ")
+    details_certificate_ethics = fields.One2many('hr.declaration.interest', 'employee_id', string=u"Déclaration d'intérêt et cours d\'éthique", track_visibility="onchange")
 	#TODO verification certficats
     ethics_course_certificate   = fields.Boolean(default=False, string=u"Certificat du cours d'éthique")
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
@@ -72,7 +72,7 @@ class hr_employee(models.Model):
 
     psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat",store=True)
     
-    all_files_checked = fields.Boolean(compute='_all_checked_files', string="Pièces complet")
+    all_files_checked = fields.Boolean(compute='_all_checked_files', string=u"Pièces completes")
 
     @api.model
     def create(self, vals):
@@ -119,7 +119,19 @@ class hr_employee(models.Model):
     @api.constrains('personal_information')   
     def _get_not_checked_files(self):      
         list_not_checked = []
-        for record in self:     
+        for record in self:  
+            certificate_ethics = False
+            declaration_obj = self.env["hr.declaration.interest"]
+            declarations = declaration_obj.search([('employee_id','=',record.id)])
+            
+            for declaration in declarations:               
+                date_str = str(declaration.year)
+                if date_str:
+                    if date_str == str(datetime.now().year):
+                        certificate_ethics = True
+                        break
+                    else:
+                        certificate_ethics = False
             dict ={
                        'personal_information'       : record.personal_information,
                        'id_photos'                  : record.id_photos,
@@ -131,13 +143,12 @@ class hr_employee(models.Model):
                        'criminal_records'           : record.criminal_records,
                        'card_cnaps'                 : record.card_cnaps,
                        'birth_certificate_children' : record.birth_certificate_children,
-                       #'details_certificate_ethics' : record.details_certificate_ethics.checked_current_year 
+                       'details_certificate_ethics' : certificate_ethics
                    }
             
             for key, value in dict.items() :
                 if value == False:
                     list_not_checked.append(key)
-        
         return list_not_checked
 
     @api.multi
@@ -198,7 +209,7 @@ class Person(models.Model):
      date_of_birth = fields.Date(string="Date de naissance",required=True)    
      sex           = fields.Selection([
         ('M', 'Masculin'),
-        ('F', 'Feminin')
+        ('F', u'Féminin')
      ], string='Genre')    
 
     
@@ -222,9 +233,9 @@ class InformationCin(models.Model):
     _name               = 'hr.information.cin'
     
     name             = fields.Char(u'Numéro', size=64, required=True)
-    date_of_issue       = fields.Date(string="Date d’émission")
-    place_of_issue      = fields.Char(string='Lieu d’émission')
-    end_of_validity     = fields.Date(string="Fin de validité")
+    date_of_issue       = fields.Date(string=u"Date d’émission")
+    place_of_issue      = fields.Char(string=u'Lieu d’émission')
+    end_of_validity     = fields.Date(string=u"Fin de validité")
     duplicata           = fields.Boolean(string="Duplicata (O/N)")
     date_of_duplicata   = fields.Date(string="Date de duplicata")
     
@@ -246,7 +257,7 @@ class SanctionData(models.Model):
     sanction_type_id = fields.Many2one('hr.contract.type.sanction', string='Sanction')
     
     sanction_objet = fields.Char(string='Objet')
-    sanction_date_effacement = fields.Date(string='Date d\'effacement', readonly=True)
+    sanction_date_effacement = fields.Date(string=u'Date d\'éffacement', readonly=True)
     sanction_commentaire = fields.Text(string='Commentaires')
 
     employee_id = fields.Many2one('hr.employee')
@@ -257,57 +268,47 @@ class hr_declaration_interest(models.Model):
     _description = u"Declaration d'intérêt - Cours d'éthique"
     
     name = fields.Char(string=u'Nom', required=True)
-    employee_id = fields.Many2one('hr.employee', string=u'Employé', required=True)
+    employee_id = fields.Many2one('hr.employee', string=u'Employé', readonly=True)
     date_add = fields.Date(string=u'Date d\'ajout',default=lambda *a: datetime.now())
     year =  fields.Selection([
                               (num, str(num)) for num in range(2010, (datetime.now().year)+1 
-                                                             )], string=u'Année', required="True")
+                                                             )], string=u'Année', required="True", default=datetime.now().year)
     certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
     checked_current_year = fields.Boolean(string='Check')
 
-    @api.model
-    def create(self, vals):
-        daclaration = True
-        #self.verify_year_declaration()
-        if daclaration == True:                  
-            decl = super(hr_declaration_interest, self).create(vals)
-            return decl
+    @api.multi
+    def write(self, vals):
+        declaration = self.verify_year_declaration()
+        if declaration == True:                  
+            super(hr_declaration_interest, self).write(vals)
         else : 
-            raise Warning(_('Vous avez déjà rempli le formulaire de déclaration cette année'))
+            raise Warning(_(u'Vous avez déjà rempli le formulaire de déclaration cette année'))
         
-                
-    @api.one
-    @api.constrains('name')
     def verify_year_declaration(self):
         res = False
         for record in self:
-            print record.year
             declaration_obj = self.env["hr.declaration.interest"]
-            declarations = declaration_obj.search([('employee_id','=',record.employee_id.name)])  
-            if declarations:    
-                for declaration in declarations:
-                    if declaration.year:
-                        date_str = str(declaration.year)
-                        if int(record.year) == int(date_str):
+            declarations = declaration_obj.search([('employee_id','=',record.employee_id.name)]) 
+            print declarations
+            if len(declarations) == 1:
+                res = True
+            else:
+                for declaration in declarations[:-1]:               
+                    date_str = str(declaration.year)
+                    if date_str:
+                        if str(record.year) == date_str:
                             res = False
                         else: 
                             res = True
-            return res
+        return res
     
-    @api.one
-    @api.constrains('name')
-    def checked_condition(self):
-        print "Checked condition"
-        if self.id:
-            self.checked_current_year = True
-
         
 class BrigerInsight(models.Model):
     _name = 'hr.employee.bridger.insight'
     
-    date = fields.Date('Date de verification')
+    date = fields.Date(u'Date de vérification')
     result = fields.Selection([
         ('oui', 'OUI'),
         ('non', 'NON')
-       ], string='Résultat')    
+       ], string=u'Résultat')    
     employee_id = fields.Many2one('hr.employee')

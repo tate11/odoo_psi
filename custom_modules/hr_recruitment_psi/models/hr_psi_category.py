@@ -17,8 +17,9 @@ class hr_psi_category_details(models.Model):
                                         ('superviseur','SUPERVISEUR'),
                                         ('coordinateur','COORDINATEUR'),
                                        ('directeur','DIRECTEUR'),
-                                       ('rra','RRA')], string="Titre de Catégorie")
+                                       ('rra','RRA')], string="Titre de la Catégorie")
     
-    prior_notice       = fields.Integer(string='Préavis')
-    test_duration      = fields.Integer(string="Durée d'essai")
+    psi_cat = fields.Char(string="CAT", size=2)
+    prior_notice       = fields.Integer(string='Durée du Préavis')
+    test_duration      = fields.Integer(string="Durée de la période d'essai")
     psi_category_id    = fields.Many2one('hr.psi.category','Category ID')

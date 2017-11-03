@@ -12,7 +12,11 @@ from odoo.exceptions import ValidationError
 class hr_contract(models.Model):
     _inherit = 'hr.contract'
     
-    place_of_work   = fields.Char(string='Lieu d\'affectaction') #lieu d'affectation
+    place_of_work   = fields.Char(string='Lieu d\'affectaction', track_visibility='onchange') #lieu d'affectation
+    date_start = fields.Date('Start Date', required=True, default=fields.Date.today, track_visibility='onchange')
+    date_end = fields.Date('End Date', track_visibility='onchange')
+    job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
+    department_id = fields.Many2one('hr.department', string="Department", track_visibility='onchange')
     
     date_demission = fields.Date(string=u'Date de démission')
     #rupture
@@ -200,7 +204,6 @@ class hr_contract(models.Model):
                                              ('retreat',"Retraite")
                                              ], string="Séparation événement", track_visibility="onchange")
 
-    
     psi_echelon = fields.Selection([('echelon_1','ECHELON 1'),('echelon_2','ECHELON 2'),('echelon_3','ECHELON 3'),
                                     ('echelon_4','ECHELON 4'),('echelon_5','ECHELON 5'),('echelon_6','ECHELON 6'),
                                     ('echelon_7','ECHELON 7'),('echelon_8','ECHELON 8'),('echelon_9','ECHELON 9'),
@@ -209,6 +212,20 @@ class hr_contract(models.Model):
                                     ('echelon_16','ECHELON 16'),('echelon_17','ECHELON 17'),('echelon_18','ECHELON 18'),
                                     ('echelon_19','ECHELON 19'),('echelon_20','ECHELON 20'),('echelon_hc','ECHELON HC')
                                     ],string="Echelon",track_visibility="onchange" )
+
+    job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
+    
+    psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la Catégorie')
+    psi_category = fields.Selection(related='psi_category_details.psi_professional_category')
+    psi_cat_cat = fields.Char(related='psi_category_details.psi_cat', string='CAT')
+    psi_sub_category            = fields.Selection([
+                                        ('1','1'),
+                                        ('2','2'),
+                                        ('3','3'),
+                                        ('4','4')
+                                ], string="Sous Cat")
+    
+    historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
    
     def action_send_email_desactivate_flottes(self):
         template = self.env.ref('hr_contract_psi.template_desactivate_flottes_id')

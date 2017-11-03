@@ -47,7 +47,6 @@
 			<field name="department_id" position="after">
 				<field name="recrutement_type_id" />
 				<field name="recrutement_type" invisible="1" />
-				<field name="psi_professional_category" invisible="1"/>
 				<field name="psi_category"/>
 				<field name="psi_date_start" />
 				<field name="level_of_education_id" />
@@ -126,7 +125,7 @@
 				<field name="name" position="after">
 					<field name="recrutement_type_id" />
 					<field name="recrutement_type" invisible="1" />
-					<field name="tdr_file" attrs="{'required': True}"/>
+					<field name="tdr_file" />
 				</field>
 			</data>
 		</field>
