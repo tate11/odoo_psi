@@ -534,7 +534,7 @@ class hr_contract(models.Model):
                 )
                 month_to_notif = date_end_contract_time - relativedelta(months=1)  
                 if month_to_notif.date() == datetime.today().date():
-                    template = self.env.ref('hr_contract_psi.custom_template_end_contract')
+                    template = self.env.ref('hr_contract_psi.template_end_contract_id')
                     self.env['mail.template'].browse(template.id).send_mail(self.id)
         if automatic:
             self._cr.commit()

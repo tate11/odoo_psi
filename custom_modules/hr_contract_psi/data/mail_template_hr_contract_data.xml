@@ -2,7 +2,7 @@
 <odoo>
 	<data>
 		<!-- Template email - End Contrat demande d'embauche -->
-		<record id="template_end_cntract_id" model="mail.template">
+		<record id="template_end_contract_id" model="mail.template">
 			<field name="name">PSI Template email - Demande d'embauche
 			</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
