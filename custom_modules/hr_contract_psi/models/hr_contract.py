@@ -18,6 +18,7 @@ class hr_contract(models.Model):
     job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
     department_id = fields.Many2one('hr.department', string="Department", track_visibility='onchange')
     
+    date_demission = fields.Date(string=u'Date de démission')
     #rupture
     date_rupture = fields.Date(string='Date rupture de contrat')
 
@@ -65,7 +66,20 @@ class hr_contract(models.Model):
     debauchage_cnaps = fields.Boolean(string="Débauchage CNAPS", default=False)
     debauchage_ostie = fields.Boolean(string="Débauchage OSTIE", default=False)
     debauchage_assurance = fields.Boolean(string="Débauchage Assurance Santé", default=False)
-
+    
+    job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
+    
+    psi_professional_category = fields.Many2one(related='job_id.psi_category',string='Catégorie professionnelle')
+    psi_category = fields.Selection(related='psi_professional_category.psi_professional_category',string='Catégorie professionnelle')
+    
+    psi_sub_category            = fields.Selection([
+                                        ('1','1'),
+                                        ('2','2'),
+                                        ('3','3'),
+                                        ('4','4')
+                                ], string="Sous Cat")
+    
+    historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
 
     def action_report_certificat(self):
         return {
@@ -190,7 +204,6 @@ class hr_contract(models.Model):
                                              ('retreat',"Retraite")
                                              ], string="Séparation événement", track_visibility="onchange")
 
-    
     psi_echelon = fields.Selection([('echelon_1','ECHELON 1'),('echelon_2','ECHELON 2'),('echelon_3','ECHELON 3'),
                                     ('echelon_4','ECHELON 4'),('echelon_5','ECHELON 5'),('echelon_6','ECHELON 6'),
                                     ('echelon_7','ECHELON 7'),('echelon_8','ECHELON 8'),('echelon_9','ECHELON 9'),
@@ -199,7 +212,7 @@ class hr_contract(models.Model):
                                     ('echelon_16','ECHELON 16'),('echelon_17','ECHELON 17'),('echelon_18','ECHELON 18'),
                                     ('echelon_19','ECHELON 19'),('echelon_20','ECHELON 20'),('echelon_hc','ECHELON HC')
                                     ],string="Echelon",track_visibility="onchange" )
-    
+
     job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
     
     psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la Catégorie')
@@ -213,9 +226,15 @@ class hr_contract(models.Model):
                                 ], string="Sous Cat")
     
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
-    
    
+    def action_send_email_desactivate_flottes(self):
+        template = self.env.ref('hr_contract_psi.template_desactivate_flottes_id')
+        self.env['mail.template'].browse(template.id).send_mail(self.id,force_send=True) 
     
+    def action_send_email_desactivate_account(self):
+        template = self.env.ref('hr_contract_psi.template_desactivate_account_id')
+        self.env['mail.template'].browse(template.id).send_mail(self.id,force_send=True)
+           
     @api.model
     def create(self, vals):  
         contract = super(hr_contract, self).create(vals)
@@ -419,6 +438,12 @@ class hr_contract(models.Model):
             contract_obj = self.env['hr.contract']
             employee_obj = self.env['hr.employee']
             employee = record.employee_id
+            
+            if record.motif_rupture == 'resignation':
+                template = self.env.ref('hr_contract_psi.template_separation_demission_id')
+                self.env['mail.template'].browse(template.id).send_mail(self.id)
+                print "EMAIL SENT"
+            
             #employee readonly
             contract = contract_obj.browse([record.id])
             contract.update({
