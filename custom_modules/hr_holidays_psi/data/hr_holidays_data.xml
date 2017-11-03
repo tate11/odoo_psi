@@ -9,6 +9,7 @@
 		</record>
 		<record model="hr.holidays.status" id="type_maladie">
 			<field name="name">Congé maladie</field>
+			<field name="color_name">blue</field>
 		</record>
 		<record model="hr.holidays.status" id="type_permission">
 			<field name="name">Absences pour permission</field>

@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models,fields, api
-from datetime import datetime
+import dateutil.parser
+from datetime import date, datetime
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.translate import _
 
@@ -57,33 +60,32 @@ class hr_holidays_psi(models.Model):
                 #Add the partner_id (if exist) as an attendee
                 if holiday.user_id and holiday.user_id.partner_id:
                     meeting_values['partner_ids'] = [(4, holiday.user_id.partner_id.id)]
-
-                meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
-                holiday._create_resource_leave()
-                holiday.write({'meeting_id': meeting.id})
-            elif holiday.holiday_type == 'category':
-                leaves = self.env['hr.holidays']
-                employees = self.env['hr.employee'].search([])
-                for employee in employees: 
-                    if employee.psi_category == holiday.psi_category_id.psi_professional_category :
-                        values = {
-                            'name': holiday.name,
-                            'type': holiday.type,
-                            'holiday_type': 'employee',
-                            'holiday_status_id': holiday.holiday_status_id.id,
-                            'date_from': holiday.date_from,
-                            'date_to': holiday.date_to,
-                            'notes': holiday.notes,
-                            'number_of_days_temp': holiday.number_of_days_temp,
-                            'parent_id': holiday.id,
-                            'employee_id': employee.id
-                        }
-                        leaves += self.with_context(mail_notify_force_send=False).create(values)
-                # TODO is it necessary to interleave the calls?
-                leaves.action_approve()
-                if leaves and leaves[0].double_validation:
-                    leaves.action_validate()
-        return True
+                    meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
+                    holiday._create_resource_leave()
+                    holiday.write({'meeting_id': meeting.id})
+                elif holiday.holiday_type == 'category':
+                    leaves = self.env['hr.holidays']
+                    employees = self.env['hr.employee'].search([])
+                    for employee in employees: 
+                        if employee.psi_category == holiday.psi_category_id.psi_professional_category :
+                            values = {
+                                'name': holiday.name,
+                                'type': holiday.type,
+                                'holiday_type': 'employee',
+                                'holiday_status_id': holiday.holiday_status_id.id,
+                                'date_from': holiday.date_from,
+                                'date_to': holiday.date_to,
+                                'notes': holiday.notes,
+                                'number_of_days_temp': holiday.number_of_days_temp,
+                                'parent_id': holiday.id,
+                                'employee_id': employee.id
+                            }
+                            leaves += self.with_context(mail_notify_force_send=False).create(values)
+                    # TODO is it necessary to interleave the calls?
+                    leaves.action_approve()
+                    if leaves and leaves[0].double_validation:
+                        leaves.action_validate()
+            return True
     
     _sql_constraints = [
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND psi_category_id IS NOT NULL))",
@@ -98,3 +100,33 @@ class hr_holidays_psi(models.Model):
         for leave in self:
             res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name or leave.psi_category_id.psi_professional_category, leave.holiday_status_id.name, leave.number_of_days_temp)))
         return res
+
+
+    justificatif_file = fields.Binary(string=u'Pièce justificatif', help=u"Joindre un certificat médical ou une ordonnance", tracability="onchange") 
+ 
+#    color_name_holidays_status = fields.Selection(related='holiday_status_id.color_name', string="color")
+    
+    # Send mail - rappel piece justificatif - conge maladie  
+    @api.multi
+    @api.constrains('holiday_status_id')  
+    def _send_email_rappel_justificatif_conge_maladie(self, automatic=False):
+        print "test cron by send mail"
+        date_debut = self.date_from
+        date = dateutil.parser.parse(date_debut).date()
+        dt = datetime.strptime(date_debut,'%Y-%m-%d %H:%M:%S')
+        date_y_m_d = datetime(
+                                     year=date.year, 
+                                     month=date.month,
+                                     day=date.day,
+                )   
+        date_to_notif = date_y_m_d + relativedelta(hours=48)   
+        if self.id != False :
+            for record in self:
+                if record.holiday_status_id.color_name == 'blue' or record.holiday_status_id.name == u"Cong� maladie":
+#                    if not record.justificatif_file:
+                    if not self.justificatif_file and date_to_notif.date() == datetime.today().date() :
+                        template = self.env.ref('hr_holidays_psi.custom_template_rappel_justificatif_conge_maladie')
+                        self.env['mail.template'].browse(template.id).send_mail(self.id)               
+        if automatic:
+            self._cr.commit()
+            
