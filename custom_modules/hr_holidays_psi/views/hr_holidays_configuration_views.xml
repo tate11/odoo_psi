@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+	<record id="hr_holiday_configuration_form" model="ir.ui.view">
+		<field name="name">hr.holiday.configuration.form</field>
+		<field name="model">hr.holidays.configuration</field>
+		<field name="arch" type="xml">
+			<form create="false">
+				<group>
+					<field name="droit_conge" />
+					<field name="conges_sans_solde" />
+				</group>
+			</form>
+		</field>
+	</record>
+	
+	<record id="open_configuration" model="ir.actions.act_window">
+		<field name="name">Données par défaut</field>
+		<field name="res_model">hr.holidays.configuration</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+		<field name="view_id" eval="False" />
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+				Configuration
+			</p>
+		</field>
+	</record>
+	
+	<menuitem id="hr_menu_holidays_psi_config" parent="hr_holidays.menu_hr_holidays_root"
+		sequence="5" name="PSI Configuration" />
+		
+	<menuitem id="menu_holidays_config" action="open_configuration"
+		parent="hr_menu_holidays_psi_config" sequence="6" />
+</odoo>
