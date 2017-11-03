@@ -19,14 +19,37 @@ class hr_holidays_psi(models.Model):
     _inherit = "hr.holidays"
     
     psi_category_id = fields.Many2one('hr.psi.category.details','Catégorie professionnelle')
-    justificatif_file = fields.Binary(string=u'Pièce justificatif', help=u"Joindre un certificat médical ou une ordonnance", tracability="onchange") 
     
+    color_name_holiday_status_conge_maladie = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du congé maladie')
+    color_name_holiday_status_conge_permission = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du congé permission')
+    
+    attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
+    attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
+
     @api.model
     def create(self, values):
         got_droit = self.check_droit(values)
-        
+#        print str(color_name_holiday_status_conge_maladie)
         #holidays = super(hr_holidays_psi, self).create()
         #return holidays
+        
+    @api.multi
+    def _get_attachment_number(self):
+        read_group_res = self.env['ir.attachment'].read_group(
+            [('res_model', '=', 'hr.holidays'), ('res_id', 'in', self.ids)],
+            ['res_id'], ['res_id'])
+        attach_data = dict((res['res_id'], res['res_id_count']) for res in read_group_res)
+        for record in self:
+            record.attachment_number = attach_data.get(record.id, 0)
+ 
+    @api.multi 
+    def action_get_attachment_tree_view(self):    
+        attachment_action = self.env.ref('base.action_attachment')
+        action = attachment_action.read()[0]
+        action['context'] = {'default_res_model': self._name, 'default_res_id': self.ids[0]}
+        action['domain'] = str(['&', ('res_model', '=', self._name), ('res_id', 'in', self.ids)])
+        action['search_view_id'] = (self.env.ref('hr_holidays_psi.ir_attachment_view_search_inherit_hr_holidays').id, )
+        return action
     
     def check_droit(self, values):
         current_employee = self.env['hr.contract'].search([('employee_id', '=', values['employee_id'])])

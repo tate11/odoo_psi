@@ -5,16 +5,47 @@
 		<field name="model">hr.holidays</field>
 		<field name="inherit_id" ref="hr_holidays.edit_holiday_new" />
 		<field name="arch" type="xml">
+			<xpath expr="//div[@class='oe_title']">
+				<div name="button_box" position="inside">
+					<button name="action_get_attachment_tree_view" 
+						class="oe_stat_button" 
+						icon="fa-book" type="object">
+						<field name="attachment_number" widget="statinfo" string="Documents"
+							modifiers="{'readonly': true}" />
+					</button>
+				</div>
+			</xpath>
 			<field name="category_id" position="replace">
+				<field name="color_name_holiday_status_conge_permission" invisible="1" />
+				<field name="color_name_holiday_status_conge_maladie" invisible="1" />
 				<field name="category_id" invisible="1"/>
 			</field>
 			<field name="holiday_type" position="after">
 				<field name="psi_category_id" attrs="{'invisible': [('holiday_type','not in','category')]}" />
 			</field>
-      <xpath expr="//field[@name='holiday_status_id']" position="after">
-					<field name="justificatif_file" />
-					<!-- <field name="justificatif_file" attrs="{'invisible': [('color_name_holidays_status','=','blue')]}"/> -->
-				</xpath>
+		</field>
+	</record>
+	
+	<!-- Resume and Letters -->
+	<record id="ir_attachment_view_search_inherit_hr_holidays"
+		model="ir.ui.view">
+		<field name="name">ir.attachment.search.inherit.contract</field>
+		<field name="model">ir.attachment</field>
+		<field name="mode">primary</field>
+		<field name="inherit_id" ref="base.view_attachment_search" />
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='create_date']" position="after">
+				<field name="index_content" string="Content" />
+			</xpath>
+			<xpath expr="//filter[@name='my_documents_filter']" position="attributes">
+				<attribute name='invisible'>1</attribute>
+			</xpath>
+			<xpath expr="//filter[@name='url_filter']" position="attributes">
+				<attribute name='invisible'>1</attribute>
+			</xpath>
+			<xpath expr="//filter[@name='binary_filter']" position="attributes">
+				<attribute name='invisible'>1</attribute>
+			</xpath>
 		</field>
 	</record>
 </odoo>
