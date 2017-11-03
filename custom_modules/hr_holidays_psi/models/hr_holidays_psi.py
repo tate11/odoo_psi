@@ -1,20 +1,25 @@
 # -*- coding: utf-8 -*-
 
 
-import dateutil.parser
 from datetime import date, datetime
 from datetime import timedelta
+
+import dateutil.parser
 from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.translate import _
 
+
 HOURS_PER_DAY = 8
 
 class hr_holidays_psi(models.Model):
+    
     _inherit = "hr.holidays"
     
-    psi_category = fields.Many2one('hr.psi.category.details','Catégorie professionnelle')
+    psi_category_id = fields.Many2one('hr.psi.category.details','Catégorie professionnelle')
+    justificatif_file = fields.Binary(string=u'Pièce justificatif', help=u"Joindre un certificat médical ou une ordonnance", tracability="onchange") 
     
     @api.model
     def create(self, values):
@@ -118,10 +123,6 @@ class hr_holidays_psi(models.Model):
         return res
 
 
-    justificatif_file = fields.Binary(string=u'Pièce justificatif', help=u"Joindre un certificat médical ou une ordonnance", tracability="onchange") 
- 
-#    color_name_holidays_status = fields.Selection(related='holiday_status_id.color_name', string="color")
-    
     # Send mail - rappel piece justificatif - conge maladie  
     @api.multi
     @api.constrains('holiday_status_id')  
@@ -146,3 +147,4 @@ class hr_holidays_psi(models.Model):
         if automatic:
             self._cr.commit()
             
+    
