@@ -59,6 +59,7 @@
 			<xpath expr="//field[@name='department_id']" position='after'>
 				<field name="psi_contract_type" attrs="{'readonly' : [('state','=','close')]}"/>
 				<field name="place_of_work" attrs="{'readonly' : [('state','=','close')]}"/>
+					<field name="motif_rupture" attrs="{'readonly' : [('state','=','close')]}" />		
 				
 			</xpath>
 
@@ -68,18 +69,24 @@
  -->
 			<xpath expr="//notebook" position="inside" />
 			<notebook>
-				<page string="Checkout" attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}">
+				<page string="Séparation" attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}">
 					<group>
 						<button name="action_report_certificat" type="object" string="Génerer certificat de travail" class="oe_highlight" />
-						<br />
+            <br />
 						<button name="action_send_email_desactivate_flottes" string="Demande de la désactivation des flottes " type="object"  class="oe_highlight" />
 						<br />
 						<button name="action_send_email_desactivate_account" type="object" class="oe_highlight" string="Demande de la désactivation de compte (email,etc...)"/>
 						<br />
+					</group>
+					<group>
 						<field name="debauchage_cnaps"/>
 						<field name="debauchage_ostie"/>
 						<field name="debauchage_assurance"/>
 					</group>
+					<group>
+						<field name="date_rupture" attrs="{'readonly' : [('state','=','close')]}" />
+						<field name="preavis" attrs="{'invisible': [('motif_rupture','not in','resignation'),('motif_rupture','not in','dismissal')]}"/>
+					</group>		
 				</page>
 			</notebook>
 			<xpath expr="//group[@name='duration_group']" position="after">
@@ -108,11 +115,10 @@
 						attrs="{'invisible': ['|',('response_evaluation','=',False),('result_evaluation','not in','ko')]}" />
 				</group>
 			</xpath>
+
 			<group name="duration_group" position="after">
 				<group name="rupture" string="Rupture de contrat">
-					<field name="date_demission" attrs="{'readonly' : [('state','=','close')]}" />
-					<field name="date_rupture" attrs="{'readonly' : [('state','=','close')]}" />
-					<field name="motif_rupture" attrs="{'readonly' : [('state','=','close')]}" />					
+					<field name="date_demission" attrs="{'readonly' : [('state','=','close')]}" />			
 				</group>
 			</group>
 
@@ -243,7 +249,7 @@
 			<form string="form grille salariale">
 				<field name="wage_grid_details">
 					<tree string="Wage Grid Details" editable="bottom" create="false"
-						delete="false">
+						delete="false" colors="red">
 						<field name="psi_professional_category" readonly="1" />
 						<field name="name" readonly="1" />
 						<field name="psi_category" readonly="1" />

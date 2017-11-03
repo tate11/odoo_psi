@@ -17,7 +17,8 @@ class hr_contract(models.Model):
     date_end = fields.Date('End Date', track_visibility='onchange')
     job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
     department_id = fields.Many2one('hr.department', string="Department", track_visibility='onchange')
-    
+    preavis = fields.Selection([('preste',u'Presté'),('paye',u'Payé')],string='préavis')
+    indeminite_de_preavis = fields.Float(string="Indeminité de préavis")
     date_demission = fields.Date(string=u'Date de démission')
     #rupture
     date_rupture = fields.Date(string='Date rupture de contrat')
