@@ -15,7 +15,7 @@ class hr_contract(models.Model):
     place_of_work   = fields.Char(string='Lieu d\'affectaction', track_visibility='onchange') #lieu d'affectation
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today, track_visibility='onchange')
     date_end = fields.Date('End Date', track_visibility='onchange')
-    job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
+    #job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
     department_id = fields.Many2one('hr.department', string="Department", track_visibility='onchange')
     preavis = fields.Selection([('preste',u'Presté'),('paye',u'Payé')],string='préavis')
     indeminite_de_preavis = fields.Float(string="Indeminité de préavis")
@@ -83,6 +83,10 @@ class hr_contract(models.Model):
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
 
     def action_report_certificat(self):
+        date = fields.Date().today()
+        psi_contract_historicals = self.env['psi.contract.historical'].search([('contract_id', '=', self.id)])
+        psi_contract_historicals[len(psi_contract_historicals)-1].write({'fin': date})
+        self
         return {
                'type': 'ir.actions.report.xml',
                'report_name': 'hr_contract_psi.report_certificat_travail'
@@ -239,6 +243,14 @@ class hr_contract(models.Model):
     @api.model
     def create(self, vals):  
         contract = super(hr_contract, self).create(vals)
+        date = fields.Date().today()
+        ancien = ''
+        nouveau = contract.job_id.name
+        debut = fields.Date().today()
+        index = "changement_de_grille_salariale"
+        historical = "Changement de Grille salariale"
+        vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':contract.id}
+        self.env['psi.contract.historical'].create(vals_historical) 
         self._update_cron_rh_1()
         return contract
     
