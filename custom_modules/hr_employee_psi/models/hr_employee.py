@@ -18,6 +18,9 @@ class hr_employee(models.Model):
     mother_name                     = fields.Char(string=u'Nom de la mère')
     spouse_s_name                   = fields.Char(string='Nom du conjoint')
     
+    psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la Catégorie')
+    psi_category = fields.Selection(related='psi_category_details.psi_professional_category')
+    
     emergency_contact_id            = fields.Many2one('hr.person.information', string=u'Personne à contacter en cas d\'urgence',
          help='Person to contact in case of emergency')
     
