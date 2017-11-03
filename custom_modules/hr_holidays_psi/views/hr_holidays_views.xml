@@ -1,18 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8' ?>
 <odoo>
-	<data>
-		<!-- View hr holidays inherit -->
-		<record id="view_hr_holidays_inherit" model="ir.ui.view">
-			<field name="name">hr.holidays.inherit</field>
-			<field name="model">hr.holidays</field>
-			<field name="inherit_id" ref="hr_holidays.edit_holiday_new" />
-			<field name="arch" type="xml">
-				<xpath expr="//field[@name='holiday_status_id']" position="after">
+	<record id="edit_holiday_new_psi_inherit" model="ir.ui.view">
+		<field name="name">edit.holiday.new.psi.inherit</field>
+		<field name="model">hr.holidays</field>
+		<field name="inherit_id" ref="hr_holidays.edit_holiday_new" />
+		<field name="arch" type="xml">
+			<field name="category_id" position="replace">
+				<field name="category_id" invisible="1"/>
+			</field>
+			<field name="holiday_type" position="after">
+				<field name="psi_category_id" attrs="{'invisible': [('holiday_type','not in','category')]}" />
+			</field>
+      <xpath expr="//field[@name='holiday_status_id']" position="after">
 					<field name="justificatif_file" />
 					<!-- <field name="justificatif_file" attrs="{'invisible': [('color_name_holidays_status','=','blue')]}"/> -->
 				</xpath>
-			</field>
-		</record>
-		
-	</data>
+		</field>
+	</record>
 </odoo>
