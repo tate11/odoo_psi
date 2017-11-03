@@ -83,6 +83,10 @@ class hr_contract(models.Model):
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
 
     def action_report_certificat(self):
+        date = fields.Date().today()
+        psi_contract_historicals = self.env['psi.contract.historical'].search([('contract_id', '=', self.id)])
+        psi_contract_historicals[len(psi_contract_historicals)-1].write({'fin': date})
+        self
         return {
                'type': 'ir.actions.report.xml',
                'report_name': 'hr_contract_psi.report_certificat_travail'
