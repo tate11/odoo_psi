@@ -25,20 +25,57 @@ class hr_holidays_psi(models.Model):
     
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
+    
+    state = fields.Selection([
+        ('draft', 'To Submit'),
+        ('cancel', 'Cancelled'),
+        ('confirm', 'To Approve'),
+        ('refuse', 'Refused'),
+        ('validate1', 'Valider par Supérieur hiérarchique'),
+        ('validate2', 'Valider par Responsable RH'),
+        ('validate', 'Valider par DRHA')
+        ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
+            help="The status is set to 'To Submit', when a holiday request is created." +
+            "\nThe status is 'To Approve', when holiday request is confirmed by user." +
+            "\nThe status is 'Refused', when holiday request is refused by manager." +
+            "\nThe status is 'Approved', when holiday request is approved by manager.")
+    
+#     @api.model
+#     def create(self, values):
+#         got_droit = self.check_droit(values)
+#         if got_droit == False:
+#             raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
+#         else:
+#             holidays = super(hr_holidays_psi, self).create(values)
+#             return holidays
 
-    @api.model
-    def create(self, values):
-        got_droit = self.check_droit(values)
-        if got_droit == False:
-            raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
-        else:
-            holidays = super(hr_holidays_psi, self).create(values)
-            return holidays
-          
-#        print str(color_name_holiday_status_conge_maladie)
-        #holidays = super(hr_holidays_psi, self).create()
-        #return holidays
-        
+    @api.multi
+    def action_approve(self):
+        # if double_validation: this method is the first approval approval
+        # if not double_validation: this method calls action_validate() below
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
+
+        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        for holiday in self:
+            print "holiday.state : ",holiday.state
+            if holiday.state != 'confirm':
+                raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
+            return holiday.write({'state': 'validate1', 'manager_id': manager.id if manager else False})
+    
+    @api.multi
+    def action_approve_candidate1(self):
+        # if double_validation: this method is the first approval approval
+        # if not double_validation: this method calls action_validate() below
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
+
+        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        for holiday in self:
+            if holiday.state != 'validate1':
+                raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
+        return holiday.write({'state': 'validate2', 'manager_id': manager.id if manager else False})
+                    
     @api.multi
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment'].read_group(
@@ -102,9 +139,9 @@ class hr_holidays_psi(models.Model):
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
-            if holiday.state not in ['confirm', 'validate1']:
+            if holiday.state not in ['confirm', 'validate1','validate2']:
                 raise UserError(_('Leave request must be confirmed in order to approve it.'))
-            if holiday.state == 'validate1' and not holiday.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
+            if holiday.state == 'validate2' and not holiday.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
                 raise UserError(_('Only an HR Manager can apply the second approval on leave requests.'))
 
             holiday.write({'state': 'validate'})
