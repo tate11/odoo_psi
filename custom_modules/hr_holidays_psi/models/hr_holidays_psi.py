@@ -27,18 +27,20 @@ class hr_holidays_psi(models.Model):
         if got_droit == False:
             raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
         else:
-            holidays = super(hr_holidays_psi, self).create()
+            holidays = super(hr_holidays_psi, self).create(values)
             return holidays
     
     def check_droit(self, values):
         current_employee = self.env['hr.contract'].search([('employee_id', '=', values['employee_id'])])
-        date_start = datetime.strptime(current_employee.date_start,"%Y-%m-%d")
-        date_from = datetime.strptime(values['date_from'],"%Y-%m-%d %H:%M:%S")
-        config = self.env['hr.holidays.configuration'].search([])[0]
-        diff = (date_from.year - date_start.year) * 12 + date_from.month - date_start.month
         
-        if diff <= config.droit_conge:
-            return False
+        if values.has_key('date_from') and current_employee.date_start != False :
+            if values['date_from'] != False :
+                date_start = datetime.strptime(current_employee.date_start,"%Y-%m-%d")
+                date_from = datetime.strptime(values['date_from'],"%Y-%m-%d %H:%M:%S")
+                config = self.env['hr.holidays.configuration'].search([])[0]
+                diff = (date_from.year - date_start.year) * 12 + date_from.month - date_start.month
+                if diff <= config.droit_conge:
+                    return False
         return True     
     
     @api.constrains('date_from')
@@ -58,16 +60,15 @@ class hr_holidays_psi(models.Model):
        print "_check_date_from"
        for record in self :
            if record.date_from != False and record.holiday_status_id.color_name == 'red':
-               date_from_time = datetime.strptime(record.date_from,"%Y-%m-%d %H:%M:%S")
-               date_from = date_from_time.date()
-               date_now = datetime.strptime(fields.Date().today(),"%Y-%m-%d")
-               between = date_from.day - date_now.day
                config = self.env['hr.holidays.configuration'].search([])[0]
-               if between > config.conges_sans_solde :
-                  raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes")
+
+               if record.number_of_days_temp > config.conges_sans_solde :
+                  raise ValidationError(u"Votre demande de congés depaasse le limite de conges sans soldes")
+
      
     @api.multi
     def action_validate(self):
+        print "action_validate"
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
@@ -97,17 +98,19 @@ class hr_holidays_psi(models.Model):
                     'privacy': 'confidential'
                 }
                 #Add the partner_id (if exist) as an attendee
-                if holiday.user_id and holiday.user_id.partner_id:
-                    meeting_values['partner_ids'] = [(4, holiday.user_id.partner_id.id)]
-                    meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
-                    holiday._create_resource_leave()
-                    holiday.write({'meeting_id': meeting.id})
-                elif holiday.holiday_type == 'category':
-                    leaves = self.env['hr.holidays']
-                    employees = self.env['hr.employee'].search([])
-                    for employee in employees: 
-                        if employee.psi_category == holiday.psi_category_id.psi_professional_category :
-                            values = {
+            if holiday.user_id and holiday.user_id.partner_id:
+                meeting_values['partner_ids'] = [(4, holiday.user_id.partner_id.id)]
+                meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
+                holiday._create_resource_leave()
+                holiday.write({'meeting_id': meeting.id})
+            elif holiday.holiday_type == 'category':
+                leaves = self.env['hr.holidays']
+                employees = self.env['hr.employee'].search([])
+                print '--category--'
+                for employee in employees: 
+                    if employee.psi_category == holiday.psi_category_id.psi_professional_category :
+                        print employee.name
+                        values = {
                                 'name': holiday.name,
                                 'type': holiday.type,
                                 'holiday_type': 'employee',
@@ -119,12 +122,12 @@ class hr_holidays_psi(models.Model):
                                 'parent_id': holiday.id,
                                 'employee_id': employee.id
                             }
-                            leaves += self.with_context(mail_notify_force_send=False).create(values)
+                        leaves += self.with_context(mail_notify_force_send=False).create(values)
                     # TODO is it necessary to interleave the calls?
-                    leaves.action_approve()
-                    if leaves and leaves[0].double_validation:
-                        leaves.action_validate()
-            return True
+                leaves.action_approve()
+                if leaves and leaves[0].double_validation:
+                    leaves.action_validate()
+        return True
     
     _sql_constraints = [
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND psi_category_id IS NOT NULL))",
@@ -147,21 +150,22 @@ class hr_holidays_psi(models.Model):
     def _send_email_rappel_justificatif_conge_maladie(self, automatic=False):
         print "test cron by send mail"
         date_debut = self.date_from
-        date = dateutil.parser.parse(date_debut).date()
-        dt = datetime.strptime(date_debut,'%Y-%m-%d %H:%M:%S')
-        date_y_m_d = datetime(
-                                     year=date.year, 
-                                     month=date.month,
-                                     day=date.day,
-                )   
-        date_to_notif = date_y_m_d + relativedelta(hours=48)   
-        if self.id != False :
-            for record in self:
-                if record.holiday_status_id.color_name == 'blue' or record.holiday_status_id.name == u"Cong� maladie":
-#                    if not record.justificatif_file:
-                    if not self.justificatif_file and date_to_notif.date() == datetime.today().date() :
-                        template = self.env.ref('hr_holidays_psi.custom_template_rappel_justificatif_conge_maladie')
-                        self.env['mail.template'].browse(template.id).send_mail(self.id)               
+        if date_debut != False:
+            dt = datetime.strptime(date_debut,'%Y-%m-%d %H:%M:%S')
+            date_y_m_d = datetime(
+                                         year=dt.year, 
+                                         month=dt.month,
+                                         day=dt.day,
+                    )   
+            print "1"
+            date_to_notif = date_y_m_d + relativedelta(hours=48)   
+            if self.id != False :
+                for record in self:
+                    if record.holiday_status_id.color_name == 'blue':
+                        #if not record.justificatif_file:
+                        if not self.justificatif_file and date_to_notif.date() == datetime.today().date() :
+                            template = self.env.ref('hr_holidays_psi.custom_template_rappel_justificatif_conge_maladie')
+                            self.env['mail.template'].browse(template.id).send_mail(self.id)               
         if automatic:
             self._cr.commit()
             
