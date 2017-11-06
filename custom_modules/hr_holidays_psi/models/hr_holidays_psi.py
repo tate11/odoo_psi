@@ -29,6 +29,12 @@ class hr_holidays_psi(models.Model):
     @api.model
     def create(self, values):
         got_droit = self.check_droit(values)
+        if got_droit == False:
+            raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
+        else:
+            holidays = super(hr_holidays_psi, self).create()
+            return holidays
+          
 #        print str(color_name_holiday_status_conge_maladie)
         #holidays = super(hr_holidays_psi, self).create()
         #return holidays
@@ -50,14 +56,18 @@ class hr_holidays_psi(models.Model):
         action['domain'] = str(['&', ('res_model', '=', self._name), ('res_id', 'in', self.ids)])
         action['search_view_id'] = (self.env.ref('hr_holidays_psi.ir_attachment_view_search_inherit_hr_holidays').id, )
         return action
+
     
     def check_droit(self, values):
         current_employee = self.env['hr.contract'].search([('employee_id', '=', values['employee_id'])])
         date_start = datetime.strptime(current_employee.date_start,"%Y-%m-%d")
         date_from = datetime.strptime(values['date_from'],"%Y-%m-%d %H:%M:%S")
-        delta = date_from - date_start
-        print delta.days
-        return False     
+        config = self.env['hr.holidays.configuration'].search([])[0]
+        diff = (date_from.year - date_start.year) * 12 + date_from.month - date_start.month
+        
+        if diff <= config.droit_conge:
+            return False
+        return True     
     
     @api.constrains('date_from')
     def _check_date_from(self):
@@ -69,7 +79,20 @@ class hr_holidays_psi(models.Model):
                date_now = datetime.strptime(fields.Date().today(),"%Y-%m-%d")
                between = date_from.day - date_now.day
                if between < 3 :
-                  raise ValidationError(u"Vous devez faire le demande de congeés avant 3jours de depart")
+                  raise ValidationError(u"Vous devez faire le demande de congés avant 3jours de depart")
+     
+    @api.constrains('date_from')
+    def _check_date_from_conge_sans_solde(self):
+       print "_check_date_from"
+       for record in self :
+           if record.date_from != False and record.holiday_status_id.color_name == 'red':
+               date_from_time = datetime.strptime(record.date_from,"%Y-%m-%d %H:%M:%S")
+               date_from = date_from_time.date()
+               date_now = datetime.strptime(fields.Date().today(),"%Y-%m-%d")
+               between = date_from.day - date_now.day
+               config = self.env['hr.holidays.configuration'].search([])[0]
+               if between > config.conges_sans_solde :
+                  raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes")
      
     @api.multi
     def action_validate(self):

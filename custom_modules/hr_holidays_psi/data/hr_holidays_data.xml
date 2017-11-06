@@ -20,6 +20,14 @@
 		</record>
 		<record model="hr.holidays.status" id="type_solde">
 			<field name="name">Congés sans soldes</field>
+			<field name="color_name">red</field>
 		</record>
+		
+		<!-- Données par défaut configurations -->
+		<record model="hr.holidays.configuration" id="default_config">
+			<field name="droit_conge">6</field>
+			<field name="conges_sans_solde">30</field>
+		</record>
+		
 	</data>
 </odoo>
