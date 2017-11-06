@@ -80,8 +80,11 @@ class hr_holidays_psi(models.Model):
                date_from = date_from_time.date()
                date_now = datetime.strptime(fields.Date().today(),"%Y-%m-%d")
                between = date_from.day - date_now.day
+               between_month = date_now.month - date_from.month
+               if (between_month == 1 and date_from.day >= 3) or between_month > 1:
+                   raise ValidationError(u"La date du début du congé n'est pas valide.")
                if between < 3 :
-                  raise ValidationError(u"Vous devez faire le demande de congés avant 3jours de depart")
+                   raise ValidationError(u"Vous devez faire le demande de congés avant 3jours de depart")  
      
     @api.constrains('date_from')
     def _check_date_from_conge_sans_solde(self):
