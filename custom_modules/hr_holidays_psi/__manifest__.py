@@ -10,7 +10,6 @@
     'data': [
         'data/hr_holidays_cron.xml',
         'data/hr_holidays_data.xml',
-        'security/ir.model.access.csv',
         'data/mail_template_hr_holidays_data.xml',
         'views/hr_holidays_views.xml',
         'views/hr_holidays_configuration_views.xml',

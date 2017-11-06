@@ -24,6 +24,7 @@
 			<field name="holiday_type" position="after">
 				<field name="psi_category_id" attrs="{'invisible': [('holiday_type','not in','category')]}" />
 			</field>
+
 			<xpath expr="//button[@name='action_refuse']" position='replace'>
 				<button string="Refuse" name="action_refuse" states="confirm,validate,validate1,validate2" type="object" groups="hr_holidays.group_hr_holidays_user"/>
 			</xpath>
@@ -39,6 +40,10 @@
 			
 			<field name="state" position="replace">
 				<field name="state" widget="statusbar" statusbar_visible="draft,confirm, validate1, validate2, validate"/>
+      </field>
+
+			<field name="employee_id" position="after">
+				<field name="all_employee" attrs="{'invisible': [('holiday_type','not in','employee')]}" />
 			</field>
 		</field>
 	</record>

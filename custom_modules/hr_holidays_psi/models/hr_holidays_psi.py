@@ -26,6 +26,8 @@ class hr_holidays_psi(models.Model):
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
     
+    all_employee = fields.Boolean(string="Tous les employés")
+
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -39,15 +41,20 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'To Approve', when holiday request is confirmed by user." +
             "\nThe status is 'Refused', when holiday request is refused by manager." +
             "\nThe status is 'Approved', when holiday request is approved by manager.")
-    
-#     @api.model
-#     def create(self, values):
-#         got_droit = self.check_droit(values)
-#         if got_droit == False:
-#             raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
-#         else:
-#             holidays = super(hr_holidays_psi, self).create(values)
-#             return holidays
+        
+    @api.model
+    def create(self, values):
+        got_droit = self.check_droit(values)
+        if got_droit == False:
+            raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
+        else:
+            holidays = super(hr_holidays_psi, self).create(values)
+            return holidays
+          
+#        print str(color_name_holiday_status_conge_maladie)
+        #holidays = super(hr_holidays_psi, self).create()
+        #return holidays
+
 
     @api.multi
     def action_approve(self):
@@ -117,8 +124,11 @@ class hr_holidays_psi(models.Model):
                date_from = date_from_time.date()
                date_now = datetime.strptime(fields.Date().today(),"%Y-%m-%d")
                between = date_from.day - date_now.day
+               between_month = date_now.month - date_from.month
+               if (between_month == 1 and date_from.day >= 3) or between_month > 1:
+                   raise ValidationError(u"La date du début du congé n'est pas valide.")
                if between < 3 :
-                  raise ValidationError(u"Vous devez faire le demande de congés avant 3jours de depart")
+                   raise ValidationError(u"Vous devez faire le demande de congés avant 3jours de depart")  
      
     @api.constrains('date_from')
     def _check_date_from_conge_sans_solde(self):
@@ -149,7 +159,7 @@ class hr_holidays_psi(models.Model):
                 holiday.write({'manager_id2': manager.id})
             else:
                 holiday.write({'manager_id': manager.id})
-            if holiday.holiday_type == 'employee' and holiday.type == 'remove':
+            if holiday.holiday_type == 'employee' and holiday.type == 'remove' and holiday.all_employee == False:
                 meeting_values = {
                     'name': holiday.display_name,
                     'categ_ids': [(6, 0, [holiday.holiday_status_id.categ_id.id])] if holiday.holiday_status_id.categ_id else [],
@@ -163,8 +173,9 @@ class hr_holidays_psi(models.Model):
                     'privacy': 'confidential'
                 }
                 #Add the partner_id (if exist) as an attendee
-            if holiday.user_id and holiday.user_id.partner_id:
-                meeting_values['partner_ids'] = [(4, holiday.user_id.partner_id.id)]
+                if holiday.user_id and holiday.user_id.partner_id :
+                    meeting_values['partner_ids'] = [(4, holiday.user_id.partner_id.id)]
+                
                 meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
                 holiday._create_resource_leave()
                 holiday.write({'meeting_id': meeting.id})
@@ -188,7 +199,24 @@ class hr_holidays_psi(models.Model):
                                 'employee_id': employee.id
                             }
                         leaves += self.with_context(mail_notify_force_send=False).create(values)
-                    # TODO is it necessary to interleave the calls?
+            elif holiday.holiday_type == 'employee' and holiday.all_employee == True:
+                leaves = self.env['hr.holidays']
+                employees = self.env['hr.employee'].search([])
+                print '--all--'
+                for employee in employees: 
+                    values = {
+                        'name': holiday.name,
+                        'type': holiday.type,
+                        'holiday_type': 'employee',
+                        'holiday_status_id': holiday.holiday_status_id.id,
+                        'date_from': holiday.date_from,
+                        'date_to': holiday.date_to,
+                        'notes': holiday.notes,
+                        'number_of_days_temp': holiday.number_of_days_temp,
+                         'parent_id': holiday.id,
+                         'employee_id': employee.id
+                    }
+                    leaves += self.with_context(mail_notify_force_send=False).create(values)    
                 leaves.action_approve()
                 if leaves and leaves[0].double_validation:
                     leaves.action_validate()
