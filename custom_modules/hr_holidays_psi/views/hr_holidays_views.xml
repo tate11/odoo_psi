@@ -23,6 +23,9 @@
 			<field name="holiday_type" position="after">
 				<field name="psi_category_id" attrs="{'invisible': [('holiday_type','not in','category')]}" />
 			</field>
+			<field name="employee_id" position="after">
+				<field name="all_employee" attrs="{'invisible': [('holiday_type','not in','employee')]}" />
+			</field>
 		</field>
 	</record>
 	
