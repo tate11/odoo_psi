@@ -20,9 +20,28 @@
 				<field name="color_name_holiday_status_conge_maladie" invisible="1" />
 				<field name="category_id" invisible="1"/>
 			</field>
+			
 			<field name="holiday_type" position="after">
 				<field name="psi_category_id" attrs="{'invisible': [('holiday_type','not in','category')]}" />
 			</field>
+
+			<xpath expr="//button[@name='action_refuse']" position='replace'>
+				<button string="Refuse" name="action_refuse" states="confirm,validate,validate1,validate2" type="object" groups="hr_holidays.group_hr_holidays_user"/>
+			</xpath>
+			<xpath expr="//button[@name='action_validate']" position='replace'>
+				<button string="Valider (DRHA)" name="action_validate" states="validate2" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
+			</xpath>
+			<xpath expr="//button[@name='action_approve']" position='replace'>
+				<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
+			</xpath>
+			<field name="state" position="before">
+				<button string="Valider (Responsable RH)" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','validate1')]}" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
+			</field>
+			
+			<field name="state" position="replace">
+				<field name="state" widget="statusbar" statusbar_visible="draft,confirm, validate1, validate2, validate"/>
+      </field>
+
 			<field name="employee_id" position="after">
 				<field name="all_employee" attrs="{'invisible': [('holiday_type','not in','employee')]}" />
 			</field>
