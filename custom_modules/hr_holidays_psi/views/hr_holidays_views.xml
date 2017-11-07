@@ -16,8 +16,7 @@
 				</div>
 			</xpath>
 			<field name="category_id" position="replace">
-				<field name="color_name_holiday_status_conge_permission" invisible="1" />
-				<field name="color_name_holiday_status_conge_maladie" invisible="1" />
+				<field name="color_name_holiday_status" invisible="1" />
 				<field name="category_id" invisible="1"/>
 			</field>
 			

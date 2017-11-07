@@ -20,8 +20,7 @@ class hr_holidays_psi(models.Model):
     
     psi_category_id = fields.Many2one('hr.psi.category.details','Catégorie professionnelle')
     
-    color_name_holiday_status_conge_maladie = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du congé maladie')
-    color_name_holiday_status_conge_permission = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du congé permission')
+    color_name_holiday_status = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur')
     
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
@@ -139,8 +138,9 @@ class hr_holidays_psi(models.Model):
                between_month = date_now.month - date_from.month
                if (between_month == 1 and date_from.day >= 3) or between_month > 1:
                    raise ValidationError(u"La date du début du congé n'est pas valide.")
-               if between < 3 :
-                   raise ValidationError(u"Vous devez faire le demande de congés avant 3jours de depart")  
+               if record.color_name_holiday_status != 'lightyellow':
+                   if between < 3 :
+                       raise ValidationError(u"Vous devez faire le demande de congés avant 3 jours de depart")  
      
     @api.constrains('date_from')
     def _check_date_from_conge_sans_solde(self):
