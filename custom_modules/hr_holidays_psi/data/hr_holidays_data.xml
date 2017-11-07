@@ -2,6 +2,7 @@
 <odoo>
 	<data>
 		<record model="hr.holidays.status" id="type_formation">
+			<field name="color_name">violet</field>
 			<field name="name">Absences pour formation</field>
 		</record>
 		<record model="hr.holidays.status" id="type_conge_annuel">
@@ -9,9 +10,9 @@
 		</record>
 		<record model="hr.holidays.status" id="type_maladie">
 			<field name="name">Congés maladies</field>
-			<field name="color_name">lightyellow</field>
+			<field name="color_name">blue</field>
 		</record>
-		<record model="hr.holidays.status" id="type_permission">			
+		<record model="hr.holidays.status" id="type_permission">
 			<field name="name">Absences pour permission</field>
 			<field name="color_name">lightblue</field>
 		</record>
@@ -22,12 +23,13 @@
 			<field name="name">Congés sans soldes</field>
 			<field name="color_name">red</field>
 		</record>
-		
+
 		<!-- Données par défaut configurations -->
 		<record model="hr.holidays.configuration" id="default_config">
 			<field name="droit_conge">6</field>
 			<field name="conges_sans_solde">30</field>
 		</record>
+
 		
 		<!-- Liste type permission -->
 		<record model="hr.holidays.type.permission" id="marriage_employee">
@@ -74,5 +76,6 @@
 	        <field name="name">Formalités administratives (réunions des parent d’élèves, demande de divers certificats ou actes officiels…)</field>
 	        <field name="number_of_day">0.5</field>
 	    </record>		
+
 	</data>
 </odoo>

@@ -158,9 +158,8 @@ class hr_holidays_psi(models.Model):
                between_month = date_now.month - date_from.month
                if (between_month == 1 and date_from.day >= 3) or between_month > 1:
                    raise ValidationError(u"La date du début du congé n'est pas valide.")
-               if record.color_name_holiday_status != 'lightyellow':
-                   if between < 3 :
-                       raise ValidationError(u"Vous devez faire le demande de congés avant 3 jours de depart")  
+               if between < 3 :
+                   raise ValidationError(u"Vous devez faire le demande de congés avant 3jours de depart")  
      
     @api.constrains('date_from')
     def _check_date_from_conge_sans_solde(self):
@@ -267,8 +266,51 @@ class hr_holidays_psi(models.Model):
         for leave in self:
             res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name or leave.psi_category_id.psi_professional_category, leave.holiday_status_id.name, leave.number_of_days_temp)))
         return res
-
-
+    
+    def _increment_doit_conge(self):
+        contracts = self.env['hr.contract'].search([])
+        dt_now = datetime.strptime(fields.Date().today(),'%Y-%m-%d')
+        
+        for contract in contracts :
+            print contract.date_start
+            holidays = self.env['hr.holidays'].search([('employee_id','=',contract.employee_id.id),('type','=','add')],order='id')
+            if len(holidays) > 0:
+                if holidays[0].write_date != holidays[0].create_date:
+                    dt_write_date = datetime.strptime(holidays[0].write_date,'%Y-%m-%d %H:%M:%S')
+                if dt_write_date.year == dt_now.year and dt_write_date.month != dt_now.month :
+                    number_of_days = holidays[0].number_of_days + 2 
+                    holidays[0].write({'number_of_days':number_of_days})
+                elif dt_write_date.year != dt_now.year :
+                                    number_of_days = holidays[0].number_of_days + 2 
+                                    holidays[0].write({'number_of_days':number_of_days})
+            elif contract.date_start != False :
+                   # print contract.employee_id.name
+                    dt = datetime.strptime(contract.date_start,'%Y-%m-%d')
+                    holidays_status = self.env['hr.holidays.status'].search([('color_name','=','violet')])
+                    if dt_now.year == dt.year and dt.month != dt_now.month:
+                        
+                        values = {
+                                    'name': contract.employee_id.name,
+                                    'type': 'add',
+                                    'state': 'validate',
+                                    'holiday_type': 'employee',
+                                    'holiday_status_id': holidays_status[0].id,
+                                    'number_of_days_temp': 2,
+                                    'employee_id': contract.employee_id.id
+                                }
+                        self.env['hr.holidays'].create(values)
+                    if dt_now.year != dt.year:
+                        values = {
+                                    'name': contract.employee_id.name,
+                                    'type': 'add',
+                                    'holiday_type': 'employee',
+                                    'holiday_status_id': holidays_status[0].id,
+                                    'number_of_days_temp': 2,
+                                    'employee_id': contract.employee_id.id,
+                                    'state': 'validate',
+                                }
+                        self.env['hr.holidays'].create(values)
+                
     # Send mail - rappel piece justificatif - conge maladie  
     @api.multi
     @api.constrains('holiday_status_id')  
@@ -294,7 +336,9 @@ class hr_holidays_psi(models.Model):
         if automatic:
             self._cr.commit()
            
-    
+
+     
+
     # Mail de rappel aux Assistantes et Coordinateurs
     @api.multi
     def _send_email_rappel_absences_to_assist_and_coord(self, automatic=False):
@@ -305,3 +349,4 @@ class hr_holidays_psi(models.Model):
             self.env['mail.template'].browse(template.id).send_mail(self.id)               
         if automatic:
             self._cr.commit()
+
