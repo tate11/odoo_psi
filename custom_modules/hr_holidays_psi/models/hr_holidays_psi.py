@@ -8,7 +8,7 @@ import dateutil.parser
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools.translate import _
 
 
@@ -51,9 +51,21 @@ class hr_holidays_psi(models.Model):
             holidays = super(hr_holidays_psi, self).create(values)
             return holidays
           
-#        print str(color_name_holiday_status_conge_maladie)
-        #holidays = super(hr_holidays_psi, self).create()
-        #return holidays
+    @api.multi
+    def write(self, values):
+        employee_id = values.get('employee_id', False)
+        
+        if self.env.user == self.employee_id.user_id:
+            raise AccessError(u'Vous ne pouvez plus modifier votre demande, veuillez contacter votre supérieur hiérarchique.')
+        
+        if self.env.user != self.employee_id.department_id.manager_id.user_id:
+            raise AccessError(u'Vous ne pouvez pas modifier cette demande de congé.')
+        
+        if not self._check_state_access_right(values):
+            raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
+        result = super(hr_holidays_psi, self).write(values)
+        self.add_follower(employee_id)
+        return result
 
 
     @api.multi
