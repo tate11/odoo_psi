@@ -11,7 +11,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.translate import _
 
-
 HOURS_PER_DAY = 8
 
 class hr_holidays_psi(models.Model):
@@ -55,7 +54,13 @@ class hr_holidays_psi(models.Model):
         #holidays = super(hr_holidays_psi, self).create()
         #return holidays
 
+    def action_report_request_for_absences(self):
+        return {
+               'type': 'ir.actions.report.xml',
+               'report_name': 'hr_holidays_psi.report_request_for_absences'
+           }
 
+    
     @api.multi
     def action_approve(self):
         # if double_validation: this method is the first approval approval
