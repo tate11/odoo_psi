@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+		<record id="report_request_for_absences_paysage" model="report.paperformat">
+		    <field name="name">format paysage</field>
+		    <field name="default" eval="True"/>
+		    <field name="format">A4</field>
+		    <field name="orientation">Landscape</field>
+		</record>
+        <report 
+            string="Demande d'absences" 
+            id="action_report_request_for_absences" 
+            model="hr.holidays" 
+            report_type="qweb-pdf"
+            name="hr_holidays_psi.report_request_for_absences" 
+            file="hr_holidays_psi.report_request_for_absences"
+            paperformat="report_request_for_absences_paysage"
+        />
+</odoo>

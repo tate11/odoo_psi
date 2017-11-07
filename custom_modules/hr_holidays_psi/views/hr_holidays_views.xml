@@ -38,7 +38,7 @@
 				<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
 			</xpath>
 			<field name="state" position="before">
-				<button string="Valider (Responsable RH)" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','validate1')]}" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
+			    <button string="Valider (Responsable RH)" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','validate1')]}" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
 			</field>
 			
 			<field name="state" position="replace">
