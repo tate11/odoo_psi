@@ -11,16 +11,31 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools.translate import _
 
-
 HOURS_PER_DAY = 8
 
+class hr_holidays_type_psi(models.Model):
+    
+    _inherit = "hr.holidays.status"
+    
+    type_permission = fields.Many2one('hr.holidays.type.permission', string="Type de permission")
+#    categ_permission = fields.Selection()
+    
+class hr_holidays_type_permission(models.Model):
+    
+    _name = "hr.holidays.type.permission"
+    _description = "Type de permission"
+    
+    name = fields.Char('Type de permission', required=True)
+    number_of_day = fields.Float('Nombre de jours', required=True)
+    
 class hr_holidays_psi(models.Model):
     
     _inherit = "hr.holidays"
     
     psi_category_id = fields.Many2one('hr.psi.category.details','Catégorie professionnelle')
     
-    color_name_holiday_status = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur')
+    color_name_holiday_status = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du type du congé')
+    holiday_type_permission = fields.Many2one(related='holiday_status_id.type_permission', string='Type de permission')
     
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
@@ -66,7 +81,12 @@ class hr_holidays_psi(models.Model):
         self.add_follower(employee_id)
         return result
 
-
+    def action_report_request_for_absences(self):
+        return {
+               'type': 'ir.actions.report.xml',
+               'report_name': 'hr_holidays_psi.report_request_for_absences'
+           }
+      
     @api.multi
     def action_approve(self):
         # if double_validation: this method is the first approval approval
@@ -273,5 +293,15 @@ class hr_holidays_psi(models.Model):
                             self.env['mail.template'].browse(template.id).send_mail(self.id)               
         if automatic:
             self._cr.commit()
-            
+           
     
+    # Mail de rappel aux Assistantes et Coordinateurs
+    @api.multi
+    def _send_email_rappel_absences_to_assist_and_coord(self, automatic=False):
+        print "test cron by send mail rappel"
+        today = datetime.today()
+        if today.day == 20:
+            template = self.env.ref('hr_holidays_psi.custom_template_absences_to_assist_and_coord')
+            self.env['mail.template'].browse(template.id).send_mail(self.id)               
+        if automatic:
+            self._cr.commit()
