@@ -72,7 +72,7 @@ class hr_holidays_psi(models.Model):
         if self.env.user == self.employee_id.user_id:
             raise AccessError(u'Vous ne pouvez plus modifier votre demande, veuillez contacter votre supérieur hiérarchique.')
         
-        if self.state == 'confirm' and self.env.user != self.employee_id.department_id.manager_id.user_id:
+        if self.state == 'validate1' and self.env.user != self.employee_id.department_id.manager_id.user_id:
             raise AccessError(u'Vous ne pouvez pas modifier cette demande de congé.')
         
         if not self._check_state_access_right(values):
