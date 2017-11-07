@@ -292,5 +292,15 @@ class hr_holidays_psi(models.Model):
                             self.env['mail.template'].browse(template.id).send_mail(self.id)               
         if automatic:
             self._cr.commit()
-            
+           
     
+    # Mail de rappel aux Assistantes et Coordinateurs
+    @api.multi
+    def _send_email_rappel_absences_to_assist_and_coord(self, automatic=False):
+        print "test cron by send mail rappel"
+        today = datetime.today()
+        if today.day == 20:
+            template = self.env.ref('hr_holidays_psi.custom_template_absences_to_assist_and_coord')
+            self.env['mail.template'].browse(template.id).send_mail(self.id)               
+        if automatic:
+            self._cr.commit()
