@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<template id="report_request_for_absences">
+		<t t-call="report.html_container">
+			<t t-call="report.external_layout">
+				<div class="page">
+					<style>
+						.cadre1 {
+						font-size: x-large;
+						border:1px solid black;
+						padding: 1% 1% 1% 1%;
+						width: 250px;
+						text-align:center;
+						}
+						.cadre2 {
+						font-size: small;
+						border:1px solid black;
+						padding: 1% 1% 1% 1%;
+						width: 400px;
+						text-align:left;
+						}
+						.periode {
+						text-align:center;
+						font-size: xx-small;
+						}
+						td,th
+						{padding-top:1%;padding-bottom:1%;padding-right:1%;padding-left:1%;border:1px
+						solid;}
+						table {margin-left:1%;margin-right:1%;border:1px
+						solid;align:center;font-family: Arial, "Arial Black",Arial,
+						Verdana, sans-serif;}
+						th {text-align:center;font-weight:bold;}
+						.tableau{width: 98%;}
+					</style>
+
+					<div class="row">
+						<div>
+							<div class="col-xs-6">
+								<h2 class="cadre1">DEMANDE D'ABSENCE </h2>
+							</div>
+						</div>
+
+						<div t-foreach="docs" t-as="line">
+							Nom :
+							<span t-esc="line.employee_id.name" />
+							<br />
+							Poste :
+							<span t-esc="line.employee_id.job_id.name" />
+							<br />
+						</div>
+						<table width="98%" border="1">
+							<thead>
+								<tr>
+									<th>DATE DEBUT</th>
+									<th>DATE FIN</th>
+									<th>NOMBRE DE JOURS</th>
+									<th>TYPE DE CONGE</th>
+								</tr>
+							</thead>
+							<tbody t-foreach="docs" t-as="o">
+								<tr align="center" t-foreach="get_absences(o.employee_id.id)"
+									t-as="line">
+									<td>
+										<span t-esc="line.date_from" />
+									</td>
+									<td>
+										<span t-field="line.date_to" />
+									</td>
+									<td>
+										<span t-field="line.number_of_days" />
+									</td>
+									<td>
+										<span t-field="line.holiday_status_id.name" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</t>
+		</t>
+	</template>
+
+</odoo>
