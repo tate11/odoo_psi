@@ -58,6 +58,9 @@ class hr_holidays_psi(models.Model):
         if self.env.user == self.employee_id.user_id:
             raise AccessError(u'Vous ne pouvez plus modifier votre demande, veuillez contacter votre supérieur hiérarchique.')
         
+        if self.env.user != self.employee_id.department_id.manager_id.user_id:
+            raise AccessError(u'Vous ne pouvez pas modifier cette demande de congé.')
+        
         if not self._check_state_access_right(values):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
         result = super(hr_holidays_psi, self).write(values)
