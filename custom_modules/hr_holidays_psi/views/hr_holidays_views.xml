@@ -16,10 +16,13 @@
 				</div>
 			</xpath>
 			<field name="category_id" position="replace">
-				<field name="color_name_holiday_status_conge_permission" invisible="1" />
-				<field name="color_name_holiday_status_conge_maladie" invisible="1" />
+				<field name="color_name_holiday_status" invisible="1" />
 				<field name="category_id" invisible="1"/>
 			</field>
+			
+			<xpath expr="//field[@name='holiday_status_id']" position='after'>
+				<field name="holiday_type_permission" attrs="{'invisible':[('color_name_holiday_status','not in','lightblue')]}" />
+			</xpath>
 			
 			<field name="holiday_type" position="after">
 				<field name="psi_category_id" attrs="{'invisible': [('holiday_type','not in','category')]}" />
