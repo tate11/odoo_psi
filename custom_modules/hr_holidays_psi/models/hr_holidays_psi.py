@@ -14,14 +14,29 @@ from odoo.tools.translate import _
 
 HOURS_PER_DAY = 8
 
+class hr_holidays_type_psi(models.Model):
+    
+    _inherit = "hr.holidays.status"
+    
+    type_permission = fields.Many2one('hr.holidays.type.permission', string="Type de permission")
+#    categ_permission = fields.Selection()
+    
+class hr_holidays_type_permission(models.Model):
+    
+    _name = "hr.holidays.type.permission"
+    _description = "Type de permission"
+    
+    name = fields.Char('Type de permission', required=True)
+    number_of_day = fields.Float('Nombre de jours', required=True)
+    
 class hr_holidays_psi(models.Model):
     
     _inherit = "hr.holidays"
     
     psi_category_id = fields.Many2one('hr.psi.category.details','Catégorie professionnelle')
     
-    color_name_holiday_status_conge_maladie = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du congé maladie')
-    color_name_holiday_status_conge_permission = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du congé permission')
+    color_name_holiday_status = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du type du congé')
+    holiday_type_permission = fields.Many2one(related='holiday_status_id.type_permission', string='Type de permission')
     
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
@@ -54,7 +69,6 @@ class hr_holidays_psi(models.Model):
 #        print str(color_name_holiday_status_conge_maladie)
         #holidays = super(hr_holidays_psi, self).create()
         #return holidays
-
 
     @api.multi
     def action_approve(self):
