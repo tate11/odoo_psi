@@ -13,5 +13,17 @@
             <field eval="'hr.holidays'" name="model" />
             <field name="function" eval="'_send_email_rappel_justificatif_conge_maladie'" /> 
         </record>
+        <!-- Cron Droits aux congés – nombre de jour(s) -->
+        <record id="ir_cron_send_email_rappel_justificatif_conge_maladie" model="ir.cron">
+            <field name="name">PSI Droits aux congés – nombre de jour(s)</field>
+            <field name="active" eval="True" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False" />
+            <field eval="'hr.holidays'" name="model" />
+            <field name="function" eval="'_increment_doit_conge'" /> 
+        </record>
     </data>
 </odoo>
