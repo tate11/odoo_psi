@@ -24,7 +24,7 @@
             <field name="numbercall">-1</field>
             <field name="doall" eval="False" />
             <field eval="'hr.holidays'" name="model" />
-            <field name="function" eval="'_send_email_rappel_to_assist_and_coord'" /> 
+            <field name="function" eval="'_send_email_rappel_absences_to_assist_and_coord'" /> 
         </record>
     </data>
 </odoo>
