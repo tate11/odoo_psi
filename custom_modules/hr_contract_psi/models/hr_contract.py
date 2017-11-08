@@ -69,7 +69,7 @@ class hr_contract(models.Model):
     debauchage_assurance = fields.Boolean(string="Débauchage Assurance Santé", default=False)
     
     job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
-    
+    user_id = fields.Many2one('res.users',related='job_id.user_id',string='Users ID')
     psi_professional_category = fields.Many2one(related='job_id.psi_category',string='Catégorie professionnelle')
     psi_category = fields.Selection(related='psi_professional_category.psi_professional_category',string='Catégorie professionnelle')
     
