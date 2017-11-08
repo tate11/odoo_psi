@@ -12,10 +12,9 @@
 			<field name="body_html"><![CDATA[
 		<div>
 		     <p>
-		      	Bonjour ${object.employee_id.name},
-		      	Est ce que vous voulez
+		      	Bonjour ${object.employee_id.name}, <br />
+		      	Est ce que vous voulez rénouveller votre contrat cliquez ici, 
 		      	 <a href="/contract_psi/renouveller?id=${object.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Rénouveller votre contrat</a>
-		      	 <a href="/contract_psi/nouveau?id=${object.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Nouveau recruter,</a>
 		  	</p>
 			<h5> Email - Fin de contrat de demande d'embauche</h5>
 		                 
