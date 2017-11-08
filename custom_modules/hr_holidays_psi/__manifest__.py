@@ -15,6 +15,8 @@
         'views/hr_holidays_configuration_views.xml',
         'report/report_request_for_absences.xml',
         'report/report_request_for_absences_template.xml',
+		'report/report_unwarranted_absences.xml',
+        'report/report_unwarranted_absences_template.xml',
         'security/ir.model.access.csv',
         ],
     'demo': [],
