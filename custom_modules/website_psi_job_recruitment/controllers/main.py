@@ -341,7 +341,7 @@ class WebsiteHrRecruitment(http.Controller):
         linguistic_knowledge_line = {}
         if len(linguistics) > 0 and linguistics[0] != '' and writtens[0] != '' and spokens[0] != '' and listens[0] != '' :
             for index, linguistic in enumerate(linguistics):
-                print "AIZA E : ",linguistics[0]
+                
                 if  linguistics[index] != '' and writtens[index] != '' and spokens[index] != '' and listens[index] != '' :
                     linguistic_knowledge_line = {
     
