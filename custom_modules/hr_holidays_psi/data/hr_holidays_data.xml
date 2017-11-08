@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<record model="hr.holidays.status" id="type_formation">
+			<field name="color_name">violet</field>
+			<field name="name">Absences pour formation</field>
+		</record>
+		<record model="hr.holidays.status" id="type_conge_annuel">
+			<field name="name">Absences pour conge annuel</field>
+		</record>
+		<record model="hr.holidays.status" id="type_maladie">
+			<field name="name">Congés maladies</field>
+			<field name="color_name">blue</field>
+		</record>
+		<record model="hr.holidays.status" id="type_permission">
+			<field name="name">Absences pour permission</field>
+			<field name="color_name">lightblue</field>
+		</record>
+		<record model="hr.holidays.status" id="type_maternite">
+			<field name="name">Congés de maternité</field>
+		</record>
+		<record model="hr.holidays.status" id="type_solde">
+			<field name="name">Congés sans soldes</field>
+			<field name="color_name">red</field>
+		</record>
+
+		<!-- Données par défaut configurations -->
+		<record model="hr.holidays.configuration" id="default_config">
+			<field name="droit_conge">6</field>
+			<field name="conges_sans_solde">30</field>
+		</record>
+
+		
+		<!-- Liste type permission -->
+		<record model="hr.holidays.type.permission" id="marriage_employee">
+	        <field name="name">Mariage de l’employé</field>
+	        <field name="number_of_day">3</field>
+	    </record>
+		<record model="hr.holidays.type.permission" id="marriage_child_employee">
+	        <field name="name">Mariage d’un enfant de l’employé</field>
+	        <field name="number_of_day">3</field>
+	    </record>
+		<record model="hr.holidays.type.permission" id="marriage_family_employee">
+	        <field name="name">Mariage père, mère, soeur, frère de l’employé</field>
+	        <field name="number_of_day">2</field>
+	    </record>
+		<record model="hr.holidays.type.permission" id="fatherhood">
+	        <field name="name">Naissance d’un enfant de l’employé (Paternité)</field>
+	        <field name="number_of_day">5</field>
+	    </record>
+		<record model="hr.holidays.type.permission" id="circumcision_employee_child">
+	        <field name="name">Circoncision d’un enfant de l’employé</field>
+	        <field name="number_of_day">2</field>
+	    </record>
+		<record model="hr.holidays.type.permission" id="death_spouse_child_employee">
+	        <field name="name">Décès du conjoint, enfant de l’employé</field>
+	        <field name="number_of_day">5</field>
+	    </record>
+		<record model="hr.holidays.type.permission" id="death_family_employee">
+	        <field name="name">Décès des parents et beaux-parents, frère ou soeur direct de l’employé ou de son conjoint</field>
+	        <field name="number_of_day">3</field>
+	    </record>
+		<record model="hr.holidays.type.permission" id="exhumation_family_employee">
+	        <field name="name">Exhumation du conjoint, enfants, parents, beaux-parents, frère ou soeur de l’employé ou de leur conjoint</field>
+	        <field name="number_of_day">2</field>
+	    </record>
+		<record model="hr.holidays.type.permission" id="hospitalization_family_employee">
+	        <field name="name">Hospitalisation de conjoint ou d’enfant mineur de l’employé sous sa garde ou à sa charge (légitime)</field>
+	        <field name="number_of_day">3</field>
+	    </record>
+		<record model="hr.holidays.type.permission" id="move">
+	        <field name="name">Déménagement (à raison d’une fois tous le 02 ans)</field>
+	        <field name="number_of_day">2</field>
+	    </record>
+		<record model="hr.holidays.type.permission" id="administrative_formalities">
+	        <field name="name">Formalités administratives (réunions des parent d’élèves, demande de divers certificats ou actes officiels…)</field>
+	        <field name="number_of_day">0.5</field>
+	    </record>		
+
+	</data>
+</odoo>

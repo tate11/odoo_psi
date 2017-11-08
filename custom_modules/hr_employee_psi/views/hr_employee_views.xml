@@ -191,6 +191,9 @@
 				<field name='job_id' position="after">
 					<field name="psi_budget_code_distribution" />
 				</field>
+				<field name='coach_id' position="replace">
+					<field name="coach_id" string="Supérieur Hiérarchique" />
+				</field>
 			</field>
 		</record>
 
