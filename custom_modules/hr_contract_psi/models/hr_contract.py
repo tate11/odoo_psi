@@ -251,7 +251,6 @@ class hr_contract(models.Model):
         historical = "Changement de Grille salariale"
         vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':contract.id}
         self.env['psi.contract.historical'].create(vals_historical) 
-        self._update_cron_rh_1()
         return contract
     
     @api.multi
@@ -430,8 +429,6 @@ class hr_contract(models.Model):
         if vals.has_key('job_id') :
              template5 = self.env.ref('hr_contract_psi.template_changement_de_grille_salariale_id')
              self.env['mail.template'].browse(template5.id).send_mail(contract.id,force_send=True)
-             
-        self._update_cron_rh_1()  
         return contract_obj
     
     @api.depends('date_start')
@@ -481,29 +478,31 @@ class hr_contract(models.Model):
         print "Séparation"
         self.set_employee_inactif()    
     
-    def _update_cron_rh_1(self):
-        """ Activate the cron First Email RH + Employee.
-        """
-        employee = self.employee_id
-        cron = self.env.ref('hr_contract_psi.ir_cron_send_email_rh_1', raise_if_not_found=False)
-        return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
-    
     #(R7.) Rappel - enregistrement du profil du collaborateur / complétude
-    @api.one
-    @api.constrains('name')
     def _send_first_email_rh(self, automatic=False):
-        if len(self.employee_id._get_not_checked_files()) > 0:
-            template0 = self.env.ref('hr_contract_psi.custom_template_rappel_hr_missing_pieces')
-            self.env['mail.template'].browse(template0.id).send_mail(self.id,force_send=True)
-            template1 = self.env.ref('hr_contract_psi.custom_template_rappel_collab_missing_pieces')
-            self.env['mail.template'].browse(template1.id).send_mail(self.id,force_send=True)
+        contracts = self.env['hr.contract'].search([])
+        for record in contracts:
+            date_create = record.create_date
+            date_create_contract = datetime.strptime(date_create,"%Y-%m-%d %H:%M:%S")
+            date_create_contract_time = datetime(
+                    year=date_create_contract.year, 
+                    month=date_create_contract.month,
+                    day=date_create_contract.day,
+                )
+            date_to_notif = date_create_contract_time - relativedelta(days=15) 
+            if date_to_notif.date() == datetime.today().date():
+                if len(record.employee_id._get_not_checked_files()) > 0:
+                    template0 = self.env.ref('hr_contract_psi.custom_template_rappel_hr_missing_pieces')
+                    self.env['mail.template'].browse(template0.id).send_mail(self.id)
+                    template1 = self.env.ref('hr_contract_psi.custom_template_rappel_collab_missing_pieces')
+                    self.env['mail.template'].browse(template1.id).send_mail(self.id)
+
         if automatic:
             self._cr.commit()
 
-    @api.one
-    @api.constrains('name')
     def _send_email_trial_date_end(self, automatic=False):
-        for record in self:
+        contracts = self.env['hr.contract'].search([])
+        for record in contracts:
             if record.trial_date_start:
                 date_start = record.trial_date_start
                 date_start_trial = datetime.strptime(date_start,"%Y-%m-%d")
@@ -512,28 +511,15 @@ class hr_contract(models.Model):
                     month=date_start_trial.month,
                     day=date_start_trial.day,
                 )
-                # Verification selection
-                if record.job_id.psi_professional_category == 'directeur':
-                    month_to_notif = date_start_trial_time + relativedelta(months=5)
-                    if month_to_notif.date() == datetime.today().date():
-                        template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
-                        self.env['mail.template'].browse(template.id).send_mail(self.id)
-                elif record.job_id.psi_professional_category == 'coordinateur':
-                    month_to_notif = date_start_trial_time + relativedelta(months=3)  
-                    if month_to_notif.date() == datetime.today().date():
-                        template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
-                        self.env['mail.template'].browse(template.id).send_mail(self.id)
-                else:
-                    month_to_notif = date_start_trial_time + relativedelta(months=2)  
-                    if month_to_notif.date() == datetime.today().date():
+                # Verification selection                
+                month_to_notif = date_start_trial_time + relativedelta(months=record.job_id.psi_category.test_duration-1)
+                if month_to_notif.date() == datetime.today().date():
                         template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
                         self.env['mail.template'].browse(template.id).send_mail(self.id)
         if automatic:
             self._cr.commit()
 
-    
     def _send_email_end_contract(self, automatic=False):
-        print "Send email to mentor - fin contrat"
         contracts = self.env['hr.contract'].search([])
         for record in contracts:
             if record.date_end:
@@ -552,10 +538,9 @@ class hr_contract(models.Model):
         if automatic:
             self._cr.commit()
 
-    @api.one
-    @api.constrains('name')
     def _close_collabo_end_contract(self, automatic=False):
-        for record in self:
+        contracts = self.env['hr.contract'].search([])
+        for record in contracts:
             if record.date_end:
                 date_end = record.date_end
                 date_end_contract = datetime.strptime(date_end,"%Y-%m-%d")
