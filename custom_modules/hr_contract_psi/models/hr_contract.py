@@ -15,9 +15,11 @@ class hr_contract(models.Model):
     place_of_work   = fields.Char(string='Lieu d\'affectaction', track_visibility='onchange') #lieu d'affectation
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today, track_visibility='onchange')
     date_end = fields.Date('End Date', track_visibility='onchange')
-    job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
+    #job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
     department_id = fields.Many2one('hr.department', string="Department", track_visibility='onchange')
-    
+    preavis = fields.Selection([('preste',u'Presté'),('paye',u'Payé')],string='préavis')
+    indeminite_de_preavis = fields.Float(string="Indeminité de préavis")
+    date_demission = fields.Date(string=u'Date de démission')
     #rupture
     date_rupture = fields.Date(string='Date rupture de contrat')
 
@@ -65,9 +67,26 @@ class hr_contract(models.Model):
     debauchage_cnaps = fields.Boolean(string="Débauchage CNAPS", default=False)
     debauchage_ostie = fields.Boolean(string="Débauchage OSTIE", default=False)
     debauchage_assurance = fields.Boolean(string="Débauchage Assurance Santé", default=False)
-
+    
+    job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
+    user_id = fields.Many2one('res.users',related='job_id.user_id',string='Users ID')
+    psi_professional_category = fields.Many2one(related='job_id.psi_category',string='Catégorie professionnelle')
+    psi_category = fields.Selection(related='psi_professional_category.psi_professional_category',string='Catégorie professionnelle')
+    
+    psi_sub_category            = fields.Selection([
+                                        ('1','1'),
+                                        ('2','2'),
+                                        ('3','3'),
+                                        ('4','4')
+                                ], string="Sous Cat")
+    
+    historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
 
     def action_report_certificat(self):
+        date = fields.Date().today()
+        psi_contract_historicals = self.env['psi.contract.historical'].search([('contract_id', '=', self.id)])
+        psi_contract_historicals[len(psi_contract_historicals)-1].write({'fin': date})
+        self
         return {
                'type': 'ir.actions.report.xml',
                'report_name': 'hr_contract_psi.report_certificat_travail'
@@ -190,7 +209,6 @@ class hr_contract(models.Model):
                                              ('retreat',"Retraite")
                                              ], string="Séparation événement", track_visibility="onchange")
 
-    
     psi_echelon = fields.Selection([('echelon_1','ECHELON 1'),('echelon_2','ECHELON 2'),('echelon_3','ECHELON 3'),
                                     ('echelon_4','ECHELON 4'),('echelon_5','ECHELON 5'),('echelon_6','ECHELON 6'),
                                     ('echelon_7','ECHELON 7'),('echelon_8','ECHELON 8'),('echelon_9','ECHELON 9'),
@@ -199,7 +217,7 @@ class hr_contract(models.Model):
                                     ('echelon_16','ECHELON 16'),('echelon_17','ECHELON 17'),('echelon_18','ECHELON 18'),
                                     ('echelon_19','ECHELON 19'),('echelon_20','ECHELON 20'),('echelon_hc','ECHELON HC')
                                     ],string="Echelon",track_visibility="onchange" )
-    
+
     job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
     
     psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la Catégorie')
@@ -213,12 +231,26 @@ class hr_contract(models.Model):
                                 ], string="Sous Cat")
     
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
-    
    
+    def action_send_email_desactivate_flottes(self):
+        template = self.env.ref('hr_contract_psi.template_desactivate_flottes_id')
+        self.env['mail.template'].browse(template.id).send_mail(self.id,force_send=True) 
     
+    def action_send_email_desactivate_account(self):
+        template = self.env.ref('hr_contract_psi.template_desactivate_account_id')
+        self.env['mail.template'].browse(template.id).send_mail(self.id,force_send=True)
+           
     @api.model
     def create(self, vals):  
         contract = super(hr_contract, self).create(vals)
+        date = fields.Date().today()
+        ancien = ''
+        nouveau = contract.job_id.name
+        debut = fields.Date().today()
+        index = "changement_de_grille_salariale"
+        historical = "Changement de Grille salariale"
+        vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':contract.id}
+        self.env['psi.contract.historical'].create(vals_historical) 
         self._update_cron_rh_1()
         return contract
     
@@ -419,6 +451,12 @@ class hr_contract(models.Model):
             contract_obj = self.env['hr.contract']
             employee_obj = self.env['hr.employee']
             employee = record.employee_id
+            
+            if record.motif_rupture == 'resignation':
+                template = self.env.ref('hr_contract_psi.template_separation_demission_id')
+                self.env['mail.template'].browse(template.id).send_mail(self.id,force_send=True)
+                print "EMAIL SENT"
+            
             #employee readonly
             contract = contract_obj.browse([record.id])
             contract.update({
@@ -456,9 +494,9 @@ class hr_contract(models.Model):
     def _send_first_email_rh(self, automatic=False):
         if len(self.employee_id._get_not_checked_files()) > 0:
             template0 = self.env.ref('hr_contract_psi.custom_template_rappel_hr_missing_pieces')
-            self.env['mail.template'].browse(template0.id).send_mail(self.id)
+            self.env['mail.template'].browse(template0.id).send_mail(self.id,force_send=True)
             template1 = self.env.ref('hr_contract_psi.custom_template_rappel_collab_missing_pieces')
-            self.env['mail.template'].browse(template1.id).send_mail(self.id)
+            self.env['mail.template'].browse(template1.id).send_mail(self.id,force_send=True)
         if automatic:
             self._cr.commit()
 
@@ -493,11 +531,11 @@ class hr_contract(models.Model):
         if automatic:
             self._cr.commit()
 
-    @api.one
-    @api.constrains('name')
+    
     def _send_email_end_contract(self, automatic=False):
         print "Send email to mentor - fin contrat"
-        for record in self:
+        contracts = self.env['hr.contract'].search([])
+        for record in contracts:
             if record.date_end:
                 date_end = record.date_end
                 date_end_contract = datetime.strptime(date_end,"%Y-%m-%d")
@@ -508,8 +546,9 @@ class hr_contract(models.Model):
                 )
                 month_to_notif = date_end_contract_time - relativedelta(months=1)  
                 if month_to_notif.date() == datetime.today().date():
-                    template = self.env.ref('hr_contract_psi.custom_template_end_contract')
-                    self.env['mail.template'].browse(template.id).send_mail(self.id)
+                    print record.employee_id.name
+                    template = self.env.ref('hr_contract_psi.template_end_contract_id')
+                    self.env['mail.template'].browse(template.id).send_mail(record.id,force_send=True)
         if automatic:
             self._cr.commit()
 

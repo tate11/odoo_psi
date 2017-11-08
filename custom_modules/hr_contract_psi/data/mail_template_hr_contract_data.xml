@@ -1,6 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
+		<!-- Template email - End Contrat demande d'embauche -->
+		<record id="template_end_contract_id" model="mail.template">
+			<field name="name">PSI Template email - Demande d'embauche
+			</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Demande d'embauche</field>
+			<field name="email_to">${object.user_id.email}</field>
+			<field name="body_html"><![CDATA[
+		<div>
+		     <p>
+		      	Bonjour ${object.user_id.name}, <br />
+		      	Est ce que vous voulez rénouveller le contrat de ${object.employee_id.name}, Si Oui veuillez  cliquez ici, 
+		      	 <a href="/contract_psi/renouveller?id=${object.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Rénouveller votre contrat</a>
+		  	</p>
+			<h5> Email - Fin de contrat de demande d'embauche</h5>
+		                 
+		</div>   ]]>
+			</field>
+		</record>
+		<!-- Template email - Séparation - démission -->
+		<record id="template_separation_demission_id" model="mail.template">
+			<field name="name">PSI Template email - Séparation - démission
+			</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Séparation - démission</field>
+			<field name="email_to">${object.employee_id.work_email}</field>
+			<field name="body_html"><![CDATA[
+		<div>
+		    <p>
+		      	Bonjour, 
+		      	<ul>
+		      	 		<li>Nombre de jours de préavis : ${object.psi_professional_category.prior_notice}</li>
+		      	 	% if object.date_demission != False:
+		      	 		<li>Date de démission : ${object.date_demission}</li>
+		      	 	% endif
+		      	 	% if object.date_rupture != False:
+						<li>Date effective de la rupture de contrat : ${object.date_rupture}</li>
+					% endif
+		      	</ul> 
+		     	                     
+			</p>
+			<h5> Email - Séparation - démission</h5>
+		                 
+		</div>   ]]>
+			</field>
+		</record>
+		<!-- Template email - desactivate flottes -->
+		<record id="template_desactivate_flottes_id" model="mail.template">
+			<field name="name">PSI Template email - demande désactivation
+			</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Rappel de demande désactivation flottes</field>
+			<field name="email_to">admin@test.ts</field>
+			<field name="body_html"><![CDATA[
+		<div>
+		    <p>
+		      	Bonjour, Veuillez désactiver les flottes de l'employée ${object.employee_id.name}
+		     	                     
+			</p>
+			<h5> Email - Demande de désactivation de flottes</h5>
+		                 
+		</div>   ]]>
+			</field>
+		</record>
+		
+		<!-- Template email - desactivation compte -->
+		<record id="template_desactivate_account_id" model="mail.template">
+			<field name="name">PSI Template email - desactivation compte
+			</field>
+			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Désactivation de compte</field>
+			<field name="email_to">it@test.ts</field>
+			<field name="body_html"><![CDATA[
+		<div>
+		    <p>
+		      	Bonjour,
+		        Bonjour, Veuillez désactiver tous les comptes (email,....) de l'employée ${object.employee_id.name}                      
+			</p>
+			<h5> Email - rappel Désactivation compte</h5>
+		                 
+		</div>   ]]>
+			</field>
+		</record>
+		
 		<!-- Template email - rappel sur collaborateur -->
 		<record id="template_collaborator_id" model="mail.template">
 			<field name="name">PSI Template email - rappel sur collaborateur
