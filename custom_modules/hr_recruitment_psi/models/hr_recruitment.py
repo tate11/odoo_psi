@@ -37,9 +37,6 @@ class Applicant(models.Model):
     
     def _default_stage_id(self):
         return self.env.ref('hr_recruitment_psi.applicant_selected').id
-    
-    #attachment_file_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], ondelete='cascade',string='Attachments')
-    #attachment_file_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')],string='Attachments')
     attachment_file_ids = fields.Many2one('ir.attachment',string='Attachments')
     
     recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement', readonly=True)
@@ -205,7 +202,7 @@ class Applicant(models.Model):
                                                      day=date_start_trial.day,
                        )
                 
-                month_to_notif = date_start_trial_time + relativedelta(months=applicant.job_id.psi_professional_category.test_duration)
+                month_to_notif = date_start_trial_time + relativedelta(months=applicant.job_id.psi_category.test_duration)
                     
                 vals_contract = {'name': applicant.partner_name or contact_name,
                                                 'psi_contract_type' : applicant.job_id.psi_contract_type,

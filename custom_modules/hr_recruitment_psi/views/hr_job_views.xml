@@ -47,8 +47,8 @@
 			<field name="department_id" position="after">
 				<field name="recrutement_type_id" />
 				<field name="recrutement_type" invisible="1" />
-				<field name="psi_category"/>
-				<field name="psi_date_start" />
+				<field name="psi_category" required="1"/>
+				<field name="psi_date_start" required="1"/>
 				<field name="level_of_education_id" />
 				<field name="experience_required_ids" colspan="2">
 					<tree string="Experience requise" editable="bottom">
