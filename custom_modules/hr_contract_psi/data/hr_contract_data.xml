@@ -7,8 +7,8 @@
 			</field>
 			<field name="active" eval="False" />
 			<field name="user_id" ref="base.user_root" />
-			<field name="interval_number">15</field>
-			<field name="interval_type">days</field>	<!-- 3 weeks -->
+			<field name="interval_number">1</field>
+			<field name="interval_type">days</field>
 			<field name="numbercall">1</field>
 			<field name="doall" eval="False" />
 			<field eval="'hr.contract'" name="model" />
@@ -20,7 +20,7 @@
 			<field name="name">PSI Contrat - Rappel fin période d'essai</field>
 			<field name="user_id" ref="base.user_root" />
 			<field name="interval_number">1</field>
-			<field name="interval_type">months</field>
+			<field name="interval_type">days</field>
 			<field name="numbercall">-1</field>
 			<field name="doall">1</field>
 			<field eval="'hr.contract'" name="model" />
