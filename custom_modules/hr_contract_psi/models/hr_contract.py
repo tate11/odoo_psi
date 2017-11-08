@@ -69,7 +69,7 @@ class hr_contract(models.Model):
     debauchage_assurance = fields.Boolean(string="Débauchage Assurance Santé", default=False)
     
     job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
-    
+    user_id = fields.Many2one('res.users',related='job_id.user_id',string='Users ID')
     psi_professional_category = fields.Many2one(related='job_id.psi_category',string='Catégorie professionnelle')
     psi_category = fields.Selection(related='psi_professional_category.psi_professional_category',string='Catégorie professionnelle')
     
@@ -451,7 +451,7 @@ class hr_contract(models.Model):
             
             if record.motif_rupture == 'resignation':
                 template = self.env.ref('hr_contract_psi.template_separation_demission_id')
-                self.env['mail.template'].browse(template.id).send_mail(self.id)
+                self.env['mail.template'].browse(template.id).send_mail(self.id,force_send=True)
                 print "EMAIL SENT"
             
             #employee readonly
@@ -496,6 +496,7 @@ class hr_contract(models.Model):
                     self.env['mail.template'].browse(template0.id).send_mail(self.id)
                     template1 = self.env.ref('hr_contract_psi.custom_template_rappel_collab_missing_pieces')
                     self.env['mail.template'].browse(template1.id).send_mail(self.id)
+
         if automatic:
             self._cr.commit()
 
@@ -531,8 +532,9 @@ class hr_contract(models.Model):
                 )
                 month_to_notif = date_end_contract_time - relativedelta(months=1)  
                 if month_to_notif.date() == datetime.today().date():
+                    print record.employee_id.name
                     template = self.env.ref('hr_contract_psi.template_end_contract_id')
-                    self.env['mail.template'].browse(template.id).send_mail(self.id)
+                    self.env['mail.template'].browse(template.id).send_mail(record.id,force_send=True)
         if automatic:
             self._cr.commit()
 
