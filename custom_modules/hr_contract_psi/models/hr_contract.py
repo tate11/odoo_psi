@@ -454,7 +454,7 @@ class hr_contract(models.Model):
             
             if record.motif_rupture == 'resignation':
                 template = self.env.ref('hr_contract_psi.template_separation_demission_id')
-                self.env['mail.template'].browse(template.id).send_mail(self.id)
+                self.env['mail.template'].browse(template.id).send_mail(self.id,force_send=True)
                 print "EMAIL SENT"
             
             #employee readonly
@@ -494,9 +494,9 @@ class hr_contract(models.Model):
     def _send_first_email_rh(self, automatic=False):
         if len(self.employee_id._get_not_checked_files()) > 0:
             template0 = self.env.ref('hr_contract_psi.custom_template_rappel_hr_missing_pieces')
-            self.env['mail.template'].browse(template0.id).send_mail(self.id)
+            self.env['mail.template'].browse(template0.id).send_mail(self.id,force_send=True)
             template1 = self.env.ref('hr_contract_psi.custom_template_rappel_collab_missing_pieces')
-            self.env['mail.template'].browse(template1.id).send_mail(self.id)
+            self.env['mail.template'].browse(template1.id).send_mail(self.id,force_send=True)
         if automatic:
             self._cr.commit()
 
@@ -531,11 +531,11 @@ class hr_contract(models.Model):
         if automatic:
             self._cr.commit()
 
-    @api.one
-    @api.constrains('name')
+    
     def _send_email_end_contract(self, automatic=False):
         print "Send email to mentor - fin contrat"
-        for record in self:
+        contracts = self.env['hr.contract'].search([])
+        for record in contracts:
             if record.date_end:
                 date_end = record.date_end
                 date_end_contract = datetime.strptime(date_end,"%Y-%m-%d")
@@ -546,8 +546,9 @@ class hr_contract(models.Model):
                 )
                 month_to_notif = date_end_contract_time - relativedelta(months=1)  
                 if month_to_notif.date() == datetime.today().date():
+                    print record.employee_id.name
                     template = self.env.ref('hr_contract_psi.template_end_contract_id')
-                    self.env['mail.template'].browse(template.id).send_mail(self.id)
+                    self.env['mail.template'].browse(template.id).send_mail(record.id,force_send=True)
         if automatic:
             self._cr.commit()
 
