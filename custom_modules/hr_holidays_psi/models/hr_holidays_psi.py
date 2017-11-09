@@ -6,6 +6,7 @@ from datetime import timedelta
 
 import dateutil.parser
 from dateutil.relativedelta import relativedelta
+from odoo.tools import float_compare
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, AccessError
@@ -349,4 +350,21 @@ class hr_holidays_psi(models.Model):
             self.env['mail.template'].browse(template.id).send_mail(self.id)               
         if automatic:
             self._cr.commit()
+            
+            
+    @api.constrains('state', 'number_of_days_temp')
+    def _check_holidays(self):
+        holidays_status_formation = self.env['hr.holidays.status'].search([('color_name','=','lightpink')])
+        holidays_status_annuel = self.env['hr.holidays.status'].search([('color_name','=','violet')])
+        for holiday in self:
+            
+            if holiday.holiday_type != 'employee' or holiday.type != 'remove' or not holiday.employee_id or holiday.holiday_status_id.limit:
+                continue
+            if holidays_status_formation[0].id == holiday.holiday_status_id and holidays_status_annuel[0].id == holiday.holiday_status_id:
+                holidays_attribution = self.env['hr.holidays'].search([('employee_id','',holiday.employee_id.id),('type','=','add')])
+                leave_days = holidays_attribution[0].holiday_status_id.get_days(holidays_attribution[0].employee_id.id)[holidays_attribution[0].holiday_status_id.id]
+                if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or \
+                  float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
+                    raise ValidationError(_('The number of remaining leaves is not sufficient for this leave type.\n'
+                                            'Please verify also the leaves waiting for validation.'))
 
