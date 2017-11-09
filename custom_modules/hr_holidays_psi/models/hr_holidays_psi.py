@@ -3,13 +3,21 @@
 
 from datetime import date, datetime
 from datetime import timedelta
+import math
+import logging
+import math
+from datetime import timedelta
+
+from werkzeug import url_encode
+from openerp.tools import float_compare
 
 import dateutil.parser
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools.translate import _
+from odoo.exceptions import Warning
 
 
 HOURS_PER_DAY = 8
@@ -36,7 +44,7 @@ class hr_holidays_psi(models.Model):
     psi_category_id = fields.Many2one('hr.psi.category.details','Catégorie professionnelle')
     
     color_name_holiday_status = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du type du congé')
-    holiday_type_permission = fields.Many2one(related='holiday_status_id.type_permission', string='Type de permission')
+    holiday_type_permission = fields.Many2one(related='holiday_status_id.type_permission', string='Type de permission', compute="_verif_leave_date")
     
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
@@ -57,6 +65,23 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'Refused', when holiday request is refused by manager." +
             "\nThe status is 'Approved', when holiday request is approved by manager.")
         
+    @api.depends('date_from','date_to')
+    def _verif_leave_date(self):
+
+            from_dt = fields.Datetime.from_string(self.date_from)
+            to_dt = fields.Datetime.from_string(self.date_to)
+            time_delta = to_dt - from_dt
+            get_day_difference = time_delta + timedelta(hours=24)
+            type_permissions = self.env['hr.holidays.type.permission'].search([])
+            for permissions in type_permissions:
+                if self.holiday_type_permission.id == permissions.id:
+                    offset_seconds = get_day_difference.total_seconds()
+                    offset_hours = offset_seconds / 3600.0
+#                    print float(get_day_difference.days),'  #  ',permissions.number_of_day
+                    if float(get_day_difference.days) > permissions.number_of_day:
+                        raise Warning(_(u'Vous ne pouvez pas dépasser ',permissions.number_of_day,' jours pour ce type de permission.'))
+            
+        
     @api.model
     def create(self, values):
         got_droit = self.check_droit(values)
@@ -65,7 +90,7 @@ class hr_holidays_psi(models.Model):
         else:
             holidays = super(hr_holidays_psi, self).create(values)
             return holidays
-          
+        
 #        print str(color_name_holiday_status_conge_maladie)
         #holidays = super(hr_holidays_psi, self).create()
         #return holidays
@@ -275,5 +300,6 @@ class hr_holidays_psi(models.Model):
                             self.env['mail.template'].browse(template.id).send_mail(self.id)               
         if automatic:
             self._cr.commit()
+
+
             
-    
