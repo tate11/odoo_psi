@@ -19,7 +19,7 @@
 				<field name="color_name_holiday_status_conge_permission" invisible="1" />
 				<field name="color_name_holiday_status_conge_maladie" invisible="1" />
 				<field name="category_id" invisible="1"/>
-				<field name="last_business_day" invisible="1"/>
+				<field name="last_business_day"/>
 			</field>
 			<field name="holiday_type" position="after">
 				<field name="psi_category_id" attrs="{'invisible': [('holiday_type','not in','category')]}" />

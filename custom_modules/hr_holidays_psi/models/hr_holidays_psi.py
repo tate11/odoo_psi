@@ -29,17 +29,17 @@ class hr_holidays_psi(models.Model):
 
     last_business_day = fields.Date(compute="_get_last_business_day", string="Dernier jour ouvrable du mois")
 
-    @api.depends('employee_id')
     def _get_last_business_day(self):
-        date=datetime.now() 
-        last_day_month = self.get_last_month(date)
+        date=datetime.now()
+        day_last_month = self.get_last_month(date)
+        lastBusDay = datetime.today()
+        new_lastBusDay = lastBusDay.replace(day=int(day_last_month))
+        if new_lastBusDay.weekday() == 5:
+             new_lastBusDay = new_lastBusDay - datetime.timedelta(days = 1)
+        elif new_lastBusDay.weekday() == 6: 
+             new_lastBusDay = new_lastBusDay - datetime.timedelta(days = 2)
         for record in self:
-            lastBusDay = datetime.today()
-            if lastBusDay.weekday() == 5:
-                 lastBusDay = lastBusDay - datetime.timedelta(days = 1)
-            elif lastBusDay.weekday() == 6: 
-                 lastBusDay = lastBusDay - datetime.timedelta(days = 2)
-            record.last_business_day = lastBusDay.date()
+            record.last_business_day = new_lastBusDay.date()
         
     def get_last_month(self,date):  
         result = calendar.monthrange(date.year,date.month)[1]
@@ -60,9 +60,7 @@ class hr_holidays_psi(models.Model):
         
     @api.multi
     def write(self, vals):
-        date=datetime.now()   
-        ok = calendar.monthrange(date.year,date.month)
-        print ok
+        self._send_email_rappel_absences_to_assist_and_coord(False)
         holiday = super(hr_holidays_psi, self).write(vals)
         return holiday
     
@@ -228,8 +226,8 @@ class hr_holidays_psi(models.Model):
     def _send_email_rappel_absences_to_assist_and_coord(self, automatic=False):
         print "test cron by send mail rappel"
         today = datetime.today()
-#        if today.day == 20:
-        template = self.env.ref('hr_holidays_psi.custom_template_absences_to_assist_and_coord')
-        self.env['mail.template'].browse(template.id).send_mail(self.id)               
+        if today.day == 20:
+            template = self.env.ref('hr_holidays_psi.custom_template_absences_to_assist_and_coord')
+            self.env['mail.template'].browse(template.id).send_mail(self.id)               
         if automatic:
             self._cr.commit()

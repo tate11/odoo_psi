@@ -25,13 +25,11 @@
 			<field name="email_from">${object.create_uid.email}</field>
 			<field name="subject">Rappel pour envoie des pièces de demandes d'absences</field>
 			<field name="email_to">${(object.manager_id.work_email and object.manager_id2.work_email)|safe}</field>
-			<!-- <field name="report_template" ref="hr_holidays.report_holidayssummary"/> -->
-            <!-- <field name="report_name">Recap_absences</field> -->
 			<field name="body_html"><![CDATA[
 <div>
     <p>
       	Bonjour, 
-		Veuillez envoyé les pièces de demandes d'absences avec les états récapitulatif avant le fin du mois le 2017-11-30.
+		Veuillez envoyé les pièces de demandes d'absences avec les états récapitulatif avant le fin du mois le ${object.last_business_day}.
 	</p>
 </div>   ]]>
 			</field>
