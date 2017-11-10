@@ -10,7 +10,9 @@
 			<field name="model">hr.applicant</field>
 			<field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job" />
 			<field name="arch" type="xml">
-			  
+			  <field name="email_from" position="replace">
+			  	<field name="email_from" required="1" />
+			  </field>
 				<field name="partner_id" position="before">
 					<field name="birthday" attrs="{'required': True}" />
 					<field name="age" />
@@ -207,16 +209,16 @@
 					<label for="salary_expected" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
 				</xpath>
 				<xpath expr="//field[@name='salary_expected']" position='replace'>
-					<field name="salary_expected" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
+					<field name="salary_expected" required="1" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')], 'required':[('state', 'in', ('psi_wage_proposal','honorary_proposal'))]}" />
 				</xpath>
 				<xpath expr="//field[@name='salary_expected_extra']" position='replace'>
 					<field name="salary_expected_extra" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
 				</xpath>
 				<xpath expr="//label[@for='salary_proposed']" position='replace'>
-					<label for="salary_proposed" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
+					<label for="salary_proposed"  attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
 				</xpath>
 				<xpath expr="//field[@name='salary_proposed']" position='replace'>
-					<field name="salary_proposed" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}"/>
+					<field name="salary_proposed" required="1" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')], 'required':[('state', 'in', ('psi_wage_proposal','honorary_proposal'))]}"/>
 				</xpath>
 				<xpath expr="//field[@name='salary_proposed_extra']" position='replace'>
 					<field name="salary_proposed_extra" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}"/>
