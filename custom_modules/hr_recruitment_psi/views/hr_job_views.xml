@@ -29,12 +29,12 @@
 						<field name="equipment_state" />
 					</tree>
 				</field>
-				<field name="nature_recrutement" /> <!-- attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': [('recrutement_type', '=', 'consultant')]}" -->
+				<field name="nature_recrutement" required="1" /> <!-- attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': [('recrutement_type', '=', 'consultant')]}" -->
 				<field name="psi_budget_code_distribution" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'required': [('state', '=', 'validation_finance')]}"/>
 				<field name="subordination_link_id" />
 				<field name="psi_contract_type" attrs="{'required': [('state', 'in', ('open'))]}" />
 				<field name="psi_contract_duration" attrs="{'invisible': ['|',('psi_contract_type','=','cdi'),('psi_contract_type','=','prestataire')], 'required': [('psi_contract_type', '=', 'cdd')]}" />
-				<field name="rr_approbation" />
+				<field name="rr_approbation" attrs="{'readonly': [('nature_recrutement', '=', 'interne')]}" />
 				<field name="psi_memo" attrs="{'invisible': [('nature_recrutement', '!=', 'conssideration_dossier')]}"/>
 			</field>
 			<field name="address_id" position="replace">
