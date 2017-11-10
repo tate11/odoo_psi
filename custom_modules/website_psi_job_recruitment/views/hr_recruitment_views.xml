@@ -812,13 +812,12 @@
 				       </p>
                 </div>
 				<div class="form-group form-field">
-				   <p>
-					  Avez-vous jamais été arrêté, inculpé ou poursuivi au criminel ? Avez-vous jamais été reconnu coupable ou condamné à une autre amende ou une peine de prison pour un délit (autre qu'une infraction en matiére de circulation) ?
-					</p>
-					<div class="col-md-3 col-sm-4 text-right">
+				  
+					<div class="col-md-7 col-sm-4 text-right">
+					 Avez-vous jamais été arrêté, inculpé ou poursuivi au criminel ? Avez-vous jamais été reconnu coupable ou condamné à une autre amende ou une peine de prison pour un délit (autre qu'une infraction en matiére de circulation) ?
 						<label class="control-label" for="bridger_insight">  </label>
 					</div>
-					<div class="col-md-7 col-sm-8">
+					<div class="col-md-3 col-sm-8">
 						<input type="checkbox" value="Yes" class="o_website_form_input"
 							name="bridger_insight" id="bridger_insight"/>
 					</div>
