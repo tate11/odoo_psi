@@ -41,14 +41,17 @@
 							</div>
 						</div>
 
-						<div t-foreach="docs" t-as="line">
+						<div t-foreach="docs" t-as="o">
 							Nom :
-							<span t-esc="line.employee_id.name" />
+							<span t-esc="o.employee_id.name" />
+							<br />
+							Département :
+							<span t-esc="o.employee_id.job_id.department_id.name" />
 							<br />
 							Poste :
-							<span t-esc="line.employee_id.job_id.name" />
+							<span t-esc="o.employee_id.job_id.name" />
 							<br />
-						</div>
+						
 						<table width="98%" border="1">
 							<thead>
 								<tr>
@@ -58,7 +61,7 @@
 									<th>TYPE DE CONGE</th>
 								</tr>
 							</thead>
-							<tbody t-foreach="docs" t-as="o">
+							<tbody>
 								<tr align="center" t-foreach="get_absences(o.employee_id.id)"
 									t-as="line">
 									<td>
@@ -78,6 +81,7 @@
 						</table>
 					</div>
 				</div>
+			</div>
 			</t>
 		</t>
 	</template>
