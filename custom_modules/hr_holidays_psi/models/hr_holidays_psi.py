@@ -3,6 +3,7 @@
 
 from datetime import date, datetime
 from datetime import timedelta
+import calendar
 
 import dateutil.parser
 from dateutil.relativedelta import relativedelta
@@ -42,7 +43,7 @@ class hr_holidays_psi(models.Model):
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
     
     all_employee = fields.Boolean(string="Tous les employés")
-
+    
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -56,6 +57,24 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'To Approve', when holiday request is confirmed by user." +
             "\nThe status is 'Refused', when holiday request is refused by manager." +
             "\nThe status is 'Approved', when holiday request is approved by manager.")
+    
+    last_business_day = fields.Date(compute="_get_last_business_day", string="Dernier jour ouvrable du mois")
+
+    def _get_last_business_day(self):
+        date=datetime.now()
+        day_last_month = self.get_last_month(date)
+        lastBusDay = datetime.today()
+        new_lastBusDay = lastBusDay.replace(day=int(day_last_month))
+        if new_lastBusDay.weekday() == 5:
+             new_lastBusDay = new_lastBusDay - datetime.timedelta(days = 1)
+        elif new_lastBusDay.weekday() == 6: 
+             new_lastBusDay = new_lastBusDay - datetime.timedelta(days = 2)
+        for record in self:
+            record.last_business_day = new_lastBusDay.date()
+        
+    def get_last_month(self,date):  
+        result = calendar.monthrange(date.year,date.month)[1]
+        return result
         
     @api.model
     def create(self, values):
@@ -115,6 +134,12 @@ class hr_holidays_psi(models.Model):
                 raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
         return holiday.write({'state': 'validate2', 'manager_id': manager.id if manager else False})
                     
+    @api.multi
+    def write(self, vals):
+        self._send_email_rappel_absences_to_assist_and_coord(False)
+        holiday = super(hr_holidays_psi, self).write(vals)
+        return holiday
+    
     @api.multi
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment'].read_group(
@@ -316,7 +341,6 @@ class hr_holidays_psi(models.Model):
     @api.multi
     @api.constrains('holiday_status_id')  
     def _send_email_rappel_justificatif_conge_maladie(self, automatic=False):
-        print "test cron by send mail"
         date_debut = self.date_from
         if date_debut != False:
             dt = datetime.strptime(date_debut,'%Y-%m-%d %H:%M:%S')
@@ -325,13 +349,12 @@ class hr_holidays_psi(models.Model):
                                          month=dt.month,
                                          day=dt.day,
                     )   
-            print "1"
             date_to_notif = date_y_m_d + relativedelta(hours=48)   
             if self.id != False :
                 for record in self:
                     if record.holiday_status_id.color_name == 'blue':
                         #if not record.justificatif_file:
-                        if not self.justificatif_file and date_to_notif.date() == datetime.today().date() :
+                        if self.attachment_number == 0 and date_to_notif.date() == datetime.today().date() :
                             template = self.env.ref('hr_holidays_psi.custom_template_rappel_justificatif_conge_maladie')
                             self.env['mail.template'].browse(template.id).send_mail(self.id)               
         if automatic:
