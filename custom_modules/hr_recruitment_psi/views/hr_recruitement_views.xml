@@ -36,13 +36,13 @@
 						<field name="b_liste_restreinte" />
 					</group>
 					<group string="Note Shortlist">
-						<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}" />
-						<field name="psi_note_candidate" attrs="{'required': [('state','in',('interview'))]}" />
+						<field name="psi_note_hr" attrs="{'required': [('state','=',('applicant_selected'))]}" />
+						<field name="psi_note_candidate" attrs="{'required': [('state','=',('applicant_selected'))]}" />
 						<field name="psi_average_note" />
 					</group>
 					<group string="Note Test">
-						<field name="psi_note_test_rh" required="1"/>
-						<field name="psi_note_test_candidate" required="1"/>
+						<field name="psi_note_test_rh" attrs="{'required': [('state','=',('convoked_for_test'))]}" />
+						<field name="psi_note_test_candidate" attrs="{'required': [('state','=',('convoked_for_test'))]}" />
 						<field name="psi_average_note_test" />
 					</group>
 				</field>
@@ -313,7 +313,7 @@
 				<field name="state" position="after">
 					<field name="psi_average_note"/>
 					<field name="psi_average_note_test"/>
-					<field name="psi_note_interview"/>
+					<field name="psi_note_interview" attrs="{'required': [('state','=','interview')]}" />
 					<field name="psi_total_note"/>
 				</field>
 	        </field>
