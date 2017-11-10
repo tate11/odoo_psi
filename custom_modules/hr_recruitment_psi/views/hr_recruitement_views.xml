@@ -262,7 +262,7 @@
 					<button name="button_contract_established_consultant"
 						string="Etablir contrat"
 						attrs="{'invisible': ['|',('state','!=','honorary_proposal'),('recrutement_type', '!=', 'consultant')]}" />
-					<button string="Refuser" name="mail_refuse_applicant" type="object"
+					<button string="Refuser" name="button_refuser" 
 						attrs="{'invisible': [('state','not in',('interview', 'professional_reference', 'bridger_insight', 'psi_wage_proposal'))]}" />
 					<button name="button_contract_established" string="Etablir contrat"
 						attrs="{'invisible': [('state','!=','notification_of_employment')]}" />
