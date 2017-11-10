@@ -91,7 +91,7 @@
         
         <record id="activity_draft_to_activity_interview" model="workflow.transition">
             <field name="act_from" ref="activity_applicant_selected"/>
-            <field name="act_to" ref="activity_interview"/>
+            <field name="act_to" ref="activity_professional_reference"/>
             <field name="signal">button_consultant_consideration_de_dossier</field>
         </record>
         
