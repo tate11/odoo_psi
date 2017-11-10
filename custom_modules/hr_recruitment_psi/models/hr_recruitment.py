@@ -37,6 +37,7 @@ class Applicant(models.Model):
     
     def _default_stage_id(self):
         return self.env.ref('hr_recruitment_psi.applicant_selected').id
+    
     attachment_file_ids = fields.Many2one('ir.attachment',string='Attachments')
     
     recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement', readonly=True)
@@ -56,7 +57,8 @@ class Applicant(models.Model):
         ('notification_of_employment', '6- Notification d\'embauche'),
          ('internship_contract', u'7- Contrat de stage à faire'),
         ('contract_established', u'7- Contrat à faire'),
-         ('contract_established_consultant', u'7- Contrat à faire')
+         ('contract_established_consultant', u'7- Contrat à faire'),
+         ('refused', '8- Refusé')
     ], string='Status', readonly=True, required=True, track_visibility='onchange', copy=False, default='applicant_selected', help="Set whether the recruitment process is open or closed for this job position.")
      
 
@@ -426,6 +428,8 @@ class ProfessionalReference(models.Model):
     work_email      = fields.Char('Email')
     
     psi_applicant_id = fields.Many2one("hr.applicant")
+
+
    
 class PreviousFunctions(models.Model):
     _name = "hr.recruitment.previous.functions"

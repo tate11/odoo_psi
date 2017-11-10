@@ -128,7 +128,7 @@
 				<field name="name" position="after">
 					<field name="recrutement_type_id" />
 					<field name="recrutement_type" invisible="1" />
-					<field name="tdr_file" />
+					<field name="tdr_file" context="{'default_res_model': 'hr.job','default_res_id': active_id}" />
 				</field>
 			</data>
 		</field>

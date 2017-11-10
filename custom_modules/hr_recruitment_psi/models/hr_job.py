@@ -19,6 +19,9 @@ class hr_job(models.Model):
         ('convention_stage','Convention de stage')
     ], string='Type de contrat', help="Type de contrat")
     
+    tdr_file = fields.Many2one('ir.attachment',string='Termes de Références (TDR)')
+    file = fields.Binary("your_file", model='tdr_file.datas')
+    
     website_published = fields.Boolean(default=False)
     
     psi_contract_duration = fields.Integer(string=u"Durée du contrat")
@@ -41,7 +44,7 @@ class hr_job(models.Model):
     level_of_education_id = fields.Many2one('hr.recruitment.degree', string='Niveau de formation')
     psi_budget_code_distribution = fields.Many2one('account.analytic.account', string='Code budgetaire')
     place_of_work = fields.Many2many('hr.recruitment.working.state', string='Lieu de travail')
-    place_of_employment = fields.Char(string=u'Lieu d\'embauche')
+    place_of_employment = fields.Many2one('hr.recruitment.lieu.embauche',string="Liei d'embaiche")
     subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination')
     experience_required_ids = fields.One2many('hr.experience.required', 'job_id', string=u'Expériences requises')
     
@@ -141,3 +144,7 @@ class JobEquipment(models.Model):
     
     equipment_id = fields.Many2one('hr.equipment', string=u"Désignation")
     job_id = fields.Many2one('hr.job')
+class LieuEmbauche(models.Model):
+    _name = 'hr.recruitment.lieu.embauche'
+    
+    name = fields.Char(string="Lieu d' embauche")
