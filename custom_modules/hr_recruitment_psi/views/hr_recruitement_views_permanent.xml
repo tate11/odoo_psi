@@ -20,7 +20,7 @@
 	        <field name="name">Candidatures des Permanents</field>
 	        <field name="res_model">hr.applicant</field>
 	        <field name="view_mode">tree,form,kanban,calendar</field>
-	        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'search_default_recrutement_type_id' : [active_id], default_recrutement_type_id : active_id}</field>
+	        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'search_default_recrutement_type_id': context.get('recrutement_type_id', False) }</field>
 	    </record>
 	    
 	    <record model="ir.actions.act_window.view" id="action_tree_permanent">

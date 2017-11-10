@@ -24,7 +24,7 @@ class hr_job(models.Model):
     
     website_published = fields.Boolean(default=False)
     
-    psi_contract_duration = fields.Integer(string=u"Durée du contrat")
+    psi_contract_duration = fields.Integer(string=u"Durée du contrat (en mois)")
     psi_motif = fields.Text(string="Motif du recrutement")
     poste_description = fields.Text(string=u"Déscription des objectifs reliés au travail")
       
@@ -91,6 +91,11 @@ class hr_job(models.Model):
     def _change_approbation_rr(self):
         if self.nature_recrutement == 'interne':
             self.rr_approbation = False
+    
+    @api.onchange('recrutement_type')
+    def _change_recrutement_type_id(self):
+        if self.recrutement_type == 'stagiaire':
+            self.psi_contract_type = 'convention_stage'
         
 class SubordinationLink(models.Model):
      _name = 'hr.subordination.link'
