@@ -7,26 +7,57 @@ import calendar
 
 import dateutil.parser
 from dateutil.relativedelta import relativedelta
+from odoo.tools import float_compare
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools.translate import _
-
 
 HOURS_PER_DAY = 8
 
+class hr_holidays_type_psi(models.Model):
+    
+    _inherit = "hr.holidays.status"
+    
+    type_permission = fields.Many2one('hr.holidays.type.permission', string="Type de permission")
+#    categ_permission = fields.Selection()
+    
+class hr_holidays_type_permission(models.Model):
+    
+    _name = "hr.holidays.type.permission"
+    _description = "Type de permission"
+    
+    name = fields.Char('Type de permission', required=True)
+    number_of_day = fields.Float('Nombre de jours', required=True)
+    
 class hr_holidays_psi(models.Model):
     
     _inherit = "hr.holidays"
     
     psi_category_id = fields.Many2one('hr.psi.category.details','Catégorie professionnelle')
     
-    color_name_holiday_status_conge_maladie = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du congé maladie')
-    color_name_holiday_status_conge_permission = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du congé permission')
+    color_name_holiday_status = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du type du congé')
+    holiday_type_permission = fields.Many2one(related='holiday_status_id.type_permission', string='Type de permission')
     
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
-
+    
+    all_employee = fields.Boolean(string="Tous les employés")
+    
+    state = fields.Selection([
+        ('draft', 'To Submit'),
+        ('cancel', 'Cancelled'),
+        ('confirm', 'To Approve'),
+        ('refuse', 'Refused'),
+        ('validate1', 'Valider par Supérieur hiérarchique'),
+        ('validate2', 'Valider par Responsable RH'),
+        ('validate', 'Valider par DRHA')
+        ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
+            help="The status is set to 'To Submit', when a holiday request is created." +
+            "\nThe status is 'To Approve', when holiday request is confirmed by user." +
+            "\nThe status is 'Refused', when holiday request is refused by manager." +
+            "\nThe status is 'Approved', when holiday request is approved by manager.")
+    
     last_business_day = fields.Date(compute="_get_last_business_day", string="Dernier jour ouvrable du mois")
 
     def _get_last_business_day(self):
@@ -54,10 +85,55 @@ class hr_holidays_psi(models.Model):
             holidays = super(hr_holidays_psi, self).create(values)
             return holidays
           
-#        print str(color_name_holiday_status_conge_maladie)
-        #holidays = super(hr_holidays_psi, self).create()
-        #return holidays
+    @api.multi
+    def write(self, values):
+        employee_id = values.get('employee_id', False)
         
+        if self.env.user == self.employee_id.user_id:
+            raise AccessError(u'Vous ne pouvez plus modifier votre demande, veuillez contacter votre supérieur hiérarchique.')
+        
+        if self.state == 'validate1' and self.env.user != self.employee_id.department_id.manager_id.user_id:
+            raise AccessError(u'Vous ne pouvez pas modifier cette demande de congé.')
+        
+        if not self._check_state_access_right(values):
+            raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
+        result = super(hr_holidays_psi, self).write(values)
+        self.add_follower(employee_id)
+        return result
+
+    def action_report_request_for_absences(self):
+        return {
+               'type': 'ir.actions.report.xml',
+               'report_name': 'hr_holidays_psi.report_request_for_absences'
+           }
+      
+    @api.multi
+    def action_approve(self):
+        # if double_validation: this method is the first approval approval
+        # if not double_validation: this method calls action_validate() below
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
+
+        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        for holiday in self:
+            print "holiday.state : ",holiday.state
+            if holiday.state != 'confirm':
+                raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
+            return holiday.write({'state': 'validate1', 'manager_id': manager.id if manager else False})
+    
+    @api.multi
+    def action_approve_candidate1(self):
+        # if double_validation: this method is the first approval approval
+        # if not double_validation: this method calls action_validate() below
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
+
+        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        for holiday in self:
+            if holiday.state != 'validate1':
+                raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
+        return holiday.write({'state': 'validate2', 'manager_id': manager.id if manager else False})
+                    
     @api.multi
     def write(self, vals):
         self._send_email_rappel_absences_to_assist_and_coord(False)
@@ -105,8 +181,11 @@ class hr_holidays_psi(models.Model):
                date_from = date_from_time.date()
                date_now = datetime.strptime(fields.Date().today(),"%Y-%m-%d")
                between = date_from.day - date_now.day
+               between_month = date_now.month - date_from.month
+               if (between_month == 1 and date_from.day >= 3) or between_month > 1:
+                   raise ValidationError(u"La date du début du congé n'est pas valide.")
                if between < 3 :
-                  raise ValidationError(u"Vous devez faire le demande de congés avant 3jours de depart")
+                   raise ValidationError(u"Vous devez faire le demande de congés avant 3jours de depart")  
      
     @api.constrains('date_from')
     def _check_date_from_conge_sans_solde(self):
@@ -127,9 +206,9 @@ class hr_holidays_psi(models.Model):
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
-            if holiday.state not in ['confirm', 'validate1']:
+            if holiday.state not in ['confirm', 'validate1','validate2']:
                 raise UserError(_('Leave request must be confirmed in order to approve it.'))
-            if holiday.state == 'validate1' and not holiday.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
+            if holiday.state == 'validate2' and not holiday.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
                 raise UserError(_('Only an HR Manager can apply the second approval on leave requests.'))
 
             holiday.write({'state': 'validate'})
@@ -137,7 +216,7 @@ class hr_holidays_psi(models.Model):
                 holiday.write({'manager_id2': manager.id})
             else:
                 holiday.write({'manager_id': manager.id})
-            if holiday.holiday_type == 'employee' and holiday.type == 'remove':
+            if holiday.holiday_type == 'employee' and holiday.type == 'remove' and holiday.all_employee == False:
                 meeting_values = {
                     'name': holiday.display_name,
                     'categ_ids': [(6, 0, [holiday.holiday_status_id.categ_id.id])] if holiday.holiday_status_id.categ_id else [],
@@ -151,8 +230,9 @@ class hr_holidays_psi(models.Model):
                     'privacy': 'confidential'
                 }
                 #Add the partner_id (if exist) as an attendee
-            if holiday.user_id and holiday.user_id.partner_id:
-                meeting_values['partner_ids'] = [(4, holiday.user_id.partner_id.id)]
+                if holiday.user_id and holiday.user_id.partner_id :
+                    meeting_values['partner_ids'] = [(4, holiday.user_id.partner_id.id)]
+                
                 meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
                 holiday._create_resource_leave()
                 holiday.write({'meeting_id': meeting.id})
@@ -176,7 +256,24 @@ class hr_holidays_psi(models.Model):
                                 'employee_id': employee.id
                             }
                         leaves += self.with_context(mail_notify_force_send=False).create(values)
-                    # TODO is it necessary to interleave the calls?
+            elif holiday.holiday_type == 'employee' and holiday.all_employee == True:
+                leaves = self.env['hr.holidays']
+                employees = self.env['hr.employee'].search([])
+                print '--all--'
+                for employee in employees: 
+                    values = {
+                        'name': holiday.name,
+                        'type': holiday.type,
+                        'holiday_type': 'employee',
+                        'holiday_status_id': holiday.holiday_status_id.id,
+                        'date_from': holiday.date_from,
+                        'date_to': holiday.date_to,
+                        'notes': holiday.notes,
+                        'number_of_days_temp': holiday.number_of_days_temp,
+                         'parent_id': holiday.id,
+                         'employee_id': employee.id
+                    }
+                    leaves += self.with_context(mail_notify_force_send=False).create(values)    
                 leaves.action_approve()
                 if leaves and leaves[0].double_validation:
                     leaves.action_validate()
@@ -195,8 +292,51 @@ class hr_holidays_psi(models.Model):
         for leave in self:
             res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name or leave.psi_category_id.psi_professional_category, leave.holiday_status_id.name, leave.number_of_days_temp)))
         return res
-
-
+    
+    def _increment_doit_conge(self):
+        contracts = self.env['hr.contract'].search([])
+        dt_now = datetime.strptime(fields.Date().today(),'%Y-%m-%d')
+        
+        for contract in contracts :
+            print contract.date_start
+            holidays = self.env['hr.holidays'].search([('employee_id','=',contract.employee_id.id),('type','=','add')],order='id')
+            if len(holidays) > 0:
+                if holidays[0].write_date != holidays[0].create_date:
+                    dt_write_date = datetime.strptime(holidays[0].write_date,'%Y-%m-%d %H:%M:%S')
+                if dt_write_date.year == dt_now.year and dt_write_date.month != dt_now.month :
+                    number_of_days = holidays[0].number_of_days + 2 
+                    holidays[0].write({'number_of_days':number_of_days})
+                elif dt_write_date.year != dt_now.year :
+                                    number_of_days = holidays[0].number_of_days + 2 
+                                    holidays[0].write({'number_of_days':number_of_days})
+            elif contract.date_start != False :
+                   # print contract.employee_id.name
+                    dt = datetime.strptime(contract.date_start,'%Y-%m-%d')
+                    holidays_status = self.env['hr.holidays.status'].search([('color_name','=','violet')])
+                    if dt_now.year == dt.year and dt.month != dt_now.month:
+                        
+                        values = {
+                                    'name': contract.employee_id.name,
+                                    'type': 'add',
+                                    'state': 'validate',
+                                    'holiday_type': 'employee',
+                                    'holiday_status_id': holidays_status[0].id,
+                                    'number_of_days_temp': 2,
+                                    'employee_id': contract.employee_id.id
+                                }
+                        self.env['hr.holidays'].create(values)
+                    if dt_now.year != dt.year:
+                        values = {
+                                    'name': contract.employee_id.name,
+                                    'type': 'add',
+                                    'holiday_type': 'employee',
+                                    'holiday_status_id': holidays_status[0].id,
+                                    'number_of_days_temp': 2,
+                                    'employee_id': contract.employee_id.id,
+                                    'state': 'validate',
+                                }
+                        self.env['hr.holidays'].create(values)
+                
     # Send mail - rappel piece justificatif - conge maladie  
     @api.multi
     @api.constrains('holiday_status_id')  
@@ -220,7 +360,9 @@ class hr_holidays_psi(models.Model):
         if automatic:
             self._cr.commit()
            
-    
+
+     
+
     # Mail de rappel aux Assistantes et Coordinateurs
     @api.multi
     def _send_email_rappel_absences_to_assist_and_coord(self, automatic=False):
@@ -231,3 +373,21 @@ class hr_holidays_psi(models.Model):
             self.env['mail.template'].browse(template.id).send_mail(self.id)               
         if automatic:
             self._cr.commit()
+            
+            
+    @api.constrains('state', 'number_of_days_temp')
+    def _check_holidays(self):
+        holidays_status_formation = self.env['hr.holidays.status'].search([('color_name','=','lightpink')])
+        holidays_status_annuel = self.env['hr.holidays.status'].search([('color_name','=','violet')])
+        for holiday in self:
+            
+            if holiday.holiday_type != 'employee' or holiday.type != 'remove' or not holiday.employee_id or holiday.holiday_status_id.limit:
+                continue
+            if holidays_status_formation[0].id == holiday.holiday_status_id and holidays_status_annuel[0].id == holiday.holiday_status_id:
+                holidays_attribution = self.env['hr.holidays'].search([('employee_id','',holiday.employee_id.id),('type','=','add')])
+                leave_days = holidays_attribution[0].holiday_status_id.get_days(holidays_attribution[0].employee_id.id)[holidays_attribution[0].holiday_status_id.id]
+                if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or \
+                  float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
+                    raise ValidationError(_('The number of remaining leaves is not sufficient for this leave type.\n'
+                                            'Please verify also the leaves waiting for validation.'))
+
