@@ -146,13 +146,13 @@
 	                    name="%(hr_recruitment.action_hr_job_applications)d"
 	                    context="{'default_user_id': user_id}"
 	                    type="action">
-	                    <field name="application_count" widget="statinfo" string="Candidature(s)"/>
+	                    <field name="application_count" widget="statinfo" string="Applications"/>
 	                </button>
 	                <button class="oe_stat_button"
 	                    icon="fa-users"
 	                    name="%(hr_recruitment.action_hr_job_no_employee)d"
 	                    type="action">
-	                    <field name="no_of_employee" widget="statinfo" string="Employé(s)"/>
+	                    <field name="no_of_employee" widget="statinfo" string="Employees"/>
 	                </button>
 	                <button class="oe_stat_button"
 	                    icon="fa-book"
@@ -164,7 +164,7 @@
 	                    name="%(hr_recruitment.action_hr_job_sources)d" icon="fa-share"
 	                    context="{'default_job_id': active_id}">
 	                    <div class="o_form_field o_stat_info">
-	                        <span class="o_stat_text">Origine de l'offre</span>
+	                        <span class="o_stat_text">Trackers</span>
 	                    </div>
 	                </button>
 	                <button class="oe_stat_button" 
