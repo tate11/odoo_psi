@@ -155,13 +155,13 @@
 	                    icon="fa-users"
 	                    name="%(hr_recruitment.action_hr_job_no_employee)d"
 	                    type="action">
-	                    <field name="no_of_employee" widget="statinfo" string="Employée(s)"/>
+	                    <field name="no_of_employee" widget="statinfo" string="Employé(s)"/>
 	                </button>
 	                <button class="oe_stat_button"
 	                    icon="fa-book"
 	                    name="action_get_attachment_tree_view"
 	                    type="object">
-	                    <field name="documents_count" widget="statinfo" string="Documents"/>
+	                    <field name="documents_count" widget="statinfo" string="Document(s)"/>
 	                </button>
 	                <button class="oe_stat_button" type="action"
 	                    name="%(hr_recruitment.action_hr_job_sources)d" icon="fa-share"
