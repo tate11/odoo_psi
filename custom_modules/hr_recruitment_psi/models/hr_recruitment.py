@@ -189,7 +189,7 @@ class Applicant(models.Model):
                                                'address_home_id': address_id,
                                                'department_id': applicant.department_id.id or False,
                                                'address_id': applicant.company_id and applicant.company_id.partner_id and applicant.company_id.partner_id.id or False,
-                                               'work_email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
+                                               'work_email': applicant.email_from,
                                                'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False}
                 employee = self.env['hr.employee'].create(vals)
                 applicant.write({'emp_id': employee.id})

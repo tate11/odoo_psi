@@ -401,6 +401,7 @@
 			<field name="model">hr.applicant</field>
 			<field name="arch" type="xml">
 				<search string="Recherche">
+					<field name="recrutement_type_id" string="Type de recrutement" />
 					<field name="job_id" string="Job concerné" />
 					<field name="partner_name" string="Nom du candidat" />
 					<group expand="0" string="Group By...">
