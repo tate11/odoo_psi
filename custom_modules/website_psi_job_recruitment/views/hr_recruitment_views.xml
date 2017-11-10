@@ -32,7 +32,7 @@
 											   '<tr><td>'+
 											   '<input type="text" class="form-control o_website_form_input" name="name_poste[]" required="1" /> '+
 											   '</td><td>'+
-									'<input type="text" class="form-control date_psi" name="period[]"  /> '+
+									'<input type="text" class="form-control" name="period[]"  /> '+
 											   '</td></tr>');
                     			$('#div_already_answered_application').hide(50);
                     		
@@ -67,7 +67,7 @@
                 $('#table_already_answered_application tr:last').after('<tr><td>'+
 											   '<input type="text" class="form-control o_website_form_input" name="name_poste[]" required="1" /> '+
 											   '</td><td>'+
-									'<input type="text" class="form-control date_psi" name="period[]" /> '+
+									'<input type="text" class="form-control " name="period[]" /> '+
 											   '</td></tr>');
             }, 200);
         });
@@ -183,7 +183,7 @@
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="salary_expected"> Salaire demandé </label>
+						<label class="control-label" for="salary_expected"> Salaire demandé *</label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" class="form-control o_website_form_input"
@@ -304,7 +304,7 @@
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="email_from"> Email </label>
+						<label class="control-label" for="email_from"> Email *</label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" class="form-control o_website_form_input"
@@ -313,7 +313,7 @@
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="partner_mobile"> Mobile N°</label>
+						<label class="control-label" for="partner_mobile"> Mobile N° *</label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" class="form-control o_website_form_input"
@@ -452,7 +452,7 @@
 										name="name_poste[]" required="1" /> 
 								</td>
 								<td>
-									<input type="text" class="form-control date_psi"
+									<input type="text" class="form-control "
 										name="period[]" /> 
 								</td>
 							</tr>
@@ -707,53 +707,53 @@
 					</tr>
 					<tr>
 						<td>
-							<input type="text" class="form-control date_psi" name="begin_date[]"/>
+							<input type="text" class="form-control date_psi" name="begin_date[]" value="."/>
 						</td>
 						<td>
-							<input type="text" class="form-control date_psi" name="end_date[]"/>
+							<input type="text" class="form-control date_psi" name="end_date[]" value="."/>
 						</td>
 						<td>
-							<input type="text"	name="last_basic_salary[]" class="form-control" />
+							<input type="text"	name="last_basic_salary[]" class="form-control" value="0"/>
 						</td>
 						<td>
-							<input type="text"	name="title_function[]"  class="form-control" />
-						</td>
-					</tr>
-				</table>
-				<table class="table">
-					<tr>
-						<td>
-							Employeur : <input type="text"  name="employer[]" class="form-control"/>
-						</td>
-						<td>
-							Type d'activité : <input type="text"  name="type_of_activity[]" class="form-control"/>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							Adresse : <input type="text"  name="address[]" class="form-control"/>
-						</td>
-						<td>
-							Nom du supérieur hiérarchique : <input type="text"  name="name_of_supervisor[]" class="form-control"/>
+							<input type="text"	name="title_function[]"  class="form-control" value="."/>
 						</td>
 					</tr>
 				</table>
 				<table class="table">
 					<tr>
 						<td>
-							Téléphone : <input type="text"  name="mobile_phone[]" class="form-control"/> <br />
-							Email : <input type="text"  name="work_email[]" class="form-control"/>
+							Employeur : <input type="text"  name="employer[]" class="form-control" value="."/>
 						</td>
 						<td>
-							Nombre de supervisé : <input type="text"  name="number_of_supervised[]" class="form-control"/>
+							Type d'activité : <input type="text"  name="type_of_activity[]" class="form-control" value="."/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Adresse : <input type="text"   name="address[]" class="form-control" value="."/>
 						</td>
 						<td>
-							Motif de votre départ : <input type="text"  name="reason_for_leaving[]" class="form-control"/>
+							Nom du supérieur hiérarchique : <input type="text"  value="." name="name_of_supervisor[]" class="form-control"/>
+						</td>
+					</tr>
+				</table>
+				<table class="table">
+					<tr>
+						<td>
+							Téléphone : <input type="text" value="." name="mobile_phone[]" class="form-control"/> <br />
+							Email : <input type="text"  value="." name="work_email[]" class="form-control"/>
+						</td>
+						<td>
+							Nombre de supervisé : <input value="." type="text"  name="number_of_supervised[]" class="form-control"/>
+						</td>
+						<td>
+							Motif de votre départ : <input value="." type="text"  name="reason_for_leaving[]" class="form-control"/>
 						</td>
 					</tr>
 				</table>
 				<p class="text-center">BREVE DESCRIPTION DES TACHES ET RESPONSABILITES</p>
-				<textarea class="form-control" name="description[]"></textarea>
+				<textarea class="form-control" name="description[]">.</textarea>
 			</div>
 			<div id="div_functions"></div>
 				<br />

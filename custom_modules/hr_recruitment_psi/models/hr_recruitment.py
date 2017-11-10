@@ -348,7 +348,7 @@ class Applicant(models.Model):
 class ParentInformationEmployed(models.Model):
       _name = 'hr.recruitement.parent.information'
       
-      name                      = fields.Char(string='NOM ET PRENOM', required=True)
+      name                      = fields.Char(string='NOM ET PRENOM')
       degree_of_relationship    = fields.Selection([
         ('enfant', 'Enfant'),
         ('famille', 'Famille'),
@@ -362,7 +362,7 @@ class AlreadyAnsweredApplicant(models.Model):
      _name = 'hr.recruitment.already.answered.applicant'
      
      name           = fields.Char(string='POSTE')
-     period         = fields.Date(string='PERIODE')
+     period         = fields.Char(string='PERIODE')
      
      hr_recruitment_already_answered_applicant_id = fields.Many2one("hr.applicant")
      
