@@ -224,7 +224,7 @@
 				
 				<field name="availability" position="after">
 				    <field name="psi_allowance" attrs="{'invisible': [('recrutement_type', '!=', 'stagiaire')]}" />
-					<field name="psi_salary_type"  />
+					<field name="psi_salary_type" attrs="{'invisible': [('recrutement_type', '=', 'consultant')]}" />
 					<field name="psi_salary_negotiable" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
 				</field>
 				
@@ -245,9 +245,9 @@
 					<button name="button_professional_reference" string="Références professionnelles"
 						attrs="{'invisible': ['|',('state','!=','interview'),('recrutement_type', '=', 'stagiaire')]}" />
 					<button name="button_bridger_insight_trainee_interview"
-						string="Brider Insight Trainee"
+						string="Bridger Insight"
 						attrs="{'invisible': ['|',('state','!=','interview'),('recrutement_type','!=','stagiaire')]}" />
-					<button name="button_bridger_insight" string="Brider Insight"
+					<button name="button_bridger_insight" string="Bridger Insight"
 						attrs="{'invisible': [('state','!=','professional_reference')]}" />
 					<button name="button_psi_wage_proposal" string="Proposition salariale"
 						attrs="{'invisible': ['|','|',('state','!=','bridger_insight'),('recrutement_type', '=', 'consultant'),('recrutement_type', '=', 'stagiaire')]}" />
