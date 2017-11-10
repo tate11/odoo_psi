@@ -29,7 +29,7 @@
 						<field name="equipment_state" />
 					</tree>
 				</field>
-				<field name="nature_recrutement" attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': [('recrutement_type', '=', 'consultant')]}" />
+				<field name="nature_recrutement" /> <!-- attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': [('recrutement_type', '=', 'consultant')]}" -->
 				<field name="psi_budget_code_distribution" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'required': [('state', '=', 'validation_finance')]}"/>
 				<field name="subordination_link_id" />
 				<field name="psi_contract_type" attrs="{'required': [('state', 'in', ('open'))]}" />
