@@ -84,6 +84,11 @@ class hr_job(models.Model):
             wf_service.trg_create(uid, 'hr.job', id, cr)
             return True
     
+    @api.onchange('nature_recrutement')
+    def _change_approbation_rr(self):
+        if self.nature_recrutement == 'interne':
+            self.rr_approbation = False
+        
 class SubordinationLink(models.Model):
      _name = 'hr.subordination.link'
      
