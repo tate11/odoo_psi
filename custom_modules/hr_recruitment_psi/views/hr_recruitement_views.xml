@@ -41,8 +41,8 @@
 						<field name="psi_average_note" />
 					</group>
 					<group string="Note Test">
-						<field name="psi_note_test_rh" />
-						<field name="psi_note_test_candidate" />
+						<field name="psi_note_test_rh" required="1"/>
+						<field name="psi_note_test_candidate" required="1"/>
 						<field name="psi_average_note_test" />
 					</group>
 				</field>
