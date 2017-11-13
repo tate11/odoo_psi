@@ -282,12 +282,9 @@ class hr_holidays_psi(models.Model):
                     holidays[0].write({'number_of_days':number_of_days})
                 
             elif contract.date_start != False :
-                    print contract.employee_id.name
-                    dt = datetime.strptime(contract.date_start,'%Y-%m-%d')
-                    holidays_status = self.env['hr.holidays.status'].search([('color_name','=','violet')])
-                    if dt_now.year == dt.year and dt.month != dt_now.month:
-                        
-                        values = {
+                print contract.employee_id.name
+                holidays_status = self.env['hr.holidays.status'].search([('color_name','=','violet')])
+                values = {
                                     'name': contract.employee_id.name,
                                     'type': 'add',
                                     'state': 'validate',
@@ -296,18 +293,7 @@ class hr_holidays_psi(models.Model):
                                     'number_of_days_temp': 2,
                                     'employee_id': contract.employee_id.id
                                 }
-                        self.env['hr.holidays'].create(values)
-                    if dt_now.year != dt.year:
-                        values = {
-                                    'name': contract.employee_id.name,
-                                    'type': 'add',
-                                    'holiday_type': 'employee',
-                                    'holiday_status_id': holidays_status[0].id,
-                                    'number_of_days_temp': 2,
-                                    'employee_id': contract.employee_id.id,
-                                    'state': 'validate',
-                                }
-                        self.env['hr.holidays'].create(values)
+                self.env['hr.holidays'].create(values)
                 
     # Send mail - rappel piece justificatif - conge maladie  
     @api.multi
