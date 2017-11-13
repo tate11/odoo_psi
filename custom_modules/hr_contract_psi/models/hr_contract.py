@@ -481,27 +481,30 @@ class hr_contract(models.Model):
     #(R7.) Rappel - enregistrement du profil du collaborateur / complétude
     def _send_first_email_rh(self, automatic=False):
         contracts = self.env['hr.contract'].search([])
-        for record in contracts:
-            date_create = record.create_date
+        print "Verification premier email RH"
+        for contract in contracts:
+            date_create = contract.create_date
             date_create_contract = datetime.strptime(date_create,"%Y-%m-%d %H:%M:%S")
             date_create_contract_time = datetime(
                     year=date_create_contract.year, 
                     month=date_create_contract.month,
                     day=date_create_contract.day,
                 )
-            date_to_notif = date_create_contract_time - relativedelta(days=15) 
+            date_to_notif = date_create_contract_time - relativedelta(days=0)  #days=15
             if date_to_notif.date() == datetime.today().date():
-                if len(record.employee_id._get_not_checked_files()) > 0:
-                    template0 = self.env.ref('hr_contract_psi.custom_template_rappel_hr_missing_pieces')
-                    self.env['mail.template'].browse(template0.id).send_mail(self.id)
-                    template1 = self.env.ref('hr_contract_psi.custom_template_rappel_collab_missing_pieces')
-                    self.env['mail.template'].browse(template1.id).send_mail(self.id)
-
+                files_not_checked = contract.employee_id._get_not_checked_files()
+                for list_not_check in files_not_checked:
+                    if len(list_not_check) > 0:
+                        template0 = self.env.ref('hr_contract_psi.custom_template_rappel_hr_missing_pieces')
+                        self.env['mail.template'].browse(template0.id).send_mail(contract.id, force_send=True)
+                        template1 = self.env.ref('hr_contract_psi.custom_template_rappel_collab_missing_pieces')
+                        self.env['mail.template'].browse(template1.id).send_mail(contract.id, force_send=True)
         if automatic:
             self._cr.commit()
 
     def _send_email_trial_date_end(self, automatic=False):
         contracts = self.env['hr.contract'].search([])
+        print "Verification un mois apres fin essai"
         for record in contracts:
             if record.trial_date_start:
                 date_start = record.trial_date_start
@@ -514,8 +517,8 @@ class hr_contract(models.Model):
                 # Verification selection                
                 month_to_notif = date_start_trial_time + relativedelta(months=record.job_id.psi_category.test_duration-1)
                 if month_to_notif.date() == datetime.today().date():
-                        template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
-                        self.env['mail.template'].browse(template.id).send_mail(self.id)
+                    template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
+                    self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)
         if automatic:
             self._cr.commit()
 

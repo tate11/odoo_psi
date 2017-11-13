@@ -14,7 +14,7 @@
 <div>
     <p>
       	Bonjour ${object.name}, 
-     	Premier rappel Email au collaborateur pour suivre le cours d’éthique                    
+     	Ceci est un premier rappel pour suivre le cours d'éthique.                    
 	</p>               
 </div>   ]]>
 			</field>
@@ -32,8 +32,7 @@
 			<field name="body_html"><![CDATA[                
 <div>           
 	<p>Bonjour ${object.name},</p>
-			<p>Un 2d rappel doit être envoyé au collaborateur par mail pour suivre le cours d’éthique, avec en copie RH, 3 semaines après l’enregistrement de son profil. S’il n’a pas enregistré son certificat de complétude du cours.
-			le cours d’éthique, avec en copie RH, 15 jrs après l’enregistrement de son profil.</p>
+			<p>Ceci est un second rappel pour suivre le cours d'éthique.</p>
 </div>
                   ]]>
 			</field>
