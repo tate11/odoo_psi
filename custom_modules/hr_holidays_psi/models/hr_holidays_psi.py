@@ -47,9 +47,9 @@ class hr_holidays_psi(models.Model):
         ('cancel', 'Cancelled'),
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
-        ('validate1', 'Valider par Supérieur hiérarchique'),
-        ('validate2', 'Valider par Responsable RH'),
-        ('validate', 'Valider par DRHA')
+        ('validate1', u'Validation par Supérieur hiérarchique'),
+        ('validate2', 'Validation par RH'),
+        ('validate', 'Validation par DRHA')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
             help="The status is set to 'To Submit', when a holiday request is created." +
             "\nThe status is 'To Approve', when holiday request is confirmed by user." +
@@ -69,11 +69,11 @@ class hr_holidays_psi(models.Model):
     def write(self, values):
         employee_id = values.get('employee_id', False)
         
-        if self.env.user == self.employee_id.user_id:
-            raise AccessError(u'Vous ne pouvez plus modifier votre demande, veuillez contacter votre supérieur hiérarchique.')
+        if not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_rh'): #self.env.user == self.employee_id.user_id:
+            raise AccessError(u'Vous ne pouvez plus modifier votre demande, veuillez contacter le(s) responsable(s) RH.')
         
-        if self.state == 'validate1' and self.env.user != self.employee_id.department_id.manager_id.user_id:
-            raise AccessError(u'Vous ne pouvez pas modifier cette demande de congé.')
+        #if self.state == 'validate1' and self.env.user != self.employee_id.department_id.manager_id.user_id:
+            #raise AccessError(u'Vous ne pouvez pas modifier cette demande de congé.')
         
         if not self._check_state_access_right(values):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
@@ -149,17 +149,21 @@ class hr_holidays_psi(models.Model):
     @api.constrains('date_from')
     def _check_date_from(self):
        print "_check_date_from"
+       
        for record in self :
-           if record.date_from != False :
+           if record.date_from != False:
                date_from_time = datetime.strptime(record.date_from,"%Y-%m-%d %H:%M:%S")
-               date_from = date_from_time.date()
+               #date_from = date_from_time.date()
                date_now = datetime.strptime(fields.Date().today(),"%Y-%m-%d")
-               between = date_from.day - date_now.day
-               between_month = date_now.month - date_from.month
-               if (between_month == 1 and date_from.day >= 3) or between_month > 1:
-                   raise ValidationError(u"La date du début du congé n'est pas valide.")
-               if between < 3 :
-                   raise ValidationError(u"Vous devez faire le demande de congés avant 3jours de depart")  
+               between = date_from_time - date_now
+               #between_month = date_now.month - date_from.month
+               
+               if between.days < 0: #(between_month == 1 and date_from.day >= 3) or between_month < 1:
+                   raise ValidationError(u"La date de début du congé n'est pas valide.")
+               
+               if record.holiday_status_id.id != 7: # a part maladie
+                   if between.days >= 0 and between.days < 3 :
+                       raise ValidationError(u"Vous devez faire une demande de congés au moins 3 jours avant votre départ pour congé.")
      
     @api.constrains('date_from')
     def _check_date_from_conge_sans_solde(self):
@@ -168,8 +172,9 @@ class hr_holidays_psi(models.Model):
            if record.date_from != False and record.holiday_status_id.color_name == 'red':
                config = self.env['hr.holidays.configuration'].search([])[0]
 
-               if record.number_of_days_temp > config.conges_sans_solde :
-                  raise ValidationError(u"Votre demande de congés depaasse le limite de conges sans soldes")
+               if record.holiday_status_id == 10:
+                   if record.number_of_days_temp > config.conges_sans_solde :
+                      raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
 
      
     @api.multi
@@ -310,6 +315,8 @@ class hr_holidays_psi(models.Model):
                                     'state': 'validate',
                                 }
                         self.env['hr.holidays'].create(values)
+    
+    justificatif_file = fields.Binary(string=u'Pièce justificatif', help=u"Joindre un certificat médical ou une ordonnance", tracability="onchange")
                 
     # Send mail - rappel piece justificatif - conge maladie  
     @api.multi
