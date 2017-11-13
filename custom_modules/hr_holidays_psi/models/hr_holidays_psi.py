@@ -161,6 +161,7 @@ class hr_holidays_psi(models.Model):
                if between.days < 0: #(between_month == 1 and date_from.day >= 3) or between_month < 1:
                    raise ValidationError(u"La date de début du congé n'est pas valide.")
                
+               #TODO a modifier
                if record.holiday_status_id.id != 7: # a part maladie
                    if between.days >= 0 and between.days < 3 :
                        raise ValidationError(u"Vous devez faire une demande de congés au moins 3 jours avant votre départ pour congé.")
@@ -171,7 +172,8 @@ class hr_holidays_psi(models.Model):
        for record in self :
            if record.date_from != False and record.holiday_status_id.color_name == 'red':
                config = self.env['hr.holidays.configuration'].search([])[0]
-
+               
+               #TODO a modifier
                if record.holiday_status_id == 10:
                    if record.number_of_days_temp > config.conges_sans_solde :
                       raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
