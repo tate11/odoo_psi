@@ -191,7 +191,7 @@ class hr_employee(models.Model):
                     day=date_create_employee.day,
                 )
             date_to_notif = date_create_employee_time - relativedelta(weeks=0) #3 weeks
-            print date_to_notif.date() ,' # ', datetime.today().date()
+#            print date_to_notif.date() ,' # ', datetime.today().date()
             if date_to_notif.date() == datetime.today().date():
                 certificate_ethics = False
                 declaration_obj = self.env["hr.declaration.interest"]
