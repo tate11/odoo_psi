@@ -3,7 +3,16 @@
 
 from datetime import date, datetime
 from datetime import timedelta
+
+import math
+import logging
+import math
+from datetime import timedelta
 import calendar
+
+from werkzeug import url_encode
+from openerp.tools import float_compare
+
 
 import dateutil.parser
 from dateutil.relativedelta import relativedelta
@@ -12,6 +21,7 @@ from odoo.tools import float_compare
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools.translate import _
+from odoo.exceptions import Warning
 
 HOURS_PER_DAY = 8
 
@@ -20,7 +30,7 @@ class hr_holidays_type_psi(models.Model):
     _inherit = "hr.holidays.status"
     
     type_permission = fields.Many2one('hr.holidays.type.permission', string="Type de permission")
-#    categ_permission = fields.Selection()
+    holidays_status_id_psi = fields.Integer(string=u"id type de congé psi")
     
 class hr_holidays_type_permission(models.Model):
     
@@ -34,9 +44,10 @@ class hr_holidays_psi(models.Model):
     
     _inherit = "hr.holidays"
     
-    psi_category_id = fields.Many2one('hr.psi.category.details','Catégorie professionnelle')
+    psi_category_id = fields.Many2one('hr.psi.category.details',u'Catégorie professionnelle')
     
     color_name_holiday_status = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du type du congé')
+    id_psi_holidays_status = fields.Integer(related='holiday_status_id.holidays_status_id_psi')
     holiday_type_permission = fields.Many2one(related='holiday_status_id.type_permission', string='Type de permission')
     
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
@@ -57,6 +68,26 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'To Approve', when holiday request is confirmed by user." +
             "\nThe status is 'Refused', when holiday request is refused by manager." +
             "\nThe status is 'Approved', when holiday request is approved by manager.")
+
+     
+    @api.constrains('number_of_days_temp')
+    def _verif_leave_date(self):
+        holidays = self.env["hr.holidays"].search([('employee_id','=',self.employee_id.name)])
+#        holiday.holiday_status_id.max_leaves = 10
+#        if count holiday.id_psi_holidays_status remaining_leaves > 10 > erreur
+        for record in self:
+            get_day_difference = record.number_of_days_temp
+            type_permissions = self.env['hr.holidays.type.permission'].search([])            
+            for permissions in type_permissions:
+                if self.holiday_type_permission.id == permissions.id:
+                    if get_day_difference > permissions.number_of_day:
+                        raise Warning(_(u"Vous avez depassé le nombre de jours permi pour ce type de permission."))
+            
+    @api.multi
+    def write(self, values):
+        self._verif_leave_date()
+        holidays = super(hr_holidays_psi, self).write(values)
+        return holidays    
     
     last_business_day = fields.Date(compute="_get_last_business_day", string="Dernier jour ouvrable du mois")
 
@@ -78,12 +109,14 @@ class hr_holidays_psi(models.Model):
         
     @api.model
     def create(self, values):
+        self._verif_leave_date()
         got_droit = self.check_droit(values)
         if got_droit == False:
             raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
         else:
             holidays = super(hr_holidays_psi, self).create(values)
             return holidays
+
           
     @api.multi
     def write(self, values):
@@ -364,9 +397,6 @@ class hr_holidays_psi(models.Model):
                             self.env['mail.template'].browse(template.id).send_mail(self.id)               
         if automatic:
             self._cr.commit()
-           
-
-     
 
     # Mail de rappel aux Assistantes et Coordinateurs
     @api.multi
@@ -395,4 +425,3 @@ class hr_holidays_psi(models.Model):
                   float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
                     raise ValidationError(_('The number of remaining leaves is not sufficient for this leave type.\n'
                                             'Please verify also the leaves waiting for validation.'))
-
