@@ -168,7 +168,7 @@ class hr_employee(models.Model):
                     month=date_create_employee.month,
                     day=date_create_employee.day,
                 )
-            date_to_notif = date_create_employee_time - relativedelta(days=15)
+            date_to_notif = date_create_employee_time - relativedelta(days=0) #15 days
             if date_to_notif.date() == datetime.today().date():
                 files_not_checked = record._get_not_checked_files()
                 for list_not_check in files_not_checked:
@@ -190,7 +190,8 @@ class hr_employee(models.Model):
                     month=date_create_employee.month,
                     day=date_create_employee.day,
                 )
-            date_to_notif = date_create_employee_time - relativedelta(weeks=3)
+            date_to_notif = date_create_employee_time - relativedelta(weeks=0) #3 weeks
+            print date_to_notif.date() ,' # ', datetime.today().date()
             if date_to_notif.date() == datetime.today().date():
                 certificate_ethics = False
                 declaration_obj = self.env["hr.declaration.interest"]

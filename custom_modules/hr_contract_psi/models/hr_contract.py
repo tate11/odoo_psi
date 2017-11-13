@@ -491,7 +491,7 @@ class hr_contract(models.Model):
                     month=date_create_contract.month,
                     day=date_create_contract.day,
                 )
-            date_to_notif = date_create_contract_time - relativedelta(days=15)  #days=15
+            date_to_notif = date_create_contract_time - relativedelta(days=0)  #days=15
             if date_to_notif.date() == datetime.today().date():
                 files_not_checked = contract.employee_id._get_not_checked_files()
                 for list_not_check in files_not_checked:
