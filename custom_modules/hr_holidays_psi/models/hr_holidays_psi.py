@@ -277,7 +277,7 @@ class hr_holidays_psi(models.Model):
                 dt_write_date = datetime.strptime(holidays[0].write_date,'%Y-%m-%d %H:%M:%S')
                 print dt_write_date
                 print dt_now
-                if holidays[0].write_date != holidays[0].create_date and dt_write_date.month != dt_now.month:
+                if dt_write_date.month != dt_now.month:
                     number_of_days = holidays[0].number_of_days + 2 
                     holidays[0].write({'number_of_days':number_of_days})
                 
