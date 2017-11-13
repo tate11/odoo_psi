@@ -27,7 +27,7 @@ class hr_holidays_type_psi(models.Model):
     _inherit = "hr.holidays.status"
     
     type_permission = fields.Many2one('hr.holidays.type.permission', string="Type de permission")
-#    categ_permission = fields.Selection()
+    holidays_status_id_psi = fields.Integer(string=u"id type de congé psi")
     
 class hr_holidays_type_permission(models.Model):
     
@@ -41,10 +41,11 @@ class hr_holidays_psi(models.Model):
     
     _inherit = "hr.holidays"
     
-    psi_category_id = fields.Many2one('hr.psi.category.details','Catégorie professionnelle')
+    psi_category_id = fields.Many2one('hr.psi.category.details',u'Catégorie professionnelle')
     
     color_name_holiday_status = fields.Selection(related='holiday_status_id.color_name', string=u'Couleur du type du congé')
-    holiday_type_permission = fields.Many2one(related='holiday_status_id.type_permission', string='Type de permission', compute="_verif_leave_date")
+    id_psi_holidays_status = fields.Integer(related='holiday_status_id.holidays_status_id_psi')
+    holiday_type_permission = fields.Many2one(related='holiday_status_id.type_permission', string='Type de permission')
     
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
@@ -64,26 +65,29 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'To Approve', when holiday request is confirmed by user." +
             "\nThe status is 'Refused', when holiday request is refused by manager." +
             "\nThe status is 'Approved', when holiday request is approved by manager.")
-        
-    @api.depends('date_from','date_to')
+     
+    @api.constrains('number_of_days_temp')
     def _verif_leave_date(self):
-
-            from_dt = fields.Datetime.from_string(self.date_from)
-            to_dt = fields.Datetime.from_string(self.date_to)
-            time_delta = to_dt - from_dt
-            get_day_difference = time_delta + timedelta(hours=24)
-            type_permissions = self.env['hr.holidays.type.permission'].search([])
+        holidays = self.env["hr.holidays"].search([('employee_id','=',self.employee_id.name)])
+#        holiday.holiday_status_id.max_leaves = 10
+#        if count holiday.id_psi_holidays_status remaining_leaves > 10 > erreur
+        for record in self:
+            get_day_difference = record.number_of_days_temp
+            type_permissions = self.env['hr.holidays.type.permission'].search([])            
             for permissions in type_permissions:
                 if self.holiday_type_permission.id == permissions.id:
-                    offset_seconds = get_day_difference.total_seconds()
-                    offset_hours = offset_seconds / 3600.0
-#                    print float(get_day_difference.days),'  #  ',permissions.number_of_day
-                    if float(get_day_difference.days) > permissions.number_of_day:
-                        raise Warning(_(u'Vous ne pouvez pas dépasser ',permissions.number_of_day,' jours pour ce type de permission.'))
+                    if get_day_difference > permissions.number_of_day:
+                        raise Warning(_(u"Vous avez depassé le nombre de jours permi pour ce type de permission."))
             
-        
+    @api.multi
+    def write(self, values):
+        self._verif_leave_date()
+        holidays = super(hr_holidays_psi, self).write(values)
+        return holidays    
+    
     @api.model
     def create(self, values):
+        self._verif_leave_date()
         got_droit = self.check_droit(values)
         if got_droit == False:
             raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')

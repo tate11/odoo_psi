@@ -21,7 +21,9 @@
 			</field>
 			
 			<xpath expr="//field[@name='holiday_status_id']" position='after'>
-				<field name="holiday_type_permission" attrs="{'invisible':['&amp;',('color_name_holiday_status','not in','lightblue'),('type','not in','add')], 'required': [('color_name_holiday_status', '=', 'lightblue')]}" />
+				<!-- <field name="holiday_type_permission" attrs="{'invisible':[('id_psi_holidays_status','not in','1')]}" /> -->
+				<field name="holiday_type_permission" attrs="{'invisible':[('color_name_holiday_status','not in','lightblue')]}" />
+				<!-- <field name="holiday_type_permission" attrs="{'invisible':['&amp;',('color_name_holiday_status','not in','lightblue'),('type','not in','add')], 'required': [('color_name_holiday_status', '=', 'lightblue')]}" /> -->
 			</xpath>
 			
 			<field name="holiday_type" position="after">
