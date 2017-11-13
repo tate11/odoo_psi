@@ -272,19 +272,17 @@ class hr_holidays_psi(models.Model):
         dt_now = datetime.strptime(fields.Date().today(),'%Y-%m-%d')
         
         for contract in contracts :
-            print contract.date_start
             holidays = self.env['hr.holidays'].search([('employee_id','=',contract.employee_id.id),('type','=','add')],order='id')
             if len(holidays) > 0:
-                if holidays[0].write_date != holidays[0].create_date:
-                    dt_write_date = datetime.strptime(holidays[0].write_date,'%Y-%m-%d %H:%M:%S')
-                if dt_write_date.year == dt_now.year and dt_write_date.month != dt_now.month :
+                dt_write_date = datetime.strptime(holidays[0].write_date,'%Y-%m-%d %H:%M:%S')
+                #print dt_write_date
+                #print dt_now
+                if holidays[0].write_date != holidays[0].create_date and dt_write_date.month != dt_now.month:
                     number_of_days = holidays[0].number_of_days + 2 
                     holidays[0].write({'number_of_days':number_of_days})
-                elif dt_write_date.year != dt_now.year :
-                                    number_of_days = holidays[0].number_of_days + 2 
-                                    holidays[0].write({'number_of_days':number_of_days})
+                
             elif contract.date_start != False :
-                   # print contract.employee_id.name
+                    print contract.employee_id.name
                     dt = datetime.strptime(contract.date_start,'%Y-%m-%d')
                     holidays_status = self.env['hr.holidays.status'].search([('color_name','=','violet')])
                     if dt_now.year == dt.year and dt.month != dt_now.month:
