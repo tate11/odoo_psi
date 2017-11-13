@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_holidays_configuration,hr.holidays.configuration,model_hr_holidays_configuration,hr_holidays.group_hr_holidays_user,1,0,0,0
 access_hr_psi_category_details,hr.psi.category.details,hr_recruitment_psi.model_hr_psi_category_details,hr_holidays.group_hr_holidays_user,1,0,0,0
+access_hr_holidays_status,hr.holidays.status,hr_holidays.model_hr_holidays_status,hr_holidays.group_hr_holidays_user,1,1,1,1
