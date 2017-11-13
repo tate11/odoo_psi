@@ -8,6 +8,7 @@
     'website': 'https://www.ingenosya.mg',
     'depends': ['hr_holidays','hr_recruitment_psi','hr_employee_psi','report'],
     'data': [
+        'security/hr_holidays_security.xml',
         'data/hr_holidays_cron.xml',
         'data/hr_holidays_data.xml',
         'data/mail_template_hr_holidays_data.xml',

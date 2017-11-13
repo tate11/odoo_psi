@@ -32,16 +32,17 @@
 			</field>
 
 			<xpath expr="//button[@name='action_refuse']" position='replace'>
-				<button string="Refuse" name="action_refuse" states="confirm,validate,validate1,validate2" type="object" groups="hr_holidays.group_hr_holidays_user"/>
+				<button string="Refuser" name="action_refuse" states="confirm,validate,validate1,validate2" type="object" 
+				groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha"/>
 			</xpath>
 			<xpath expr="//button[@name='action_validate']" position='replace'>
-				<button string="Valider (DRHA)" name="action_validate" states="validate2" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
+				<button string="Valider (DRHA)" name="action_validate" states="validate2" type="object" groups="hr_holidays_psi.group_hr_holidays_drha" class="oe_highlight"/>
 			</xpath>
 			<xpath expr="//button[@name='action_approve']" position='replace'>
-				<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
+				<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" class="oe_highlight" />
 			</xpath>
 			<field name="state" position="before">
-			    <button string="Valider (Responsable RH)" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','validate1')]}" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
+			    <button string="Valider (Responsable RH)" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','validate1')]}" states="validate1" type="object" groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa" class="oe_highlight"/>
 			</field>
 			
 			<field name="state" position="replace">
@@ -49,7 +50,7 @@
       </field>
 
 			<field name="employee_id" position="after">
-				<field name="all_employee" attrs="{'invisible': [('holiday_type','not in','employee')]}" />
+				<field name="all_employee" invisible="1" /> <!-- attrs="{'invisible': [('holiday_type','not in','employee')]}" -->
 			</field>
 		</field>
 	</record>
