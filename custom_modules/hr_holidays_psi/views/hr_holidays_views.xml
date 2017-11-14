@@ -1,5 +1,23 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <odoo>
+	<data>
+	
+   		<!-- Search Filter in HrHolidays -->
+		<record id="hr_holidays_filter_inherit" model="ir.ui.view">
+			<field name="name">hr.holidays.filter.inherit</field>
+			<field name="model">hr.holidays</field>
+			<field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="filter[@name='approve']" position="before">					
+					<filter string="Personnel permanent" domain="[]" />	
+					<filter icon="terp-go-month" string="Mois en cours" 
+                        name="month" 
+                        domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]" 
+                        help="Mois en cours"/>				
+				</xpath>
+			</field>
+		</record>
+
 	<record id="edit_holiday_new_psi_inherit" model="ir.ui.view">
 		<field name="name">edit.holiday.new.psi.inherit</field>
 		<field name="model">hr.holidays</field>
@@ -74,4 +92,5 @@
 			</xpath>
 		</field>
 	</record>
+	</data>
 </odoo>
