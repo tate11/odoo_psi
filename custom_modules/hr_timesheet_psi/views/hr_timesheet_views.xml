@@ -6,9 +6,9 @@
 			<field name="model">account.analytic.line</field>
 			<field name="inherit_id" ref="timesheet_grid.view_timesheet_list" />
 			<field name="arch" type="xml">
-				<field name="unit_amount" position="before">
+				<!-- field name="unit_amount" position="before">
 		            <field name="type"/>
-		        </field>
+		        </field-->
 			</field>		
 		</record>
 	</data>

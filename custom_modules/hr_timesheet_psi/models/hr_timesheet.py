@@ -8,10 +8,6 @@ from odoo.exceptions import Warning
 class hr_timesheet(models.Model):
     _inherit = 'account.analytic.line'
     
-    type = fields.Selection([('normal','Timesheet Normal'),
-                              ('heure_supp','Timesheet heure supp')
-                              ], string="Type de Timesheet", required=True, default='normal')
-    
     def traiter_unit_amount(self,vals):
         unit_amount=vals.get('unit_amount');
         if unit_amount>self.task_id.planned_hours:
@@ -70,7 +66,8 @@ class hr_timesheet(models.Model):
             total_planned_hours=0
             for task in self.env['project.task'].browse(vals.get('task_id')):
                 total_planned_hours+=float(task.planned_hours)
-            raise Warning(total_planned_hours)
+            #if total_planned_hours<self.unit_amount:
+            #    raise Warning('Total de la durée maximale est {}'.format())
             
         self.traiter_unit_amount(vals)
         return super(hr_timesheet, self).write(vals)
