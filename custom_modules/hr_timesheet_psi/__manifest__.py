@@ -8,6 +8,8 @@
     'website': 'https://www.ingenosya.mg',
     'depends': ['account', 'hr', 'project'],
     'data':  [
+              'data/hr_timesheet_data.xml',
+              'views/resource_views_psi.xml',
               'views/hr_timesheet_views.xml',
              ],
     'demo': [],

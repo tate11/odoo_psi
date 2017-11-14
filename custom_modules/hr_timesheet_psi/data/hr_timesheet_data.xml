@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+  <data>
+    <!-- Ville/Bureau PSI -->  
+	<record model="ville" id="antananarivo">
+        <field name="name">Antananarivo</field>
+    </record>  
+	<record model="ville" id="toamasina">
+        <field name="name">Toamasina</field>
+    </record>  
+	<record model="ville" id="antsiranana">
+        <field name="name">Antsiranana</field>
+    </record>  
+	<record model="ville" id="antsirabe">
+        <field name="name">Antsirabe</field>
+    </record>  
+	<record model="ville" id="fianarantsoa">
+        <field name="name">Fianarantsoa</field>
+    </record>  
+	<record model="ville" id="taolagnaro">
+        <field name="name">Taolagnaro</field>
+    </record>  
+	<record model="ville" id="toliary">
+        <field name="name">Toliary</field>
+    </record>  
+	<record model="ville" id="morondava">
+        <field name="name">Morondava</field>
+    </record>  
+	<record model="ville" id="mahajanga">
+        <field name="name">Mahajanga</field>
+    </record>  
+  </data>
+</odoo>

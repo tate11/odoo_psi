@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 	<data>
-		<record id="hr_timesheet_view_grid_view_psi" model="ir.ui.view">
+		<!-- <record id="hr_timesheet_view_grid_view_psi" model="ir.ui.view">
 			<field name="name">hr.timesheet.view.form.psi</field>
 			<field name="model">account.analytic.line</field>
 			<field name="inherit_id" ref="timesheet_grid.view_timesheet_list" />
 			<field name="arch" type="xml">
-				<!-- field name="unit_amount" position="before">
+				field name="unit_amount" position="before">
 		            <field name="type"/>
-		        </field-->
+		        </field
 			</field>		
-		</record>
+		</record> -->
 	</data>
 </odoo>
