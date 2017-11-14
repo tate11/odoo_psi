@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="custom_template_rappel_timesheet_collaborator" model="mail.template">
+			<field name="name">PSI Template email timesheet - Rappel Email au collaborateur</field>
+			<field name="model_id" ref="hr_employee_psi.model_hr_employee" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Premier rappel de ${object.name_related or 'n/a' }</field>
+			<field name="email_to">${object.user_id.login}</field>
+			<field name="email_cc">${object.coach_id.email}</field>
+			<field name="body_html"><![CDATA[
+				<div>
+				    <p>
+				      	Bonjour ${object.name}, 
+				     	Vous devez finaliser et déposer votre timesheet!                     
+					</p>               
+				</div>   ]]>
+			</field>
+		</record>
+    </data>
+</odoo>

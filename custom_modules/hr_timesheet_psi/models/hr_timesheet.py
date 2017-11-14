@@ -8,6 +8,18 @@ from odoo.exceptions import Warning
 class hr_timesheet(models.Model):
     _inherit = 'account.analytic.line'
     
+    def _send_email_rappel_timesheet_collaborator(self, automatic=False):
+        year_mounth=datetime.now().strftime('%Y-%m')
+        all_employees = self.env['hr.employee'].search([])
+        for employee in all_employees:
+            timesheets = self.env['account.analytic.line'].search([['user_id','=',employee.id],['date','like',year_mounth]])
+            if not timesheets:
+                template = self.env.ref('hr_timesheet_psi.custom_template_rappel_timesheet_collaborator')
+                self.env['mail.template'].browse(template.id).send_mail(employee.id,force_send=True)
+        
+        if automatic:
+            self._cr.commit()
+            
     def traiter_unit_amount(self,vals):
         unit_amount=vals.get('unit_amount');
         if unit_amount>self.task_id.planned_hours:
@@ -38,7 +50,7 @@ class hr_timesheet(models.Model):
                 vals['unit_amount']=float("{}.{}".format(heure,min))
                 
     @api.model
-    def create(self, vals):
+    def create(self, vals): 
         if vals.get('project_id'):
             project = self.env['project.project'].browse(vals.get('project_id'))
             vals['account_id'] = project.analytic_account_id.id
