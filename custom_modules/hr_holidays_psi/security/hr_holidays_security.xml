@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+    <record id="group_hr_holidays_rh" model="res.groups">
+        <field name="name">PSI-RH</field>
+        <field name="category_id" ref="base.module_category_hr_holidays"/>
+        <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/>
+    </record>
+    
+    <record id="group_hr_holidays_spa" model="res.groups">
+        <field name="name">PSI-SPA</field>
+        <field name="category_id" ref="base.module_category_hr_holidays"/>
+        <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/>
+    </record>
+    
+    <record id="group_hr_holidays_crh" model="res.groups">
+        <field name="name">PSI-CRH</field>
+        <field name="category_id" ref="base.module_category_hr_holidays"/>
+        <field name="implied_ids" eval="[(4, ref('group_hr_holidays_rh'))]"/>
+    </record>
+    
+    <record id="group_hr_holidays_drha" model="res.groups">
+        <field name="name">PSI-DRHA</field>
+        <field name="category_id" ref="base.module_category_hr_holidays"/>
+        <field name="implied_ids" eval="[(4, ref('group_hr_holidays_crh'))]"/>
+    </record>
+
+</odoo>
