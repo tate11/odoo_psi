@@ -283,7 +283,7 @@
 	<record id="open_contract_wage_grid" model="ir.actions.act_window">
 		<field name="name">Grille Salariale</field>
 		<field name="res_model">hr.wage.grid</field>
-		<field name="res_id" eval="ref('grid-salariale')" />
+		<field name="res_id" eval="ref('grid-salariale')"/>
 		<field name="view_type">form</field>
 		<field name="view_mode">form</field>
 		<field name="domain">[]</field>
