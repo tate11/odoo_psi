@@ -24,11 +24,11 @@ class hr_contract(models.Model):
     date_rupture = fields.Date(string='Date rupture de contrat')
 
     motif_rupture = fields.Selection([
-                                      ('end_deadline_without_renewal',"Arrivée de l'échéance sans reconduction"),
+                                      ('end_deadline_without_renewal',u"Arrivée de l'échéance sans reconduction"),
                                       ('conventional_break',"Rupture conventionnelle"),
-                                      ('resignation',"Lettre de démission"),
+                                      ('resignation',u"Réception d'une lettre de démission"),
                                       ('dismissal',"Licenciement"),
-                                      ('death',"Décès"),
+                                      ('death',u"Décès"),
                                       ('retreat',"Retraite")
                                       ], string="Motif de rupture de contrat", track_visibility="onchange")
     
