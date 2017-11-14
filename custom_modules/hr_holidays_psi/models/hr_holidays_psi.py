@@ -42,6 +42,9 @@ class hr_holidays_psi(models.Model):
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
     
+    job_id = fields.Many2one(related='employee_id.job_id', store=True)
+    employee_type = fields.Selection(related='job_id.recrutement_type', store=True)
+    
     all_employee = fields.Boolean(string="Tous les employés")
     
     state = fields.Selection([
