@@ -248,8 +248,7 @@
 		<field name="arch" type="xml">
 			<form string="form grille salariale">
 				<field name="wage_grid_details">
-					<tree string="Wage Grid Details" editable="bottom" create="false"
-						delete="false" colors="red">
+					<tree string="Wage Grid Details">
 						<field name="psi_professional_category" readonly="1" />
 						<field name="name" readonly="1" />
 						<field name="psi_category" readonly="1" />
@@ -289,7 +288,7 @@
 		<field name="view_mode">form</field>
 		<field name="domain">[]</field>
 		<field name="context">{}</field>
-		<field name="view_id" eval="False" />
+		<field name="view_id" eval="hr_contract_form_view_wage_grids" />
 		<field name="help" type="html">
 			<p class="oe_view_nocontent_create">
 				Grille Salariale

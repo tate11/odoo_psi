@@ -17,7 +17,7 @@ class hr_psi_category_details(models.Model):
                                         ('superviseur','SUPERVISEUR'),
                                         ('coordinateur','COORDINATEUR'),
                                        ('directeur','DIRECTEUR'),
-                                       ('rra','RRA')], string="Titre de la Catégorie")
+                                       ('rra','RRA')], string=u"Titre de la Catégorie")
     
     psi_cat = fields.Char(string="CAT", size=2)
     prior_notice       = fields.Integer(string='Durée du Préavis')
