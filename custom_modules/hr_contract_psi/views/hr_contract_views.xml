@@ -59,8 +59,6 @@
 			<xpath expr="//field[@name='department_id']" position='after'>
 				<field name="psi_contract_type" attrs="{'readonly' : [('state','=','close')]}"/>
 				<field name="place_of_work" attrs="{'readonly' : [('state','=','close')]}"/>
-					<field name="motif_rupture" attrs="{'readonly' : [('state','=','close')]}" />		
-				
 			</xpath>
 
 <!-- 			<field name="date_end" position="after">
@@ -71,24 +69,32 @@
 			<notebook>
 				<page string="Séparation" attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}">
 					<group>
-						<button name="action_report_certificat" type="object" string="Génerer certificat de travail" class="oe_highlight" />
-            <br />
-						<button name="action_send_email_desactivate_flottes" string="Demande de la désactivation des flottes " type="object"  class="oe_highlight" />
-						<br />
-						<button name="action_send_email_desactivate_account" type="object" class="oe_highlight" string="Demande de la désactivation de compte (email,etc...)"/>
-						<br />
+						<field name="preavis" attrs="{'invisible': [('motif_rupture','not in','resignation'),('motif_rupture','not in','dismissal')]}"/>
+						<field name="date_rupture" attrs="{'readonly' : [('state','=','close')]}" />
+					</group>
+					<group>
+						<button name="action_report_certificat" type="object" string="Générer son certificat de travail" class="oe_highlight" />
+            			<separator />
+						<button name="action_send_email_desactivate_flottes" string="Demande de désactivation des flottes " type="object"  class="oe_highlight" />
+						<separator />
+						<button name="action_send_email_desactivate_account" type="object" class="oe_highlight" string="Demande de désactivation de compte (email, etc.)"/>
+						<separator />
 					</group>
 					<group>
 						<field name="debauchage_cnaps"/>
 						<field name="debauchage_ostie"/>
 						<field name="debauchage_assurance"/>
 					</group>
-					<group>
-						<field name="date_rupture" attrs="{'readonly' : [('state','=','close')]}" />
-						<field name="preavis" attrs="{'invisible': [('motif_rupture','not in','resignation'),('motif_rupture','not in','dismissal')]}"/>
-					</group>		
 				</page>
 			</notebook>
+			
+			<group name="duration_group" position="after">
+				<group name="rupture" string="Rupture de contrat">
+					<field name="date_demission" attrs="{'readonly' : [('state','=','close')]}" />
+					<field name="motif_rupture" attrs="{'readonly' : [('state','=','close')]}" />			
+				</group>
+			</group>
+			
 			<xpath expr="//group[@name='duration_group']" position="after">
 				<group name="result_evaluation" string="Evaluation Période d'essai"> <!-- Condition if date_end_trial terminé -->
 					<field name="result_evaluation" attrs="{'readonly' : [('state','=','close')]}"/>
@@ -115,13 +121,7 @@
 						attrs="{'invisible': ['|',('response_evaluation','=',False),('result_evaluation','not in','ko')]}" />
 				</group>
 			</xpath>
-
-			<group name="duration_group" position="after">
-				<group name="rupture" string="Rupture de contrat">
-					<field name="date_demission" attrs="{'readonly' : [('state','=','close')]}" />			
-				</group>
-			</group>
-
+			
 			<!-- Contract close - READONLY -->
 			<field name='name' position="replace">
 				<field name="name" attrs="{'readonly' : [('state','=','close')]}" />
@@ -153,21 +153,21 @@
 			<field name='wage' position="replace">
 				<field name="wage" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
-			<field name='trial_date_start' position="replace">
-				<field name="trial_date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"></field>
-			</field>
-			<field name='trial_date_end' position="replace">
-				- <field name="trial_date_end" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}" />
-			</field>
-			<field name='date_start' position="replace">
-				<field name="date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"></field>
-			</field>
-			<field name='date_end' position="replace">
-				- <field name="date_end" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}" />
-			</field>
-			<field name='working_hours' position="replace">
-				<field name="working_hours" attrs="{'readonly' : [('state','=','close')]}" />
-			</field>
+			
+            <group name="duration_group" position="replace">
+	            <group name="duration_group" string="Duration">
+		            <label for="trial_date_start" string="Durée de la période d'essai"/>
+		            <div>
+		                <field name="trial_date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/> - <field name="trial_date_end" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/>
+		            </div>
+		            <label for="date_start" string="Durée du contrat"/>
+		            <div>
+		                <field name="date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/> - <field name="date_end" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/>
+		            </div>
+		            <field name="working_hours" attrs="{'readonly' : [('state','=','close')]}"/>
+		        </group>
+            </group>
+			
 			<field name="working_hours" position="before">
 				<field name="work_years" attrs="{'readonly' : [('state','=','close')]}"/>
 			</field>

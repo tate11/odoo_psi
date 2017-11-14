@@ -200,15 +200,6 @@ class hr_contract(models.Model):
                     template_rh = self.env.ref('hr_contract_psi.template_rh_id')
                     self.env['mail.template'].browse(template_rh.id).send_mail(employee.id)
                     
-    employment_termination = fields.Selection([
-                                             ('end_deadline_without_renewal',"Arrivée de l'échéance sans reconduction"),
-                                             ('conventional_break',"Rupture conventionnelle"),
-                                             ('resignation',"Lettre de démission"),
-                                             ('dismissal',"Licenciement"),
-                                             ('death',"Décès"),
-                                             ('retreat',"Retraite")
-                                             ], string="Séparation événement", track_visibility="onchange")
-
     psi_echelon = fields.Selection([('echelon_1','ECHELON 1'),('echelon_2','ECHELON 2'),('echelon_3','ECHELON 3'),
                                     ('echelon_4','ECHELON 4'),('echelon_5','ECHELON 5'),('echelon_6','ECHELON 6'),
                                     ('echelon_7','ECHELON 7'),('echelon_8','ECHELON 8'),('echelon_9','ECHELON 9'),

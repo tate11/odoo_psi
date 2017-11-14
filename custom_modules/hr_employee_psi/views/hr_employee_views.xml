@@ -31,7 +31,7 @@
 			<field name="name">Ajouter une déclaration d'intérêt</field>
 			<field name="res_model">hr.declaration.interest</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
+			<field name="view_mode">form</field>
 			<field name="view_id" ref="view_action_add_declaration" />
 			<field name="target">new</field>
 			<field name="context">{'default_employee_id': active_id}</field>
