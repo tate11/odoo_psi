@@ -7,21 +7,26 @@
 			<field name="model">hr.declaration.interest</field>
 			<field name="arch" type="xml">
 				<form string="Declaration d'intérêt">
-						<div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name" placeholder="Nom du déclaration"/>
-                            </h1>
-                        </div>
+					<div class="oe_title">
+                           <label for="name" class="oe_edit_only"/>
+                           <h1>
+                               <field name="name" placeholder="Nom du déclaration"/>
+                           </h1>
+                       </div>
+                       <group>
                         <group>
-	                        <group>
-	                            <field name="employee_id"/>
-	                        </group>
-	                        <group>
-	                            <field name="year"/>
-	                            <field name="certificate_ethics_file"/> 
-	                        </group>
-	                    </group>
+                            <field name="employee_id"/>
+                            <field name="b_edit" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="year"/>
+                            <field name="certificate_ethics_file"/> 
+                        </group>
+                    </group>
+                    <footer attrs="{'invisible' : [('b_edit','=',True)]}">
+                       <button string='Sauvegarder' name="write" type="object" class="btn-primary"/>
+                       <button string="Annuler" class="btn-default" special="cancel"/>
+                    </footer>
 				</form>
 			</field>
 		</record>
@@ -96,7 +101,7 @@
 							<field name="card_cnaps" />
 							<field name="birth_certificate_children" />
 							<field name="details_certificate_ethics">
-								<tree create="false" delete="false" editable="false">
+								<tree create="false" editable="false">
 									<field name="name"/>
 									<field name="date_add" />
 									<field name="year" />

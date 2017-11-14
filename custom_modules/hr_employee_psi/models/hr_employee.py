@@ -302,14 +302,20 @@ class hr_declaration_interest(models.Model):
                                                              )], string=u'Année', required="True", default=datetime.now().year)
     certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
     checked_current_year = fields.Boolean(string='Check')
+    
+    b_edit = fields.Boolean(default=False)
 
     @api.multi
     def write(self, vals):
         declaration = self.verify_year_declaration()
-        if declaration == True:                  
+        if declaration == True:
+            #self.b_edit = True
+            vals['b_edit'] = True                  
             super(hr_declaration_interest, self).write(vals)
+            return True
         else : 
             raise Warning(_(u'Vous avez déjà rempli le formulaire de déclaration cette année'))
+            return False
         
     def verify_year_declaration(self):
         res = False
