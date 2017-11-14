@@ -1,5 +1,22 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <odoo>
+	<data>
+	
+   		<!-- Search Filter in HrHolidays -->
+		<record id="hr_holidays_filter_inherit" model="ir.ui.view">
+			<field name="name">hr.holidays.filter.inherit</field>
+			<field name="model">hr.holidays</field>
+			<field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="filter[@name='approve']" position="before">					
+					<filter string="Personnel permanent du mois en cours" 
+						domain="['&amp;',('employee_type','=','collaborateur'),('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]" 
+						help="Liste des absences de tout le personnel permanent pour le mois courant"
+						/>				
+				</xpath>
+			</field>
+		</record>
+
 	<record id="edit_holiday_new_psi_inherit" model="ir.ui.view">
 		<field name="name">edit.holiday.new.psi.inherit</field>
 		<field name="model">hr.holidays</field>
@@ -17,8 +34,9 @@
 			</xpath>
 			<field name="category_id" position="replace">
 				<field name="color_name_holiday_status" invisible="1" />
-				<field name="category_id" invisible="1"/>
-				<field name="last_business_day"/>
+				<field name="category_id" invisible="1" />
+				<field name="last_business_day" invisible="1" />
+				<field name="employee_type" invisible="1" />
 			</field>
 			
 			<xpath expr="//field[@name='holiday_status_id']" position='after'>
@@ -77,4 +95,5 @@
 			</xpath>
 		</field>
 	</record>
+	</data>
 </odoo>
