@@ -248,7 +248,7 @@
 		<field name="arch" type="xml">
 			<form string="form grille salariale">
 				<field name="wage_grid_details">
-					<tree string="Wage Grid Details">
+					<tree string="Wage Grid Details" editable="bottom">
 						<field name="psi_professional_category" readonly="1" />
 						<field name="name" readonly="1" />
 						<field name="psi_category" readonly="1" />
