@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-from datetime import datetime, date
-from odoo.exceptions import Warning
-import calendar
 from __builtin__ import False
+import calendar
+from datetime import datetime, date
+
+from odoo import api, fields, models
+from odoo.exceptions import Warning
 
 
 class AccountAnalyticLine(models.Model):
