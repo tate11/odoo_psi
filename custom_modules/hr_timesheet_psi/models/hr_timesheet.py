@@ -9,10 +9,13 @@ from odoo import api, fields, models
 from odoo.exceptions import Warning
 
 
+class ProjectProject(models.Model):
+    _inherit = 'project.project'
+
+    project_timesheet_id = fields.Integer()
+    
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
-
-    project_timesheet_id = fields.Integer(store=True)
 
     def _send_email_rappel_envoie_abscence_membres(self, automatic=False):
         this_year=datetime.now().strftime("%Y")
