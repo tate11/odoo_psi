@@ -2,6 +2,7 @@
 <odoo>
         <record id="timesheet_antananarivo" model="resource.calendar">
             <field name="name">Antananarivo</field>
+            <field name="resource_calendar_id_psi">1</field>
         </record>
 
         <record model="resource.calendar.attendance" id="calendar_attendance_tana_mon1">
@@ -77,6 +78,7 @@
         
         <record id="timesheet_toamasina" model="resource.calendar">
             <field name="name">Toamasina</field>
+            <field name="resource_calendar_id_psi">2</field>
         </record>
 
         <record model="resource.calendar.attendance" id="calendar_attendance_toa_mon1">
@@ -152,6 +154,7 @@
         
         <record id="timesheet_antsiranana" model="resource.calendar">
             <field name="name">Antsiranana</field>
+            <field name="resource_calendar_id_psi">3</field>
         </record>
 
         <record model="resource.calendar.attendance" id="calendar_attendance_ants_mon1">
@@ -227,6 +230,7 @@
         
         <record id="timesheet_antsirabe" model="resource.calendar">
             <field name="name">Antsirabe</field>
+            <field name="resource_calendar_id_psi">4</field>
         </record>
 
         <record model="resource.calendar.attendance" id="calendar_attendance_a/rabe_mon1">
@@ -302,6 +306,7 @@
         
         <record id="timesheet_fianarantsoa" model="resource.calendar">
             <field name="name">Fianarantsoa</field>
+            <field name="resource_calendar_id_psi">5</field>
         </record>
 
         <record model="resource.calendar.attendance" id="calendar_attendance_fianar_mon1">
@@ -377,6 +382,7 @@
         
         <record id="timesheet_taolagnaro" model="resource.calendar">
             <field name="name">Taolagnaro</field>
+            <field name="resource_calendar_id_psi">6</field>
         </record>
 
         <record model="resource.calendar.attendance" id="calendar_attendance_taol_mon1">
@@ -452,6 +458,7 @@
         
         <record id="timesheet_toliary" model="resource.calendar">
             <field name="name">Toliary</field>
+            <field name="resource_calendar_id_psi">7</field>
         </record>
 
         <record model="resource.calendar.attendance" id="calendar_attendance_toli_mon1">
@@ -527,6 +534,7 @@
         
         <record id="timesheet_morondava" model="resource.calendar">
             <field name="name">Morondava</field>
+            <field name="resource_calendar_id_psi">8</field>
         </record>
 
         <record model="resource.calendar.attendance" id="calendar_attendance_moro_mon1">
@@ -602,6 +610,7 @@
         
         <record id="timesheet_mahajanga" model="resource.calendar">
             <field name="name">Mahajanga</field>
+            <field name="resource_calendar_id_psi">9</field>
         </record>
 
         <record model="resource.calendar.attendance" id="calendar_attendance_maha_mon1">

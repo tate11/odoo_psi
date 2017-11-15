@@ -20,7 +20,7 @@
             <field name="active" eval="True" />
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">1</field>
-            <field name="interval_type">minutes</field>	<!-- 1 mounth -->
+            <field name="interval_type">hours</field>	<!-- 1 mounth -->
             <field name="numbercall">-1</field>
             <field name="doall" eval="False" />
             <field eval="'account.analytic.line'" name="model" />

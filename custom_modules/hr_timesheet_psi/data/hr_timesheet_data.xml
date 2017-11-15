@@ -10,6 +10,15 @@
 	        <field name="name">Prestataires PSI</field>
 	        <field name="project_timesheet_id">2</field>
 	    </record>
-
+	    
+	    <!-- Temps Timesheet Prestataire -->
+	    <record model="timesheet.prestataire.hours" id="mi_temps">
+	    	<field name="name">Mi-temps</field>
+	    	<field name="temps">5</field>
+	    </record>
+		<record model="timesheet.prestataire.hours" id="temps_plein">
+	    	<field name="name">Temps plein</field>
+	    	<field name="temps">8</field>
+	    </record>
     </data>
 </odoo>
