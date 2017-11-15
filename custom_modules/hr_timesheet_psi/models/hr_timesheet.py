@@ -11,7 +11,8 @@ from odoo.exceptions import Warning
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
-    
+
+    project_timesheet_id = fields.Integer(store=True)
 
     def _send_email_rappel_envoie_abscence_membres(self, automatic=False):
         this_year=datetime.now().strftime("%Y")
@@ -95,7 +96,7 @@ class AccountAnalyticLine(models.Model):
         unit_amount=vals.get('unit_amount');
         
         if unit_amount>self.task_id.planned_hours:
-            raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans la tâche actuelle qui est {}!'.format(self.float_time_to_time(self.task_id.planned_hours)))   
+            raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans la tâche actuelle qui est {}!'.format(self.float_time_to_time(self.task_id.planned_hours)))
             return False
         
         if unit_amount>self.unit_amount:
