@@ -49,10 +49,10 @@ class HrTimesheetPsi(models.Model):
         index=True, readonly=True, states={'new': [('readonly', False)]})
     date_to = fields.Date(string='Date fin', default=_default_date_to, required=True,
         index=True, readonly=True, states={'new': [('readonly', False)]})
-    timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
     motif = fields.Text(string="Motif")
     time_from = fields.Float(string="Heure de debut")
     time_to = fields.Float(string="Heure de fin")
+    hours = fields.Integer(compute="_get_hours", String='Heure')
     
     state = fields.Selection([
         ('new', 'Nouveau'),
@@ -64,7 +64,17 @@ class HrTimesheetPsi(models.Model):
     company_id = fields.Many2one('res.company', string='Company')
     department_id = fields.Many2one('hr.department', string='Departement',
         default=lambda self: self.env['res.company']._company_default_get())
-
+    
+    @api.depends('time_from','time_to')
+    def _get_hours(self):
+        for record in self:
+            if record.time_from and record.time_to:
+                time_from = record.time_from
+                time_to = record.time_to
+                difference = int(time_to) - int(time_from)             
+                record.hours = float(difference)
+   
+   
     @api.constrains('date_to', 'date_from', 'employee_id')
     def _check_sheet_date(self, forced_user_id=False):
         for sheet in self:
