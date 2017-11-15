@@ -122,7 +122,7 @@ class HrTimesheetPsi(models.Model):
     def onchange_employee_id(self):
         if self.employee_id:
             self.department_id = self.employee_id.department_id
-            self.user_id = self.employee_id.user
+            self.user_id = self.employee_id.user_id
 
     def copy(self, *args, **argv):
         raise UserError(_('You cannot duplicate a timesheet.'))
