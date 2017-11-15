@@ -9,6 +9,7 @@ import calendar
 class hr_timesheet(models.Model):
     _inherit = 'account.analytic.line'
     
+    #hita ve eto
     def _send_email_rappel_envoie_abscence_membres(self, automatic=False):
         this_year=datetime.now().strftime("%Y")
         this_month=datetime.now().strftime("%m")
