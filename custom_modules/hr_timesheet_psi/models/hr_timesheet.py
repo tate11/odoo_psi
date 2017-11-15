@@ -10,7 +10,7 @@ class hr_timesheet(models.Model):
     
     def _send_email_rappel_timesheet_collaborator(self, automatic=False):
         year_mounth=datetime.now().strftime('%Y-%m')
-        all_employees = self.env['hr.employee'].search([])
+        all_employees = self.env['hr.employee'].search([('job_id.recrutement_type','=','collaborateur')])
         for employee in all_employees:
             timesheets = self.env['account.analytic.line'].search([['user_id','=',employee.id],['date','like',year_mounth]])
             if not timesheets:
