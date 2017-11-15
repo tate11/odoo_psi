@@ -9,6 +9,7 @@
     'depends': ['account', 'hr', 'project'],
     'data':  [
               'data/hr_timesheet_cron.xml',
+              'data/resource_calendar_data.xml'
               'data/mail_template_hr_timesheet_data.xml',
              ],
     'demo': [],
