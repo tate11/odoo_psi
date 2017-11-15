@@ -8,9 +8,11 @@
     'website': 'https://www.ingenosya.mg',
     'depends': ['account', 'hr', 'project'],
     'data':  [
-        'data/resource_calendar.xml',
-        'security/ir.model.access.csv',
-        ],
+              'data/hr_timesheet_cron.xml',
+              'data/resource_calendar_data.xml'
+              'data/mail_template_hr_timesheet_data.xml',
+              'security/ir.model.access.csv',
+             ],
     'demo': [],
     'test': [],
     'installable': True,

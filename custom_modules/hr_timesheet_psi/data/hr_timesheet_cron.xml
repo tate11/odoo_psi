@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+        <!-- Cron send rappel timesheet email collaborator -->
+        <record id="ir_cron_send_email_rappel_timesheet_collab" model="ir.cron">
+            <field name="name">Collaborateur - Rappel du timesheet au collaborateur</field>
+            <field name="active" eval="True" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>	<!-- 1 mounth -->
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False" />
+            <field eval="'account.analytic.line'" name="model" />
+            <field name="function" eval="'_send_email_rappel_timesheet_collaborator'" /> 
+        </record>
+        
+        <!-- Cron send rappel envoie abscences email à tous les membres -->
+        <record id="ir_cron_send_email_rappel_envoie_abscence_membres" model="ir.cron">
+            <field name="name">Membres - Rappel d'envoie des abscences aux membres</field>
+            <field name="active" eval="True" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>	<!-- 1 mounth -->
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False" />
+            <field eval="'account.analytic.line'" name="model" />
+            <field name="function" eval="'_send_email_rappel_envoie_abscence_membres'" /> 
+        </record>
+    </data>
+</odoo>
