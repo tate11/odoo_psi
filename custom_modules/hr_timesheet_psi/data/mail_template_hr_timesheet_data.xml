@@ -17,5 +17,22 @@
 				</div>   ]]>
 			</field>
 		</record>
+		
+		<record id="custom_template_rappel_envoie_abscence_membres" model="mail.template">
+			<field name="name">PSI Template email envoie abscence - Rappel d'envoie par mail des abscences aux Membres</field>
+			<field name="model_id" ref="hr_employee_psi.model_hr_employee" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Premier rappel de ${object.name_related or 'n/a' }</field>
+			<field name="email_to">${object.user_id.login}</field>
+			<field name="email_cc">${object.coach_id.email}</field>
+			<field name="body_html"><![CDATA[
+				<div>
+				    <p>
+				      	Bonjour ${object.name}, 
+				     	Vous devez envoyer l’état compilé des absences de votre site/ département de ce mois.              
+					</p>               
+				</div>   ]]>
+			</field>
+		</record>
     </data>
 </odoo>

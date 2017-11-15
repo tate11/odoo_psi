@@ -2,12 +2,63 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from datetime import datetime
+from datetime import datetime, date
 from odoo.exceptions import Warning
+import calendar
 
 class hr_timesheet(models.Model):
     _inherit = 'account.analytic.line'
     
+    def _send_email_rappel_envoie_abscence_membres(self, automatic=False):
+        this_year=datetime.now().strftime("%Y")
+        this_month=datetime.now().strftime("%m")
+        last_day_in_this_month= calendar.monthrange(int(this_year),int(this_month))[1] 
+        last_day_of_week_in_this_month= datetime.strptime("{}-{}-{}".format(this_year,this_month,last_day_in_this_month), '%Y-%m-%d').strftime('%w')
+        nowday_of_week=datetime.now().strftime('%w')
+        nowday=datetime.now().strftime('%d')
+        
+        self.send_rappel_envoie_abscence()
+        if last_day_of_week_in_this_month==6 or last_day_of_week_in_this_month==0:
+            if nowday_of_week==5:
+                self.send_rappel_envoie_abscence()
+        else:
+            if nowday==last_day_in_this_month:
+                self.send_rappel_envoie_abscence()
+        
+        #Call the next cron in next day 'ouvrable' of next month
+        
+        this_year=datetime.now().strftime("%Y")
+        this_next_month=datetime.now().strftime("%m")
+        if this_month==12:
+            this_next_month="1"
+            this_year=int(this_year)+1
+        
+        last_day_in_next_month= calendar.monthrange(int(this_year),int(this_next_month))[1] 
+        last_day_of_week_in_next_month= datetime.strptime("{}-{}-{}".format(this_year,this_next_month,last_day_in_next_month), '%Y-%m-%d').strftime('%w')
+        
+        next_day_call_cron=""
+        if last_day_of_week_in_next_month==6:
+            next_day_call_cron=int(last_day_in_next_month)-1
+        elif last_day_of_week_in_next_month==0:
+            next_day_call_cron=int(last_day_in_next_month)-2
+        else:
+            next_day_call_cron=last_day_in_next_month
+        
+        #date_nextcall=datetime.strptime("{}-{}-{} 08:00:00".format(this_year,this_next_month,next_day_call_cron), '%Y-%m-%d %H:%M:%S')
+        
+        #cron = self.env.ref('hr_timesheet_psi.ir_cron_send_email_rappel_envoie_abscence_membres', raise_if_not_found=False)
+        #cron.write({'nextcall':date_nextcall})
+        
+        # End call the next cron
+        if automatic:
+            self._cr.commit()
+    
+    def send_rappel_envoie_abscence(self):
+        all_employees = self.env['hr.employee'].search([])
+        for employee in all_employees:
+            template = self.env.ref('hr_timesheet_psi.custom_template_rappel_envoie_abscence_membres')
+            self.env['mail.template'].browse(template.id).send_mail(employee.id,force_send=True)
+                    
     def _send_email_rappel_timesheet_collaborator(self, automatic=False):
         year_mounth=datetime.now().strftime('%Y-%m')
         all_employees = self.env['hr.employee'].search([('job_id.recrutement_type','=','collaborateur')])
