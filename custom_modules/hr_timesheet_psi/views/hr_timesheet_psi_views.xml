@@ -46,17 +46,6 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
-                   	<group>
-						<field name="timesheet_ids">
-                                <tree editable="bottom" string="Timesheet Activities">
-                                    <field name="date"/>
-                                    <field name="name"/>
-                                    <field name="project_id" required="1"/>
-                                    <field name="unit_amount" widget="float_time" string="Hours" sum="Hours"/>
-                                    <field name="user_id" invisible="1"/>
-                                </tree>
-                       	</field>
-                    </group>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
