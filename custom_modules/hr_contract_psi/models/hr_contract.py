@@ -192,13 +192,13 @@ class hr_contract(models.Model):
                 monday2 = (date_birthday_time - timedelta(days=date_birthday_time.weekday()))
 
                 weeks = (monday2 - monday1).days / 7
-               
+                
                 if weeks == 2 :
-                    
+                    print employee.employee_id.name
                     template_collaborator = self.env.ref('hr_contract_psi.template_collaborator_id')
-                    self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id)
+                    self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id, force_send=True)
                     template_rh = self.env.ref('hr_contract_psi.template_rh_id')
-                    self.env['mail.template'].browse(template_rh.id).send_mail(employee.id)
+                    self.env['mail.template'].browse(template_rh.id).send_mail(employee.id, force_send=True)
                     
     psi_echelon = fields.Selection([('echelon_1','ECHELON 1'),('echelon_2','ECHELON 2'),('echelon_3','ECHELON 3'),
                                     ('echelon_4','ECHELON 4'),('echelon_5','ECHELON 5'),('echelon_6','ECHELON 6'),

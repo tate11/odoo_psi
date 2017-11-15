@@ -100,7 +100,7 @@
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
-		      	Bonjour,
+		      	Bonjour, ${object.employee_id.name} </br>
 		     	Il faut mettre à jour la déclaration conflit d’intérêt (par an), l’attestation de cours d’éthique (tous les 2 ans).                      
 			</p>
 			<h5> Email - rappel Collaborateur</h5>
