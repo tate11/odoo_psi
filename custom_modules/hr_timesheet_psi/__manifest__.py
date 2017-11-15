@@ -7,9 +7,7 @@
     'description': """Gestion des Timesheet chez PSI-M""",
     'website': 'https://www.ingenosya.mg',
     'depends': ['account', 'hr', 'project'],
-    'data':  [
-              'views/hr_timesheet_views.xml',
-             ],
+    'data':  ['data/resource_calendar.xml'],
     'demo': [],
     'test': [],
     'installable': True,
