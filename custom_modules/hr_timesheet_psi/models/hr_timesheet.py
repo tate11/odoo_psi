@@ -101,16 +101,12 @@ class AccountAnalyticLine(models.Model):
         
         if unit_amount>self.unit_amount:
             total_planned_hours=0
-            current_timesheets=self.env['account.analytic.line'].search([('project_id','=',self.project_id),('task_id','=',self.task_id)])
+            current_timesheets=self.env['account.analytic.line'].search([['project_id','=',self.project_id.id],['task_id','=',self.task_id.id]])
             for current_timesheet in current_timesheets:
                 total_planned_hours+=float(current_timesheet.unit_amount)
             if (total_planned_hours+unit_amount-self.unit_amount)>self.task_id.planned_hours:
                 raise Warning(u'Il ne reste plus que {} de travail dans cette tâche'.format(self.float_time_to_time(self.task_id.planned_hours-total_planned_hours)))   
                 return False
-        
-        if unit_amount>=8.5:
-            raise Warning('Veuillez entrer une durée inférieure à 8h30!')   
-            return False
         
         if len(str(unit_amount))>2:
             
