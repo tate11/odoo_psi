@@ -8,10 +8,12 @@ from odoo.exceptions import Warning
 class hr_timesheet(models.Model):
     _inherit = 'account.analytic.line'
     
+    project_timesheet_id = fields.Integer(store=True)
+   
     def traiter_unit_amount(self,vals):
         unit_amount=vals.get('unit_amount');
         if unit_amount>self.task_id.planned_hours:
-            raise Warning('Cette durée est supérieure à celle qu\'on a prévue!')   
+#            raise Warning('Cette durée est supérieure à celle qu\'on a prévue!')   
             return False
         if unit_amount:
             if unit_amount>=8.5:

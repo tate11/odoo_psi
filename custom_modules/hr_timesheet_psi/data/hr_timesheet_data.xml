@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<!-- Liste des projets -->
+		<record model="project.project" id="heure_supp">
+	        <field name="name">Heures supplémentaires PSI</field>
+	        <field name="project_timesheet_id">1</field>
+	    </record>
+		<record model="project.project" id="prestataires">
+	        <field name="name">Prestataires PSI</field>
+	        <field name="project_timesheet_id">2</field>
+	    </record>
+
+    </data>
+</odoo>

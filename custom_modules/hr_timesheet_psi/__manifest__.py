@@ -6,9 +6,10 @@
     'sequence': 0,
     'description': """Gestion des Timesheet chez PSI-M""",
     'website': 'https://www.ingenosya.mg',
-    'depends': ['account', 'hr', 'project'],
+    'depends': ['hr_timesheet'],
     'data':  [
-              'views/hr_timesheet_views.xml',
+              'data/hr_timesheet_data.xml',
+              'views/hr_timesheet_psi_views.xml'
              ],
     'demo': [],
     'test': [],
