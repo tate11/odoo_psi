@@ -17,6 +17,33 @@ class ProjectProject(models.Model):
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
+    project_timesheet_id = fields.Integer(store=True)
+    project_id = fields.Many2one('project.project', 'Project', domain=lambda self: 
+                                    [
+                                        '|',
+                                          ('id','in', tuple([x.id for x in (
+                                              self.env['project.project'].search([('parent_id','=',
+                                                                                    self.env['project.project'].search([['parent_id','=',False],['analytic_account_id','=',
+                                                                                      self.env['hr.employee'].search([('user_id','=',
+                                                                                         self.env.user.id)])[0].psi_budget_code_distribution.id]])[0].id
+                                                                                   )
+                                                                                  ]
+                                                                                 )
+                                                                            )
+                                                             ]
+                                                            )
+                                           ),
+                                     
+                                           ('id','in', tuple(
+                                            [x.id for x in (
+                                                self.env['project.project'].search([['parent_id','=',False],['analytic_account_id','=',
+                                                     self.env['hr.employee'].search([('user_id','=',
+                                                         self.env.user.id)])[0].psi_budget_code_distribution.id]])
+                                                ,)
+                                            ])
+                                          )
+                                     ])
+
     def _send_email_rappel_envoie_abscence_membres(self, automatic=False):
         this_year=datetime.now().strftime("%Y")
         this_month=datetime.now().strftime("%m")
