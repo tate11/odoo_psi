@@ -2,6 +2,7 @@
 <odoo>
 	<data>
 		<record model="hr.holidays.status" id="type_formation">
+
 			<field name="name">Absences pour formation</field>
 			<field name="color_name">lightpink</field>
 		</record>

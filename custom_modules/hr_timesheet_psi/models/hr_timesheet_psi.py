@@ -206,7 +206,7 @@ class HrTimesheetPsi(models.Model):
     
     @api.onchange('time_to')
     def _on_change_time_to(self):
-        if self.time_to <= self.time_from:
+        if self.time_to < self.time_from:
             raise Warning('L\'heure de fin est incorrecte')
             return False
     

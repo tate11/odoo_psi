@@ -166,6 +166,9 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def create(self, vals):
         
+        if vals.get('unit_amount') <= 0.0:
+            raise Warning('Veuillez saisir l\'heure.')
+        
         if vals.get('task_id') and vals.get('project_id') and vals.get('unit_amount') and vals.get('unit_amount') != 0.0:
             current_timesheets = self.env['account.analytic.line'].search([['project_id', '=', vals.get('project_id')], ['task_id', '=', vals.get('task_id')]])
             task = self.env['project.task'].search([('id','=',vals.get('task_id'))])[0]

@@ -29,12 +29,12 @@
 						<field name="equipment_state" />
 					</tree>
 				</field>
-				<field name="nature_recrutement" attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': [('recrutement_type', '=', 'consultant')]}" />
+				<field name="nature_recrutement" required="1" /> <!-- attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': [('recrutement_type', '=', 'consultant')]}" -->
 				<field name="psi_budget_code_distribution" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'required': [('state', '=', 'validation_finance')]}"/>
 				<field name="subordination_link_id" />
 				<field name="psi_contract_type" attrs="{'required': [('state', 'in', ('open'))]}" />
 				<field name="psi_contract_duration" attrs="{'invisible': ['|',('psi_contract_type','=','cdi'),('psi_contract_type','=','prestataire')], 'required': [('psi_contract_type', '=', 'cdd')]}" />
-				<field name="rr_approbation" />
+				<field name="rr_approbation" attrs="{'readonly': [('nature_recrutement', '=', 'interne')]}" />
 				<field name="psi_memo" attrs="{'invisible': [('nature_recrutement', '!=', 'conssideration_dossier')]}"/>
 			</field>
 			<field name="address_id" position="replace">
@@ -128,7 +128,7 @@
 				<field name="name" position="after">
 					<field name="recrutement_type_id" />
 					<field name="recrutement_type" invisible="1" />
-					<field name="tdr_file" />
+					<field name="tdr_file" context="{'default_res_model': 'hr.job','default_res_id': active_id}" />
 				</field>
 			</data>
 		</field>
@@ -149,25 +149,25 @@
 	                    name="%(hr_recruitment.action_hr_job_applications)d"
 	                    context="{'default_user_id': user_id}"
 	                    type="action">
-	                    <field name="application_count" widget="statinfo" string="Applications"/>
+	                    <field name="application_count" widget="statinfo" string="Candidature(s)"/>
 	                </button>
 	                <button class="oe_stat_button"
 	                    icon="fa-users"
 	                    name="%(hr_recruitment.action_hr_job_no_employee)d"
 	                    type="action">
-	                    <field name="no_of_employee" widget="statinfo" string="Employees"/>
+	                    <field name="no_of_employee" widget="statinfo" string="Employé(s)"/>
 	                </button>
 	                <button class="oe_stat_button"
 	                    icon="fa-book"
 	                    name="action_get_attachment_tree_view"
 	                    type="object">
-	                    <field name="documents_count" widget="statinfo" string="Documents"/>
+	                    <field name="documents_count" widget="statinfo" string="Document(s)"/>
 	                </button>
 	                <button class="oe_stat_button" type="action"
 	                    name="%(hr_recruitment.action_hr_job_sources)d" icon="fa-share"
 	                    context="{'default_job_id': active_id}">
 	                    <div class="o_form_field o_stat_info">
-	                        <span class="o_stat_text">Trackers</span>
+	                        <span class="o_stat_text">Origine de l'offre</span>
 	                    </div>
 	                </button>
 	                <button class="oe_stat_button" 

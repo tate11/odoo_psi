@@ -10,7 +10,9 @@
 			<field name="model">hr.applicant</field>
 			<field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job" />
 			<field name="arch" type="xml">
-			  
+			  <field name="email_from" position="replace">
+			  	<field name="email_from" required="1" />
+			  </field>
 				<field name="partner_id" position="before">
 					<field name="birthday" attrs="{'required': True}" />
 					<field name="age" />
@@ -36,13 +38,13 @@
 						<field name="b_liste_restreinte" />
 					</group>
 					<group string="Note Shortlist">
-						<field name="psi_note_hr" attrs="{'required': [('state','in',('interview'))]}" />
-						<field name="psi_note_candidate" attrs="{'required': [('state','in',('interview'))]}" />
+						<field name="psi_note_hr" attrs="{'required': [('state','=',('applicant_selected'))]}" />
+						<field name="psi_note_candidate" attrs="{'required': [('state','=',('applicant_selected'))]}" />
 						<field name="psi_average_note" />
 					</group>
 					<group string="Note Test">
-						<field name="psi_note_test_rh" />
-						<field name="psi_note_test_candidate" />
+						<field name="psi_note_test_rh" attrs="{'required': [('state','=',('convoked_for_test'))]}" />
+						<field name="psi_note_test_candidate" attrs="{'required': [('state','=',('convoked_for_test'))]}" />
 						<field name="psi_average_note_test" />
 					</group>
 				</field>
@@ -204,27 +206,35 @@
 				   	<field name="availability" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
 				</field>
 				<xpath expr="//label[@for='salary_expected']" position='replace'>
-					<label for="salary_expected" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
+					<!-- <label for="salary_expected" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" /> -->
+					<div >
+					    <label for="salary_expected" string="Salaire demandée" attrs="{'invisible': ['|', ('recrutement_type', '=', 'consultant'), ('recrutement_type', '=', 'stagiaire')]}"/>
+					    <label for="salary_expected" string="Honoraire demandée" attrs="{'invisible': ['|', ('recrutement_type', '!=', 'consultant'), ('recrutement_type', '=', 'stagiaire')]}" />
+					</div>
 				</xpath>
 				<xpath expr="//field[@name='salary_expected']" position='replace'>
-					<field name="salary_expected" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
+					<field name="salary_expected" required="1" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')], 'required':[('state', 'in', ('psi_wage_proposal','honorary_proposal'))]}" />
 				</xpath>
 				<xpath expr="//field[@name='salary_expected_extra']" position='replace'>
-					<field name="salary_expected_extra" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
+					<field name="salary_expected_extra" invisible="1" />
 				</xpath>
 				<xpath expr="//label[@for='salary_proposed']" position='replace'>
-					<label for="salary_proposed" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
+					<!-- <label for="salary_proposed" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" /> -->
+					<div >
+					    <label for="salary_proposed" string="Salaire proposée" attrs="{'invisible': ['|', ('recrutement_type', '=', 'consultant'), ('recrutement_type', '=', 'stagiaire')]}"/>
+					    <label for="salary_proposed" string="Honoraire proposée" attrs="{'invisible': ['|', ('recrutement_type', '!=', 'consultant'), ('recrutement_type', '=', 'stagiaire')]}" />
+					</div>
 				</xpath>
 				<xpath expr="//field[@name='salary_proposed']" position='replace'>
-					<field name="salary_proposed" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}"/>
+					<field name="salary_proposed" required="1" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')], 'required':[('state', 'in', ('psi_wage_proposal','honorary_proposal'))]}"/>
 				</xpath>
 				<xpath expr="//field[@name='salary_proposed_extra']" position='replace'>
-					<field name="salary_proposed_extra" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}"/>
+					<field name="salary_proposed_extra" invisible="1" />
 				</xpath>
 				
 				<field name="availability" position="after">
 				    <field name="psi_allowance" attrs="{'invisible': [('recrutement_type', '!=', 'stagiaire')]}" />
-					<field name="psi_salary_type"  />
+					<field name="psi_salary_type" attrs="{'invisible': [('recrutement_type', '=', 'consultant')]}" />
 					<field name="psi_salary_negotiable" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
 				</field>
 				
@@ -245,9 +255,9 @@
 					<button name="button_professional_reference" string="Références professionnelles"
 						attrs="{'invisible': ['|',('state','!=','interview'),('recrutement_type', '=', 'stagiaire')]}" />
 					<button name="button_bridger_insight_trainee_interview"
-						string="Brider Insight Trainee"
+						string="Bridger Insight"
 						attrs="{'invisible': ['|',('state','!=','interview'),('recrutement_type','!=','stagiaire')]}" />
-					<button name="button_bridger_insight" string="Brider Insight"
+					<button name="button_bridger_insight" string="Bridger Insight"
 						attrs="{'invisible': [('state','!=','professional_reference')]}" />
 					<button name="button_psi_wage_proposal" string="Proposition salariale"
 						attrs="{'invisible': ['|','|',('state','!=','bridger_insight'),('recrutement_type', '=', 'consultant'),('recrutement_type', '=', 'stagiaire')]}" />
@@ -262,7 +272,7 @@
 					<button name="button_contract_established_consultant"
 						string="Etablir contrat"
 						attrs="{'invisible': ['|',('state','!=','honorary_proposal'),('recrutement_type', '!=', 'consultant')]}" />
-					<button string="Refuser" name="mail_refuse_applicant" type="object"
+					<button string="Refuser" name="button_refuser" 
 						attrs="{'invisible': [('state','not in',('interview', 'professional_reference', 'bridger_insight', 'psi_wage_proposal'))]}" />
 					<button name="button_contract_established" string="Etablir contrat"
 						attrs="{'invisible': [('state','!=','notification_of_employment')]}" />
@@ -313,7 +323,7 @@
 				<field name="state" position="after">
 					<field name="psi_average_note"/>
 					<field name="psi_average_note_test"/>
-					<field name="psi_note_interview"/>
+					<field name="psi_note_interview" attrs="{'required': [('state','=','interview')]}" />
 					<field name="psi_total_note"/>
 				</field>
 	        </field>
@@ -401,6 +411,7 @@
 			<field name="model">hr.applicant</field>
 			<field name="arch" type="xml">
 				<search string="Recherche">
+					<field name="recrutement_type_id" string="Type de recrutement" />
 					<field name="job_id" string="Job concerné" />
 					<field name="partner_name" string="Nom du candidat" />
 					<group expand="0" string="Group By...">

@@ -8,6 +8,10 @@
 			<field name="mode">primary</field>
 			<field name="inherit_id" ref="crm_case_form_view_job_inherit1" />
 			<field name="arch" type="xml">
+				<xpath expr="//button[@name='button_interview']" position='replace'>
+					<button name="button_interview" string="Entretiens"
+						attrs="{'invisible': ['|',('state','not in',('convoked_for_test', 'applicant_selected')),('nature_recrutement_id', '=', 'conssideration_dossier')]}" />
+				</xpath>
 				<field name="state" position="replace">
 					<field name="state" widget="statusbar"
 						attrs="{'invisible': [('active', '=', False)]}"

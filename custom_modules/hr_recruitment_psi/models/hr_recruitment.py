@@ -37,6 +37,7 @@ class Applicant(models.Model):
     
     def _default_stage_id(self):
         return self.env.ref('hr_recruitment_psi.applicant_selected').id
+    
     attachment_file_ids = fields.Many2one('ir.attachment',string='Attachments')
     
     recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement', readonly=True)
@@ -56,7 +57,8 @@ class Applicant(models.Model):
         ('notification_of_employment', '6- Notification d\'embauche'),
          ('internship_contract', u'7- Contrat de stage à faire'),
         ('contract_established', u'7- Contrat à faire'),
-         ('contract_established_consultant', u'7- Contrat à faire')
+         ('contract_established_consultant', u'7- Contrat à faire'),
+         ('refused', '8- Refusé')
     ], string='Status', readonly=True, required=True, track_visibility='onchange', copy=False, default='applicant_selected', help="Set whether the recruitment process is open or closed for this job position.")
      
 
@@ -189,7 +191,7 @@ class Applicant(models.Model):
                                                'address_home_id': address_id,
                                                'department_id': applicant.department_id.id or False,
                                                'address_id': applicant.company_id and applicant.company_id.partner_id and applicant.company_id.partner_id.id or False,
-                                               'work_email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
+                                               'work_email': applicant.email_from,
                                                'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False}
                 employee = self.env['hr.employee'].create(vals)
                 applicant.write({'emp_id': employee.id})
@@ -348,7 +350,7 @@ class Applicant(models.Model):
 class ParentInformationEmployed(models.Model):
       _name = 'hr.recruitement.parent.information'
       
-      name                      = fields.Char(string='NOM ET PRENOM', required=True)
+      name                      = fields.Char(string='NOM ET PRENOM')
       degree_of_relationship    = fields.Selection([
         ('enfant', 'Enfant'),
         ('famille', 'Famille'),
@@ -362,7 +364,7 @@ class AlreadyAnsweredApplicant(models.Model):
      _name = 'hr.recruitment.already.answered.applicant'
      
      name           = fields.Char(string='POSTE')
-     period         = fields.Date(string='PERIODE')
+     period         = fields.Char(string='PERIODE')
      
      hr_recruitment_already_answered_applicant_id = fields.Many2one("hr.applicant")
      
@@ -426,6 +428,8 @@ class ProfessionalReference(models.Model):
     work_email      = fields.Char('Email')
     
     psi_applicant_id = fields.Many2one("hr.applicant")
+
+
    
 class PreviousFunctions(models.Model):
     _name = "hr.recruitment.previous.functions"

@@ -80,15 +80,11 @@ class hr_employee(models.Model):
     @api.model
     def create(self, vals):
         employee = super(hr_employee, self).create(vals)
-        self._update_cron_collab_1()    
-        self._update_cron_collab_2()    
         return employee
     
     @api.multi
     def write(self, vals):
         employee = super(hr_employee, self).write(vals)
-        self._update_cron_collab_1()
-        self._update_cron_collab_2()
         return employee
     
     # fonction remove sanction after period MONTHS
@@ -105,23 +101,11 @@ class hr_employee(models.Model):
                     s_date = datetime.strptime(sanction.sanction_date,"%Y-%m-%d")
                     if (today.year - s_date.year) * 12 + today.month - s_date.month >= period:
                         sanction.write({'sanction_date_effacement' : today})
-    
-    def _update_cron_collab_1(self):
-        """ Activate the cron Premier Email Employee.
-        """
-        cron = self.env.ref('hr_employee_psi.ir_cron_send_email_collab_1', raise_if_not_found=False)
-        return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
-    
-    def _update_cron_collab_2(self):
-        """ Activate the cron Second Email Employee.
-        """
-        cron = self.env.ref('hr_employee_psi.ir_cron_send_email_collab_2', raise_if_not_found=False)
-        return cron and cron.toggle(model=self._name, domain=[('name', '!=', '')])
-    
+  
     @api.one
     @api.constrains('personal_information')   
     def _get_not_checked_files(self):      
-        list_not_checked = []
+        list_not_checked = list()
         for record in self:  
             certificate_ethics = False
             declaration_obj = self.env["hr.declaration.interest"]
@@ -151,7 +135,7 @@ class hr_employee(models.Model):
             
             for key, value in dict.items() :
                 if value == False:
-                    list_not_checked.append(key)
+                    list_not_checked.append(key)      
         return list_not_checked
 
     @api.multi
@@ -173,34 +157,74 @@ class hr_employee(models.Model):
         return action
     
     #(R6.) First Rappel au cours d'éthique  
-    @api.one
-    @api.constrains('personal_information')  
     def _send_first_email_collaborator(self, automatic=False):
-        if self.id != False :
-            list_not_checked = self._get_not_checked_files()
-            if len(list_not_checked) > 0:
-                template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_1')
-                self.env['mail.template'].browse(template.id).send_mail(self.id)
+        employees = self.env['hr.employee'].search([])
+        print "Verification mail 1 collaborateur"
+        for record in employees:
+            date_create = record.create_date
+            date_create_employee = datetime.strptime(date_create,"%Y-%m-%d %H:%M:%S")
+            date_create_employee_time = datetime(
+                    year=date_create_employee.year, 
+                    month=date_create_employee.month,
+                    day=date_create_employee.day,
+                )
+            date_to_notif = date_create_employee_time - relativedelta(days=0) #15 days
+            if date_to_notif.date() == datetime.today().date():
+                files_not_checked = record._get_not_checked_files()
+                for list_not_check in files_not_checked:
+                    if len(list_not_check) > 0:
+                        template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_1')
+                        self.env['mail.template'].browse(template.id).send_mail(record.id, force_send=True)
         if automatic:
             self._cr.commit()
 
     #(R8.) Second Rappel au cours d'éthique
     def _send_second_email_collaborator(self, automatic=False):
-        if self.id != False :
-            template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_2')
-            self.env['mail.template'].browse(template.id).send_mail(self.id)
+        employees = self.env['hr.employee'].search([])
+        print "Verification mail 2 collaborateur"
+        for record in employees:  
+            date_create = record.create_date
+            date_create_employee = datetime.strptime(date_create,"%Y-%m-%d %H:%M:%S")
+            date_create_employee_time = datetime(
+                    year=date_create_employee.year, 
+                    month=date_create_employee.month,
+                    day=date_create_employee.day,
+                )
+            date_to_notif = date_create_employee_time - relativedelta(weeks=0) #3 weeks
+#            print date_to_notif.date() ,' # ', datetime.today().date()
+            if date_to_notif.date() == datetime.today().date():
+                certificate_ethics = False
+                declaration_obj = self.env["hr.declaration.interest"]
+                declarations = declaration_obj.search([('employee_id','=',record.id)])
+                for declaration in declarations:               
+                    date_str = str(declaration.year)
+                    if date_str:
+                        if date_str == str(datetime.now().year):
+                            certificate_ethics = True
+                if not certificate_ethics:
+                    template = self.env.ref('hr_employee_psi.custom_template_rappel_collab_2')
+                    self.env['mail.template'].browse(template.id).send_mail(record.id, force_send=True)
         if automatic:
             self._cr.commit()
     
     # add declaration interest every 2 years
     def _add_declaration_interest(self, automatic=False):
-        if self.id != False:
-            template = self.env.ref('hr_employee_psi.custom_template_add_declaration_interest')
-            self.env['mail.template'].browse(template.id).send_mail(self.id)
-            #test
-            mail_failed_list = self.env['mail.mail'].search([('state', '=', 'exception')])
-            for failed_mail in mail_failed_list:
-                failed_mail.state = 'outgoing'
+        print "Verification declaration interet/2ans"
+        employees = self.env['hr.employee'].search([])
+        for employee in employees:
+            date_create = employee.create_date
+            date_create_employee = datetime.strptime(date_create,"%Y-%m-%d %H:%M:%S")
+            current_month = datetime.now().month
+            month_date_create = date_create_employee.month
+            print month_date_create ,' # ', current_month
+            if month_date_create == current_month:
+                print "mail"
+                template = self.env.ref('hr_employee_psi.custom_template_add_declaration_interest')
+                self.env['mail.template'].browse(template.id).send_mail(employee.id, force_send=True)
+                #test
+#                mail_failed_list = self.env['mail.mail'].search([('state', '=', 'exception')])
+#                for failed_mail in mail_failed_list:
+#                    failed_mail.state = 'outgoing'
         if automatic:
             self._cr.commit()
                 
@@ -278,14 +302,20 @@ class hr_declaration_interest(models.Model):
                                                              )], string=u'Année', required="True", default=datetime.now().year)
     certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
     checked_current_year = fields.Boolean(string='Check')
+    
+    b_edit = fields.Boolean(default=False)
 
     @api.multi
     def write(self, vals):
         declaration = self.verify_year_declaration()
-        if declaration == True:                  
+        if declaration == True:
+            #self.b_edit = True
+            vals['b_edit'] = True                  
             super(hr_declaration_interest, self).write(vals)
+            return True
         else : 
             raise Warning(_(u'Vous avez déjà rempli le formulaire de déclaration cette année'))
+            return False
         
     def verify_year_declaration(self):
         res = False

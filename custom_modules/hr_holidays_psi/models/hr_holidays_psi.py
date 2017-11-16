@@ -2,9 +2,7 @@
 
 
 import calendar
-from datetime import date, datetime
-from datetime import timedelta
-from datetime import timedelta
+from datetime import date, datetime, timedelta
 import logging
 import math
 import math
@@ -94,15 +92,15 @@ class hr_holidays_psi(models.Model):
 
     def _get_last_business_day(self):
         date=datetime.now()
-        day_last_month = self.get_last_month(date)
-        lastBusDay = datetime.today()
-        new_lastBusDay = lastBusDay.replace(day=int(day_last_month))
-        if new_lastBusDay.weekday() == 5:
-             new_lastBusDay = new_lastBusDay - datetime.timedelta(days = 1)
-        elif new_lastBusDay.weekday() == 6: 
-             new_lastBusDay = new_lastBusDay - datetime.timedelta(days = 2)
-        for record in self:
-            record.last_business_day = new_lastBusDay.date()
+#         day_last_month = self.get_last_month(date)
+#         lastBusDay = datetime.today()
+#         new_lastBusDay = lastBusDay.replace(day=int(day_last_month))
+#         if new_lastBusDay.weekday() == 5:
+#              new_lastBusDay = new_lastBusDay - datetime.timedelta(days = 1)
+#         elif new_lastBusDay.weekday() == 6: 
+#              new_lastBusDay = new_lastBusDay - datetime.timedelta(days = 2)
+#         for record in self:
+#             record.last_business_day = new_lastBusDay.date()
         
     def get_last_month(self,date):  
         result = calendar.monthrange(date.year,date.month)[1]
@@ -362,8 +360,7 @@ class hr_holidays_psi(models.Model):
                                     'employee_id': contract.employee_id.id
                                 }
                 self.env['hr.holidays'].create(values)
-    
-    justificatif_file = fields.Binary(string=u'Pièce justificatif', help=u"Joindre un certificat médical ou une ordonnance", tracability="onchange")
+
                 
     # Send mail - rappel piece justificatif - conge maladie  
     @api.multi
