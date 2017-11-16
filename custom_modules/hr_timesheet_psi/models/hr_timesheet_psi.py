@@ -131,7 +131,6 @@ class HrTimesheetPsi(models.Model):
 
     @api.model
     def create(self, vals):
-        print vals.get('project_choice')
         if 'employee_id' in vals:
             employee = self.env['hr.employee'].browse(vals.get('employee_id'))
             attendances = employee.calendar_id.attendance_ids

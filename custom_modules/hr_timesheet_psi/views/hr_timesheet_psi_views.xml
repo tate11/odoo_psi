@@ -123,7 +123,6 @@
         <menuitem action="act_hr_timesheet_psi_prestataire" id="menu_act_hr_timesheet_psi_prestataire" parent="hr_timesheet.menu_hr_time_tracking"
              sequence="3"/> -->
 
-
         <!-- <record id="act_hr_timesheet_psi_form" model="ir.actions.act_window">
             <field name="name">Feuilles de temps à approuver</field>
             <field name="type">ir.actions.act_window</field>
