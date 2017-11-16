@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<odoo>
+  <data>
+    <!-- Ville/Bureau PSI -->  
+	<record model="ville" id="antananarivo">
+        <field name="name">Antananarivo</field>
+    </record>  
+	<record model="ville" id="toamasina">
+        <field name="name">Toamasina</field>
+    </record>  
+	<record model="ville" id="antsiranana">
+        <field name="name">Antsiranana</field>
+    </record>  
+	<record model="ville" id="antsirabe">
+        <field name="name">Antsirabe</field>
+    </record>  
+	<record model="ville" id="fianarantsoa">
+        <field name="name">Fianarantsoa</field>
+    </record>  
+	<record model="ville" id="taolagnaro">
+        <field name="name">Taolagnaro</field>
+    </record>  
+	<record model="ville" id="toliary">
+        <field name="name">Toliary</field>
+    </record>  
+	<record model="ville" id="morondava">
+        <field name="name">Morondava</field>
+    </record>  
+	<record model="ville" id="mahajanga">
+        <field name="name">Mahajanga</field>
+    </record>
+
+	<record model="project.project" id="heure_supp">
+        <field name="name">Heures supplémentaires PSI</field>
+        <field name="project_timesheet_id">1</field>
+    </record>
+	<record model="project.project" id="prestataires">
+        <field name="name">Prestataires PSI</field>
+        <field name="project_timesheet_id">2</field>
+    </record>
+    
+    <!-- Temps Timesheet Prestataire -->
+    <record model="timesheet.prestataire.hours" id="mi_temps">
+    	<field name="name">Mi-temps</field>
+    	<field name="temps">5</field>
+    </record>
+	<record model="timesheet.prestataire.hours" id="temps_plein">
+    	<field name="name">Temps plein</field>
+    	<field name="temps">8</field>
+    </record>
+    
+  </data>
+</odoo>

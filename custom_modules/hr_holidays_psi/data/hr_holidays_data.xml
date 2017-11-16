@@ -2,8 +2,8 @@
 <odoo>
 	<data>
 		<record model="hr.holidays.status" id="type_formation">
-			
 			<field name="name">Absences pour formation</field>
+			<field name="color_name">lightpink</field>
 		</record>
 		<record model="hr.holidays.status" id="type_conge_annuel">
 			<field name="name">Absences pour conge annuel</field>
@@ -16,6 +16,7 @@
 		<record model="hr.holidays.status" id="type_permission">
 			<field name="name">Absences pour permission</field>
 			<field name="color_name">lightblue</field>
+			<field name="holidays_status_id_psi">1</field>
 		</record>
 		<record model="hr.holidays.status" id="type_maternite">
 			<field name="name">Congés de maternité</field>
@@ -28,6 +29,7 @@
 		<!-- Données par défaut configurations -->
 		<record model="hr.holidays.configuration" id="default_config">
 			<field name="droit_conge">6</field>
+			<field name="droit_conge_nb_jr">2</field>
 			<field name="conges_sans_solde">30</field>
 		</record>
 

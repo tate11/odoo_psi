@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="1">
+		<!-- Liste des temps de travail par Région -->
+		<record model="resource.calendar.attendance" id="antananarivo">
+	        <field name="name"></field>
+	    </record>
+		<!-- Fin des temps de travail par Région -->     
+    </data>
+</odoo>

@@ -8,3 +8,5 @@ class hr_holidays_holidays(models.Model):
     
     droit_conge = fields.Integer(string=u'Droits aux congés (en mois)')
     conges_sans_solde = fields.Integer(string=u'Congés sans soldes')
+    droit_conge_nb_jr = fields.Integer(string=u'Droits aux congés nombre de jours')
+    
