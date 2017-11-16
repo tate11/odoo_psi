@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import time
 from datetime import datetime
+import time
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
-from odoo.tools.translate import _
+from odoo.exceptions import UserError, ValidationError, Warning
 from odoo.tools.sql import drop_view_if_exists
-from odoo.exceptions import UserError, ValidationError
+from odoo.tools.translate import _
+
 
 class TimesheetPrestataireHours(models.Model):
                        
@@ -201,3 +203,10 @@ class HrTimesheetPsi(models.Model):
                 raise UserError(_(u'Vous ne pouvez pas supprimé un timesheet qui est déjà valider.'))
 
         return super(HrTimesheetPsi, self).unlink()
+    
+    @api.onchange('time_to')
+    def _on_change_time_to(self):
+        if self.time_to <= self.time_from:
+            raise Warning('L\'heure de fin est incorrecte')
+            return False
+    

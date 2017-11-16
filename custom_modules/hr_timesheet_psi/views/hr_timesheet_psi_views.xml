@@ -41,7 +41,7 @@
                         	<field name="project_id_prestataire" attrs="{'invisible': [('project_choice', 'not in', 'prestataire')]}" readonly="True"/>
                         	<field name="motif" />
                         	<field name="date" />
-                        	<label for="time_from" string="Durée"/>
+                        	<label for="time_from" string="Intervalle d'heures"/>
                         	<div>
                         		<field name="time_from" class="oe_inline" widget="float_time" sum="Hours"/> - <field name="time_to" class="oe_inline" widget="float_time" sum="Hours"/> = <field name="hours" /> Hr(s)
                         	</div>
@@ -80,26 +80,6 @@
             </field>
         </record>
      
-      	<record id="act_hr_timesheet_psi_normal" model="ir.actions.act_window">
-            <field name="name">Demande heures normal</field>
-            <field name="res_model">hr_timesheet_psi.sheet</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <!-- <field name="domain">[('employee_id.user_id', '=', uid)]</field> -->
-            <field name="search_view_id" ref="view_hr_timesheet_psi_filter"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Nouvelle feuille normal.
-              </p><p>
-                Vous devez remplir votre feuille de temps chaque jour, 
-                et les confirmer à la fin de la semaine. 
-                Une fois la feuille confirmée, elle doit être validée par un gestionnaire.
-              </p>
-            </field>
-        </record>
-        <menuitem action="act_hr_timesheet_psi_normal" id="menu_act_hr_timesheet_psi_normal" parent="hr_timesheet.menu_hr_time_tracking"
-             sequence="3"/>
-
         <record id="act_hr_timesheet_psi_my_timesheets" model="ir.actions.act_window">
             <field name="name">Demande heures supplémentaires</field>
             <field name="res_model">hr_timesheet_psi.sheet</field>

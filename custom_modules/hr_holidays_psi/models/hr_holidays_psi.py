@@ -69,8 +69,8 @@ class hr_holidays_psi(models.Model):
     def write(self, values):
         employee_id = values.get('employee_id', False)
         
-        if self.env.user == self.employee_id.user_id:
-            raise AccessError(u'Vous ne pouvez plus modifier votre demande, veuillez contacter votre supérieur hiérarchique.')
+#         if self.env.user == self.employee_id.user_id:
+#             raise AccessError(u'Vous ne pouvez plus modifier votre demande, veuillez contacter votre supérieur hiérarchique.')
         
         if self.state == 'validate1' and self.env.user != self.employee_id.department_id.manager_id.user_id:
             raise AccessError(u'Vous ne pouvez pas modifier cette demande de congé.')
