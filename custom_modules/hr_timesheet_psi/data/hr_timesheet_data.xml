@@ -28,6 +28,26 @@
     </record>  
 	<record model="ville" id="mahajanga">
         <field name="name">Mahajanga</field>
-    </record>  
+    </record>
+
+	<record model="project.project" id="heure_supp">
+        <field name="name">Heures supplémentaires PSI</field>
+        <field name="project_timesheet_id">1</field>
+    </record>
+	<record model="project.project" id="prestataires">
+        <field name="name">Prestataires PSI</field>
+        <field name="project_timesheet_id">2</field>
+    </record>
+    
+    <!-- Temps Timesheet Prestataire -->
+    <record model="timesheet.prestataire.hours" id="mi_temps">
+    	<field name="name">Mi-temps</field>
+    	<field name="temps">5</field>
+    </record>
+	<record model="timesheet.prestataire.hours" id="temps_plein">
+    	<field name="name">Temps plein</field>
+    	<field name="temps">8</field>
+    </record>
+    
   </data>
 </odoo>

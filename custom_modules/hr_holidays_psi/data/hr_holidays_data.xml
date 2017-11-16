@@ -29,6 +29,7 @@
 		<!-- Données par défaut configurations -->
 		<record model="hr.holidays.configuration" id="default_config">
 			<field name="droit_conge">6</field>
+			<field name="droit_conge_nb_jr">2</field>
 			<field name="conges_sans_solde">30</field>
 		</record>
 

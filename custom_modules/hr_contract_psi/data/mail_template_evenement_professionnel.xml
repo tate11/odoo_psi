@@ -13,7 +13,7 @@
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
-		      	Bonjour ${object.employee_id.name},
+		      	Bonjour ${object.employee_id.name}, <br />
 		     	Votre nouvel échelon est ${object.psi_echelon}.                  
 			</p>
 			<h5> Email - Notification avancement échelon</h5>
@@ -33,7 +33,7 @@
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
-		      	Bonjour ${object.employee_id.name},
+		      	Bonjour ${object.employee_id.name},<br />
 		     	Votre statut CDD a changé au statut CDI.                  
 			</p>
 			<h5> Email - Notification de changement de statut</h5>
@@ -47,16 +47,16 @@
 			<field name="name">PSI Template email - Notification Augmentation générale des salaires</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
 			<field name="email_from">${object.create_uid.email}</field>
-			<field name="subject">Augmentation générale des salaires</field>
+			<field name="subject">Augmentation des salaires</field>
 			<field name="email_to">${object.employee_id.work_email}</field>
 
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
-		      	Bonjour ${object.employee_id.name},
-		     	Votre salaire est augmenté.                  
+		      	Bonjour ${object.employee_id.name},<br />
+		     	Votre salaire a augmenté.                  
 			</p>
-			<h5> Email - Notification de l'Augmentation générale des salaires</h5>
+			<h5> Email - Notification de l'Augmentation des salaires</h5>
 		                 
 		</div>   ]]>
 			</field>
@@ -73,8 +73,8 @@
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
-		      	Bonjour ${object.employee_id.name},
-		     	Vous êtes affecté a ${object.place_of_work}              
+		      	Bonjour ${object.employee_id.name}, <br />
+		     	Vous êtes affecté à ${object.place_of_work}.              
 			</p>
 			<h5> Email - Notification de l'Affectation</h5>
 		                 
@@ -93,8 +93,8 @@
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
-		      	Bonjour ${object.employee_id.name}, 
-		     	Vous avez changé de departement a ${object.department_id.name}     
+		      	Bonjour ${object.employee_id.name}, <br />
+		     	Vous avez changé de departement a ${object.department_id.name}.     
 			</p>
 			<h5> Email - Notification de Changement de departement</h5>
 		                 
@@ -113,8 +113,8 @@
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
-		      	Bonjour ${object.employee_id.name}, 
-		     	Vous avez changé de poste a ${object.job_id.name}     
+		      	Bonjour ${object.employee_id.name}, <br />
+		     	Vous avez changé de poste a ${object.job_id.name}.     
 			</p>
 			<h5> Email - Notification de Changement de grille salariale</h5>
 		                 
