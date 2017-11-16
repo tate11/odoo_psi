@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
+import datetime
 from datetime import date, datetime
 from datetime import timedelta
 
@@ -10,6 +11,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools.translate import _
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
 HOURS_PER_DAY = 8
 
@@ -18,7 +20,7 @@ class hr_holidays_type_psi(models.Model):
     _inherit = "hr.holidays.status"
     
     type_permission = fields.Many2one('hr.holidays.type.permission', string="Type de permission")
-#    categ_permission = fields.Selection()
+    holidays_status_id_psi = fields.Integer(string=u"id type de congé psi")
     
 class hr_holidays_type_permission(models.Model):
     
@@ -72,8 +74,8 @@ class hr_holidays_psi(models.Model):
         if self.env.user == self.employee_id.user_id:
             raise AccessError(u'Vous ne pouvez plus modifier votre demande, veuillez contacter votre supérieur hiérarchique.')
         
-        if self.state == 'validate1' and self.env.user != self.employee_id.department_id.manager_id.user_id:
-            raise AccessError(u'Vous ne pouvez pas modifier cette demande de congé.')
+#        if self.state == 'validate1' and self.env.user != self.employee_id.department_id.manager_id.user_id:
+#            raise AccessError(u'Vous ne pouvez pas modifier cette demande de congé.')
         
         if not self._check_state_access_right(values):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
@@ -159,7 +161,7 @@ class hr_holidays_psi(models.Model):
                if (between_month == 1 and date_from.day >= 3) or between_month > 1:
                    raise ValidationError(u"La date du début du congé n'est pas valide.")
                if between < 3 :
-                   raise ValidationError(u"Vous devez faire le demande de congés avant 3jours de depart")  
+                   raise ValidationError(u"Vous devez faire le demande de congés avant 3jours de depart")
      
     @api.constrains('date_from')
     def _check_date_from_conge_sans_solde(self):
@@ -170,11 +172,11 @@ class hr_holidays_psi(models.Model):
 
                if record.number_of_days_temp > config.conges_sans_solde :
                   raise ValidationError(u"Votre demande de congés depaasse le limite de conges sans soldes")
-
-     
+        
     @api.multi
     def action_validate(self):
         print "action_validate"
+
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
@@ -200,9 +202,37 @@ class hr_holidays_psi(models.Model):
                     'start': holiday.date_from,
                     'stop': holiday.date_to,
                     'allday': False,
-                    'state': 'open',            # to block that meeting date in the calendar
+                    'state': 'open',            # bloquer cette date de réunion dans le calendrier
                     'privacy': 'confidential'
                 }
+                
+                for holiday in self.filtered(lambda r: r.state == 'validate'):
+                    print holiday.employee_id
+                    if not holiday.employee_id:
+                        continue        
+                    if not holiday.employee_id.user_id:
+                        raise ValidationError(_(
+                            u'Vous ne pouvez pas valider une permission pour un employé sans utilisateur'))
+                    print holiday.number_of_days,' holiday.number_of_days'
+                    if holiday.number_of_days > 0:
+                        continue
+                    if not (holiday.date_from or holiday.date_to):
+                        continue
+        
+                    employee = holiday.employee_id
+                    print employee,' employee'
+        
+                    time_from = self.str_to_timezone(holiday.date_from)
+                    time_to = self.str_to_timezone(holiday.date_to)
+        
+                    for timestamp in self.datespan(time_from, time_to):
+                        company = employee.company_id
+                        date = timestamp.date()
+                        hours = company.hours_per_day
+                        
+                        self.create_leave_analytic_line(
+                                holiday, employee, date, hours)
+                 
                 #Add the partner_id (if exist) as an attendee
                 if holiday.user_id and holiday.user_id.partner_id :
                     meeting_values['partner_ids'] = [(4, holiday.user_id.partner_id.id)]
@@ -210,6 +240,8 @@ class hr_holidays_psi(models.Model):
                 meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
                 holiday._create_resource_leave()
                 holiday.write({'meeting_id': meeting.id})
+                
+                
             elif holiday.holiday_type == 'category':
                 leaves = self.env['hr.holidays']
                 employees = self.env['hr.employee'].search([])
@@ -260,6 +292,39 @@ class hr_holidays_psi(models.Model):
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
     ]
     
+    def datespan(self, start_date, end_date, delta=datetime.timedelta(days=1)):
+        current_date = start_date
+        while current_date.date() <= end_date.date():
+            yield current_date
+            current_date += delta
+              
+    def str_to_timezone(self, time_string):
+        time_obj = datetime.datetime.strptime(time_string, DTF)
+
+        return fields.Datetime.context_timestamp(self.env.user, time_obj)
+    
+    def create_leave_analytic_line(self, holiday, employee, concerned_day, hours):
+
+        account = self.env.ref('hr_holidays_psi.account_leave')
+        project = self.env.ref('hr_holidays_psi.project_leave')
+        print holiday,' holiday'
+        print employee,' employee'
+        print concerned_day,' concerned_day'
+        print hours, ' hours'
+        return self.env['account.analytic.line'].sudo().create({
+            'account_id': account.id,
+            'project_id': project.id,
+            'company_id': employee.company_id.id,
+            'amount': 0,
+            'date': concerned_day,
+            'name': holiday.name,
+            'amount_currency': 0,
+            'is_timesheet': True,
+            'unit_amount': hours,
+            'user_id': employee.user_id.id,
+            'leave_id': self.id
+        })
+        
     @api.multi
     def name_get(self):
         res = []
