@@ -26,7 +26,7 @@ class hr_job(models.Model):
     
     psi_contract_duration = fields.Integer(string=u"Durée du contrat (en mois)")
     psi_motif = fields.Text(string="Motif du recrutement")
-    poste_description = fields.Text(string=u"Déscription des objectifs reliés au travail")
+    poste_description = fields.Text(string=u"Mission")
       
     state = fields.Selection([
         ('open', '1- Demande d\'embauche'),
@@ -55,7 +55,7 @@ class hr_job(models.Model):
         ('externe', u'Appel à candidature externe')
         ], string="Nature de recrutement")
     
-    application_deadline_date = fields.Date(string=u"Délai de candidature")
+    application_deadline_date = fields.Date(string=u"Date limite de candidature")
     rr_approbation = fields.Boolean("Approbation par RR", default=True)
     psi_memo = fields.Boolean(u"Mémo", default=False)
     psi_date_start = fields.Date(string='Date de prise de fonction souhaitée')
