@@ -7,70 +7,70 @@
 
         <record model="resource.calendar.attendance" id="calendar_attendance_tana_mon1">
             <field name="name">Lundi AM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">08</field>
             <field name="hour_to">13.5</field>
             <field name="calendar_id" ref="timesheet_antananarivo"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_tana_mon2">
             <field name="name">Lundi PM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">14</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_antananarivo"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_tana_tue1">
             <field name="name">Mardi AM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">08</field>
             <field name="hour_to">13.5</field>
             <field name="calendar_id" ref="timesheet_antananarivo"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_tana_tue2">
             <field name="name">Mardi PM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">14</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_antananarivo"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_tana_thi1">
             <field name="name">Mercredi AM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">08</field>
             <field name="hour_to">13.5</field>
             <field name="calendar_id" ref="timesheet_antananarivo"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_tana_thi2">
             <field name="name">Mercredi PM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">14</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_antananarivo"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_tana_thr1">
             <field name="name">Jeudi AM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">08</field>
             <field name="hour_to">13.5</field>
             <field name="calendar_id" ref="timesheet_antananarivo"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_tana_thr2">
             <field name="name">Jeudi PM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">14</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_antananarivo"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_tana_fri1">
             <field name="name">Vendredi AM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">08</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_antananarivo"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_tana_fri2">
             <field name="name">Vendredi PM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">12</field>
             <field name="hour_to">14</field>
             <field name="calendar_id" ref="timesheet_antananarivo"/>
@@ -83,70 +83,70 @@
 
         <record model="resource.calendar.attendance" id="calendar_attendance_toa_mon1">
             <field name="name">Lundi AM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_toamasina"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toa_mon2">
             <field name="name">Lundi PM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">13</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_toamasina"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toa_tue1">
             <field name="name">Mardi AM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_toamasina"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toa_tue2">
             <field name="name">Mardi PM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">13</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_toamasina"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toa_thi1">
             <field name="name">Mercredi AM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_toamasina"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toa_thi2">
             <field name="name">Mercredi PM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">13</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_toamasina"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toa_thr1">
             <field name="name">Jeudi AM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_toamasina"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toa_thr2">
             <field name="name">Jeudi PM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">13</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_toamasina"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toa_fri1">
             <field name="name">Vendredi AM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_toamasina"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toa_fri2">
             <field name="name">Vendredi PM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">12.5</field>
             <field name="hour_to">14</field>
             <field name="calendar_id" ref="timesheet_toamasina"/>
@@ -159,70 +159,70 @@
 
         <record model="resource.calendar.attendance" id="calendar_attendance_ants_mon1">
             <field name="name">Lundi AM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_antsiranana"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_ants_mon2">
             <field name="name">Lundi PM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">14.5</field>
             <field name="hour_to">18</field>
             <field name="calendar_id" ref="timesheet_antsiranana"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_ants_tue1">
             <field name="name">Mardi AM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_antsiranana"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_ants_tue2">
             <field name="name">Mardi PM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">14.5</field>
             <field name="hour_to">18</field>
             <field name="calendar_id" ref="timesheet_antsiranana"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_ants_thi1">
             <field name="name">Mercredi AM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_antsiranana"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_ants_thi2">
             <field name="name">Mercredi PM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">14.5</field>
             <field name="hour_to">18</field>
             <field name="calendar_id" ref="timesheet_antsiranana"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_ants_thr1">
             <field name="name">Jeudi AM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_antsiranana"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_ants_thr2">
             <field name="name">Jeudi PM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">14.5</field>
             <field name="hour_to">18</field>
             <field name="calendar_id" ref="timesheet_antsiranana"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_ants_fri1">
             <field name="name">Vendredi AM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_antsiranana"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_ants_fri2">
             <field name="name">Vendredi PM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">13</field>
             <field name="hour_to">15.5</field>
             <field name="calendar_id" ref="timesheet_antsiranana"/>
@@ -235,70 +235,70 @@
 
         <record model="resource.calendar.attendance" id="calendar_attendance_a/rabe_mon1">
             <field name="name">Lundi AM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_antsirabe"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_a/rabe_mon2">
             <field name="name">Lundi PM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">13</field>
             <field name="hour_to">17.5</field>
             <field name="calendar_id" ref="timesheet_antsirabe"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_a/rabe_tue1">
             <field name="name">Mardi AM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_antsirabe"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_a/rabe_tue2">
             <field name="name">Mardi PM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">13</field>
             <field name="hour_to">17.5</field>
             <field name="calendar_id" ref="timesheet_antsirabe"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_a/rabe_thi1">
             <field name="name">Mercredi AM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_antsirabe"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_a/rabe_thi2">
             <field name="name">Mercredi PM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">13</field>
             <field name="hour_to">17.5</field>
             <field name="calendar_id" ref="timesheet_antsirabe"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_a/rabe_thr1">
             <field name="name">Jeudi AM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_antsirabe"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_a/rabe_thr2">
             <field name="name">Jeudi PM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">13</field>
             <field name="hour_to">17.5</field>
             <field name="calendar_id" ref="timesheet_antsirabe"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_a/rabe_fri1">
             <field name="name">Vendredi AM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_antsirabe"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_a/rabe_fri2">
             <field name="name">Vendredi PM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">12</field>
             <field name="hour_to">14</field>
             <field name="calendar_id" ref="timesheet_antsirabe"/>
@@ -311,70 +311,70 @@
 
         <record model="resource.calendar.attendance" id="calendar_attendance_fianar_mon1">
             <field name="name">Lundi AM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">08</field>
             <field name="hour_to">13.5</field>
             <field name="calendar_id" ref="timesheet_fianarantsoa"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_fianar_mon2">
             <field name="name">Lundi PM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">14</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_fianarantsoa"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_fianar_tue1">
             <field name="name">Mardi AM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">08</field>
             <field name="hour_to">13.5</field>
             <field name="calendar_id" ref="timesheet_fianarantsoa"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_fianar_tue2">
             <field name="name">Mardi PM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">14</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_fianarantsoa"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_fianar_thi1">
             <field name="name">Mercredi AM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">08</field>
             <field name="hour_to">13.5</field>
             <field name="calendar_id" ref="timesheet_fianarantsoa"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_fianar_thi2">
             <field name="name">Mercredi PM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">14</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_fianarantsoa"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_fianar_thr1">
             <field name="name">Jeudi AM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">08</field>
             <field name="hour_to">13.5</field>
             <field name="calendar_id" ref="timesheet_fianarantsoa"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_fianar_thr2">
             <field name="name">Jeudi PM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">14</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_fianarantsoa"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_fianar_fri1">
             <field name="name">Vendredi AM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">08</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_fianarantsoa"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_fianar_fri2">
             <field name="name">Vendredi PM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">12</field>
             <field name="hour_to">14</field>
             <field name="calendar_id" ref="timesheet_fianarantsoa"/>
@@ -387,70 +387,70 @@
 
         <record model="resource.calendar.attendance" id="calendar_attendance_taol_mon1">
             <field name="name">Lundi AM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">08</field>
             <field name="hour_to">12.5</field>
             <field name="calendar_id" ref="timesheet_taolagnaro"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_taol_mon2">
             <field name="name">Lundi PM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">13.5</field>
             <field name="hour_to">17.5</field>
             <field name="calendar_id" ref="timesheet_taolagnaro"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_taol_tue1">
             <field name="name">Mardi AM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">08</field>
             <field name="hour_to">12.5</field>
             <field name="calendar_id" ref="timesheet_taolagnaro"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_taol_tue2">
             <field name="name">Mardi PM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">13.5</field>
             <field name="hour_to">17.5</field>
             <field name="calendar_id" ref="timesheet_taolagnaro"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_taol_thi1">
             <field name="name">Mercredi AM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">08</field>
             <field name="hour_to">12.5</field>
             <field name="calendar_id" ref="timesheet_taolagnaro"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_taol_thi2">
             <field name="name">Mercredi PM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">13.5</field>
             <field name="hour_to">17.5</field>
             <field name="calendar_id" ref="timesheet_taolagnaro"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_taol_thr1">
             <field name="name">Jeudi AM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">08</field>
             <field name="hour_to">12.5</field>
             <field name="calendar_id" ref="timesheet_taolagnaro"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_taol_thr2">
             <field name="name">Jeudi PM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">13.5</field>
             <field name="hour_to">17.5</field>
             <field name="calendar_id" ref="timesheet_taolagnaro"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_taol_fri1">
             <field name="name">Vendredi AM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">08</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_taolagnaro"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_taol_fri2">
             <field name="name">Vendredi PM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">12</field>
             <field name="hour_to">14</field>
             <field name="calendar_id" ref="timesheet_taolagnaro"/>
@@ -463,70 +463,70 @@
 
         <record model="resource.calendar.attendance" id="calendar_attendance_toli_mon1">
             <field name="name">Lundi AM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">08</field>
             <field name="hour_to">13.5</field>
             <field name="calendar_id" ref="timesheet_toliary"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toli_mon2">
             <field name="name">Lundi PM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">14</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_toliary"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toli_tue1">
             <field name="name">Mardi AM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">08</field>
             <field name="hour_to">13.5</field>
             <field name="calendar_id" ref="timesheet_toliary"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toli_tue2">
             <field name="name">Mardi PM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">14</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_toliary"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toli_thi1">
             <field name="name">Mercredi AM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">08</field>
             <field name="hour_to">13.5</field>
             <field name="calendar_id" ref="timesheet_toliary"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toli_thi2">
             <field name="name">Mercredi PM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">14</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_toliary"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toli_thr1">
             <field name="name">Jeudi AM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">08</field>
             <field name="hour_to">13.5</field>
             <field name="calendar_id" ref="timesheet_toliary"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toli_thr2">
             <field name="name">Jeudi PM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">14</field>
             <field name="hour_to">17</field>
             <field name="calendar_id" ref="timesheet_toliary"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toli_fri1">
             <field name="name">Vendredi AM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">08</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_toliary"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_toli_fri2">
             <field name="name">Vendredi PM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">12</field>
             <field name="hour_to">14</field>
             <field name="calendar_id" ref="timesheet_toliary"/>
@@ -539,70 +539,70 @@
 
         <record model="resource.calendar.attendance" id="calendar_attendance_moro_mon1">
             <field name="name">Lundi AM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_morondava"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_moro_mon2">
             <field name="name">Lundi PM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">14.5</field>
             <field name="hour_to">18</field>
             <field name="calendar_id" ref="timesheet_morondava"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_moro_tue1">
             <field name="name">Mardi AM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_morondava"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_moro_tue2">
             <field name="name">Mardi PM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">14.5</field>
             <field name="hour_to">18</field>
             <field name="calendar_id" ref="timesheet_morondava"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_moro_thi1">
             <field name="name">Mercredi AM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_morondava"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_moro_thi2">
             <field name="name">Mercredi PM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">14.5</field>
             <field name="hour_to">18</field>
             <field name="calendar_id" ref="timesheet_morondava"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_moro_thr1">
             <field name="name">Jeudi AM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_morondava"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_moro_thr2">
             <field name="name">Jeudi PM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">14.5</field>
             <field name="hour_to">18</field>
             <field name="calendar_id" ref="timesheet_morondava"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_moro_fri1">
             <field name="name">Vendredi AM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_morondava"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_moro_fri2">
             <field name="name">Vendredi PM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">12</field>
             <field name="hour_to">14.5</field>
             <field name="calendar_id" ref="timesheet_morondava"/>
@@ -615,70 +615,70 @@
 
         <record model="resource.calendar.attendance" id="calendar_attendance_maha_mon1">
             <field name="name">Lundi AM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_mahajanga"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_maha_mon2">
             <field name="name">Lundi PM</field>
-            <field name="dayofweek">0</field>
+            <field name="dayofweek">1</field>
             <field name="hour_from">14.5</field>
             <field name="hour_to">18</field>
             <field name="calendar_id" ref="timesheet_mahajanga"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_maha_tue1">
             <field name="name">Mardi AM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_mahajanga"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_maha_tue2">
             <field name="name">Mardi PM</field>
-            <field name="dayofweek">1</field>
+            <field name="dayofweek">2</field>
             <field name="hour_from">14.5</field>
             <field name="hour_to">18</field>
             <field name="calendar_id" ref="timesheet_mahajanga"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_maha_thi1">
             <field name="name">Mercredi AM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_mahajanga"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_maha_thi2">
             <field name="name">Mercredi PM</field>
-            <field name="dayofweek">2</field>
+            <field name="dayofweek">3</field>
             <field name="hour_from">14.5</field>
             <field name="hour_to">18</field>
             <field name="calendar_id" ref="timesheet_mahajanga"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_maha_thr1">
             <field name="name">Jeudi AM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_mahajanga"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_maha_thr2">
             <field name="name">Jeudi PM</field>
-            <field name="dayofweek">3</field>
+            <field name="dayofweek">4</field>
             <field name="hour_from">14.5</field>
             <field name="hour_to">18</field>
             <field name="calendar_id" ref="timesheet_mahajanga"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_maha_fri1">
             <field name="name">Vendredi AM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">07.5</field>
             <field name="hour_to">12</field>
             <field name="calendar_id" ref="timesheet_mahajanga"/>
         </record>
         <record model="resource.calendar.attendance" id="calendar_attendance_maha_fri2">
             <field name="name">Vendredi PM</field>
-            <field name="dayofweek">4</field>
+            <field name="dayofweek">5</field>
             <field name="hour_from">12</field>
             <field name="hour_to">14.5</field>
             <field name="calendar_id" ref="timesheet_mahajanga"/>

@@ -18,32 +18,31 @@ class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
     project_timesheet_id = fields.Integer(store=True)
-#     project_id = fields.Many2one('project.project', 'Project', domain=lambda self: 
-#                                     [
-#                                         '|',
-#                                           ('id','in', tuple([x.id for x in (
-#                                               self.env['project.project'].search([('parent_id','=',
-#                                                                                     self.env['project.project'].search([['parent_id','=',False],['analytic_account_id','=',
-#                                                                                       self.env['hr.employee'].search([('user_id','=',
-#                                                                                          self.env.user.id)])[0].psi_budget_code_distribution.id]])[0].id
-#                                                                                    )
-#                                                                                   ]
-#                                                                                  )
-#                                                                             )
-#                                                              ]
-#                                                             )
-#                                            ),
-#                                      
-#                                            ('id','in', tuple(
-#                                             [x.id for x in (
-#                                                 self.env['project.project'].search([['parent_id','=',False],['analytic_account_id','=',
-#                                                      self.env['hr.employee'].search([('user_id','=',
-#                                                          self.env.user.id)])[0].psi_budget_code_distribution.id]])
-#                                                 ,)
-#                                             ])
-#                                           )
-#                                      ])
-
+    project_id = fields.Many2one('project.project', 'Project', domain=lambda self: 
+                                    [
+                                        '|',
+                                          ('id','in', tuple([x.id for x in (
+                                              self.env['project.project'].search([('parent_id','=',
+                                                                                    self.env['project.project'].search([['parent_id','=',False],['analytic_account_id','=',
+                                                                                      self.env['hr.employee'].search([('user_id','=',
+                                                                                         self.env.user.id)])[0].psi_budget_code_distribution.id]])[0].id
+                                                                                   )
+                                                                                  ]
+                                                                                 )
+                                                                            )
+                                                             ]
+                                                            )
+                                           ),
+                                     
+                                           ('id','in', tuple(
+                                            [x.id for x in (
+                                                self.env['project.project'].search([['parent_id','=',False],['analytic_account_id','=',
+                                                     self.env['hr.employee'].search([('user_id','=',
+                                                         self.env.user.id)])[0].psi_budget_code_distribution.id]])
+                                                ,)
+                                            ])
+                                          )
+                                     ])
 
     def _send_email_rappel_envoie_abscence_membres(self, automatic=False):
         this_year=datetime.now().strftime("%Y")
@@ -164,13 +163,37 @@ class AccountAnalyticLine(models.Model):
                 
             vals['unit_amount']=float("{}.{}".format(heure,min))
                 
+    def get_heure_par_jour(self,date):
+        employees = self.env['hr.employee'].search([('id', '=', self.env.user.id)])
+        heure_par_jour = 0
+        for employee in employees:
+            attendance_ids = employee.calendar_id.attendance_ids
+            for attendance_id in attendance_ids:
+                attendances = self.env['resource.calendar.attendance'].search([['id', '=', attendance_id.id], ['dayofweek', '=', datetime.strptime(date, '%Y-%m-%d').strftime('%w')]])
+                for attendance in attendances:
+                    heure_par_jour += attendance.hour_to - attendance.hour_from
+        return heure_par_jour
+    
     @api.model
     def create(self, vals):
-        
+
         if vals.get('unit_amount') <= 0.0:
             raise Warning('Veuillez saisir l\'heure.')
-        
+
+        if vals.get('unit_amount') and vals.get('date') and vals.get('task_id'):
+            heure_par_jour=self.get_heure_par_jour(vals.get('date'))
+            
+            total_planned_hours = 0
+            timesheets_this_date = self.env['account.analytic.line'].search([['date','=',vals.get('date')],['task_id', '=', vals.get('task_id')]])
+            for timesheet_this_date in timesheets_this_date:
+                total_planned_hours += float(timesheet_this_date.unit_amount)
+            
+            if total_planned_hours + vals.get('unit_amount') > heure_par_jour:
+                raise Warning('Vous ne pouvez pas travailler plus de {} le même jour'.format(self.float_time_to_time(heure_par_jour)))
+                return False
+
         if vals.get('task_id') and vals.get('project_id') and vals.get('unit_amount') and vals.get('unit_amount') != 0.0:
+            
             current_timesheets = self.env['account.analytic.line'].search([['project_id', '=', vals.get('project_id')], ['task_id', '=', vals.get('task_id')]])
             task = self.env['project.task'].search([('id','=',vals.get('task_id'))])[0]
             total_planned_hours = 0
@@ -183,53 +206,70 @@ class AccountAnalyticLine(models.Model):
                 raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time(total_planned_hours - task.planned_hours ))) 
                 return False
             
-        if vals.get('task_id'):
-            unit_amount=vals.get('unit_amount')
-            tasks=self.env['project.task'].search([('id','=',vals.get('task_id'))])
-            for task in tasks:
-                if unit_amount>task.planned_hours:
-                    raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans cette tâche qui est {}!'.format(self.float_time_to_time(task.planned_hours)))   
-                    return False
-            
-        self.traiter_unit_amount(vals)
+        if vals.get('unit_amount'):  
+            self.traiter_unit_amount(vals)
         
         return super(AccountAnalyticLine, self).create(vals)
 
+    def planned_hours_heure_par_jour(self,vals):
+        
+        date=""
+        task_id=""
+        unit_amount=""
+        
+        if vals.get('date'):
+            date=vals.get('date')
+        else:
+            date=self.date
+        
+        if vals.get('task_id'):
+            task_id=vals.get('task_id')
+        else:
+            task_id=self.task_id.id
+        
+        if vals.get('unit_amount'):
+            unit_amount=vals.get('unit_amount')
+        else:
+            unit_amount=self.unit_amount
+            
+        heure_par_jour=self.get_heure_par_jour(date)
+            
+        total_planned_hours = 0
+        timesheets_this_date = self.env['account.analytic.line'].search([['date','=',date],['task_id', '=', task_id]])
+        for timesheet_this_date in timesheets_this_date:
+            total_planned_hours += float(timesheet_this_date.unit_amount)
+        
+        if total_planned_hours + unit_amount > heure_par_jour:
+            raise Warning('Vous ne pouvez pas travailler plus de {} le même jour'.format(self.float_time_to_time(heure_par_jour)))
+            return False
+        
     @api.multi
     def write(self, vals):
         
-        if vals.get('task_id'):
-            unit_amount=self.unit_amount
-            tasks=self.env['project.task'].search([('id','=',vals.get('task_id'))])
-            for task in tasks:
-                if unit_amount>task.planned_hours:
-                    raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans cette tâche qui est {}!'.format(self.float_time_to_time(task.planned_hours)))  
-                    return False
+        self.planned_hours_heure_par_jour(vals)
             
         if vals.get('unit_amount'):
-            employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
-            heure_par_jour = 0.0
-            for employee in employees:
-                attendance_ids = employee.calendar_id.attendance_ids
-                for attendance_id in attendance_ids:
-                    attendances = self.env['resource.calendar.attendance'].search([['id', '=', attendance_id.id], ['dayofweek', '=', datetime.strptime(self.date, '%Y-%m-%d').strftime('%w')]])
-                    for attendance in attendances:
-                        heure_par_jour += attendance.hour_to - attendance.hour_from
+        
+            heure_par_jour=0.0
+            if vals.get('date'):
+                heure_par_jour=self.get_heure_par_jour(vals.get('date'))
+            else:
+                heure_par_jour=self.get_heure_par_jour(self.date)
             
             if vals.get('unit_amount')>heure_par_jour:
                 raise Warning('Vous ne pouvez pas travailler plus de {} aujourd\'hui!'.format(self.float_time_to_time(heure_par_jour)))
                 return False
         
             if vals.get('unit_amount') > self.unit_amount:
-                    total_planned_hours = 0
-                    current_timesheets = self.env['account.analytic.line'].search([['project_id', '=', self.project_id.id], ['task_id', '=', self.task_id.id]])
-                    for current_timesheet in current_timesheets:
-                        total_planned_hours += float(current_timesheet.unit_amount)
-                        
-                    if (total_planned_hours + vals.get('unit_amount') - self.unit_amount) > self.task_id.planned_hours:
-                        raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time((total_planned_hours + vals.get('unit_amount') - self.unit_amount) - self.task_id.planned_hours)))
-                        return False
+                total_planned_hours = 0
+                current_timesheets = self.env['account.analytic.line'].search([['project_id', '=', self.project_id.id], ['task_id', '=', self.task_id.id]])
+                for current_timesheet in current_timesheets:
+                    total_planned_hours += float(current_timesheet.unit_amount)
                     
-        self.traiter_unit_amount(vals)
+                if (total_planned_hours + vals.get('unit_amount') - self.unit_amount) > self.task_id.planned_hours:
+                    raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time((total_planned_hours + vals.get('unit_amount') - self.unit_amount) - self.task_id.planned_hours)))
+                    return False
+                    
+            self.traiter_unit_amount(vals)
         
         return super(AccountAnalyticLine, self).write(vals)
