@@ -182,13 +182,12 @@
 					</page>
 				</notebook>
 				
-				<!-- <xpath expr="//page[@name='personal_information']" position="replace"> -->
-				<page name="personal_information" position="replace">
-					<page name="information_personnelle" string="Information personnelle" groups="hr.group_hr_user">
+				<xpath expr="//field[@name='country_id']/../../.." position="replace">
+					<page name="information_personnelle" string="Informations personnelles" groups="hr.group_hr_user">
                        	<group col="2">
 							<group string="Etat civil">
 		                         <field name="matricule"/>
-		                         <field name="name" string='Nom et prénom'/>
+		                         <field name="name" string='Nom et prénom(s)'/>
 		                         <field name="birthday" string='Date de naissance'/>
 		                         <field name="place_of_birth" string='Lieu de naissance'/>
 		                         <field name="father_name" string='Nom du père'/>
@@ -201,8 +200,8 @@
 		                         <field name="marital" string="Situation matrimoniale"/>
 		                         <field name="children" string="Nombre d'enfant"/>
 		                     </group>
-		                     <group string="Information de contact">
-		                         <field name="matricule" string='Adresse personnel'/>
+		                     <group string="Informations de contact">
+		                         <field name="matricule" string='Adresse personnelle'/>
 		                         <field name="personal_phone" string='Téléphone portable personnel'/>
 		                         <field name="personal_fixed_phone" string='Téléphone fixe personnel'/>
 		                         <field name="emergency_contact_id" string="Personne à contacter d'urgence"/>
@@ -215,8 +214,7 @@
 		                     </group>
 	                     </group>
                      </page>
-				<!-- </xpath> -->
-				</page>
+				</xpath>
 				
 				<div name="button_box" position="inside">
 					<button name="action_get_attachment_tree_view" class="oe_stat_button"

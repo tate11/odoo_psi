@@ -18,7 +18,7 @@ class hr_employee(models.Model):
     mother_name                     = fields.Char(string=u'Nom de la mère')
     
     conjoint_s_name                 = fields.Char(string='Nom du conjoint')
-    spouse_s_name                   = fields.Char(string='Nom de l\'epoux')
+    spouse_s_name                   = fields.Char(string='Nom de l\'epoux(se)')
     matricule                       = fields.Char(string='Matricule')
     personal_fixed_phone            = fields.Char(string='Téléphone fixe personnel')
     cnaps_number                    = fields.Char(string='Numéro CNaPS')
@@ -307,7 +307,7 @@ class hr_declaration_interest(models.Model):
                               (num, str(num)) for num in range(2010, (datetime.now().year)+1 
                                                              )], string=u'Année', required="True", default=datetime.now().year)
     certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
-    declaration_interet = fields.Binary(string=u'Déclaration d\'interêt')
+    declaration_interet = fields.Binary(string=u'Déclaration d\'intérêt')
     checked_current_year = fields.Boolean(string='Check')
     
     b_edit = fields.Boolean(default=False)
