@@ -32,15 +32,15 @@
 		</record>
 		
 		<!-- cours d'ethique -->
-		<!-- record id="view_action_add_cours_ethique" model="ir.ui.view">
+		<record id="view_action_add_cours_ethique" model="ir.ui.view">
 			<field name="name">hr.cours.ethique.form</field>
-			<field name="model">hr.declaration.interest</field>
+			<field name="model">hr.cours.ethique</field>
 			<field name="arch" type="xml">
 				<form string="Cours d'étique">
 					<div class="oe_title">
                            <span for="name" class="oe_edit_only"/>
                            <h1>
-                               <field name="name" placeholder="Nom du déclaration"/>
+                               <field name="name" placeholder="Nom du cours d'éthique"/>
                            </h1>
                        </div>
                        <group>
@@ -50,7 +50,7 @@
                         </group>
                         <group>
                             <field name="year"/>
-                            <field name="declaration_interet"/> 
+                            <field name="certificate_ethics_file"/> 
                         </group>
                     </group>
                     <footer attrs="{'invisible' : [('b_edit','=',True)]}">
@@ -59,15 +59,25 @@
                     </footer>
 				</form>
 			</field>
-		</record-->
+		</record>
 		
-		<!-- Action add declaration - cours ethique -->
+		<!-- Action add declaration -->
 		<record id="action_add_declaration" model="ir.actions.act_window">
 			<field name="name">Ajouter une déclaration d'intérêt</field>
 			<field name="res_model">hr.declaration.interest</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form</field>
 			<field name="view_id" ref="view_action_add_declaration" />
+			<field name="target">new</field>
+			<field name="context">{'default_employee_id': active_id}</field>
+		</record>
+		<!-- Action add declaration - cours ethique -->
+		<record id="action_add_cours_ethique" model="ir.actions.act_window">
+			<field name="name">Ajouter un cours d'étique</field>
+			<field name="res_model">hr.cours.ethique</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_action_add_cours_ethique" />
 			<field name="target">new</field>
 			<field name="context">{'default_employee_id': active_id}</field>
 		</record>
@@ -168,7 +178,7 @@
 							</div>
 							<div>
 								<span><b>Cours d'étique</b></span>
-								<field name="details_certificate_ethics" string="Cours d'étique">
+								<field name="details_cours_ethique" string="Cours d'étique">
 									<tree delete="false">
 										<field name="name"/>
 										<field name="date_add" />
