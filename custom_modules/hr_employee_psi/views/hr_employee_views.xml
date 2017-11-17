@@ -127,21 +127,19 @@
 							<br />
 							<div>
 
-								<span><b>Déclaration d'interêt</b></span>
+								<span><b>Déclaration de conflit d'interêt</b></span>
 								<field name="details_declaration_interet" string="Déclaration d'interêt">
 
 									<tree delete="false">
 										<field name="name" />
 										<field name="date_add" />
 										<field name="year" />
-										<!-- <field name="checked_current_year" attrs="{'readonly':1}" 
-											onchange="checked_condition()"/> -->
 									</tree>
 								</field>
 							</div>
 							<div>
 
-								<span><b>Cours d'éthique</b></span>
+								<span><b>Certificat de cours d'éthique</b></span>
 								<field name="details_cours_ethique" string="Cours d'étique">
 									<tree delete="false">
 										<field name="name" />
