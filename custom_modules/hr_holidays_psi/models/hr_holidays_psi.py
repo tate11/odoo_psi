@@ -3,7 +3,7 @@
 
 
 import calendar
-from datetime import date, datetime, timedelta
+import datetime
 import logging
 import math
 import math
@@ -15,13 +15,13 @@ from werkzeug import url_encode
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.exceptions import Warning
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.tools import float_compare
 from odoo.tools.translate import _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
-
 from openerp.tools import float_compare
 
 
+#from datetime import  datetime, timedelta
 HOURS_PER_DAY = 8
 
 class hr_holidays_type_psi(models.Model):
@@ -94,7 +94,7 @@ class hr_holidays_psi(models.Model):
     last_business_day = fields.Date(compute="_get_last_business_day", string="Dernier jour ouvrable du mois")
 
     def _get_last_business_day(self):
-        date=datetime.now()
+        date=datetime.datetime.now()
 #         day_last_month = self.get_last_month(date)
 #         lastBusDay = datetime.today()
 #         new_lastBusDay = lastBusDay.replace(day=int(day_last_month))
@@ -200,8 +200,8 @@ class hr_holidays_psi(models.Model):
         
         if values.has_key('date_from') and current_employee.date_start != False :
             if values['date_from'] != False :
-                date_start = datetime.strptime(current_employee.date_start,"%Y-%m-%d")
-                date_from = datetime.strptime(values['date_from'],"%Y-%m-%d %H:%M:%S")
+                date_start = datetime.datetime.strptime(current_employee.date_start,"%Y-%m-%d")
+                date_from = datetime.datetime.strptime(values['date_from'],"%Y-%m-%d %H:%M:%S")
                 config = self.env['hr.holidays.configuration'].search([])[0]
                 diff = (date_from.year - date_start.year) * 12 + date_from.month - date_start.month
                 if diff <= config.droit_conge:
@@ -214,9 +214,9 @@ class hr_holidays_psi(models.Model):
        
        for record in self :
            if record.date_from != False:
-               date_from_time = datetime.strptime(record.date_from,"%Y-%m-%d %H:%M:%S")
+               date_from_time = datetime.datetime.strptime(record.date_from,"%Y-%m-%d %H:%M:%S")
                #date_from = date_from_time.date()
-               date_now = datetime.strptime(fields.Date().today(),"%Y-%m-%d")
+               date_now = datetime.datetime.strptime(fields.Date().today(),"%Y-%m-%d")
 
                between = date_from_time - date_now
                #between_month = date_now.month - date_from.month
@@ -403,12 +403,12 @@ class hr_holidays_psi(models.Model):
     
     def _increment_doit_conge(self):
         contracts = self.env['hr.contract'].search([])
-        dt_now = datetime.strptime(fields.Date().today(),'%Y-%m-%d')
+        dt_now = datetime.datetime.strptime(fields.Date().today(),'%Y-%m-%d')
         
         for contract in contracts :
             holidays = self.env['hr.holidays'].search([('employee_id','=',contract.employee_id.id),('type','=','add')],order='id')
             if len(holidays) > 0:
-                dt_write_date = datetime.strptime(holidays[0].write_date,'%Y-%m-%d %H:%M:%S')
+                dt_write_date = datetime.datetime.strptime(holidays[0].write_date,'%Y-%m-%d %H:%M:%S')
                 print dt_write_date
                 print dt_now
                 if dt_write_date.month != dt_now.month:
@@ -436,7 +436,7 @@ class hr_holidays_psi(models.Model):
     def _send_email_rappel_justificatif_conge_maladie(self, automatic=False):
         date_debut = self.date_from
         if date_debut != False:
-            dt = datetime.strptime(date_debut,'%Y-%m-%d %H:%M:%S')
+            dt = datetime.datetime.strptime(date_debut,'%Y-%m-%d %H:%M:%S')
             date_y_m_d = datetime(
                                          year=dt.year, 
                                          month=dt.month,
