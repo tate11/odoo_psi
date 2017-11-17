@@ -109,7 +109,8 @@ class hr_holidays_psi(models.Model):
     @api.model
     def create(self, values):
         self._verif_leave_date()
-        got_droit = self.check_droit(values)
+        #got_droit = self.check_droit(values)
+        got_droit = True
         if got_droit == False:
             raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
         else:
@@ -230,7 +231,7 @@ class hr_holidays_psi(models.Model):
                    raise ValidationError(u"La date de début du congé n'est pas valide.")
                
                holidays_status = self.env['hr.holidays.status'].search([('color_name','=','blue')])
-               if record.holiday_status_id.id != holidays_status[0]: # a part maladie
+               if record.holiday_status_id.id != holidays_status[0].id: # a part maladie
                    if between.days >= 0 and between.days < 3 :
                        raise ValidationError(u"Vous devez faire une demande de congés au moins 3 jours avant votre départ pour congé.")
      
