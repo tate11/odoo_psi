@@ -182,8 +182,9 @@
 					</page>
 				</notebook>
 				
-				<xpath expr="//page[@name='personal_information']" position="replace">
-					<page name="personal_information" string="Information personnelle" groups="hr.group_hr_user">
+				<!-- <xpath expr="//page[@name='personal_information']" position="replace"> -->
+				<page name="personal_information" position="replace">
+					<page name="information_personnelle" string="Information personnelle" groups="hr.group_hr_user">
                        	<group col="2">
 							<group string="Etat civil">
 		                         <field name="matricule"/>
@@ -214,7 +215,8 @@
 		                     </group>
 	                     </group>
                      </page>
-				</xpath>
+				<!-- </xpath> -->
+				</page>
 				
 				<div name="button_box" position="inside">
 					<button name="action_get_attachment_tree_view" class="oe_stat_button"
