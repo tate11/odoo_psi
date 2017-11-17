@@ -87,39 +87,6 @@
 			<field name="model">hr.employee</field>
 			<field name="inherit_id" ref="hr.view_employee_form" />
 			<field name="arch" type="xml">
-				<!-- <xpath expr="//form/sheet/notebook/page[@name='personal_information']" position="replace">
-					<page name="personal_information" string="Information personnelle" groups="hr.group_hr_user">
-                       	<group col="2">
-							<group string="Etat civil">
-		                         <field name="matricule"/>
-		                         <field name="name" string='Nom et prénom'/>
-		                         <field name="birthday" string='Date de naissance'/>
-		                         <field name="place_of_birth" string='Lieu de naissance'/>
-		                         <field name="father_name" string='Nom du père'/>
-		                         <field name="mother_name" string='Nom de la mère'/>
-		                         <field name="information_cin_id" string='Information sur CIN'/>
-		                         <field name="passport_id" string='Numéro passeport'/>
-		                         <field name="conjoint_s_name" string="Nom du conjoint"/>
-		                         <field name="spouse_s_name" string="Nom de l'époux (se)"/>
-		                         <field name="sexe" string="Sexe"/>
-		                         <field name="marital" string="Situation matrimoniale"/>
-		                         <field name="children" string="Nombre d'enfant"/>
-		                     </group>
-		                     <group string="Information de contact">
-		                         <field name="matricule" string='Adresse personnel'/>
-		                         <field name="personal_phone" string='Téléphone portable personnel'/>
-		                         <field name="personal_fixed_phone" string='Téléphone fixe personnel'/>
-		                         <field name="emergency_contact_id" string="Personne à contacter d'urgence"/>
-		                         <field name="beneficiary_of_death_benefit_id" string="Bénéficiaire d'indemnité en cas de décès"/>
-		                     </group>
-		                     <group string="Autres informations">
-		                         <field name="bank_account_id" string='Numéro compte bancaire'/>
-		                         <field name="cnaps_number" string="Numéro CNaPS"/>
-		                         <field name="groupe_sanguin" string="Groupe sanguin"/>
-		                     </group>
-	                     </group>
-                     </page>
-				</xpath> -->
 				
 				<notebook>
 					<page string="Pièces à fournir">
@@ -214,6 +181,40 @@
 						</group>
 					</page>
 				</notebook>
+				
+				<xpath expr="//field[@name='country_id']/../../.." position="replace">
+					<page name="information_personnelle" string="Informations personnelles" groups="hr.group_hr_user">
+                       	<group col="2">
+							<group string="Etat civil">
+		                         <field name="matricule"/>
+		                         <field name="name" string='Nom et prénom(s)'/>
+		                         <field name="birthday" string='Date de naissance'/>
+		                         <field name="place_of_birth" string='Lieu de naissance'/>
+		                         <field name="father_name" string='Nom du père'/>
+		                         <field name="mother_name" string='Nom de la mère'/>
+		                         <field name="information_cin_id" string='Information sur CIN'/>
+		                         <field name="passport_id" string='Numéro passeport'/>
+		                         <field name="conjoint_s_name" string="Nom du conjoint"/>
+		                         <field name="spouse_s_name" string="Nom de l'époux (se)"/>
+		                         <field name="sexe" string="Sexe"/>
+		                         <field name="marital" string="Situation matrimoniale"/>
+		                         <field name="children" string="Nombre d'enfant"/>
+		                     </group>
+		                     <group string="Informations de contact">
+		                         <field name="matricule" string='Adresse personnelle'/>
+		                         <field name="personal_phone" string='Téléphone portable personnel'/>
+		                         <field name="personal_fixed_phone" string='Téléphone fixe personnel'/>
+		                         <field name="emergency_contact_id" string="Personne à contacter d'urgence"/>
+		                         <field name="beneficiary_of_death_benefit_id" string="Bénéficiaire d'indemnité en cas de décès"/>
+		                     </group>
+		                     <group string="Autres informations">
+		                         <field name="bank_account_id" string='Numéro compte bancaire'/>
+		                         <field name="cnaps_number" string="Numéro CNaPS"/>
+		                         <field name="groupe_sanguin" string="Groupe sanguin"/>
+		                     </group>
+	                     </group>
+                     </page>
+				</xpath>
 				
 				<div name="button_box" position="inside">
 					<button name="action_get_attachment_tree_view" class="oe_stat_button"
