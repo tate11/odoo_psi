@@ -16,7 +16,9 @@ class hr_employee(models.Model):
     
     father_name                     = fields.Char(string=u'Nom du père')
     mother_name                     = fields.Char(string=u'Nom de la mère')
-    spouse_s_name                   = fields.Char(string='Nom du conjoint')
+    
+    conjoint_s_name                 = fields.Char(string='Nom du conjoint')
+    spouse_s_name                   = fields.Char(string='Nom de l\'epoux')
     matricule                       = fields.Char(string='Matricule')
     personal_fixed_phone            = fields.Char(string='Téléphone fixe personnel')
     cnaps_number                    = fields.Char(string='Numéro CNaPS')
@@ -66,7 +68,8 @@ class hr_employee(models.Model):
     criminal_records            = fields.Boolean(default=False, string="Casier judiciaires")
     card_cnaps                  = fields.Boolean(default=False, string="Copie Carte CNAPS ")
     birth_certificate_children  = fields.Boolean(default=False, string="Acte de naissance des enfants ")
-    details_certificate_ethics = fields.One2many('hr.declaration.interest', 'employee_id', string=u"Déclaration d'intérêt et cours d\'éthique", track_visibility="onchange")
+    details_certificate_ethics = fields.One2many('hr.declaration.interest', 'employee_id', string=u"Déclaration d'intérêt", track_visibility="onchange")
+    details_cours_ethique       = fields.One2many('hr.cours.ethique' ,'employee_id', string=u"Cours d\'éthique", track_visibility="onchange")
 	#TODO verification certficats
     ethics_course_certificate   = fields.Boolean(default=False, string=u"Certificat du cours d'éthique")
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
