@@ -47,7 +47,7 @@
 					attrs="{'invisible': ['|',('motif_rupture','=',False),('state_mail','=','draft')]}" />
 			</field>
 			<field name="employee_id" position="before">
-				<field name="matricule" />
+				<field name="matricule" required="1" />
 			</field>
 			<xpath expr="//label" position="before">
 				<field name="response_evaluation" invisible="1" />
@@ -68,16 +68,16 @@
 			</field>
 
 			<field name="wage" position='after'>
-			    <field name="devise" />
+			    <field name="devise" required="1" />
 				<field name="psi_category_details" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 				<field name="psi_cat_cat" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 				<field name="psi_sub_category" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 				<field name="psi_echelon" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 			</field>
-
+			
 			<xpath expr="//field[@name='department_id']" position='after'>
-				<field name="psi_contract_type" attrs="{'readonly' : [('state','=','close')]}"/>
-				<field name="place_of_work" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="psi_contract_type" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="place_of_work" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 			</xpath>
 
 <!-- 			<field name="date_end" position="after">
@@ -168,7 +168,7 @@
 				<field name="visa_expire" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
 			<field name='department_id' position="replace">
-				<field name="department_id" attrs="{'readonly' : [('state','=','close')]}" />
+				<field name="department_id" required="1" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
 			<field name='wage' position="replace">
 				<field name="wage" attrs="{'readonly' : [('state','=','close')]}" />
@@ -178,18 +178,18 @@
 	            <group name="duration_group" string="Duration">
 		            <label for="trial_date_start" string="Durée de la période d'essai"/>
 		            <div>
-		                <field name="trial_date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/> - <field name="trial_date_end" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/>
+		                <field name="trial_date_start" class="oe_inline" required="1" attrs="{'readonly' : [('state','=','close')]}"/> - <field name="trial_date_end" class="oe_inline" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 		            </div>
 		            <label for="date_start" string="Durée du contrat"/>
 		            <div>
-		                <field name="date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/> - <field name="date_end" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/>
+		                <field name="date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/> - <field name="date_end" required="1" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/>
 		            </div>
 		            <field name="working_hours" attrs="{'readonly' : [('state','=','close')]}"/>
 		        </group>
             </group>
 			
 			<field name="working_hours" position="before">
-				<field name="work_years" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="work_years" attrs="{'readonly' : True}" />
 			</field>
 			<field name='visa_no' position="replace">
 				<field name="visa_expire" attrs="{'readonly' : [('state','=','close')]}" />
