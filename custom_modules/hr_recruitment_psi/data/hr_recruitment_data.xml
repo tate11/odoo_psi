@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
-  <data>
+  <data noupdate="1">
     <!-- Lieu d'embauche -->
  	<record model="hr.recruitment.lieu.embauche" id="lieu_embauche_antananarivo">
   		<field name="name">Antananarivo</field>
@@ -20,7 +20,7 @@
         <field name="name">Candidatures sélectionnées</field>
         <field name="sequence">1</field>
 		<field name="stage">applicant_selected</field>
-    </record>  
+    </record>
     <record model="hr.recruitment.stage" id="convoked_for_test">
         <field name="name">1- Convoqués pour les tests</field>
         <field name="sequence">2</field>

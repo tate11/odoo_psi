@@ -3,7 +3,7 @@
 from pychart.arrow import default
 
 from odoo import fields, models, api
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, Warning
 
 
 class hr_job(models.Model):
@@ -21,6 +21,9 @@ class hr_job(models.Model):
     
     tdr_file = fields.Many2one('ir.attachment',string='Termes de Références (TDR)')
     file = fields.Binary("your_file", model='tdr_file.datas')
+    
+    name_of_claimant = fields.char(string=u"Nom du demandeur") 
+    list_of_demand = fields.Many2one('hr.applicant')
     
     no_of_recruitment = fields.Integer(string=u'Nombre de poste(s) à pouvoir', help=u'Nombre de poste(s) à pouvoir.')
 
@@ -59,10 +62,12 @@ class hr_job(models.Model):
         ], string="Nature de recrutement")
     
     application_deadline_date = fields.Date(string=u"Date limite de candidature")
+    date_of_demand = fields.Date(string=u"Date de la demande", help="Date de la demande du relance")
+    ref_of_demand = fields.Char(string=u"Référence de la demande")
     rr_approbation = fields.Boolean("Approbation par RR", default=True)
     tdr_add = fields.Boolean("TDR")
     psi_memo = fields.Boolean(u"Mémo", default=False)
-    psi_date_start = fields.Date(string=u'Date de prise de fonction souhaitée')
+    psi_date_start = fields.Date(string=u'Date de prise de fonction souhaitée', default=None)
     psi_job_equipment = fields.One2many('hr.job.equipment', 'job_id', string=u'Matériels et équipement(s) demandé(s)')
 
     psi_professional_category  = fields.Selection([
@@ -75,7 +80,17 @@ class hr_job(models.Model):
     
     
     psi_category = fields.Many2one('hr.psi.category.details','Catégorie professionnelle')
-
+    
+    @api.model
+    def create(self, vals):
+        print "Create"
+        print self.documents_count
+        print vals.get('documents_count'),' documents_count'
+        res = super(hr_job, self).create(vals)
+        if vals.get('documents_count') == 0:
+            raise Warning(u"Vous devez ajouter le fichier TDR.")
+        return res
+    
     @api.one
     @api.constrains('psi_contract_duration')
     def _check_psi_contract_duration(self):
