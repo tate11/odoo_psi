@@ -38,7 +38,7 @@
 			</field>
 		</record>
 		
-		<!-- Template mail - ajouter declaration interet - certificat de cours d'ethique -->
+		<!-- Template mail - ajouter declaration interet -->
 		<record id="custom_template_add_declaration_interest"
 			model="mail.template">
 			<field name="name">PSI Template email employee - Remplir formulaire du déclaration d'intéret</field>
@@ -50,7 +50,25 @@
 <div>
     <p>
       	Bonjour ${object.name}, 
-     	Vous êtes invité à remplir le formulaire de déclaration d'intérêt et de remettre le certificat de cours d'éthique.                    
+     	Vous êtes invité à remplir le formulaire de déclaration d'intérêt.                    
+	</p>               
+</div>   ]]>
+			</field>
+		</record>
+		
+		<!-- Template mail - ajouter certificat de cours d'ethique -->
+		<record id="custom_template_add_certificate_ethics"
+			model="mail.template">
+			<field name="name">PSI Template email employee - Remplir formulaire du certificat de cours d’éthique</field>
+			<field name="model_id" ref="hr_employee_psi.model_hr_employee" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Rappel de ${object.name_related or 'n/a' } pour le rempissage du formulaire de certificat de cours d’éthique</field>
+			<field name="email_to">${object.work_email}</field>
+			<field name="body_html"><![CDATA[
+<div>
+    <p>
+      	Bonjour ${object.name}, 
+     	Vous êtes invité à remplir le formulaire de certificat de cours d’éthique.                    
 	</p>               
 </div>   ]]>
 			</field>

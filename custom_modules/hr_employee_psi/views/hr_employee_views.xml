@@ -63,7 +63,7 @@
 			<field name="target">new</field>
 			<field name="context">{'default_employee_id': active_id}</field>
 		</record>
-		<!-- Action add declaration - cours ethique -->
+		<!-- Action add cours ethique -->
 		<record id="action_add_cours_ethique" model="ir.actions.act_window">
 			<field name="name">Ajouter un cours d'étique</field>
 			<field name="res_model">hr.cours.ethique</field>
@@ -126,10 +126,10 @@
 							</group>
 							<br />
 							<div>
-								<span>
-									<b>Déclaration d'interêt</b>
-								</span>
-								<field name="details_certificate_ethics" string="Déclaration d'interêt">
+
+								<span><b>Déclaration d'interêt</b></span>
+								<field name="details_declaration_interet" string="Déclaration d'interêt">
+
 									<tree delete="false">
 										<field name="name" />
 										<field name="date_add" />
@@ -140,9 +140,8 @@
 								</field>
 							</div>
 							<div>
-								<span>
-									<b>Cours d'étique</b>
-								</span>
+
+								<span><b>Cours d'éthique</b></span>
 								<field name="details_cours_ethique" string="Cours d'étique">
 									<tree delete="false">
 										<field name="name" />
@@ -218,62 +217,11 @@
 					</button>
 				</div>
 				<!-- Collaborator close - READONLY -->
-				<field name='name' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
-				<field name='category_ids' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
-				<field name='address_id' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
-				<field name='mobile_phone' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
-				<field name='work_location' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
-				<field name='work_email' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
-				<field name='work_phone' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
-				<field name='department_id' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
-				<field name='job_id' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
-				<field name='parent_id' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
-				<field name='notes' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
-				<field name='coach_id' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
-				<field name='calendar_id' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
-				<field name='notes' position="attributes">
-					<attribute name="attrs">{'readonly':[('state','=','close')]}
-					</attribute>
-				</field>
+
+				<xpath expr="/form " position="attributes">
+				     <attribute name="attrs">{'readonly': [('state','=','close')]}</attribute>
+				</xpath>
+
 				<field name='job_id' position="after">
 					<field name="psi_budget_code_distribution" />
 				</field>
