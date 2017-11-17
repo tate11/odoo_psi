@@ -119,7 +119,11 @@
 		                     </group>
 	                     </group>
                      </page>
-                     <page string="Pièces à fournir">
+                     
+				</xpath>
+				
+				<notebook>
+					<page string="Pièces à fournir">
 						<group col="1">
 							<group col="2">
 								<field name="state" invisible="1"/>
@@ -211,16 +215,8 @@
 							</field>
 						</group>
 					</page>
-				</xpath>
-				<!-- xpath expr="//sheet" position='before'>
-					<header>
-						<button name="%(action_add_declaration)d"
-								type="action"
-								string="Ajouter une déclaration d'intérêt" 
-								class="btn-primary"
-								/>
-					</header>
-				</xpath-->
+				</notebook>
+				
 				<div name="button_box" position="inside">
 					<button name="action_get_attachment_tree_view" class="oe_stat_button"
 						icon="fa-book" type="object">
@@ -229,27 +225,6 @@
 					</button>
 				</div>
 
-				<!--xpath expr="//field[@name='identification_id']" position='before'>
-					<field name="information_cin_id" />
-				</xpath-->
-				<!--xpath expr="//field[@name='gender']" position='replace'>
-					<field name="gender" invisible="1" />
-				</xpath-->
-				<!--xpath expr="//field[@name='marital']" position='before'>
-					<field name="sexe" />
-				</xpath-->
-				<!--xpath expr="//field[@name='address_home_id']" position='before'>
-					<field name="personal_phone" />
-					<field name="father_name" />
-					<field name="mother_name" />
-					<field name="spouse_s_name" />
-					<field name="psi_contract_type" invisible="1" />
-				</xpath-->
-				<!--xpath expr="//field[@name='address_home_id']" position='after'>
-					<field name="information_about_children_id" />
-					<field name="emergency_contact_id" />
-					<field name="beneficiary_of_death_benefit_id" />
-				</xpath-->
 
 				<!-- Collaborator close - READONLY -->
 				<field name='name' position="attributes">
