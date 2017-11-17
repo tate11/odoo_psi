@@ -181,7 +181,6 @@
 								<field name="matricule" />
 								<field name="name" string='Nom et prénom(s)' />
 								<field name="birthday" string='Date de naissance' />
-								<field name="place_of_birth" string='Lieu de naissance' />
 								<field name="father_name" string='Nom du père' />
 								<field name="mother_name" string='Nom de la mère' />
 								<field name="information_cin_id" string='Information sur CIN' />
@@ -190,10 +189,9 @@
 								<field name="spouse_s_name" string="Nom de l'époux (se)" />
 								<field name="sexe" string="Sexe" />
 								<field name="marital" string="Situation matrimoniale" />
-								<field name="children" string="Nombre d'enfant" />
 							</group>
 							<group string="Informations de contact">
-								<field name="matricule" string='Adresse personnelle' />
+								<field name="address_home_id" string='Adresse personnelle' />
 								<field name="personal_phone" string='Téléphone portable personnel' />
 								<field name="personal_fixed_phone" string='Téléphone fixe personnel' />
 								<field name="emergency_contact_id" string="Personne à contacter d'urgence" />
