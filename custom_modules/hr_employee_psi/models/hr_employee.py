@@ -78,8 +78,9 @@ class hr_employee(models.Model):
     sanctions_data = fields.One2many('hr.contract.sanction.data', 'employee_id', string='', track_visibility='always')
     psi_bridger_insight = fields.One2many('hr.employee.bridger.insight', 'employee_id',"Bridger insight")
     
-    psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution", store=True)
-
+    #psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution", store=True)
+    psi_budget_code_distribution= fields.Many2many('psi.code.budgetaire',string='Code Budgétaire')
+    
     psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat",store=True)
     
     all_files_checked = fields.Boolean(compute='_all_checked_files', string=u"Pièces completes")
@@ -314,7 +315,7 @@ class SanctionData(models.Model):
     sanction_objet = fields.Char(string='Objet')
     sanction_commentaire = fields.Text(string='Commentaires')
 
-    employee_id = fields.Many2one('hr.employee')
+    employee_id = fields.Many2one('hr.employee', string="Employee")
     
 class hr_cours_ethique(models.Model):
     
@@ -461,3 +462,11 @@ class BrigerInsight(models.Model):
         ('non', 'NON')
        ], string=u'Résultat')    
     employee_id = fields.Many2one('hr.employee')
+    
+class CodeBudgetaire(models.Model):
+    _name = 'psi.code.budgetaire'
+    name = fields.Char(string="Nom");
+    employee_id = fields.Many2one('hr.employee',string='Employée')
+    aanalytic_account_parent_id = fields.Many2one('account.analytic.account', string="Compte analytique parent")
+    analytic_account_id = fields.Many2one('account.analytic.account', string="Compte analytique")
+    taux = fields.Float('Taux')

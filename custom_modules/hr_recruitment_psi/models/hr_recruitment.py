@@ -39,7 +39,8 @@ class Applicant(models.Model):
         return self.env.ref('hr_recruitment_psi.applicant_selected').id
     
     attachment_file_ids = fields.Many2one('ir.attachment',string='Attachments')
-    
+    devise_proposed = fields.Many2one('res.currency',string='Devise')
+    devise_extra = fields.Many2one('res.currency',string='Devise')
     recrutement_type_id = fields.Many2one('hr.recruitment.type',related='job_id.recrutement_type_id',string='Type de recrutement', readonly=True)
     recrutement_type = fields.Selection(related='job_id.recrutement_type_id.recrutement_type',string='Type de recrutement selection')
     

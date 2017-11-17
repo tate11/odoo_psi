@@ -221,7 +221,13 @@
 				</xpath>
 
 				<field name='job_id' position="after">
-					<field name="psi_budget_code_distribution" />
+					<field name="psi_budget_code_distribution" widget="many2many_tags">
+						<field name="name" />
+						<field name="employee_id" />
+						<field name="analytic_account_parent_id" />
+						<field name="analytic_account_id" />
+						<field name="taux" />
+					</field>
 				</field>
 				<field name='coach_id' position="replace">
 					<field name="coach_id" string="Supérieur Hiérarchique" />
@@ -250,12 +256,63 @@
 		</record>
 		<!-- ACTIONS -->
 		<record id="action_hr_contract_type_sanction" model="ir.actions.act_window">
-			<field name="name">Liste des sanctions</field>
+			<field name="name">Liste de type de sanctions</field>
 			<field name="res_model">hr.contract.type.sanction</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="hr_contract_sanction_view_tree" />
 		</record>
+		
+		
+		<record id="hr_contract_sanction_list_view_tree" model="ir.ui.view">
+			<field name="name">hr.contract.list.sanction.tree</field>
+			<field name="model">hr.contract.sanction.data</field>
+			<field name="arch" type="xml">
+				<tree string="Liste des sanctions">
+					<field name="employee_id" />
+					<field name="name" />
+					<field name="sanction_type_id" />
+					<field name="sanction_date" />
+				</tree>
+			</field>
+		</record>
+		
+		<record id="hr_contract_sanction_list_view_form" model="ir.ui.view">
+			<field name="name">hr.contract.list.sanction.tree</field>
+			<field name="model">hr.contract.sanction.data</field>
+			<field name="arch" type="xml">
+				<form string="Liste des sanctions">
+					<field name="employee_id" />
+					<field name="sanction_type_id" />
+					<field name="sanction_date" />
+				</form>
+			</field>
+		</record>
+			
+		<record id="hr_contract_sanction_view_search" model="ir.ui.view">
+            <field name="name">hr.contract.search</field>
+            <field name="model">hr.contract.sanction.data</field>
+            <field name="arch" type="xml">
+                <search string="Search Sanction">
+                    <field name="sanction_date"/>
+                    <!-- <field name="sanction_date_month"/>
+                    <field name="sanction_date_year"/>  -->
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Type de Sanction" domain="[]" context="{'group_by':'sanction_type_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>	
+		<record id="action_hr_contract_list_sanction" model="ir.actions.act_window">
+			<field name="name">Liste des employées sanctionée</field>
+			<field name="res_model">hr.contract.sanction.data</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="hr_contract_sanction_list_view_tree" />
+			<field name="search_view_id" ref="hr_contract_sanction_view_search" />
+		</record>
+		
 		<record id="hr_contract_sanction_view_tree" model="ir.ui.view">
 			<field name="name">hr.contract.type.sanction.tree</field>
 			<field name="model">hr.contract.type.sanction</field>
@@ -290,7 +347,11 @@
 			</field>
 		</record>
 		<!-- MENUS -->
+		<menuitem id="hr_menu_contract_type_sanction_root"
+			parent="hr.menu_hr_root" sequence="4" name="Sanctions"/>
 		<menuitem id="hr_menu_contract_type_sanction" action="action_hr_contract_type_sanction"
-			parent="hr.menu_hr_root" sequence="4" />
+			parent="hr_menu_contract_type_sanction_root" sequence="5" />
+		<menuitem id="hr_menu_contract_liste_employee_sanctione" action="action_hr_contract_list_sanction"
+			parent="hr_menu_contract_type_sanction_root" sequence="6" />
 	</data>
 </odoo>

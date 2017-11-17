@@ -23,7 +23,7 @@ class hr_contract(models.Model):
     date_demission = fields.Date(string=u'Date de démission')
     #rupture
     date_rupture = fields.Date(string='Date rupture de contrat')
-
+    devise = fields.Many2one('res.currency',string='Devise')
     motif_rupture = fields.Selection([
                                       ('end_deadline_without_renewal',u"Arrivée de l'échéance sans reconduction"),
                                       ('conventional_break',"Rupture conventionnelle"),
@@ -214,14 +214,14 @@ class hr_contract(models.Model):
     
     psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la Catégorie')
     psi_category = fields.Selection(related='psi_category_details.psi_professional_category')
-    psi_cat_cat = fields.Char(related='psi_category_details.psi_cat', string='CAT')
+    psi_cat_cat = fields.Char(related='psi_category_details.psi_cat', string='Catégorie')
     psi_sub_category            = fields.Selection([
                                         ('1','1'),
                                         ('2','2'),
                                         ('3','3'),
                                         ('4','4')
-                                ], string="Sous Cat")
-    
+                                ], string="Sous-catégorie")
+    matricule = fields.Char(string='Matricule')
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
    
     def action_send_email_desactivate_flottes(self):
@@ -308,7 +308,8 @@ class hr_contract(models.Model):
             wage_grids = self.env['hr.wage.grid.details'].search([('psi_professional_category', '=', self.psi_category),('psi_sub_category', '=', self.psi_sub_category)])
             echelon = 0
             for wage_grid in wage_grids :
-                echelon = wage_grid._get_echelon(vals['psi_echelon'])
+                if vals['psi_echelon'] != 'echelon_hc' :
+                    echelon = wage_grid._get_echelon(vals['psi_echelon'])
             vals['wage'] = echelon if echelon != 0 else data.wage
             
          
@@ -596,3 +597,4 @@ class ContractHistorical(models.Model):
      nouveau = fields.Char('Nouveau')
      
      contract_id = fields.Many2one('hr.contract')
+     
