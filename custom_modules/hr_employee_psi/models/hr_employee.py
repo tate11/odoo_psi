@@ -17,6 +17,10 @@ class hr_employee(models.Model):
     father_name                     = fields.Char(string=u'Nom du père')
     mother_name                     = fields.Char(string=u'Nom de la mère')
     spouse_s_name                   = fields.Char(string='Nom du conjoint')
+    matricule                       = fields.Char(string='Matricule')
+    personal_fixed_phone            = fields.Char(string='Téléphone fixe personnel')
+    cnaps_number                    = fields.Char(string='Numéro CNaPS')
+    groupe_sanguin                  = fields.Char(string='Groupe sanguin')
     
     psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la Catégorie')
     psi_category = fields.Selection(related='psi_category_details.psi_professional_category')
@@ -301,6 +305,7 @@ class hr_declaration_interest(models.Model):
                               (num, str(num)) for num in range(2010, (datetime.now().year)+1 
                                                              )], string=u'Année', required="True", default=datetime.now().year)
     certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
+    declaration_interet = fields.Binary(string=u'Déclaration d\'interêt')
     checked_current_year = fields.Boolean(string='Check')
     
     b_edit = fields.Boolean(default=False)
@@ -316,6 +321,44 @@ class hr_declaration_interest(models.Model):
         else : 
             raise Warning(_(u'Vous avez déjà rempli le formulaire de déclaration cette année'))
             return False
+        
+    def verify_year_declaration(self):
+        res = False
+        for record in self:
+            declaration_obj = self.env["hr.declaration.interest"]
+            declarations = declaration_obj.search([('employee_id','=',record.employee_id.name)]) 
+            print declarations
+            if len(declarations) == 1:
+                res = True
+            else:
+                for declaration in declarations[:-1]:               
+                    date_str = str(declaration.year)
+                    if date_str:
+                        if str(record.year) == date_str:
+                            res = False
+                        else: 
+                            res = True
+        return res
+
+class hr_cours_ethique(models.Model):
+    
+    _name = "hr.cours.ethique"
+    _description = u"Cours d'éthique"
+    
+    name = fields.Char(string=u'Nom', required=True)
+    employee_id = fields.Many2one('hr.employee', string=u'Employé', readonly=True)
+    date_add = fields.Date(string=u'Date d\'ajout',default=lambda *a: datetime.now())
+    year =  fields.Selection([
+                              (num, str(num)) for num in range(2010, (datetime.now().year)+1 
+                                                             )], string=u'Année', required="True", default=datetime.now().year)
+    certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
+    checked_current_year = fields.Boolean(string='Check')
+    
+    b_edit = fields.Boolean(default=False)
+
+    @api.multi
+    def write(self, vals):
+        declaration = self.verify_year_declaration()
         
     def verify_year_declaration(self):
         res = False
