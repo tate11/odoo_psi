@@ -344,6 +344,51 @@
 				</xpath>
 			</field>
 		</record>
+		
+		<!-- SEARCH PREAVIS -->
+        <record id="hr_duree_preavis_filter" model="ir.ui.view">
+            <field name="name">hr.duree.preavis.filter</field>
+            <field name="model">hr.duree.preavis</field>
+            <field name="arch" type="xml">
+                <search string="Recherche">
+                    <field name="name"/>         
+                    <field name="anciennete"/> 
+                    <!-- <field name="categ"/> -->
+                    <separator/>                    
+                   <!--  <filter string="Durée préavis" 
+                        domain="[('name','=','')]" />     -->        
+                </search>
+            </field>
+       </record>
+                
+		<!-- VUE PREAVIS -->
+		<record id="hr_duree_preavis_view_tree" model="ir.ui.view">
+			<field name="name">hr.duree.preavis.tree</field>
+			<field name="model">hr.duree.preavis</field>
+			<field name="arch" type="xml">
+				<search string="Recherche">
+                    <field name="name"/>         
+                    <field name="anciennete"/>
+                    <separator/>                    
+                    <filter string="Durée préavis" 
+                        domain="[('name','=','')]" />            
+                </search>
+                
+				<tree string="Liste des durée du préavis">
+					<field colspan="4" name="name" />
+					<field name="anciennete" />
+					<field name="categorie" />
+					<field name="sous_cat" />
+					<!-- <field name="categ" /> -->
+					<!-- <label for="categorie" string="Durée de la période d'essai"/>
+		            <div>
+		                <field name="sous_cat" /> - <field name="categorie" />
+		            </div> -->
+				</tree>
+			</field>
+		</record>
+		
+		
 		<!-- MENUS -->
 		<menuitem id="hr_menu_contract_type_sanction_root"
 			parent="hr.menu_hr_root" sequence="4" name="Sanctions"/>

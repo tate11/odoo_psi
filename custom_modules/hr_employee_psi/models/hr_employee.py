@@ -242,12 +242,24 @@ class hr_employee(models.Model):
             date_create = employee.create_date
             date_create_employee = datetime.strptime(date_create,"%Y-%m-%d %H:%M:%S")
             date_now = datetime.now().date()  
-            one_week_after = date_create_employee.date() + timedelta(days=7)         
-            if date_now == date_create_employee.date() or date_now == one_week_after:
+            one_week_after = date_create_employee.date() + timedelta(days=7)               
+            one_week_after_time = datetime(
+                    year=one_week_after.year, 
+                    month=one_week_after.month,
+                    day=one_week_after.day,
+                )           
+            date_create_employee_time = datetime(
+                    year=date_create_employee.year, 
+                    month=date_create_employee.month,
+                    day=date_create_employee.day,
+                )
+            date_to_notif = date_create_employee_time - relativedelta(months=12) #1 years
+            date_to_notif_2 = one_week_after_time - relativedelta(months=12) #1 years
+            
+            if date_now == date_create_employee.date() or date_now == one_week_after or date_now == date_to_notif.date() or date_now == date_to_notif_2.date():
                 declaration = self.details_declaration_interet
                 declaration_interet = declaration.verify_year_declaration()
                 if not declaration_interet:
-                    print "mail ", date_now.year
                     template = self.env.ref('hr_employee_psi.custom_template_add_declaration_interest')
                     self.env['mail.template'].browse(template.id).send_mail(employee.id, force_send=True)
         if automatic:
@@ -261,12 +273,24 @@ class hr_employee(models.Model):
             date_create = employee.create_date
             date_create_employee = datetime.strptime(date_create,"%Y-%m-%d %H:%M:%S")
             date_now = datetime.now().date()
-            one_week_after = date_create_employee.date() + timedelta(days=7) 
-            if date_now == date_create_employee.date() or date_now == one_week_after: 
+            one_week_after = date_create_employee.date() + timedelta(days=7)               
+            one_week_after_time = datetime(
+                    year=one_week_after.year, 
+                    month=one_week_after.month,
+                    day=one_week_after.day,
+                )           
+            date_create_employee_time = datetime(
+                    year=date_create_employee.year, 
+                    month=date_create_employee.month,
+                    day=date_create_employee.day,
+                )
+            date_to_notif = date_create_employee_time - relativedelta(months=24) #2 years
+            date_to_notif_2 = one_week_after_time - relativedelta(months=24) #2 years
+            
+            if date_now == date_create_employee.date() or date_now == one_week_after or date_now == date_to_notif.date() or date_now == date_to_notif_2.date():
                 cours_ethique = self.details_cours_ethique
                 ethics = cours_ethique.verify_year_certificate_ethics()
                 if not ethics:
-                    print 'mail'
                     template = self.env.ref('hr_employee_psi.custom_template_add_certificate_ethics')
                     self.env['mail.template'].browse(template.id).send_mail(employee.id, force_send=True)               
                 #test
@@ -502,3 +526,19 @@ class CodeBudgetaire(models.Model):
     aanalytic_account_parent_id = fields.Many2one('account.analytic.account', string="Compte analytique parent")
     analytic_account_id = fields.Many2one('account.analytic.account', string="Compte analytique")
     taux = fields.Float('Taux')
+
+class HrDureePreavis(models.Model):
+    
+    _name = 'hr.duree.preavis'
+    
+    preavis_id = fields.Integer()
+    name = fields.Char(string=u"DurÃ©e du prÃ©avis")
+    anciennete = fields.Char(string=u"AnciennetÃ©/groupe")
+    categorie = fields.Char(string=u"CatÃ©gorie")
+    sous_cat = fields.Integer(string=u"Sous catÃ©gorie")
+    
+    categ = fields.Char(compute='_get_categ', string=u"CatÃ©gorie", store=True)
+    
+    @api.depends('sous_cat','categorie')
+    def _get_categ(self):
+        self.name = (self.sous_cat or '')+' '+(self.categorie or '')
