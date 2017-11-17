@@ -102,7 +102,7 @@ class hr_employee(models.Model):
         ('toliary', 'Toliary'),
         ('morondava', 'Morondava'),
         ('mahajanga', 'Mahajanga'),
-        ], string="")
+        ], string="", default="antananarivo")
 
     @api.model
     def create(self, vals):

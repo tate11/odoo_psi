@@ -95,15 +95,15 @@ class hr_holidays_psi(models.Model):
 
     def _get_last_business_day(self):
         date=datetime.datetime.now()
-#         day_last_month = self.get_last_month(date)
-#         lastBusDay = datetime.today()
-#         new_lastBusDay = lastBusDay.replace(day=int(day_last_month))
-#         if new_lastBusDay.weekday() == 5:
-#              new_lastBusDay = new_lastBusDay - datetime.timedelta(days = 1)
-#         elif new_lastBusDay.weekday() == 6: 
-#              new_lastBusDay = new_lastBusDay - datetime.timedelta(days = 2)
-#         for record in self:
-#             record.last_business_day = new_lastBusDay.date()
+        day_last_month = self.get_last_month(date)
+        lastBusDay = datetime.today()
+        new_lastBusDay = lastBusDay.replace(day=int(day_last_month))
+        if new_lastBusDay.weekday() == 5:
+            new_lastBusDay = new_lastBusDay - datetime.timedelta(days = 1)
+        elif new_lastBusDay.weekday() == 6: 
+            new_lastBusDay = new_lastBusDay - datetime.timedelta(days = 2)
+        for record in self:
+            record.last_business_day = new_lastBusDay.date()
         
     def get_last_month(self,date):  
         result = calendar.monthrange(date.year,date.month)[1]
