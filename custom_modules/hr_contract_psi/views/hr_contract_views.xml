@@ -99,17 +99,18 @@
 				<group name="result_evaluation" string="Evaluation Période d'essai"> <!-- Condition if date_end_trial terminé -->
 					<field name="result_evaluation" attrs="{'readonly' : [('state','=','close')]}"/>
 					<label string="Vous voulez renouveler la période d'essai ?"
-						attrs="{'invisible':['|',('result_evaluation','not in','ko')]}" />
+						confirm="Veuillez confirmer le renouvelement de sa période d'essai."
+						attrs="{'invisible':['|','|',('result_evaluation','not in','ko'),('response_evaluation','=','accept')]}" />
 					<div>
 						<button name="action_renew_trial_accept" string="OUI" type="object"
 							class="btn-primary"
-							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=',True)]}"
+							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=','accept')]}"
 							onClick="$(this).prop('disabled', true);" />
-						-
+						&#x2063;&#x2063;
 						<button name="action_renew_trial_decline" string="NON"
 							type="object" class="btn-primary"
-							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=',True)]}"
-							confirm="Vous ne voulez pas la renouveler?" onClick="$(this).prop('disabled', true);" />
+							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=','accept')]}"
+							confirm="Veuillez confirmer si vous ne voulez pas renouvelement sa période d'essai." onClick="$(this).prop('disabled', true);" />
 					</div>
 
 					<button name="action_result_evaluation_send_ok" string="Envoyer une notification par mail"
