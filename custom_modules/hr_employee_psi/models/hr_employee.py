@@ -81,7 +81,12 @@ class hr_employee(models.Model):
     #psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution", store=True)
     psi_budget_code_distribution= fields.Many2many('psi.code.budgetaire',string='Code Budgétaire')
     
-    psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat",store=True)
+    #psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat",store=True)
+    psi_contract_type = fields.Selection([
+        ('cdd', 'CDD'),
+        ('cdi', 'CDI'),
+        ('convention_stage','Convention de stage')
+    ], string='Type de contrat', help="Type de contrat")
     
     all_files_checked = fields.Boolean(compute='_all_checked_files', string=u"Pièces completes")
 
