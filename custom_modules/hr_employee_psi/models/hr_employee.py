@@ -33,7 +33,7 @@ class hr_employee(models.Model):
     beneficiary_of_death_benefit_id = fields.Many2one('hr.person.information', string=u'Bénéficiaire d\'indemnité en cas de décès',
          help='Beneficiary of death benefit')
     
-    information_about_children_id   = fields.Many2one('hr.person', string=' Informations sur les enfants',help='Information about children')
+    information_about_children_id   = fields.One2many('hr.person.children', 'employee_id', string='Informations sur les enfants')
     
     information_cin_id              = fields.Many2one('hr.information.cin', string='Information sur CIN',help='Information about CIN')
 
@@ -103,7 +103,7 @@ class hr_employee(models.Model):
         ('morondava', 'Morondava'),
         ('mahajanga', 'Mahajanga'),
         ], string="", default="antananarivo")
-
+    
     @api.model
     def create(self, vals):
         employee = super(hr_employee, self).create(vals)
@@ -326,6 +326,16 @@ class PersonInformation(models.Model):
         ('conjoint', 'Conjoint')
     ], string='Relation')
     
+    employee_id = fields.Many2one('hr.employee')
+
+class ChildrenInformation(models.Model):
+    _inherit      = 'hr.person.information'
+    _name         = 'hr.person.children'
+    
+    relation      = fields.Selection([
+        ('enfant', 'Enfant'),
+    ], string='Relation', default="enfant")
+    
 
 class InformationCin(models.Model):
     
@@ -521,6 +531,7 @@ class BrigerInsight(models.Model):
     
 class CodeBudgetaire(models.Model):
     _name = 'psi.code.budgetaire'
+    
     name = fields.Char(string="Nom");
     employee_id = fields.Many2one('hr.employee',string='Employée')
     aanalytic_account_parent_id = fields.Many2one('account.analytic.account', string="Compte analytique parent")
@@ -532,13 +543,8 @@ class HrDureePreavis(models.Model):
     _name = 'hr.duree.preavis'
     
     preavis_id = fields.Integer()
-    name = fields.Char(string=u"DurÃ©e du prÃ©avis")
-    anciennete = fields.Char(string=u"AnciennetÃ©/groupe")
-    categorie = fields.Char(string=u"CatÃ©gorie")
-    sous_cat = fields.Integer(string=u"Sous catÃ©gorie")
+    name = fields.Char(string=u"Durée du préavis")
+    anciennete = fields.Char(string=u"Ancienneté/groupe")
+    categorie = fields.Char(string=u"Catégorie")
+    sous_cat = fields.Char(string=u"Sous catégorie")
     
-#    categ = fields.Char(compute='_get_categ', string=u"CatÃ©gorie", store=True)
-    
-#    @api.depends('sous_cat','categorie')
-#    def _get_categ(self):
-#        self.name = (self.sous_cat or '')+' '+(self.categorie or '')

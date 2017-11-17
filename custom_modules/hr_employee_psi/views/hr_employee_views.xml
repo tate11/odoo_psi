@@ -217,6 +217,14 @@
 								<field name="spouse_s_name" string="Nom de l'époux (se)" />
 								<field name="sexe" string="Sexe" />
 								<field name="marital" string="Situation matrimoniale" />
+								<field name="information_about_children_id">
+									<tree editable="bottom">
+										<field name="name"/>
+										<field name="date_of_birth"/>
+										<field name="sex"/>
+										<field name="relation" invisible="1" />
+									</tree>
+								</field>
 							</group>
 							<group string="Informations de contact">
 								<field name="address_home_id" string='Adresse personnelle' />
@@ -415,7 +423,7 @@
 			parent="hr_menu_contract_type_sanction_root" sequence="5" />
 		<menuitem id="hr_menu_contract_liste_employee_sanctione" action="action_hr_contract_list_sanction"
 			parent="hr_menu_contract_type_sanction_root" sequence="6" />
-		<!-- <menuitem id="hr_menu_duree_preavis" action="action_hr_duree_preavis"
-			parent="hr.menu_hr_root" sequence="4" /> -->
+		<menuitem id="hr_menu_duree_preavis" action="action_hr_duree_preavis"
+			parent="hr.menu_hr_root" sequence="4" />
 	</data>
 </odoo>
