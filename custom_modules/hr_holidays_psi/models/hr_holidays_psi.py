@@ -63,6 +63,7 @@ class hr_holidays_psi(models.Model):
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
         ('validate1', u'Validation par Supérieur hiérarchique'),
+        ('approbation','Approbation du chef de département de rattachement'),
         ('validate2', 'Validation par RH'),
         ('validate', 'Validation par DRHA')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
@@ -85,11 +86,7 @@ class hr_holidays_psi(models.Model):
                     if get_day_difference > permissions.number_of_day:
                         raise Warning(_(u"Vous avez depassé le nombre de jours permi pour ce type de permission."))
             
-    @api.multi
-    def write(self, values):
-        self._verif_leave_date()
-        holidays = super(hr_holidays_psi, self).write(values)
-        return holidays    
+
     
     last_business_day = fields.Date(compute="_get_last_business_day", string="Dernier jour ouvrable du mois")
 
@@ -123,7 +120,8 @@ class hr_holidays_psi(models.Model):
     @api.multi
     def write(self, values):
         employee_id = values.get('employee_id', False)
-
+        self._send_email_rappel_absences_to_assist_and_coord(False)
+        self._verif_leave_date()
 #         if self.env.user == self.employee_id.user_id:
 #             raise AccessError(u'Vous ne pouvez plus modifier votre demande, veuillez contacter votre supérieur hiérarchique.')
 
@@ -168,14 +166,21 @@ class hr_holidays_psi(models.Model):
         for holiday in self:
             if holiday.state != 'validate1':
                 raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
-        return holiday.write({'state': 'validate2', 'manager_id': manager.id if manager else False})
-                    
-    @api.multi
-    def write(self, vals):
-        self._send_email_rappel_absences_to_assist_and_coord(False)
-        holiday = super(hr_holidays_psi, self).write(vals)
-        return holiday
+        return holiday.write({'state': 'approbation', 'manager_id': manager.id if manager else False})
     
+    @api.multi
+    def action_approbation_departement(self):
+        # if double_validation: this method is the first approval approval
+        # if not double_validation: this method calls action_validate() below
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
+
+        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        for holiday in self:
+            if holiday.state != 'approbation':
+                raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
+        return holiday.write({'state': 'validate2', 'manager_id': manager.id if manager else False})
+
     @api.multi
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment'].read_group(
@@ -224,8 +229,8 @@ class hr_holidays_psi(models.Model):
                if between.days < 0: #(between_month == 1 and date_from.day >= 3) or between_month < 1:
                    raise ValidationError(u"La date de début du congé n'est pas valide.")
                
-               #TODO a modifier
-               if record.holiday_status_id.id != 7: # a part maladie
+               holidays_status = self.env['hr.holidays.status'].search([('color_name','=','blue')])
+               if record.holiday_status_id.id != holidays_status[0]: # a part maladie
                    if between.days >= 0 and between.days < 3 :
                        raise ValidationError(u"Vous devez faire une demande de congés au moins 3 jours avant votre départ pour congé.")
      
@@ -361,7 +366,7 @@ class hr_holidays_psi(models.Model):
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
     ]
     
-    def datespan(self, start_date, end_date, delta=datetime.timedelta(days=1)):
+    def datespan(self, start_date, end_date, delta=timedelta(days=1)):
         current_date = start_date
         while current_date.date() <= end_date.date():
             yield current_date
@@ -409,8 +414,6 @@ class hr_holidays_psi(models.Model):
             holidays = self.env['hr.holidays'].search([('employee_id','=',contract.employee_id.id),('type','=','add')],order='id')
             if len(holidays) > 0:
                 dt_write_date = datetime.strptime(holidays[0].write_date,'%Y-%m-%d %H:%M:%S')
-                print dt_write_date
-                print dt_now
                 if dt_write_date.month != dt_now.month:
                     number_of_days = holidays[0].number_of_days + 2 
                     holidays[0].write({'number_of_days':number_of_days})
