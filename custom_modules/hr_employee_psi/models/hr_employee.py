@@ -537,8 +537,8 @@ class HrDureePreavis(models.Model):
     categorie = fields.Char(string=u"CatÃ©gorie")
     sous_cat = fields.Integer(string=u"Sous catÃ©gorie")
     
-    categ = fields.Char(compute='_get_categ', string=u"CatÃ©gorie", store=True)
+#    categ = fields.Char(compute='_get_categ', string=u"CatÃ©gorie", store=True)
     
-    @api.depends('sous_cat','categorie')
-    def _get_categ(self):
-        self.name = (self.sous_cat or '')+' '+(self.categorie or '')
+#    @api.depends('sous_cat','categorie')
+#    def _get_categ(self):
+#        self.name = (self.sous_cat or '')+' '+(self.categorie or '')

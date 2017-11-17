@@ -71,5 +71,4 @@
             <field name="active" eval="True" />
         </record>    
     </data>   
-    </data>
 </odoo>
