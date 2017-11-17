@@ -87,7 +87,7 @@
 			<field name="model">hr.employee</field>
 			<field name="inherit_id" ref="hr.view_employee_form" />
 			<field name="arch" type="xml">
-				<xpath expr="//form/sheet/notebook/page[@name='personal_information']" position="replace">
+				<!-- <xpath expr="//form/sheet/notebook/page[@name='personal_information']" position="replace">
 					<page name="personal_information" string="Information personnelle" groups="hr.group_hr_user">
                        	<group col="2">
 							<group string="Etat civil">
@@ -119,8 +119,7 @@
 		                     </group>
 	                     </group>
                      </page>
-                     
-				</xpath>
+				</xpath> -->
 				
 				<notebook>
 					<page string="Pièces à fournir">
