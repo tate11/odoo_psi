@@ -68,9 +68,9 @@ class hr_employee(models.Model):
     criminal_records            = fields.Boolean(default=False, string="Casier judiciaires")
     card_cnaps                  = fields.Boolean(default=False, string="Copie Carte CNAPS ")
     birth_certificate_children  = fields.Boolean(default=False, string="Acte de naissance des enfants ")
-    details_certificate_ethics = fields.One2many('hr.declaration.interest', 'employee_id', string=u"Déclaration d'intérêt", track_visibility="onchange")
-    details_cours_ethique       = fields.One2many('hr.cours.ethique' ,'employee_id', string=u"Cours d\'éthique", track_visibility="onchange")
-	#TODO verification certficats
+    details_declaration_interet = fields.One2many('hr.declaration.interest', 'employee_id', string=u"Déclaration d\'intérêt", track_visibility="onchange")
+    details_cours_ethique       = fields.One2many("hr.cours.ethique", 'employee_id', string=u"Cértificat de cours d\'éthique", track_visibility="onchange")
+    #TODO verification certficats
     ethics_course_certificate   = fields.Boolean(default=False, string=u"Certificat du cours d'éthique")
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments', track_visibility='always')
@@ -214,20 +214,41 @@ class hr_employee(models.Model):
         if automatic:
             self._cr.commit()
     
-    # add declaration interest every 2 years
+    # add declaration interest every year
     def _add_declaration_interest(self, automatic=False):
-        print "Verification declaration interet/2ans"
+        print "Verification declaration interet/1ans"
         employees = self.env['hr.employee'].search([])
         for employee in employees:
             date_create = employee.create_date
             date_create_employee = datetime.strptime(date_create,"%Y-%m-%d %H:%M:%S")
-            current_month = datetime.now().month
-            month_date_create = date_create_employee.month
-            print month_date_create ,' # ', current_month
-            if month_date_create == current_month:
-                print "mail"
-                template = self.env.ref('hr_employee_psi.custom_template_add_declaration_interest')
-                self.env['mail.template'].browse(template.id).send_mail(employee.id, force_send=True)
+            date_now = datetime.now().date()  
+            one_week_after = date_create_employee.date() + timedelta(days=7)         
+            if date_now == date_create_employee.date() or date_now == one_week_after:
+                declaration = self.details_declaration_interet
+                declaration_interet = declaration.verify_year_declaration()
+                if not declaration_interet:
+                    print "mail ", date_now.year
+                    template = self.env.ref('hr_employee_psi.custom_template_add_declaration_interest')
+                    self.env['mail.template'].browse(template.id).send_mail(employee.id, force_send=True)
+        if automatic:
+            self._cr.commit()
+            
+    # add certificate etich every 2 year
+    def _add_certificate_ethics (self, automatic=False):
+        print "Verification certificat cours d'Ã©thique/2ans"
+        employees = self.env['hr.employee'].search([])
+        for employee in employees:
+            date_create = employee.create_date
+            date_create_employee = datetime.strptime(date_create,"%Y-%m-%d %H:%M:%S")
+            date_now = datetime.now().date()
+            one_week_after = date_create_employee.date() + timedelta(days=7) 
+            if date_now == date_create_employee.date() or date_now == one_week_after: 
+                cours_ethique = self.details_cours_ethique
+                ethics = cours_ethique.verify_year_certificate_ethics()
+                if not ethics:
+                    print 'mail'
+                    template = self.env.ref('hr_employee_psi.custom_template_add_certificate_ethics')
+                    self.env['mail.template'].browse(template.id).send_mail(employee.id, force_send=True)               
                 #test
 #                mail_failed_list = self.env['mail.mail'].search([('state', '=', 'exception')])
 #                for failed_mail in mail_failed_list:
@@ -360,9 +381,9 @@ class hr_cours_ethique(models.Model):
 
     @api.multi
     def write(self, vals):
-        declaration = self.verify_year_declaration()
+        declaration = self.verify_year_certificate_ethics()
         
-    def verify_year_declaration(self):
+    def verify_year_certificate_ethics(self):
         res = False
         for record in self:
             declaration_obj = self.env["hr.declaration.interest"]
