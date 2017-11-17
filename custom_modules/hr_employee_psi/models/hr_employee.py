@@ -316,10 +316,10 @@ class SanctionData(models.Model):
 
     employee_id = fields.Many2one('hr.employee')
     
-class hr_declaration_interest(models.Model):
+class hr_cours_ethique(models.Model):
     
-    _name = "hr.declaration.interest"
-    _description = u"Declaration d'intérêt - Cours d'éthique"
+    _name = "hr.cours.ethique"
+    _description = u"Cours d'éthique"
     
     name = fields.Char(string=u'Nom', required=True)
     employee_id = fields.Many2one('hr.employee', string=u'Employé', readonly=True)
@@ -328,23 +328,42 @@ class hr_declaration_interest(models.Model):
                               (num, str(num)) for num in range(2010, (datetime.now().year)+1 
                                                              )], string=u'Année', required="True", default=datetime.now().year)
     certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
-    declaration_interet = fields.Binary(string=u'Déclaration d\'intérêt')
+    certificate_ethics_filename = fields.Char(u'Cértificat de cours d\'éthique')
     checked_current_year = fields.Boolean(string='Check')
     
     b_edit = fields.Boolean(default=False)
 
+    #@api.onchange()
+    #def filename(self):
+    #    print self.certificate_ethics_filename
+    #    
     @api.multi
-    def write(self, vals):
-        declaration = self.verify_year_declaration()
-        if declaration == True:
-            #self.b_edit = True
-            vals['b_edit'] = True                  
-            super(hr_declaration_interest, self).write(vals)
-            return True
-        else : 
-            raise Warning(_(u'Vous avez déjà rempli le formulaire de déclaration cette année'))
-            return False
-        
+    def create(self, vals):
+        cours_ethique = super(hr_cours_ethique, self).create(vals)
+        document_vals = {'name': cours_ethique.certificate_ethics_filename,
+                         'db_datas': vals.get('certificate_ethics_file').encode('base64'),
+                         'datas_fname': False,
+                         'res_model': 'hr.employee',
+                         'res_id': cours_ethique.employee_id.id,
+                         'type': 'binary' }
+
+        self.env['ir.attachment'].create(document_vals)
+        return cours_ethique
+        #self.env['ir.attachment'].write({'res_model':'hr.employee','res_id':self.id})
+     
+    @api.multi
+    def write(self,vals):
+        cours_ethique = super(hr_cours_ethique, self).write(vals)
+        document_vals = {'name': cours_ethique.certificate_ethics_filename,
+                         'db_datas': vals.get('certificate_ethics_file').encode('base64'),
+                         'datas_fname': False,
+                         'res_model': 'hr.employee',
+                         'res_id': cours_ethique.employee_id.id,
+                         'type': 'binary' }
+
+        self.env['ir.attachment'].write(document_vals)
+        return cours_ethique
+    
     def verify_year_declaration(self):
         res = False
         for record in self:
@@ -362,11 +381,10 @@ class hr_declaration_interest(models.Model):
                         else: 
                             res = True
         return res
-
-class hr_cours_ethique(models.Model):
+class hr_declaration_interest(models.Model):
     
-    _name = "hr.cours.ethique"
-    _description = u"Cours d'éthique"
+    _name = "hr.declaration.interest"
+    _description = u"Declaration d'intérêt - Cours d'éthique"
     
     name = fields.Char(string=u'Nom', required=True)
     employee_id = fields.Many2one('hr.employee', string=u'Employé', readonly=True)
@@ -374,14 +392,46 @@ class hr_cours_ethique(models.Model):
     year =  fields.Selection([
                               (num, str(num)) for num in range(2010, (datetime.now().year)+1 
                                                              )], string=u'Année', required="True", default=datetime.now().year)
-    certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
+    declaration_interet = fields.Binary(string=u'Déclaration d\'interêt')
+    declaration_interet_filename = fields.Char(string=u'Déclaration d\'interêt')
     checked_current_year = fields.Boolean(string='Check')
     
     b_edit = fields.Boolean(default=False)
+      
+    @api.multi
+    def create(self, vals):
+        declaration_interest = super(hr_declaration_interest, self).create(vals)
+        document_vals = {'name': declaration_interest.declaration_interet_filename,
+                         'db_datas': vals.get('declaration_interet_file').encode('base64'),
+                         'datas_fname': False,
+                         'res_model': 'hr.employee',
+                         'res_id': declaration_interest.employee_id.id,
+                         'type': 'binary' }
 
+        self.env['ir.attachment'].create(document_vals)
+        return declaration_interest
+      
     @api.multi
     def write(self, vals):
-        declaration = self.verify_year_certificate_ethics()
+
+        declaration = self.verify_year_declaration()
+        if declaration == True:
+            #self.b_edit = True
+            vals['b_edit'] = True                  
+            declaration_interet=super(hr_declaration_interest, self).write(vals)
+            document_vals = {'name': declaration_interet.declaration_interet_filename,
+                             'db_datas': declaration_interet.declaration_interet_file.encode('base64'),
+                             'datas_fname': False,
+                             'res_model': 'hr.employee',
+                             'res_id': declaration_interet.employee_id.id,
+                             'type': 'binary' }
+    
+            self.env['ir.attachment'].write(document_vals)
+            return declaration_interet
+        else : 
+            raise Warning(_(u'Vous avez déjà rempli le formulaire de déclaration cette année'))
+            return False
+
         
     def verify_year_certificate_ethics(self):
         res = False

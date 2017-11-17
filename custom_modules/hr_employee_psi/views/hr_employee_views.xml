@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 	<data>
-		<!-- Form declaration - cours d'ethique -->
+		<!-- Form declaration -->
 		<record id="view_action_add_declaration" model="ir.ui.view">
 			<field name="name">hr.declaration.interest.form</field>
 			<field name="model">hr.declaration.interest</field>
 			<field name="arch" type="xml">
 				<form string="Declaration d'intérêt">
 					<div class="oe_title">
-                           <span for="name" class="oe_edit_only"/>
-                           <h1>
-                               <field name="name" placeholder="Nom du déclaration"/>
-                           </h1>
-                       </div>
-                       <group>
-                        <group>
-                            <field name="employee_id"/>
-                            <field name="b_edit" invisible="1"/>
-                        </group>
-                        <group>
-                            <field name="year"/>
-                            <field name="declaration_interet"/> 
-                        </group>
-                    </group>
-                    <footer attrs="{'invisible' : [('b_edit','=',True)]}">
-                       <button string='Sauvegarder' name="write" type="object" class="btn-primary"/>
-                       <button string="Annuler" class="btn-default" special="cancel"/>
-                    </footer>
+						<span for="name" class="oe_edit_only" />
+						<h1>
+							<field name="name" placeholder="Nom du déclaration" />
+						</h1>
+					</div>
+					<group>
+						<group>
+							<field name="employee_id" />
+							<field name="b_edit" invisible="1" />
+						</group>
+						<group>
+							<field name="year" />
+							<field name="declaration_interet_filename" invisible="1" />
+							<field name="declaration_interet" filename="declaration_interet_filename" />
+						</group>
+					</group>
 				</form>
 			</field>
 		</record>
-		
 		<!-- cours d'ethique -->
 		<record id="view_action_add_cours_ethique" model="ir.ui.view">
 			<field name="name">hr.cours.ethique.form</field>
@@ -38,29 +34,25 @@
 			<field name="arch" type="xml">
 				<form string="Cours d'étique">
 					<div class="oe_title">
-                           <span for="name" class="oe_edit_only"/>
-                           <h1>
-                               <field name="name" placeholder="Nom du cours d'éthique"/>
-                           </h1>
-                       </div>
-                       <group>
-                        <group>
-                            <field name="employee_id"/>
-                            <field name="b_edit" invisible="1"/>
-                        </group>
-                        <group>
-                            <field name="year"/>
-                            <field name="certificate_ethics_file"/> 
-                        </group>
-                    </group>
-                    <footer attrs="{'invisible' : [('b_edit','=',True)]}">
-                       <button string='Sauvegarder' name="write" type="object" class="btn-primary"/>
-                       <button string="Annuler" class="btn-default" special="cancel"/>
-                    </footer>
+						<span for="name" class="oe_edit_only" />
+						<h1>
+							<field name="name" placeholder="Nom du cours d'éthique" />
+						</h1>
+					</div>
+					<group>
+						<group>
+							<field name="employee_id" />
+							<field name="b_edit" invisible="1" />
+						</group>
+						<group>
+							<field name="year" />
+							<field name="certificate_ethics_filename" invisible="1" />
+							<field name="certificate_ethics_file" filename="certificate_ethics_filename" />
+						</group>
+					</group>
 				</form>
 			</field>
 		</record>
-		
 		<!-- Action add declaration -->
 		<record id="action_add_declaration" model="ir.actions.act_window">
 			<field name="name">Ajouter une déclaration d'intérêt</field>
@@ -81,32 +73,30 @@
 			<field name="target">new</field>
 			<field name="context">{'default_employee_id': active_id}</field>
 		</record>
-		
 		<record id="hr_hr_employee_view_form_psi" model="ir.ui.view">
 			<field name="name">hr.hr.employee.view.form.psi</field>
 			<field name="model">hr.employee</field>
 			<field name="inherit_id" ref="hr.view_employee_form" />
 			<field name="arch" type="xml">
-				
 				<notebook>
 					<page string="Pièces à fournir">
 						<group col="1">
 							<group col="2">
-								<field name="state" invisible="1"/>
+								<field name="state" invisible="1" />
 								<div style="margin:5px">
-									<field name="personal_information" nolabel="1"/>
+									<field name="personal_information" nolabel="1" />
 									<span>Fiche de renseignements personnels</span>
 								</div>
 								<div style="margin:5px">
-									<field name="id_photos" nolabel="1"/>
+									<field name="id_photos" nolabel="1" />
 									<span>Photo d'identité</span>
 								</div>
 								<div style="margin:5px">
-									<field name="certificate_residence" nolabel="1"/>
+									<field name="certificate_residence" nolabel="1" />
 									<span>Certificat de résidence</span>
 								</div>
 								<div style="margin:5px">
-									<field name="marriage_certificate" nolabel="1"/>
+									<field name="marriage_certificate" nolabel="1" />
 									<span>Acte de mariage ou copie de livret de famille</span>
 								</div>
 								<div style="margin:5px">
@@ -114,53 +104,57 @@
 									<span>CIN</span>
 								</div>
 								<div style="margin:5px">
-									<field name="work_certificate" nolabel="1"/>
+									<field name="work_certificate" nolabel="1" />
 									<span>Copies certificats de travail</span>
 								</div>
 								<div style="margin:5px">
-									<field name="qualifications" nolabel="1"/>
+									<field name="qualifications" nolabel="1" />
 									<span>Copies diplômes</span>
 								</div>
 								<div style="margin:5px">
-									<field name="criminal_records" nolabel="1"/>
+									<field name="criminal_records" nolabel="1" />
 									<span>Casier judiciaires</span>
 								</div>
 								<div style="margin:5px">
-									<field name="card_cnaps" nolabel="1"/>
+									<field name="card_cnaps" nolabel="1" />
 									<span>Copie carte CNaPS</span>
 								</div>
 								<div style="margin:5px">
-									<field name="birth_certificate_children" nolabel="1"/>
+									<field name="birth_certificate_children" nolabel="1" />
 									<span>Acte de naissance des enfants</span>
 								</div>
 							</group>
-							<br/>
+							<br />
 							<div>
+
 								<span><b>Déclaration d'interêt</b></span>
 								<field name="details_declaration_interet" string="Déclaration d'interêt">
+
 									<tree delete="false">
-										<field name="name"/>
+										<field name="name" />
 										<field name="date_add" />
 										<field name="year" />
-										<!-- <field name="checked_current_year" attrs="{'readonly':1}" onchange="checked_condition()"/> -->
+										<!-- <field name="checked_current_year" attrs="{'readonly':1}" 
+											onchange="checked_condition()"/> -->
 									</tree>
 								</field>
 							</div>
 							<div>
+
 								<span><b>Cours d'éthique</b></span>
 								<field name="details_cours_ethique" string="Cours d'étique">
 									<tree delete="false">
-										<field name="name"/>
+										<field name="name" />
 										<field name="date_add" />
 										<field name="year" />
 									</tree>
 								</field>
 							</div>
-						</group>						
+						</group>
 					</page>
 					<page string="Sanctions">
 						<group>
-							<field name="sanctions_data" nolabel="1" >
+							<field name="sanctions_data" nolabel="1">
 								<tree string="" editable="bottom">
 									<field name="sanction_date" />
 									<field name="sanction_type_id" />
@@ -181,41 +175,40 @@
 						</group>
 					</page>
 				</notebook>
-				
 				<xpath expr="//field[@name='country_id']/../../.." position="replace">
-					<page name="information_personnelle" string="Informations personnelles" groups="hr.group_hr_user">
-                       	<group col="2">
+					<page name="information_personnelle" string="Informations personnelles"
+						groups="hr.group_hr_user">
+						<group col="2">
 							<group string="Etat civil">
-		                         <field name="matricule"/>
-		                         <field name="name" string='Nom et prénom(s)'/>
-		                         <field name="birthday" string='Date de naissance'/>
-		                         <field name="place_of_birth" string='Lieu de naissance'/>
-		                         <field name="father_name" string='Nom du père'/>
-		                         <field name="mother_name" string='Nom de la mère'/>
-		                         <field name="information_cin_id" string='Information sur CIN'/>
-		                         <field name="passport_id" string='Numéro passeport'/>
-		                         <field name="conjoint_s_name" string="Nom du conjoint"/>
-		                         <field name="spouse_s_name" string="Nom de l'époux (se)"/>
-		                         <field name="sexe" string="Sexe"/>
-		                         <field name="marital" string="Situation matrimoniale"/>
-		                         <field name="children" string="Nombre d'enfant"/>
-		                     </group>
-		                     <group string="Informations de contact">
-		                         <field name="matricule" string='Adresse personnelle'/>
-		                         <field name="personal_phone" string='Téléphone portable personnel'/>
-		                         <field name="personal_fixed_phone" string='Téléphone fixe personnel'/>
-		                         <field name="emergency_contact_id" string="Personne à contacter d'urgence"/>
-		                         <field name="beneficiary_of_death_benefit_id" string="Bénéficiaire d'indemnité en cas de décès"/>
-		                     </group>
-		                     <group string="Autres informations">
-		                         <field name="bank_account_id" string='Numéro compte bancaire'/>
-		                         <field name="cnaps_number" string="Numéro CNaPS"/>
-		                         <field name="groupe_sanguin" string="Groupe sanguin"/>
-		                     </group>
-	                     </group>
-                     </page>
+								<field name="matricule" />
+								<field name="name" string='Nom et prénom(s)' />
+								<field name="birthday" string='Date de naissance' />
+								<field name="place_of_birth" string='Lieu de naissance' />
+								<field name="father_name" string='Nom du père' />
+								<field name="mother_name" string='Nom de la mère' />
+								<field name="information_cin_id" string='Information sur CIN' />
+								<field name="passport_id" string='Numéro passeport' />
+								<field name="conjoint_s_name" string="Nom du conjoint" />
+								<field name="spouse_s_name" string="Nom de l'époux (se)" />
+								<field name="sexe" string="Sexe" />
+								<field name="marital" string="Situation matrimoniale" />
+								<field name="children" string="Nombre d'enfant" />
+							</group>
+							<group string="Informations de contact">
+								<field name="matricule" string='Adresse personnelle' />
+								<field name="personal_phone" string='Téléphone portable personnel' />
+								<field name="personal_fixed_phone" string='Téléphone fixe personnel' />
+								<field name="emergency_contact_id" string="Personne à contacter d'urgence" />
+								<field name="beneficiary_of_death_benefit_id" string="Bénéficiaire d'indemnité en cas de décès" />
+							</group>
+							<group string="Autres informations">
+								<field name="bank_account_id" string='Numéro compte bancaire' />
+								<field name="cnaps_number" string="Numéro CNaPS" />
+								<field name="groupe_sanguin" string="Groupe sanguin" />
+							</group>
+						</group>
+					</page>
 				</xpath>
-				
 				<div name="button_box" position="inside">
 					<button name="action_get_attachment_tree_view" class="oe_stat_button"
 						icon="fa-book" type="object">
@@ -223,12 +216,12 @@
 							modifiers="{'readonly': true}" />
 					</button>
 				</div>
-
-
 				<!-- Collaborator close - READONLY -->
+
 				<xpath expr="/form " position="attributes">
 				     <attribute name="attrs">{'readonly': [('state','=','close')]}</attribute>
 				</xpath>
+
 				<field name='job_id' position="after">
 					<field name="psi_budget_code_distribution" />
 				</field>
@@ -237,7 +230,6 @@
 				</field>
 			</field>
 		</record>
-
 		<record id="hr_contract_type_view_form" model="ir.ui.view">
 			<field name="name">hr.contract.type.sanction.form</field>
 			<field name="model">hr.contract.type.sanction</field>
@@ -249,7 +241,6 @@
 				</form>
 			</field>
 		</record>
-
 		<record id="hr_contract_sanction_view_tree" model="ir.ui.view">
 			<field name="name">hr.contract.type.sanction.tree</field>
 			<field name="model">hr.contract.type.sanction</field>
@@ -259,7 +250,6 @@
 				</tree>
 			</field>
 		</record>
-
 		<!-- ACTIONS -->
 		<record id="action_hr_contract_type_sanction" model="ir.actions.act_window">
 			<field name="name">Liste des sanctions</field>
@@ -268,8 +258,6 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="hr_contract_sanction_view_tree" />
 		</record>
-
-
 		<record id="hr_contract_sanction_view_tree" model="ir.ui.view">
 			<field name="name">hr.contract.type.sanction.tree</field>
 			<field name="model">hr.contract.type.sanction</field>
@@ -279,7 +267,6 @@
 				</tree>
 			</field>
 		</record>
-
 		<!--Search in hr.employee -->
 		<record id="hr_employee_filter_inherit" model="ir.ui.view">
 			<field name="name">hr.employee.filter.inherit</field>
@@ -287,26 +274,23 @@
 			<field name="inherit_id" ref="hr.view_employee_filter" />
 			<field name="arch" type="xml">
 				<xpath expr="filter[@name='message_needaction']" position="after">
-					
-					<filter string="Profil non complet" domain="['|','|','|','|','|','|', ('personal_information','=',False),('id_photos','=',False),('certificate_residence','=',False),('marriage_certificate','=',False),
+					<filter string="Profil non complet"
+						domain="['|','|','|','|','|','|', ('personal_information','=',False),('id_photos','=',False),('certificate_residence','=',False),('marriage_certificate','=',False),
 ('cin','=',False),('work_certificate','=',False),('qualifications','=',False),('criminal_records','=',False),
 ('card_cnaps','=',False),('birth_certificate_children','=',False),('ethics_course_certificate','=',False)]" />
-					
-					<filter string="Profil complet" domain="['&amp;','&amp;','&amp;','&amp;','&amp;','&amp;', ('personal_information','=',True),('id_photos','=',True),('certificate_residence','=',True),('marriage_certificate','=',True),
+					<filter string="Profil complet"
+						domain="['&amp;','&amp;','&amp;','&amp;','&amp;','&amp;', ('personal_information','=',True),('id_photos','=',True),('certificate_residence','=',True),('marriage_certificate','=',True),
 ('cin','=',True),('work_certificate','=',True),('qualifications','=',True),('criminal_records','=',True),
 ('card_cnaps','=',True),('birth_certificate_children','=',True),('ethics_course_certificate','=',True)]" />
-				
 				</xpath>
 				<xpath expr="//field[@name='department_id']" position="after">
-						<filter string="CDD vs CDI" icon="terp-personal+" domain="[]"
-							context="{'group_by':'psi_contract_type'}" />
-						<filter string="Bailleur/Projet" icon="terp-personal+" domain="[]"
-						context="{'group_by':'psi_budget_code_distribution'}" />
+					<filter string="CDD vs CDI" icon="terp-personal+" domain="[]"
+						context="{'group_by':'psi_contract_type'}" />
+					<filter string="Bailleur/Projet" icon="terp-personal+"
+						domain="[]" context="{'group_by':'psi_budget_code_distribution'}" />
 				</xpath>
 			</field>
 		</record>
-		
-
 		<!-- MENUS -->
 		<menuitem id="hr_menu_contract_type_sanction" action="action_hr_contract_type_sanction"
 			parent="hr.menu_hr_root" sequence="4" />

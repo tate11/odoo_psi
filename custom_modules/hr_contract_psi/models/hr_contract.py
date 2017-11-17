@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import calendar
 from datetime import date, datetime
 from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, Warning
 
 
 class hr_contract(models.Model):
@@ -81,7 +82,7 @@ class hr_contract(models.Model):
                                 ], string="Sous Cat")
     
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
-
+    
     def action_report_certificat(self):
         date = fields.Date().today()
         psi_contract_historicals = self.env['psi.contract.historical'].search([('contract_id', '=', self.id)])
@@ -459,10 +460,24 @@ class hr_contract(models.Model):
 #        reprise processus
         print "reprise processus"
         for record in self:
+            
+            if self.job_id.psi_category.test_duration == 0:
+                raise Warning('La période d\'essai pour la catégorie "{}" n\'est pas encore définie.'.format(self.job_id.psi_category.psi_professional_category.upper()))
+            
             contract_obj = self.env['hr.contract']
             contract = contract_obj.browse([record.id])
+            
+            fin = datetime.strptime(contract.trial_date_end,"%Y-%m-%d")
+            if fin.weekday() == calendar.FRIDAY:
+                fin = fin + timedelta(days=3)
+            
+            new_date_start = fin
+            new_date_end = new_date_start + relativedelta(months=contract.job_id.psi_category.test_duration)
+            
             contract.update({
-                             'response_evaluation':'accept'
+                             'response_evaluation' : 'accept',
+                             'trial_date_start': new_date_start,
+                             'trial_date_end' : new_date_end,
             })
             
     def action_renew_trial_decline(self):
