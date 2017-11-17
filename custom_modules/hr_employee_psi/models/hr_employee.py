@@ -107,7 +107,7 @@ class hr_employee(models.Model):
                 if sanction.sanction_date != False:
                     s_date = datetime.strptime(sanction.sanction_date,"%Y-%m-%d")
                     if (today.year - s_date.year) * 12 + today.month - s_date.month >= period:
-                        sanction.write({'sanction_date_effacement' : today})
+                        sanction.unlink()
   
     @api.one
     @api.constrains('personal_information')   
@@ -291,7 +291,6 @@ class SanctionData(models.Model):
     sanction_type_id = fields.Many2one('hr.contract.type.sanction', string='Sanction')
     
     sanction_objet = fields.Char(string='Objet')
-    sanction_date_effacement = fields.Date(string=u'Date d\'éffacement', readonly=True)
     sanction_commentaire = fields.Text(string='Commentaires')
 
     employee_id = fields.Many2one('hr.employee')
