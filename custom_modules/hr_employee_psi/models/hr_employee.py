@@ -546,5 +546,5 @@ class HrDureePreavis(models.Model):
     name = fields.Char(string=u"Durée du préavis")
     anciennete = fields.Char(string=u"Ancienneté/groupe")
     categorie = fields.Char(string=u"Catégorie")
-    sous_cat = fields.Char(string=u"Sous catégorie")
+    sous_cat = fields.Char(string=u"Sous-catégorie")
     
