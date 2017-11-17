@@ -342,15 +342,14 @@
 		<field name="view_id" ref="hr_contract_birthday_view_calendar" />
 	</record>
 
-
 	<menuitem id="hr_menu_contract_psi_config" parent="hr.menu_hr_root"
-		sequence="6" name="PSI Configuration" />
-	<menuitem id="menu_contract_wage_grid" action="open_contract_wage_grid"
-		parent="hr_menu_contract_psi_config" sequence="5" />
-	<menuitem id="menu_contract_category" action="open_contract_category"
-		parent="hr_menu_contract_psi_config" sequence="11" />
-	<menuitem id="hr_menu_contract_rapport" parent="hr.menu_hr_root"
-		sequence="7" name="Rapports" />
-	<menuitem id="hr_menu_contract_rapport_anniversaire" action="action_hr_employee_reporting_birthday"
-		parent="hr_menu_contract_rapport" sequence="8" />
+	  sequence="6" name="PSI Configuration" />
+	 <menuitem id="menu_contract_wage_grid" action="open_contract_wage_grid"
+	  parent="hr_menu_contract_psi_config" sequence="5" />
+	 <menuitem id="menu_contract_category" action="open_contract_category"
+	  parent="hr_menu_contract_psi_config" sequence="11" />
+	 <menuitem id="hr_menu_contract_rapport" parent="hr.menu_hr_root"
+	  sequence="4" name="Rapports" />
+	 <menuitem id="hr_menu_contract_rapport_anniversaire" action="action_hr_employee_reporting_birthday"
+	  parent="hr_menu_contract_rapport" sequence="8" />
 </odoo>

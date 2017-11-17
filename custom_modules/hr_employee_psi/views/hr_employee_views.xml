@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 	<data>
+		<!-- Top menu item -->
+        <menuitem
+            id="hr.menu_hr_reporting_timesheet"
+            name="Reports"
+            parent="hr.menu_hr_root"
+            groups="hr.group_hr_manager,hr.group_hr_user"
+            sequence="2"/>
+            
+		<menuitem
+            id="hr.menu_open_view_employee_list_my"
+            action="hr.open_view_employee_list_my"
+            parent="hr.menu_hr_root"
+            sequence="1"/>
+            
+        <menuitem
+            id="hr.menu_human_resources_configuration"
+            name="Configuration"
+            parent="hr.menu_hr_root"
+            groups="hr.group_hr_manager"
+            sequence="101"/>
+            
+        <menuitem
+            action="hr.open_module_tree_department"
+            id="hr.menu_hr_department_tree"
+            parent="hr.menu_hr_root"
+            sequence="0"
+            groups="hr.group_hr_user"/>
+            
 		<!-- Form declaration -->
 		<record id="view_action_add_declaration" model="ir.ui.view">
 			<field name="name">hr.declaration.interest.form</field>
@@ -382,7 +410,7 @@
 		
 		<!-- MENUS -->
 		<menuitem id="hr_menu_contract_type_sanction_root"
-			parent="hr.menu_hr_root" sequence="4" name="Sanctions"/>
+			parent="hr.menu_hr_root" sequence="5" name="Sanctions"/>
 		<menuitem id="hr_menu_contract_type_sanction" action="action_hr_contract_type_sanction"
 			parent="hr_menu_contract_type_sanction_root" sequence="5" />
 		<menuitem id="hr_menu_contract_liste_employee_sanctione" action="action_hr_contract_list_sanction"
