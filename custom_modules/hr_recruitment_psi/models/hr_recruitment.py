@@ -421,11 +421,11 @@ class UniversityStudy(models.Model):
 class ProfessionalReference(models.Model):
     _name = "hr.recruitment.professional.reference"
     
-    name            = fields.Char(string="NOM ET PRENOM")
-    function_title  = fields.Char(string="TITRE ET FONCTION")
-    company         = fields.Char(string="SOCIETES")
-    mobile_phone    = fields.Char('Mobile')
-    work_email      = fields.Char('Email')
+    name            = fields.Char(string="Nom et prenom", required=True)
+    function_title  = fields.Char(string="Titre et fonction", required=True)
+    company         = fields.Char(string="Sociétés", required=True)
+    mobile_phone    = fields.Char('Mobile', required=True)
+    work_email      = fields.Char('Email', required=True)
     
     psi_applicant_id = fields.Many2one("hr.applicant")
 
@@ -437,14 +437,14 @@ class PreviousFunctions(models.Model):
     begin_date              = fields.Date()
     end_date                = fields.Date()
     last_basic_salary       = fields.Integer(string=u"Dérnier salaire de base")
-    title_function          = fields.Char(string="Titre et fonction")
-    employer                = fields.Char(string="Employeur")
+    title_function          = fields.Char(string="Titre et fonction", required=True)
+    employer                = fields.Char(string="Employeur", required=True)
     type_of_activity        = fields.Char(string=u"Type d'activité")
-    address                 = fields.Char(string="Adresse")
+    address                 = fields.Char(string="Adresse", required=True)
     name_of_supervisor      = fields.Char(string=u"Nom du supérieur hiérarchique")
     number_of_supervised    = fields.Char(string=u"Nombre de supervisé")
     reason_for_leaving      = fields.Char(string=u"Motif de votre départ")
-    mobile_phone            = fields.Char('Mobile')
+    mobile_phone            = fields.Char('Mobile', required=True)
     work_email              = fields.Char('Email')
     description             = fields.Text(string=u"Brève Déscriptions Des Tâches et Résponsabilités")
     

@@ -1,6 +1,20 @@
 <?xml version="1.0"?>
 <odoo>
   <data>
+    <!-- Lieu d'embauche -->
+ 	<record model="hr.recruitment.lieu.embauche" id="lieu_embauche_antananarivo">
+  		<field name="name">Antananarivo</field>
+  		<field name="embauche_id">1</field>
+  	</record>
+  	<record model="hr.recruitment.lieu.embauche" id="lieu_embauche_toamasina">
+  		<field name="name">Toamasina</field>
+  		<field name="embauche_id">2</field>
+  	</record>
+  	<record model="hr.recruitment.lieu.embauche" id="lieu_embauche_antsiranana">
+  		<field name="name">Antsiranana</field>
+  		<field name="embauche_id">3</field>
+  	</record>
+  	 
     <!-- etape candidature -->  
 	<record model="hr.recruitment.stage" id="applicant_selected">
         <field name="name">Candidatures sélectionnées</field>
