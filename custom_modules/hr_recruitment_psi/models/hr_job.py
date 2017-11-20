@@ -22,7 +22,7 @@ class hr_job(models.Model):
     tdr_file = fields.Many2one('ir.attachment',string='Termes de Références (TDR)')
     file = fields.Binary("your_file", model='tdr_file.datas')
     
-    name_of_claimant = fields.char(string=u"Nom du demandeur") 
+    name_of_claimant = fields.Char(string=u"Nom du demandeur") 
     list_of_demand = fields.Many2one('hr.applicant')
     
     no_of_recruitment = fields.Integer(string=u'Nombre de poste(s) à pouvoir', help=u'Nombre de poste(s) à pouvoir.')
