@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from datetime import date, datetime
-from datetime import timedelta
 from operator import truediv
 
 from dateutil.relativedelta import relativedelta
@@ -429,11 +428,11 @@ class UniversityStudy(models.Model):
     from_date       = fields.Date(string="De")
     end_date        = fields.Date(string="A")
     degree          = fields.Char(string=u"Diplômes/certificats obtenus")
-    study_domain    = fields.Char(string=u"Principal domaine d'étude") 
+    study_domain    = fields.Char(string=u"Principal domaine d'étude")
     
     psi_applicant_secondary_id = fields.Many2one("hr.applicant")
     psi_applicant_university_id = fields.Many2one("hr.applicant")
-   
+    
 class ProfessionalReference(models.Model):
     _name = "hr.recruitment.professional.reference"
     
@@ -463,3 +462,22 @@ class PreviousFunctions(models.Model):
     description             = fields.Text(string=u"Brève déscription des tâches et résponsabilités")
     
     psi_applicant_id = fields.Many2one("hr.applicant")
+    
+    duree = fields.Float(string=u"Durée", readonly=True)
+    
+    @api.model
+    def _compute_duree_experience(self):
+        date_from = datetime.strptime(self.begin_date,"%Y-%m-%d")
+        date_to = datetime.strptime(self.end_date,"%Y-%m-%d")
+        self.duree = (date_to.year - date_from.year) * 12 + date_to.month - date_from.month
+    
+    @api.onchange('end_date')     
+    def _change_date_from(self):
+        if self.begin_date:
+            self._compute_duree_experience()
+    
+    @api.onchange('begin_date')
+    def _change_date_to(self):
+        if self.end_date:
+            self._compute_duree_experience()    
+        

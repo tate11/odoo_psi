@@ -154,6 +154,7 @@
 							<field name="work_email" />
 							<field name="description" />
 							<field name="psi_applicant_id" invisible="1" />
+							<field name="duree"/>
 						</tree>
 					</field>
 					<label for="current_employer_report" />
