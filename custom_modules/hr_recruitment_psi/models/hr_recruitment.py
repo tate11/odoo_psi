@@ -133,30 +133,42 @@ class Applicant(models.Model):
         ('divorced', u'Divorcé(e)')
     ], string='Situation de famille')
     
-    number_of_dependent_children = fields.Integer(string="Nombre d'enfant à charge (moins de 21 ans)")
+    number_of_dependent_children = fields.Integer(string=u"Nombre d'enfant à charge (moins de 21 ans)")
     
-    parents_employed_in_psi = fields.Boolean(string='Avez-vous des parents employés au sein de PSI Madagascar ?')
+    parents_employed_in_psi = fields.Selection([
+        ('true', 'Oui'),
+        ('false', 'Non'),
+        ], string=u'Avez-vous des parents employés au sein de PSI Madagascar ?')
     
     parent_information_employees = fields.Many2many('hr.recruitement.parent.information', 'hr_recruitement_parent_information_id', string=u'Dans l\'affirmatif, donnez les renseignements suivants')
      
-    already_answered_application = fields.Boolean(string="Avez-vous déjà répondu à un appel à candidature de PSI ?")
+    already_answered_application = fields.Selection([
+        ('true', 'Oui'),
+        ('false', 'Non'),
+        ], string=u"Avez-vous déjà répondu à un appel à candidature de PSI ?")
     
     description_already_answered_application = fields.One2many('hr.recruitment.already.answered.applicant', 'hr_recruitment_already_answered_applicant_id',"Dans l'affirmatif, à quel moment ? Pour quel poste et à quelle période ?")
     
-    linguistic_knowledge = fields.One2many('hr.recruitment.linguistic.knowledge', 'psi_applicant_id',string="Connaissance linguistique")
+    linguistic_knowledge = fields.One2many('hr.recruitment.linguistic.knowledge', 'psi_applicant_id', string="")
     
-    book_publish = fields.Text(string="Indiquez les ouvrages importants que vous avez publiés (thèses, essai, etc...)")
+    book_publish = fields.Text(string=u"Indiquez les ouvrages importants que vous avez publiés (thèse(s), essai(s), etc.)")
     
     university_studies = fields.One2many('hr.recruitment.university.study','psi_applicant_university_id',string='')
     university_studies_degree = fields.Char(related="university_studies.degree")
     
     secondary_studies = fields.One2many('hr.recruitment.university.study','psi_applicant_secondary_id',string='')
     
-    current_employer_report = fields.Boolean(string='Accepteriez-vous que nous mettions en rapport avec votre employeur actuel ?')
+    current_employer_report = fields.Selection([
+        ('true', 'Oui'),
+        ('false', 'Non'),
+        ], string='Accepteriez-vous que nous mettions en rapport avec votre employeur actuel ?')
     
     professional_references = fields.One2many('hr.recruitment.professional.reference', 'psi_applicant_id', string='')
      
-    bridger_insight = fields.Boolean(string="")
+    bridger_insight = fields.Selection([
+        ('true', 'Oui'),
+        ('false', 'Non'),
+        ], string="")
     
     affirmative_bridger_insight = fields.Text(string=u"Dans l'affirmative, faites un résumé du (des) cas")
     
@@ -300,6 +312,7 @@ class Applicant(models.Model):
             'mark_so_as_sent': True,
         })
         self.write({'state':'notification_of_employment'})
+        
     @api.multi
     def button_notification_of_employment(self):
         '''
@@ -351,21 +364,21 @@ class Applicant(models.Model):
 class ParentInformationEmployed(models.Model):
       _name = 'hr.recruitement.parent.information'
       
-      name                      = fields.Char(string='NOM ET PRENOM')
+      name                      = fields.Char(string=u'Nom et prénom(s)')
       degree_of_relationship    = fields.Selection([
         ('enfant', 'Enfant'),
         ('famille', 'Famille'),
         ('conjoint', 'Conjoint')
-       ], string='DEGRE DE PARENTE')
-      post_office_title         = fields.Char(string="POSTE/TITRE/BUREAU")
+       ], string=u'Degré de parenté')
+      post_office_title         = fields.Char(string="Poste/Titre/Bureau")
       
       hr_recruitement_parent_information_id = fields.Many2one("hr.applicant")
       
 class AlreadyAnsweredApplicant(models.Model):
      _name = 'hr.recruitment.already.answered.applicant'
      
-     name           = fields.Char(string='POSTE')
-     period         = fields.Char(string='PERIODE')
+     name           = fields.Char(string='Poste')
+     period         = fields.Char(string=u'Période')
      
      hr_recruitment_already_answered_applicant_id = fields.Many2one("hr.applicant")
      
@@ -373,27 +386,29 @@ class LinguisticKnowledge(models.Model):
     _name = 'hr.recruitment.linguistic.knowledge'
     
     name       = fields.Selection([
-       
         ('malagasy', 'Malagasy'),
         ('french', 'Français'),
         ('english', 'Anglais')
-       ], string='CONNAISSANCE LINGUISTIQUE')
+       ], string='Connaissance linguistique')
+    
     written     = fields.Selection([
-         ('langue_maternelle', 'Langue maternelle'),                            
+        ('langue_maternelle', 'Langue maternelle'),                            
         ('basic', 'Basique'),
         ('intermediate', 'Intermédiaire'),
         ('good', 'Bon'),
         ('excellent', 'Excellent'),
         ('Current', 'Courant')
        ], string='Ecrit')
+    
     spoken      = fields.Selection([
-                                     ('langue_maternelle', 'Langue maternelle'),
+        ('langue_maternelle', 'Langue maternelle'),
         ('basic', 'Basique'),
         ('intermediate', 'Intermédiaire'),
         ('good', 'Bon'),
         ('excellent', 'Excellent'),
         ('Current', 'Courant')
        ], string=u'Parlé')
+    
     listen      = fields.Selection([
         ('langue_maternelle', 'Langue maternelle'),
         ('basic', 'Basique'),
@@ -408,13 +423,13 @@ class LinguisticKnowledge(models.Model):
 class UniversityStudy(models.Model):
     _name = "hr.recruitment.university.study"
     
-    name            = fields.Char(string="Nom de l'établissement")
+    name            = fields.Char(string=u"Nom de l'établissement")
     city            = fields.Char(string='Ville')
     country_id      = fields.Many2one('res.country', string=u'Nationalité (Pays)')
-    from_date       = fields.Date(string=u"Début")
-    end_date        = fields.Date(string="Fin")
+    from_date       = fields.Date(string="De")
+    end_date        = fields.Date(string="A")
     degree          = fields.Char(string=u"Diplômes/certificats obtenus")
-    study_domain    = fields.Char(string="Principal domaine d'étude") 
+    study_domain    = fields.Char(string=u"Principal domaine d'étude") 
     
     psi_applicant_secondary_id = fields.Many2one("hr.applicant")
     psi_applicant_university_id = fields.Many2one("hr.applicant")
@@ -422,21 +437,19 @@ class UniversityStudy(models.Model):
 class ProfessionalReference(models.Model):
     _name = "hr.recruitment.professional.reference"
     
-    name            = fields.Char(string="Nom et prenom", required=True)
+    name            = fields.Char(string=u"Nom et prénom(s)", required=True)
     function_title  = fields.Char(string="Titre et fonction", required=True)
-    company         = fields.Char(string="Sociétés", required=True)
+    company         = fields.Char(string=u"Sociétés", required=True)
     mobile_phone    = fields.Char('Mobile', required=True)
     work_email      = fields.Char('Email', required=True)
     
     psi_applicant_id = fields.Many2one("hr.applicant")
 
-
-   
 class PreviousFunctions(models.Model):
     _name = "hr.recruitment.previous.functions"
     
-    begin_date              = fields.Date()
-    end_date                = fields.Date()
+    begin_date              = fields.Date(string="De")
+    end_date                = fields.Date(string="A")
     last_basic_salary       = fields.Integer(string=u"Dérnier salaire de base")
     title_function          = fields.Char(string="Titre et fonction", required=True)
     employer                = fields.Char(string="Employeur", required=True)
@@ -447,6 +460,6 @@ class PreviousFunctions(models.Model):
     reason_for_leaving      = fields.Char(string=u"Motif de votre départ")
     mobile_phone            = fields.Char('Mobile', required=True)
     work_email              = fields.Char('Email')
-    description             = fields.Text(string=u"Brève Déscriptions Des Tâches et Résponsabilités")
+    description             = fields.Text(string=u"Brève déscription des tâches et résponsabilités")
     
     psi_applicant_id = fields.Many2one("hr.applicant")
