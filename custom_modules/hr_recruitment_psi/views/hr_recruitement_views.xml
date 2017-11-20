@@ -422,6 +422,10 @@
 			<field name="arch" type="xml">
 				<search string="Recherche">
 					<field name="recrutement_type_id" string="Type de recrutement" />
+					<filter name="recrutement_type_filter_permanent" string="Collaborateur permanent" icon="terp-personal+" domain="[('recrutement_type_id.recrutement_type', '=', 'collaborateur')]" />
+					<filter name="recrutement_type_filter_consultant" string="Consultant" icon="terp-personal+" domain="[('recrutement_type_id.recrutement_type', '=', 'consultant')]" />
+					<filter name="recrutement_type_filter_stagiaire" string="Stagiaire" icon="terp-personal+" domain="[('recrutement_type_id.recrutement_type', '=', 'stagiaire')]" />
+					<filter name="recrutement_type_filter_externe" string="Cabinet externe" icon="terp-personal+" domain="[('recrutement_type_id.recrutement_type', '=', 'collaborateur_externe')]" />
 					<field name="job_id" string="Job concerné" />
 					<field name="partner_name" string="Nom du candidat" />
 					<group expand="0" string="Group By...">
