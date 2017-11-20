@@ -47,7 +47,7 @@ class Applicant(models.Model):
     nature_recrutement_id = fields.Selection(related='job_id.nature_recrutement',string='Nature de recrutement')
     
     state = fields.Selection([
-        ('applicant_selected', u'Candidatures selectionnées'),
+        ('applicant_selected', u'Candidatures reçues'),
         ('convoked_for_test', u'1- Convoqués pour les tests'),
         ('interview', '2- Entretiens'),
         ('professional_reference', u'3- Références proféssionnelles'),
@@ -456,7 +456,7 @@ class PreviousFunctions(models.Model):
     type_of_activity        = fields.Char(string=u"Type d'activité")
     address                 = fields.Char(string="Adresse", required=True)
     name_of_supervisor      = fields.Char(string=u"Nom du supérieur hiérarchique")
-    number_of_supervised    = fields.Char(string=u"Nombre de supervisé")
+    number_of_supervised    = fields.Char(string=u"Nombre de personne(s) supervisée(s)")
     reason_for_leaving      = fields.Char(string=u"Motif de votre départ")
     mobile_phone            = fields.Char('Mobile', required=True)
     work_email              = fields.Char('Email')

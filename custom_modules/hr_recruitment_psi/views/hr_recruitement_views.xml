@@ -228,13 +228,13 @@
 					<!-- <label for="salary_proposed" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" /> -->
 					<div >
 					    <label for="salary_proposed" string="Salaire proposée" attrs="{'invisible': ['|', ('recrutement_type', '=', 'consultant'), ('recrutement_type', '=', 'stagiaire')]}"/>
-					    <label for="salary_proposed" string="Honoraire proposée" attrs="{'invisible': ['|', ('recrutement_type', '!=', 'consultant'), ('recrutement_type', '=', 'stagiaire')]}" />
+					    <label for="salary_proposed" string="Honoraire proposée" attrs="{'invisible': ['|', ('recrutement_type', '!=', 'consultant'), ('recrutement_type', '=', 'stagiaire')]}"/>
 					</div>
 				</xpath>
 			
 				<xpath expr="//field[@name='salary_proposed']" position='replace'>
 					<div>
-						<field name="salary_proposed" required="1" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')], 'required':[('state', 'in', ('psi_wage_proposal','honorary_proposal'))]}"/>
+						<field name="salary_proposed" required="1" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')], 'required':[('state', 'in', ('psi_wage_proposal','honorary_proposal'))]}" class="oe_inline"/>
 				    	<field name="devise_proposed" class="oe_inline"/>
 				    </div>
 				</xpath>
