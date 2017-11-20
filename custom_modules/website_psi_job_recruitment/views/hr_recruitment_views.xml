@@ -6,7 +6,53 @@
 		    					<script>
 				$(function () {
 					$('body').on('focusin', '.date_psi', function(e) {
-    					$(this).datepicker({ dateFormat: 'yy-mm-dd' });
+    					//$(this).datepicker({ dateFormat: 'yy-mm-dd' });
+    					
+    					var bindDatePicker = function() {
+		$(".date_psi").datetimepicker({
+        format:'DD/MM/YYYY',
+			icons: {
+				time: "fa fa-clock-o",
+				date: "fa fa-calendar",
+				up: "fa fa-arrow-up",
+				down: "fa fa-arrow-down"
+			}
+		}).find('input:first').on("blur",function () {
+			// check if the date is correct. We can accept dd-mm-yyyy and DD/MM/YYYY.
+			// update the format if it's DD/MM/YYYY
+			var date = parseDate($(this).val());
+
+			if (! isValidDate(date)) {
+				//create date based on momentjs (we have that)
+				date = moment().format('DD/MM/YYYY');
+			}
+
+			$(this).val(date);
+		});
+	}
+   
+   var isValidDate = function(value, format) {
+		format = format || false;
+		// lets parse the date to the best of our knowledge
+		if (format) {
+			value = parseDate(value);
+		}
+
+		var timestamp = Date.parse(value);
+
+		return isNaN(timestamp) == false;
+   }
+   
+   var parseDate = function(value) {
+		var m = value.match(/^(\d{1,2})(\/|-)?(\d{1,2})(\/|-)?(\d{4})$/);
+		if (m)
+			value = m[5] + '-' + ("00" + m[3]).slice(-2) + '-' + ("00" + m[1]).slice(-2);
+
+		return value;
+   }
+   
+   bindDatePicker();
+    					
 					});
 		
 							$('#div_already_answered_application').hide();
@@ -38,14 +84,20 @@
                     		
                 			}
             			});
-							
-							 $('#parents_employed_in_psi').click(function(e){
+						
+							 $('#parents_employed_in_psi_yes').click(function(e){
                					 if(this.checked){
+               					    
                     				$('#div_parent_information').show(50);
                     			
-                			}else{
-                			    $('#table_parent_information').html(
-											   '<tr><th>NOM ET PRENOM</th><th>DEGRE DE PARENTE</th><th>POSTE/TITRE/BUREAU</th></tr>'+
+                			   }
+            			     });
+            			  	
+            			  	$('#parents_employed_in_psi_no').click(function(e){
+               					 if(this.checked){
+               					    
+                    				 $('#table_parent_information').html(
+											   '<tr><th>Nom et Prénom</th><th>Degré de Parenté</th><th>Poste/Titre/Bureau</th></tr>'+
 											   '<tr><td>'+
 											   '<input type="text" class="form-control o_website_form_input" name="name_parent[]" required="1" /> '+
 											   '</td><td>'+
@@ -58,9 +110,10 @@
 									'<input type="text" class="form-control o_website_form_input" name="post_office_title[]" /> '+
 											   '</td></tr>');
                     			$('#div_parent_information').hide(50);
-                    		
-                			}
-            			});
+                    			
+                			   }
+            			     });
+            	
  		 
  		  $('#add_form_already_answered_application').click(function () {
             setTimeout(function () {
@@ -75,7 +128,7 @@
         
          $('#add_form_previous_functions').click(function () {
             setTimeout(function () {
-               $('#div_functions').append('<table class="table"> <tr> <th>De</th> <th>A</th> <th>Dernier salaire de base</th> <th>Titre et fonction</th> </tr> <tr> <td> <input type="text" class="form-control date_psi" name="begin_date[]"/> </td> <td> <input type="text" class="form-control date_psi" name="end_date[]"/> </td> <td> <input type="text"	name="last_basic_salary[]" class="form-control"/> </td> <td> <input type="text"	class="form-control" name="title_function[]" /> </td> </tr> </table> <table class="table"> <tr> <td> Employeur : <input type="text"  class="form-control" name="employer[]"/> </td> <td> Type d\'activité : <input type="text"  class="form-control" name="type_of_activity[]"/> </td> </tr> <tr> <td> Adresse : <input type="text"  name="address[]" class="form-control"/> </td> <td> Nom du supérieur hiérarchique : <input type="text"  name="name_of_supervisor[]" class="form-control"/> </td> </tr> </table> <table class="table"> <tr> <td> Téléphone : <input type="text"  name="mobile_phone[]" class="form-control"/> <br /> Email : <input type="text"  name="work_email[]" class="form-control"/> </td> <td> Nombre de supervisé : <input type="text"  name="number_of_supervised[]" class="form-control"/> </td> <td> Motif de votre départ : <input type="text"  name="reason_for_leaving[]" class="form-control"/> </td> </tr> </table> <p class="text-center">BREVE DESCRIPTION DES TACHES ET RESPONSABILITES</p> <textarea class="form-control" name="description[]"></textarea>');
+               $('#div_functions').append('<table class="table"> <tr> <th>de</th> <th>a</th> <th>Dernier salaire de base</th> <th>Titre et fonction</th> </tr> <tr> <td> <input type="text" class="form-control date_psi" name="begin_date[]"/> </td> <td> <input type="text" class="form-control date_psi" name="end_date[]"/> </td> <td> <input type="text"	name="last_basic_salary[]" class="form-control"/> </td> <td> <input type="text"	class="form-control" name="title_function[]" /> </td> </tr> </table> <table class="table"> <tr> <td> Employeur : <input type="text"  class="form-control" name="employer[]"/> </td> <td> Type d\'activité : <input type="text"  class="form-control" name="type_of_activity[]"/> </td> </tr> <tr> <td> Adresse : <input type="text"  name="address[]" class="form-control"/> </td> <td> Nom du supérieur hiérarchique : <input type="text"  name="name_of_supervisor[]" class="form-control"/> </td> </tr> </table> <table class="table"> <tr> <td> Téléphone : <input type="text"  name="mobile_phone[]" class="form-control"/> <br /> Email : <input type="text"  name="work_email[]" class="form-control"/> </td> <td> Nombre de personne(s) supervisée(s) : <input type="text"  name="number_of_supervised[]" class="form-control"/> </td> <td> Motif de votre départ : <input type="text"  name="reason_for_leaving[]" class="form-control"/> </td> </tr> </table> <p class="text-center">Brève description des tâches et responsabilités</p> <textarea class="form-control" name="description[]"></textarea>');
             }, 200);
         });
         
@@ -168,13 +221,21 @@
 			<form action="/website_form_apply/" method="post"
 				class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data"
 				data-model_name="hr.applicant" data-success_page="/page/website_hr_recruitment.thankyou">
-
+			
 				<input type="hidden" name="job_id"
 					class="form-control o_website_form_input" t-att-value="job.id" />
-
+				<div class="form-group form-field">
+					<div class="col-md-3 col-sm-4 text-right">
+						<label class="control-label" for="partner_name"> Nom du candidat *</label>
+					</div>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" class="form-control o_website_form_input"
+							name="partner_name" required="1"/>
+					</div>
+				</div>
 				<div class="form-group form-field o_website_form_required">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="name"> Sujet / candidat </label>
+						<label class="control-label" for="name"> Prénom </label>
 					</div>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" class="form-control o_website_form_input"
@@ -183,11 +244,24 @@
 				</div>
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="salary_expected"> Salaire demandé *</label>
+						<label class="control-label" for="salary_expected"> 
+							<span t-if="job.recrutement_type=='collaborateur'">Prétention salariale *</span>
+							<span t-if="job.recrutement_type=='collaborateur_externe'">Prétention salariale *</span>
+							<span t-if="job.recrutement_type=='consultant'">Prétention d'honoraire *</span>
+							<span t-if="job.recrutement_type=='stagiaire'">Indeminité *</span>
+						</label>
 					</div>
-					<div class="col-md-7 col-sm-8">
+					<div class="col-md-5 col-sm-8">
 						<input type="number" class="form-control o_website_form_input"
 							step="any" name="salary_expected" required="1" />
+					</div>
+					<div class="col-md-2 col-sm-8">
+						<select class="form-control">
+						<option value="Ar">Ariary</option>
+							<option value="dollar">Dollar</option>
+							<option value="euro">Euro</option>
+							
+						</select>
 					</div>
 				</div>
 				<div class="form-group form-field">
@@ -236,19 +310,11 @@
 						</div>
 					</div>
 				</div>
-				<div class="form-group form-field">
-					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="partner_name"> Nom du candidat *</label>
-					</div>
-					<div class="col-md-7 col-sm-8">
-						<input type="text" class="form-control o_website_form_input"
-							name="partner_name" required="1"/>
-					</div>
-				</div>
+				
 				<div class="form-group form-field">
 					<div class="col-md-3 col-sm-4 text-right">
 						<label class="control-label" for="psi_maiden_name"> Nom de jeune fille s'il y
-							a lieu
+							a lieu (femme marié)
 						</label>
 					</div>
 					<div class="col-md-7 col-sm-8">
@@ -369,14 +435,28 @@
 					</div>
 				</div>
 				<div class="form-group form-field">
-					<div class="col-md-3 col-sm-4 text-right">
+					<div class="col-md-7 col-sm-8 text-right">
 						<label class="control-label" for="parents_employed_in_psi"> Avez-vous des parents
 							employés au sein de PSI Madagascar ?
 						</label>
 					</div>
-					<div class="col-md-7 col-sm-8">
-						<input type="checkbox" value="Yes" class="o_website_form_input" id="parents_employed_in_psi"
-							name="parents_employed_in_psi" />
+					<div class="col-md-3 col-sm-4">
+						<div class="o_website_form_flex">
+							<div class="radio o_website_form_flex_item">
+								<label>
+									<input type="radio" class="o_website_form_input" id="parents_employed_in_psi_yes" name="parents_employed_in_psi" 
+										value="Yes" />
+									<span> Oui </span>
+								</label>
+							</div>
+							<div class="radio o_website_form_flex_item">
+								<label>
+									<input type="radio" class="o_website_form_input" id="parents_employed_in_psi_no" name="parents_employed_in_psi"
+										value="No"  />
+									<span> Non </span>
+								</label>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="form-group">
@@ -422,14 +502,28 @@
 					</div>
 				</div>
 				<div class="form-group form-field">
-					<div class="col-md-3 col-sm-4 text-right">
+					<div class="col-md-7 col-sm-8 text-right">
 						<label class="control-label" for="already_answered_application"> Avez-vous déjà répondu à
 							un appel à candidature de PSI ?
 						</label>
 					</div>
-					<div class="col-md-7 col-sm-8">
-						<input type="checkbox" value="Yes" class="o_website_form_input" id="already_answered_application"
-							name="already_answered_application" />
+					<div class="col-md-3 col-sm-4">
+						<div class="o_website_form_flex">
+							<div class="radio o_website_form_flex_item">
+								<label>
+									<input type="radio" class="o_website_form_input" id="already_answered_application_yes" name="already_answered_application" 
+										value="Yes" />
+									<span> Oui </span>
+								</label>
+							</div>
+							<div class="radio o_website_form_flex_item">
+								<label>
+									<input type="radio" class="o_website_form_input" id="already_answered_application_no" name="already_answered_application"
+										value="No"  />
+									<span> Non </span>
+								</label>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="form-group">
@@ -443,8 +537,8 @@
 					
 						<table id="table_already_answered_application">
 							<tr>
-								<th>POSTE</th>
-								<th>PERIODE</th>
+								<th>Poste</th>
+								<th>Periode</th>
 							</tr>
 							<tr>
 								<td>
@@ -469,11 +563,12 @@
 				
 				<div class="form-group">
 						<!-- Trigger the modal with a button -->
+						<h2>A. Connaissance linguistique</h2>
 					<div id="div_already_answered_application">	
-						<b>Veuillez choisir votre connaissance liguistique</b>
+						<b>Veuillez choisir votre connaissance linguistique</b>
 						<table id="table_already_answered_application" class="table">
 							<tr>
-								<th>CONNAISSANCE LINGUISTIQUE</th>
+								<th></th>
 								<th>Ecrit</th>
 								<th>Parlé</th>
 								<th>Ecoute</th>
@@ -600,8 +695,9 @@
 					   </div>	
 				</div>
 				<div class="form-group">
-					<b>Veuillez donner l'intitulé exact de chaque diplôme ou titre universitaire dans la langue dans laquelle il à été établi, et non une traduction ou un équivalent</b>
-				<h3>A. ETUDES UNIVERSITAIRES</h3>
+					
+				<h2>B. Etudes universitaires</h2>
+				<b>Veuillez donner l'intitulé exact de chaque diplôme ou titre universitaire dans la langue dans laquelle il à été établi, et non une traduction ou un équivalent.</b>
 				<table id="table_university_studies" class="table">
 					<tr>
 						<th>Nom de l'établissement</th>
@@ -629,6 +725,14 @@
 							 <input type="text" class="form-control date_psi" name="end_date_university[]" />
 						</td>
 						<td>
+						     <select name="degree_university[]">
+						     	<option value="DTS">DTS</option>
+						     		<option value="Licence">Licence</option>
+						     		<option value="Maîtrice">Maîtrise</option>
+						     		<option value="M1">M1</option>
+						     		<option value="M2">M2</option>
+						     		<option value="Doctorat">Doctorat</option>
+						       </select>
 							 <input type="text" class="form-control" name="degree_university[]" />
 						</td>
 						<td>
@@ -642,11 +746,11 @@
 							Ajouter
 				</button>
 				<br/> <br/>
-				<p><b>Indiquez les ouvrages importants que vous avez publiés (thèses, essai, etc...)</b></p>
+				<p><b>Indiquez les ouvrages importants que vous avez publiés (thèse(s), essai(s), etc.)</b></p>
 				<textarea class="form-control o_website_form_input" name="book_publish"/>
 				</div>
 				<div class="form-group">
-				<h2>B. Etudes secondaires, techniques ou apprentissage</h2>
+				<h2>C. Etudes secondaires, techniques ou apprentissage</h2>
 				<table id="table_secondary" class="table">
 					<tr>
 						<th>Nom de l'établissement</th>
@@ -690,69 +794,70 @@
 				</div>
 				
 				<div class="form-group">
-				<h3>FONCTIONS ANTERIEURES</h3>
+				<h2>D. Fonctions anterieures</h2>
 				<p>
 					<b>
 					En partant de votre poste actuel, indiquez, dans l'ordre chronologique inverse,
-					tous les postes que vous avez occupés (si les cases ne suffisent pas, en rajouter svp)
+					tous les postes que vous avez occupés.
 					</b>
 				</p>
 				<div id="div_previous_functions">
 				<table class="table">
 					<tr>
-						<th>De</th>
-						<th>A</th>
-						<th>Dernier salaire de base</th>
+						<th>de</th>
+						<th>a</th>
+						<th>Employeur</th>
 						<th>Titre et fonction</th>
 					</tr>
 					<tr>
 						<td>
-							<input type="text" class="form-control date_psi" name="begin_date[]" value="."/>
+							<input type="text" class="form-control date_psi" name="begin_date[]" value=""/>
 						</td>
 						<td>
-							<input type="text" class="form-control date_psi" name="end_date[]" value="."/>
+							<input type="text" class="form-control date_psi" name="end_date[]" value=""/>
 						</td>
 						<td>
-							<input type="text"	name="last_basic_salary[]" class="form-control" value="0"/>
+							<input type="text"  name="employer[]" class="form-control" value=""/>
 						</td>
 						<td>
-							<input type="text"	name="title_function[]"  class="form-control" value="."/>
+							<input type="text"	name="title_function[]"  class="form-control" value=""/>
 						</td>
 					</tr>
 				</table>
 				<table class="table">
 					<tr>
 						<td>
-							Employeur : <input type="text"  name="employer[]" class="form-control" value="."/>
+							
+							Dernier salaire de base : <input type="text"	name="last_basic_salary[]" class="form-control" />
 						</td>
 						<td>
-							Type d'activité : <input type="text"  name="type_of_activity[]" class="form-control" value="."/>
+							Type d'activité : <input type="text"  name="type_of_activity[]" class="form-control" value=""/>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							Adresse : <input type="text"   name="address[]" class="form-control" value="."/>
+							Adresse : <input type="text"   name="address[]" class="form-control" value=""/>
 						</td>
 						<td>
-							Nom du supérieur hiérarchique : <input type="text"  value="." name="name_of_supervisor[]" class="form-control"/>
+							Nom du supérieur hiérarchique : <input type="text"  value="" name="name_of_supervisor[]" class="form-control"/>
 						</td>
 					</tr>
 				</table>
 				<table class="table">
 					<tr>
 						<td>
-							Téléphone : <input type="text" value="." name="mobile_phone[]" class="form-control"/> <br />
-							Email : <input type="text"  value="." name="work_email[]" class="form-control"/>
+							Téléphone : <input type="text" value="" name="mobile_phone[]" class="form-control"/> <br />
+							Email : <input type="text"  value="" name="work_email[]" class="form-control"/>
 						</td>
 						<td>
-							Nombre de supervisé : <input value="." type="text"  name="number_of_supervised[]" class="form-control"/>
+							Nombre de personne(s) supervisée(s) : <input value="" type="text"  name="number_of_supervised[]" class="form-control"/>
 						</td>
 						<td>
-							Motif de votre départ : <input value="." type="text"  name="reason_for_leaving[]" class="form-control"/>
+							Motif de votre départ : <input value="" type="text"  name="reason_for_leaving[]" class="form-control"/>
 						</td>
 					</tr>
 				</table>
-				<p class="text-center">BREVE DESCRIPTION DES TACHES ET RESPONSABILITES</p>
+				<p class="text-center">Brève descriptions des tâches et responsabfilités</p>
 				<textarea class="form-control" name="description[]">.</textarea>
 			</div>
 			<div id="div_functions"></div>
@@ -765,25 +870,27 @@
 				
 				</div>
 				<div class="form-group form-field">
-					<div class="col-md-3 col-sm-4 text-right">
-						<label class="control-label" for="current_employer_report"> Accepteriez-vous que nous
-							mettions en rapport avec votre employeur actuel ?
+					
+					<div class="col-md-7 col-sm-8 text-right">
+					<input type="checkbox" value="Yes" class="o_website_form_input"
+							name="current_employer_report" />
+						<label class="control-label" for="current_employer_report"> Accepteriez-vous que nous mettions en rapport avec votre employeur actuel ?
 						</label>
 					</div>
-					<div class="col-md-7 col-sm-8">
-						<input type="checkbox" value="Yes" class="o_website_form_input"
-							name="current_employer_report" />
-					</div>
+				
 				</div>
                 <div class="form-group">
-                	<h3>REFERENCES PROFESSIONNELLES : </h3>
-                	<p>Donnez le nom et l'adresse des trois avec qui vous aviez travaillé étroitement, n'ayant avec vous aucun lien de parenté et connaissant votre moralité et vos valeurs professionnelles</p>
+                	<h2>E. Réferences professionnelles</h2>
+                	<p>
+                		Donnez le nom et l'adresse des trois personnes avec qui vous aviez travaillé étroitement, 
+                		n'ayant avec vous aucun lien de parenté et connaissant votre moralité et vos valeurs professionnelles.
+                	</p>
                 	<table id="table_ref" class="table">
                 		<tr>
-                			<th>NOM ET PRENOM</th>
-                			<th>TITRE ET FONCTION</th>
-                			<th>SOCIETES</th>
-                			<th>CONTACT</th>
+                			<th>Nom et Prénom</th>
+                			<th>Titre et Fonction</th>
+                			<th>Sociétés</th>
+                			<th>Contact</th>
                 		</tr>
                 		<tr>
                 			<td>
@@ -808,19 +915,20 @@
 							Ajouter
 				       </button>
 				       <p>
-				       		<b>Par la présente, j'autorise PSI Madagascar à prendre contact avec les personnes de références citées i-dessus.</b>
+				       		<b>
+				       			Par la présente, j'autorise PSI Madagascar à prendre contact avec les personnes de références citées ci-dessus.
+				       		</b>
 				       </p>
                 </div>
 				<div class="form-group form-field">
-				  
-					<div class="col-md-7 col-sm-4 text-right">
+				
+					<div class="col-md-8 col-sm-4 text-right">
+					<input type="checkbox" value="Yes" class="o_website_form_input"
+							name="bridger_insight" id="bridger_insight"/>
 					 Avez-vous jamais été arrêté, inculpé ou poursuivi au criminel ? Avez-vous jamais été reconnu coupable ou condamné à une autre amende ou une peine de prison pour un délit (autre qu'une infraction en matiére de circulation) ?
 						<label class="control-label" for="bridger_insight">  </label>
 					</div>
-					<div class="col-md-3 col-sm-8">
-						<input type="checkbox" value="Yes" class="o_website_form_input"
-							name="bridger_insight" id="bridger_insight"/>
-					</div>
+					
 				</div>
 				<div class="form-group form-field" id="has_bridger">
 					<div class="col-md-3 col-sm-4 text-right">
@@ -835,12 +943,23 @@
 				 <div class="form-group form-field">
           			<div class="col-md-3 col-sm-4 text-right">
             			<label class="control-label" for="attachment_file_ids">
-                   			 Pièces jointes
+                   			 Pièces jointes (.docx, .pdf)
                 		</label>
           			</div>
           			<div class="col-md-7 col-sm-8">
           			  	<input type="file" class="form-control o_website_form_input" name="attachment_file_ids" multiple="1" accept=".docx, .pdf"/>
           			</div>
+        		</div>
+        		<div class="form-group">
+        		     <div class="col-md-12">
+        		     	Je certifie que mes déclarations en réponse aux questions ci-dessus sont dans toute la mesure où je puis en être certain, vraies, complètes et exactes ; je prends note du fait que toute déclaration inexacte ou omission importante dans mes déclarations m’expose au licenciement ou au renvoi sans préavis, indépendamment des poursuites judiciaires qui pourraient être prise à mon encontre.
+        		     </div>
+        		     <div class="col-md-6">
+        		     	Date : <input type="text" class="form-control date_psi" name="date" value=""/>
+        		     </div>
+        		     <div class="col-md-6">
+        		     	Signature : <input type="text" class="form-control" name="signature" value=""/>
+        		     </div>
         		</div>
 				<div class="form-group">
 					<div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
@@ -850,6 +969,20 @@
 						<span id="o_website_form_result" class="text-danger ml8" />
 					</div>
 				</div>
+				
+				<div class="form-group">
+				
+					<p>
+					<b>Important</b> <br />
+					<i>
+						Vous serez invité à produire les copies des pièces établissant l'exactitude des déclarations qui précèdent.
+						N'envoyer cependant aucune pièce avant d'y avoir été invité(e) par PSI Madagscar.
+						La présentation des originaux vous seront demandés à des fins de contrôle de conformité lors du processus de recrutement.
+						Le non présentation des pièces demandées constituera un critère éliminatoire.
+						</i>
+					</p> 
+				</div>
+				
 			</form>
 		</xpath>
 	</template>
