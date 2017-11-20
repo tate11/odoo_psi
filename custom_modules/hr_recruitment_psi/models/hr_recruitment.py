@@ -109,7 +109,7 @@ class Applicant(models.Model):
         ('oui', 'Oui'),
         ('non', 'Non'),
         ('disqualifie', u'Disqualifié')
-    ], string='Profil')  
+    ], string='Correspondance au profil')
        
     psi_salary_type = fields.Selection([
         ('net', 'Net'),
