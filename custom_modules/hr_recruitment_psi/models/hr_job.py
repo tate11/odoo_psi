@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+
 from pychart.arrow import default
 
 from odoo import fields, models, api
@@ -62,7 +64,8 @@ class hr_job(models.Model):
     
     application_deadline_date = fields.Date(string=u"Date limite de candidature")
     date_of_demand = fields.Date(string=u"Date de la demande", help="Date de la demande du relance")
-    ref_of_demand = fields.Char(string=u"Référence de la demande")
+    ref_of_demand = fields.Char(compute="_compute_reference_demande", string=u"Référence de la demande")
+    num_demande = fields.Integer(string=u'num de demande')
     rr_approbation = fields.Boolean("Approbation par RR", default=True)
     tdr_add = fields.Boolean("TDR")
     psi_memo = fields.Boolean(u"Mémo", default=False)
@@ -89,6 +92,12 @@ class hr_job(models.Model):
         if vals.get('documents_count') == 0:
             raise Warning(u"Vous devez ajouter le fichier TDR.")
         return res
+    
+    @api.model
+    def _compute_reference_demande(self):
+        d = datetime.datetime.today()
+        for record in self:
+            record.ref_of_demand = 'R{:03d}'.format(record.num_demande +1) + "/" + '{:02d}'.format(d.month) + "/" + '{:02d}'.format(d.year)[2:]
     
     @api.one
     @api.constrains('psi_contract_duration')
