@@ -4,8 +4,10 @@ import datetime
 
 from pychart.arrow import default
 
+
 from odoo import fields, models, api, netsvc
 from odoo.exceptions import ValidationError, Warning
+from future.utils import native
 
 
 class hr_job(models.Model):
@@ -66,7 +68,7 @@ class hr_job(models.Model):
     date_of_demand = fields.Date(string=u"Date de la demande", help="Date de la demande du relance")
     ref_of_demand = fields.Char(compute="_compute_reference_demande", string=u"Référence de la demande")
     num_demande = fields.Integer(string=u'num de demande')
-    rr_approbation = fields.Boolean("Approbation par RR", default=True)
+    rr_approbation = fields.Boolean("Approbation par RR", default=False)
     tdr_add = fields.Boolean("TDR")
     psi_memo = fields.Boolean(u"Mémo", default=False)
     psi_date_start = fields.Date(string=u'Date de prise de fonction souhaitée', default=None)
@@ -93,6 +95,18 @@ class hr_job(models.Model):
             raise Warning(u"Vous devez ajouter le fichier TDR.")
         return res
     
+    def wkf_open_to_validation_finance(self):
+        if self.nature_recrutement != "interne":
+            self.write({'state':'validation_finance'})
+        else:
+            self.write({'state':'validation_finance','rr_approbation':False})
+    
+    def wkf_cond_open_to_validation_finance(self):
+        if self.tdr_add==False:
+            raise Warning('Vous devez cocher sur TDR et ajouter une pièce jointe corréspondante!')
+            return False
+        return True
+          
     @api.model
     def _compute_reference_demande(self):
         d = datetime.datetime.today()
@@ -118,6 +132,8 @@ class hr_job(models.Model):
     def _change_approbation_rr(self):
         if self.nature_recrutement == 'interne':
             self.rr_approbation = False
+        else:
+            self.rr_approbation = True
     
     @api.onchange('recrutement_type')
     def _change_recrutement_type_id(self):

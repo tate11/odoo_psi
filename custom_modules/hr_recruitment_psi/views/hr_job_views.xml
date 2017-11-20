@@ -32,7 +32,7 @@
 				<field name="psi_contract_duration" attrs="{'invisible': ['|',('psi_contract_type','=','cdi'),('psi_contract_type','=','prestataire')], 'required': [('psi_contract_type', '=', 'cdd')]}" />
 				<field name="rr_approbation" attrs="{'readonly': [('nature_recrutement', '=', 'interne')]}" />
 				<field name="psi_memo" attrs="{'invisible': [('nature_recrutement', '!=', 'conssideration_dossier')]}"/>
-				<field name="tdr_add" />
+				<field name="tdr_add" required="1"/>
 				<field name="psi_job_equipment" colspan="2">
 					<tree string="psi_job_equipment" editable="bottom">
 						<field name="equipment_id" />
