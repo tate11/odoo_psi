@@ -106,10 +106,6 @@
 			<xpath expr="//button[@name='set_open']" position="after">
 				<button name="button_relance" string="Relancer la demande" class="oe_highlight" 
 					attrs="{'invisible': [('state', '!=', 'recruit')]}"/>
-				<button name="remise_zero" string="Remise à zéro" class="oe_highlight" 
-					attrs="{'invisible': [('state', '!=', 'recruit')]}"/>
-				<button name="non" string="Nom" class="oe_highlight" 
-					attrs="{'invisible': [('state', '!=', 'recruit')]}"/>
 			</xpath>
 			
 			<xpath expr="//button[@name='set_open']" position="after">
