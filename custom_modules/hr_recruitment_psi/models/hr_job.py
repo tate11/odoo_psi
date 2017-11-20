@@ -4,7 +4,7 @@ import datetime
 
 from pychart.arrow import default
 
-from odoo import fields, models, api
+from odoo import fields, models, api, netsvc
 from odoo.exceptions import ValidationError, Warning
 
 

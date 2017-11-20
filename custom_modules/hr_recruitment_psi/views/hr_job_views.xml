@@ -17,10 +17,11 @@
 		<field name="arch" type="xml">
 			<field name="user_id" position="replace">
 				<field name="user_id" required="1" />
+				<field name="name_of_claimant" />
 			</field>
 			<field name="address_id" position="after">
-				<field name="ref_of_demand" attrs="{'invisible': [('state', '!=', 'recruit')]}"/>
-				<field name="date_of_demand" attrs="{'invisible': [('state', '!=', 'recruit')]}" required="1"/>
+				<field name="ref_of_demand" />
+				<field name="date_of_demand" required="1"/>
 				<field name="psi_motif" attrs="{'required': [('state', 'in', ('open'))]}"/>
 				<field name="nature_recrutement" required="1" /> <!-- attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': [('recrutement_type', '=', 'consultant')]}" -->
 				<field name="place_of_work" widget="many2many_tags"/>
@@ -50,7 +51,6 @@
 		<field name="inherit_id" ref="hr.view_hr_job_form" />
 		<field name="arch" type="xml">
 			<field name="department_id" position="after">
-				<field name="name_of_claimant" />
 				<field name="recrutement_type_id" />
 				<field name="recrutement_type" invisible="1" />
 				<field name="psi_category" required="1"/>
