@@ -289,11 +289,13 @@
 						attrs="{'invisible': [('state','!=','notification_of_employment')]}" />
 					<button name="button_internship_contract" string="Etablir Contrat de stagiaire"
 						attrs="{'invisible': [('state','!=','benefits')]}" />
+					<button name="action_archived" string="Déplacer dans candidatures reçues" type="object"
+						attrs="{'invisible': [('state','!=','archived')]}" />
 				</field>
 				<field name="stage_id" position="replace">
 					<field name="state" widget="statusbar"
 						attrs="{'invisible': [('active', '=', False)]}"
-						statusbar_visible="applicant_selected,convoked_for_test,interview,professional_reference,bridger_insight,psi_wage_proposal,notification_of_employment,contract_established" />
+						statusbar_visible="applicant_selected,convoked_for_test,interview,professional_reference,bridger_insight,psi_wage_proposal,notification_of_employment,contract_established,archived" />
 				</field>
 
 				<button name="archive_applicant" position="replace" type='object'>

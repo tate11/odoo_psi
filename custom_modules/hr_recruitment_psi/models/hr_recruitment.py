@@ -58,7 +58,8 @@ class Applicant(models.Model):
          ('internship_contract', u'7- Contrat de stage à faire'),
         ('contract_established', u'7- Contrat à faire'),
          ('contract_established_consultant', u'7- Contrat à faire'),
-         ('refused', '8- Refusé')
+         ('refused', '8- Refusé'),
+         ('archived', u'Candidatures archivées'),
     ], string='Status', readonly=True, required=True, track_visibility='onchange', copy=False, default='applicant_selected', help="Set whether the recruitment process is open or closed for this job position.")
      
 
@@ -179,7 +180,12 @@ class Applicant(models.Model):
    
     def action_briger_insight(self):
         self.write({'state':'bridger_insight','date_verification_bridger_insight': fields.Date().today()})
-   
+    
+    def action_archived(self):
+        '''
+        action à appeler lorsque un candidat est en candidatures archivées et le déplacer dans candidatures recues
+        '''
+        self.write({'state':'applicant_selected'})
    
     @api.multi
     def create_employee_from_applicant(self):
@@ -283,7 +289,7 @@ class Applicant(models.Model):
     @api.multi
     def mail_refuse_applicant(self):
         if self.id != False :
-            self.write({'state':'applicant_selected'})
+            self.write({'state':'archived'})
             template = self.env.ref('hr_recruitment_psi.custom_template_refus')
             msg_id = self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)
     
