@@ -367,7 +367,7 @@ class hr_holidays_psi(models.Model):
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
     ]
     
-    def datespan(self, start_date, end_date, delta=timedelta(days=1)):
+    def datespan(self, start_date, end_date, delta=datetime.timedelta(days=1)):
         current_date = start_date
         while current_date.date() <= end_date.date():
             yield current_date
