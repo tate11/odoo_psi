@@ -106,8 +106,7 @@ class hr_holidays_psi(models.Model):
     @api.model
     def create(self, values):
         self._verif_leave_date()
-        #got_droit = self.check_droit(values)
-        got_droit = True
+        got_droit = self.check_droit(values)
         if got_droit == False:
             raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
         else:
@@ -420,7 +419,7 @@ class hr_holidays_psi(models.Model):
                 
             elif contract.date_start != False :
                 print contract.employee_id.name
-                holidays_status = self.env['hr.holidays.status'].search([('color_name','=','violet')])
+                holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
                 values = {
                                     'name': contract.employee_id.name,
                                     'type': 'add',
@@ -471,7 +470,7 @@ class hr_holidays_psi(models.Model):
     @api.constrains('state', 'number_of_days_temp')
     def _check_holidays(self):
         holidays_status_formation = self.env['hr.holidays.status'].search([('color_name','=','lightpink')])
-        holidays_status_annuel = self.env['hr.holidays.status'].search([('color_name','=','violet')])
+        holidays_status_annuel = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
         for holiday in self:
             
             if holiday.holiday_type != 'employee' or holiday.type != 'remove' or not holiday.employee_id or holiday.holiday_status_id.limit:

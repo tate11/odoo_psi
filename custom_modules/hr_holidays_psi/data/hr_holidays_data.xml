@@ -7,7 +7,7 @@
 		</record>
 		<record model="hr.holidays.status" id="type_conge_annuel">
 			<field name="name">Absences pour conge annuel</field>
-			<field name="color_name">violet</field>
+			<field name="holidays_status_id_psi">2</field>
 		</record>
 		<record model="hr.holidays.status" id="type_maladie">
 			<field name="name">Congés maladies</field>
