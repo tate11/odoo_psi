@@ -565,7 +565,7 @@
 						<!-- Trigger the modal with a button -->
 						<h2>A. Connaissance linguistique</h2>
 					<div id="div_already_answered_application">	
-						<b>Veuillez choisir votre connaissance linguistique</b>
+						Veuillez choisir votre connaissance linguistique
 						<table id="table_already_answered_application" class="table">
 							<tr>
 								<th></th>
@@ -697,7 +697,7 @@
 				<div class="form-group">
 					
 				<h2>B. Etudes universitaires</h2>
-				<b>Veuillez donner l'intitulé exact de chaque diplôme ou titre universitaire dans la langue dans laquelle il à été établi, et non une traduction ou un équivalent.</b>
+				Veuillez donner l'intitulé exact de chaque diplôme ou titre universitaire dans la langue dans laquelle il à été établi, et non une traduction ou un équivalent.
 				<table id="table_university_studies" class="table">
 					<tr>
 						<th>Nom de l'établissement</th>
@@ -725,7 +725,7 @@
 							 <input type="text" class="form-control date_psi" name="end_date_university[]" />
 						</td>
 						<td>
-						     <select name="degree_university[]">
+						     <select name="degree_university[]" class="form-control">
 						     	<option value="DTS">DTS</option>
 						     		<option value="Licence">Licence</option>
 						     		<option value="Maîtrice">Maîtrise</option>
@@ -733,7 +733,6 @@
 						     		<option value="M2">M2</option>
 						     		<option value="Doctorat">Doctorat</option>
 						       </select>
-							 <input type="text" class="form-control" name="degree_university[]" />
 						</td>
 						<td>
 							<input type="text" class="form-control" name="study_domain_university[]" />
@@ -746,7 +745,7 @@
 							Ajouter
 				</button>
 				<br/> <br/>
-				<p><b>Indiquez les ouvrages importants que vous avez publiés (thèse(s), essai(s), etc.)</b></p>
+				<p>Indiquez les ouvrages importants que vous avez publiés (thèse(s), essai(s), etc.)</p>
 				<textarea class="form-control o_website_form_input" name="book_publish"/>
 				</div>
 				<div class="form-group">
@@ -796,18 +795,18 @@
 				<div class="form-group">
 				<h2>D. Fonctions anterieures</h2>
 				<p>
-					<b>
+					
 					En partant de votre poste actuel, indiquez, dans l'ordre chronologique inverse,
 					tous les postes que vous avez occupés.
-					</b>
+					
 				</p>
 				<div id="div_previous_functions">
 				<table class="table">
 					<tr>
 						<th>de</th>
 						<th>a</th>
-						<th>Employeur</th>
-						<th>Titre et fonction</th>
+						<th>Employeur *</th>
+						<th>Titre et fonction *</th>
 					</tr>
 					<tr>
 						<td>
@@ -836,7 +835,7 @@
 					</tr>
 					<tr>
 						<td>
-							Adresse : <input type="text"   name="address[]" class="form-control" value=""/>
+							Adresse * : <input type="text"   name="address[]" class="form-control" value=""/>
 						</td>
 						<td>
 							Nom du supérieur hiérarchique : <input type="text"  value="" name="name_of_supervisor[]" class="form-control"/>
@@ -846,7 +845,7 @@
 				<table class="table">
 					<tr>
 						<td>
-							Téléphone : <input type="text" value="" name="mobile_phone[]" class="form-control"/> <br />
+							Téléphone * : <input type="text" value="" name="mobile_phone[]" class="form-control"/> <br />
 							Email : <input type="text"  value="" name="work_email[]" class="form-control"/>
 						</td>
 						<td>
@@ -887,10 +886,10 @@
                 	</p>
                 	<table id="table_ref" class="table">
                 		<tr>
-                			<th>Nom et Prénom</th>
-                			<th>Titre et Fonction</th>
-                			<th>Sociétés</th>
-                			<th>Contact</th>
+                			<th>Nom et Prénom *</th>
+                			<th>Titre et Fonction *</th>
+                			<th>Sociétés *</th>
+                			<th>Contact *</th>
                 		</tr>
                 		<tr>
                 			<td>
@@ -903,9 +902,9 @@
                 				<input type="text" name="ref_company[]" class="form-control"/>
                 			</td>
                 			<td>
-                				Mobile : <input type="text" name="ref_mobile_phone[]" class="form-control"/> 
+                				Mobile * : <input type="text" name="ref_mobile_phone[]" class="form-control"/> 
                 			
-                				Email : <input type="text" name="ref_work_email[]" class="form-control"/>
+                				Email * : <input type="text" name="ref_work_email[]" class="form-control"/>
                 			</td>
                 		</tr>
                 	</table>
@@ -915,9 +914,9 @@
 							Ajouter
 				       </button>
 				       <p>
-				       		<b>
+				       		
 				       			Par la présente, j'autorise PSI Madagascar à prendre contact avec les personnes de références citées ci-dessus.
-				       		</b>
+				       		
 				       </p>
                 </div>
 				<div class="form-group form-field">
@@ -973,7 +972,7 @@
 				<div class="form-group">
 				
 					<p>
-					<b>Important</b> <br />
+					Important <br />
 					<i>
 						Vous serez invité à produire les copies des pièces établissant l'exactitude des déclarations qui précèdent.
 						N'envoyer cependant aucune pièce avant d'y avoir été invité(e) par PSI Madagscar.
