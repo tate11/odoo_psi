@@ -108,7 +108,8 @@ class hr_employee(models.Model):
     @api.model
     def create(self, vals):
         if vals.has_key('nombre_conge')  :
-            self.set_nombre_conge(vals.get('nombre_conge'))
+            if vals.get('nombre_conge') != 0.0 :
+                self.set_nombre_conge(vals.get('nombre_conge'))
         employee = super(hr_employee, self).create(vals)
         return employee
     

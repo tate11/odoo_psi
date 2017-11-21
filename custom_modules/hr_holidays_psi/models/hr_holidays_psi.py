@@ -9,6 +9,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, AccessError, Warning
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.tools import float_compare
+from addons.google_calendar.models.res_users import User
 
 
 HOURS_PER_DAY = 8
@@ -66,16 +67,24 @@ class hr_holidays_psi(models.Model):
     @api.constrains('number_of_days_temp')
     def _verif_leave_date(self):
         print "_verif_leave_date"
+        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
+        year_now = datetime.datetime.today().year
         holidays = self.env["hr.holidays"].search([('employee_id','=',self.employee_id.name)])
-#        holiday.holiday_status_id.max_leaves = 10
-#        if count holiday.id_psi_holidays_status remaining_leaves > 10 > erreur
+        number_days = 0
+        for holiday in holidays :
+            write_date = datetime.datetime.strptime(holiday.write_date,"%Y-%m-%d %H:%M:%S")
+            write_date_year = write_date.year
+            if write_date_year == year_now and holidays.holiday_status_id.id == holidays_status[0].id:
+                number_days += holiday.number_of_days
+        if number_days > 10 :
+            raise UserError(u"Vous avez depassé le nombre de jours maximum de permission.")
         for record in self:
             get_day_difference = record.number_of_days_temp
             type_permissions = self.env['hr.holidays.type.permission'].search([])            
             for permissions in type_permissions:
                 if self.holiday_type_permission.id == permissions.id:
                     if get_day_difference > permissions.number_of_day:
-                        raise Warning(_(u"Vous avez depassé le nombre de jours permi pour ce type de permission."))
+                        raise UserError(u"Vous avez depassé le nombre de jours permi pour ce type de permission.")
             
 
     
@@ -142,8 +151,12 @@ class hr_holidays_psi(models.Model):
     def action_approve(self):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
+        
+        print "self.env.user.id ",self.env.user.id
+        print "self.employee_id.coach_id.user_id.id ", self.employee_id.coach_id.user_id.id
+        
+        if self.env.user.id != self.employee_id.coach_id.user_id.id:
+            raise AccessError(u'Vous n\'avez pas le droit de valider cette demande sauf le supérieur hiérarchique.')
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
@@ -161,9 +174,9 @@ class hr_holidays_psi(models.Model):
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
-            if holiday.state != 'validate1':
+            if holiday.state != 'approbation':
                 raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
-        return holiday.write({'state': 'approbation', 'manager_id': manager.id if manager else False})
+        return holiday.write({'state': 'validate2', 'manager_id': manager.id if manager else False})
     
     @api.multi
     def action_approbation_departement(self):
@@ -174,9 +187,9 @@ class hr_holidays_psi(models.Model):
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
-            if holiday.state != 'approbation':
+            if holiday.state != 'validate1':
                 raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
-        return holiday.write({'state': 'validate2', 'manager_id': manager.id if manager else False})
+        return holiday.write({'state': 'approbation', 'manager_id': manager.id if manager else False})
 
     @api.multi
     def _get_attachment_number(self):
@@ -290,10 +303,10 @@ class hr_holidays_psi(models.Model):
                     for timestamp in self.datespan(time_from, time_to):
                         company = employee.company_id
                         date = timestamp.date()
-                        hours = company.hours_per_day
+                        hours = HOURS_PER_DAY
                         
-                        self.create_leave_analytic_line(
-                                holiday, employee, date, hours)
+                        #self.create_leave_analytic_line(
+                        #        holiday, employee, date, hours)
                  
                 #Add the partner_id (if exist) as an attendee
                 if holiday.user_id and holiday.user_id.partner_id :
@@ -463,7 +476,7 @@ class hr_holidays_psi(models.Model):
             
     @api.constrains('state', 'number_of_days_temp')
     def _check_holidays(self):
-        print "_verif_leave_date"
+        print "_check_holidays"
         holidays_status_formation = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',5)])
         holidays_status_annuel = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
         for holiday in self:

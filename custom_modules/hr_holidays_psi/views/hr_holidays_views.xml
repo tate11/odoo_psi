@@ -60,16 +60,16 @@
 				groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha"/>
 			</xpath>
 			<xpath expr="//button[@name='action_validate']" position='replace'>
-				<button string="Valider (DRHA)" name="action_validate" states="validate2" type="object" groups="hr_holidays_psi.group_hr_holidays_drha" class="oe_highlight"/>
+				<button string="Valider (DRHA)" name="action_validate" states="validate2"  type="object" class="oe_highlight"/>
 			</xpath>
 			<xpath expr="//button[@name='action_approve']" position='after'>
-				<button string="Approbation (Chef de departement)" name="action_approbation_departement" attrs="{'invisible': [('state','not in','approbation')]}" groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa" states="approbation" type="object" class="oe_highlight" />
+				<button string="Approbation (Chef de departement)" name="action_approbation_departement" attrs="{'invisible': [('state','not in','validate1')]}"  type="object" class="oe_highlight" />
 			</xpath>
 			<xpath expr="//button[@name='action_approve']" position='replace'>
-				<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" class="oe_highlight" />
+				<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" class="oe_highlight"  />
 			</xpath>
 			<field name="state" position="before">
-			    <button string="Valider (Responsable RH)" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','validate1')]}" states="validate1" type="object" groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa" class="oe_highlight"/>
+			    <button string="Valider (Responsable RH)" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','approbation')]}"  type="object" class="oe_highlight"/>
 			</field>
 			
 			<field name="state" position="replace">
