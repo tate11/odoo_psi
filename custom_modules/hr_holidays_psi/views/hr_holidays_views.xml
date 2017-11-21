@@ -56,6 +56,9 @@
 			<xpath expr="//button[@name='action_validate']" position='replace'>
 				<button string="Valider (DRHA)" name="action_validate" states="validate2" type="object" groups="hr_holidays_psi.group_hr_holidays_drha" class="oe_highlight"/>
 			</xpath>
+			<xpath expr="//button[@name='action_approve']" position='after'>
+				<button string="Approbation (Chef de departement)" name="action_approbation_departement" attrs="{'invisible': [('state','not in','approbation')]}" groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa" states="approbation" type="object" class="oe_highlight" />
+			</xpath>
 			<xpath expr="//button[@name='action_approve']" position='replace'>
 				<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" class="oe_highlight" />
 			</xpath>
@@ -64,7 +67,7 @@
 			</field>
 			
 			<field name="state" position="replace">
-				<field name="state" widget="statusbar" statusbar_visible="draft,confirm, validate1, validate2, validate"/>
+				<field name="state" widget="statusbar" statusbar_visible="draft,confirm, validate1, approbation,validate2, validate"/>
       </field>
 
 		</field>
