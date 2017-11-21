@@ -25,6 +25,7 @@ class hr_holidays_type_psi(models.Model):
     
     type_permission = fields.Many2one('hr.holidays.type.permission', string="Type de permission")
     holidays_status_id_psi = fields.Integer(string=u"id type de congé psi")
+    limit = fields.Boolean(string=u'Dépassement de limite autorisé ', readonly=True)
     
 class hr_holidays_type_permission(models.Model):
     
