@@ -81,6 +81,7 @@ class hr_employee(models.Model):
     #psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution", store=True)
     psi_budget_code_distribution= fields.Many2many('psi.code.budgetaire',string='Code Budgétaire')
     
+    nombre_conge = fields.Float(string='Nombre de congés')
 
     psi_contract_type = fields.Selection([
         ('cdd', 'CDD'),
@@ -106,14 +107,32 @@ class hr_employee(models.Model):
     
     @api.model
     def create(self, vals):
+        if vals.has_key('nombre_conge')  :
+            self.set_nombre_conge(vals.get('nombre_conge'))
         employee = super(hr_employee, self).create(vals)
         return employee
     
     @api.multi
     def write(self, vals):
+        if vals.has_key('nombre_conge')  :
+            self.set_nombre_conge(vals.get('nombre_conge'))
         employee = super(hr_employee, self).write(vals)
         return employee
     
+    def set_nombre_conge(self, nombre_conge):
+       
+            holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
+            values = {
+                'name': self.name,
+                'type': 'add',
+                'state': 'validate',
+                'holiday_type': 'employee',
+                'holiday_status_id': holidays_status[0].id,
+                'number_of_days_temp': nombre_conge,
+                'employee_id': self.id
+            }
+            self.env['hr.holidays'].create(values)
+            
     # fonction remove sanction after period MONTHS
     def _remove_sanction_data(self, period): #period en mois
         employee_obj = self.env["hr.employee"]
@@ -391,6 +410,8 @@ class hr_cours_ethique(models.Model):
     #def filename(self):
     #    print self.certificate_ethics_filename
     #    
+    
+    
     @api.multi
     def create(self, vals):
         this_year=datetime.now().strftime("%Y")

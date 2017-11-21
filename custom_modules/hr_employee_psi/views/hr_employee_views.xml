@@ -106,6 +106,7 @@
 			<field name="model">hr.employee</field>
 			<field name="inherit_id" ref="hr.view_employee_form" />
 			<field name="arch" type="xml">
+			 	
 				<notebook>
 					<page string="Pièces à fournir">
 						<group col="1">
