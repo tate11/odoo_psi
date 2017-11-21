@@ -2,8 +2,14 @@
 <odoo>
 	<data>
 	
-   		<!-- Search Filter in HrHolidays -->
-		<record id="hr_holidays_filter_inherit" model="ir.ui.view">
+	<menuitem
+            id="menu_hr_holidays_config_psi"
+            name="Configuration PSI"
+            parent="hr_holidays.menu_hr_holidays_root"
+            sequence="5"/>
+            
+   	<!-- Search Filter in HrHolidays -->
+	<record id="hr_holidays_filter_inherit" model="ir.ui.view">
 			<field name="name">hr.holidays.filter.inherit</field>
 			<field name="model">hr.holidays</field>
 			<field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter" />
@@ -15,7 +21,7 @@
 						/>				
 				</xpath>
 			</field>
-		</record>
+	</record>
 
 	<record id="edit_holiday_new_psi_inherit" model="ir.ui.view">
 		<field name="name">edit.holiday.new.psi.inherit</field>
@@ -95,5 +101,28 @@
 			</xpath>
 		</field>
 	</record>
+	
+	<!-- Hide menu approve -->
+	<record id="make_invisible" model="res.groups">
+	    <field name="name">Invisible</field>
+	 </record>
+	 <record model="ir.ui.menu" id="hr_holidays.menu_open_allocation_holidays">
+	    <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+	</record>
+	 <record model="ir.ui.menu" id="hr_holidays.menu_open_department_leave_allocation_approve">
+	    <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+	</record>
+	 <record model="ir.ui.menu" id="hr_holidays.menu_open_department_leave_approve">
+	    <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+	</record>
+	
+  	<menuitem
+            id="menu_hr_holidays_approvals"
+            name="Congés à valider"
+            parent="hr_holidays.menu_hr_holidays_root"
+            sequence="3"
+            action="hr_holidays.open_department_holidays_approve"
+            groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"/>      
+            
 	</data>
 </odoo>
