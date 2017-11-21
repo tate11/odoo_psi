@@ -103,10 +103,15 @@ class hr_holidays_psi(models.Model):
         
     @api.model
     def create(self, values):
-        self._verif_leave_date()
-        got_droit = self.check_droit(values)
-        if got_droit == False:
-            raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
+        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
+        if self.holiday_status_id.id != holidays_status[0].id :
+            self._verif_leave_date()
+            got_droit = self.check_droit(values)
+            if got_droit == False:
+                raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
+            else:
+                holidays = super(hr_holidays_psi, self).create(values)
+                return holidays
         else:
             holidays = super(hr_holidays_psi, self).create(values)
             return holidays
@@ -213,31 +218,22 @@ class hr_holidays_psi(models.Model):
        print "_check_date_from"
        
        for record in self :
-           if record.date_from != False:
+           if record.date_from != False: 
+               if record.holiday_status_id.holidays_status_id_psi  == 3:
+                   config = self.env['hr.holidays.configuration'].search([])[0]
+                   if record.number_of_days_temp > config.conges_sans_solde :
+                      raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
+                  
                date_from_time = datetime.datetime.strptime(record.date_from,"%Y-%m-%d %H:%M:%S")
-               #date_from = date_from_time.date()
                date_now = datetime.datetime.strptime(fields.Date().today(),"%Y-%m-%d")
-
                between = date_from_time - date_now
-               #between_month = date_now.month - date_from.month
-               
-               if between.days < 0: #(between_month == 1 and date_from.day >= 3) or between_month < 1:
+               if between.days < 0: 
                    raise ValidationError(u"La date de début du congé n'est pas valide.")
                
                holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
                if record.holiday_status_id.id != holidays_status[0].id: # a part maladie
                    if between.days >= 0 and between.days < 3 :
                        raise ValidationError(u"Vous devez faire une demande de congés au moins 3 jours avant votre départ pour congé.")
-     
-    @api.constrains('date_from')
-    def _check_date_from_conge_sans_solde(self):
-       print "_check_date_from 2"
-       for record in self :
-           if record.date_from != False and record.holiday_status_id.holidays_status_id_psi == 3:
-               config = self.env['hr.holidays.configuration'].search([])[0]
-               
-               if record.number_of_days_temp > config.conges_sans_solde :
-                  raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
 
 
     @api.multi
@@ -443,7 +439,8 @@ class hr_holidays_psi(models.Model):
             date_to_notif = date_y_m_d + relativedelta(hours=48)   
             if self.id != False :
                 for record in self:
-                    if record.holiday_status_id.color_name == 'blue':
+                    holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
+                    if record.holiday_status_id.id == holidays_status[0].id:
                         #if not record.justificatif_file:
                         if self.attachment_number == 0 and date_to_notif.date() == datetime.today().date() :
                             template = self.env.ref('hr_holidays_psi.custom_template_rappel_justificatif_conge_maladie')
