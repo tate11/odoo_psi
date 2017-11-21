@@ -17,7 +17,7 @@
   	 
     <!-- etape candidature -->  
 	<record model="hr.recruitment.stage" id="applicant_selected">
-        <field name="name">Candidatures sélectionnées</field>
+        <field name="name">Candidatures reçues</field>
         <field name="sequence">1</field>
 		<field name="stage">applicant_selected</field>
     </record>

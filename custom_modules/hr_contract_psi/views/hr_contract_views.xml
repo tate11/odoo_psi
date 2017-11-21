@@ -84,7 +84,6 @@
 				<field name="indetermine" class="oe_inline" attrs="{'invisible': [('psi_contract_type','=','cdd')]}" />
 			</field>
  -->
-			<xpath expr="//notebook" position="inside" />
 			<notebook>
 				<page string="Séparation" attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}">
 					<group>

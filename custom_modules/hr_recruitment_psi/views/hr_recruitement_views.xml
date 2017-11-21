@@ -70,12 +70,12 @@
 				<field name="description" position="before">
 					<div>
 						<label for="parents_employed_in_psi" />
-						<field name="parents_employed_in_psi" />
+						<field name="parents_employed_in_psi" class="oe_inline" />
 					</div>
-					<p attrs="{'invisible': [('parents_employed_in_psi', '=', False)]}">Dans l'affirmatif, donnez les renseignements suivants:
+					<p attrs="{'invisible': [('parents_employed_in_psi', '!=', 'true')]}">Dans l'affirmatif, donnez les renseignements suivants:
 					</p>
 					<field name="parent_information_employees" colspan="2"
-						attrs="{'invisible': [('parents_employed_in_psi', '=', False)]}">
+						attrs="{'invisible': [('parents_employed_in_psi', '!=', 'true')]}">
 						<tree string="Experience requise" editable="bottom">
 							<field name="name" />
 							<field name="degree_of_relationship" />
@@ -84,14 +84,14 @@
 					</field>
 					<div>
 						<label for="already_answered_application" />
-						<field name="already_answered_application" />
+						<field name="already_answered_application" class="oe_inline" />
 					</div>
-					<p attrs="{'invisible': [('already_answered_application', '=', False)]}">
+					<p attrs="{'invisible': [('already_answered_application', '!=', 'true')]}">
 						Dans l'affirmatif, à quel moment ? Pour quel poste et à
 						quelle période ?:
 					</p>
 					<field name="description_already_answered_application"
-						attrs="{'invisible': [('already_answered_application', '=', False)]}">
+						attrs="{'invisible': [('already_answered_application', '!=', 'true')]}">
 						<tree string="" editable="bottom">
 							<field name="name" />
 							<field name="period" />
@@ -110,7 +110,7 @@
 						universitaire dans la langue dans laquelle il a été établi, et non
 						une traduction ou un équivalent.
 					</p>
-					<h2>A. Etudes Universitaires</h2>
+					<h2>Etudes Universitaires</h2>
 					<field name="university_studies">
 						<tree string="" editable="bottom">
 							<field name="name" />
@@ -122,7 +122,7 @@
 							<field name="study_domain" />
 						</tree>
 					</field>
-					<h2>B. Etudes secondaires, techniques ou apprentissage</h2>
+					<h2>Etudes secondaires, techniques ou apprentissage</h2>
 					<field name="secondary_studies">
 						<tree string="" editable="bottom">
 							<field name="name" />
@@ -154,10 +154,11 @@
 							<field name="work_email" />
 							<field name="description" />
 							<field name="psi_applicant_id" invisible="1" />
+							<field name="duree"/>
 						</tree>
 					</field>
 					<label for="current_employer_report" />
-					<field name="current_employer_report" />
+					<field name="current_employer_report" class="oe_inline"/>
 					<h2>REFERENCES PROFESSIONNELLES</h2>
 					<p>
 						Donnez le nom et l'adresse des trois personnes avec qui vous
@@ -175,21 +176,25 @@
 							<field name="work_email" />
 						</tree>
 					</field>
-					<b attrs="{'invisible': [('current_employer_report', '=', False)]}">
+					<b>
 						Par la présente, j'autorise PSI Madagascar à prendre
 						contact avec le personnes
 						de références citées ci-dessus.
 					</b>
-					<p>
-						Avez-vous jamais été arrêté, inculpé ou poursuivi au criminel ? Avez-vous
-						jamais été reconnu coupable ou condamné à une autre amende ou une
-						peine de prison pour un délit (autre qu'une infraction en matiére
-						de circulation) ?
-					</p>
-					<field name="bridger_insight"></field>
-					<br />
-					<label for="affirmative_bridger_insight"></label>
-					<field name="affirmative_bridger_insight"></field>
+					<span><br/><br/></span>
+					<div>
+						<label for="bridger_insight" string="Avez-vous jamais été arrêté, inculpé ou poursuivi au criminel ? Avez-vous
+							jamais été reconnu coupable ou condamné à une autre amende ou une
+							peine de prison pour un délit (autre qu'une infraction en matiére
+							de circulation) ?"/>
+						<field name="bridger_insight" class="oe_inline" />
+					</div>
+					<span><br/></span>
+					<div>
+						<label for="affirmative_bridger_insight" attrs="{'invisible': [('bridger_insight', '!=', 'true')]}"/>
+						<field name="affirmative_bridger_insight" attrs="{'invisible': [('bridger_insight', '!=', 'true')]}"/>
+					</div>
+					
 				</field>
 
 				<field name="type_id" position="after">
@@ -224,13 +229,13 @@
 					<!-- <label for="salary_proposed" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" /> -->
 					<div >
 					    <label for="salary_proposed" string="Salaire proposée" attrs="{'invisible': ['|', ('recrutement_type', '=', 'consultant'), ('recrutement_type', '=', 'stagiaire')]}"/>
-					    <label for="salary_proposed" string="Honoraire proposée" attrs="{'invisible': ['|', ('recrutement_type', '!=', 'consultant'), ('recrutement_type', '=', 'stagiaire')]}" />
+					    <label for="salary_proposed" string="Honoraire proposée" attrs="{'invisible': ['|', ('recrutement_type', '!=', 'consultant'), ('recrutement_type', '=', 'stagiaire')]}"/>
 					</div>
 				</xpath>
 			
 				<xpath expr="//field[@name='salary_proposed']" position='replace'>
 					<div>
-						<field name="salary_proposed" required="1" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')], 'required':[('state', 'in', ('psi_wage_proposal','honorary_proposal'))]}"/>
+						<field name="salary_proposed" required="1" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')], 'required':[('state', 'in', ('psi_wage_proposal','honorary_proposal'))]}" class="oe_inline"/>
 				    	<field name="devise_proposed" class="oe_inline"/>
 				    </div>
 				</xpath>
@@ -418,6 +423,10 @@
 			<field name="arch" type="xml">
 				<search string="Recherche">
 					<field name="recrutement_type_id" string="Type de recrutement" />
+					<filter name="recrutement_type_filter_permanent" string="Collaborateur permanent" icon="terp-personal+" domain="[('recrutement_type_id.recrutement_type', '=', 'collaborateur')]" />
+					<filter name="recrutement_type_filter_consultant" string="Consultant" icon="terp-personal+" domain="[('recrutement_type_id.recrutement_type', '=', 'consultant')]" />
+					<filter name="recrutement_type_filter_stagiaire" string="Stagiaire" icon="terp-personal+" domain="[('recrutement_type_id.recrutement_type', '=', 'stagiaire')]" />
+					<filter name="recrutement_type_filter_externe" string="Cabinet externe" icon="terp-personal+" domain="[('recrutement_type_id.recrutement_type', '=', 'collaborateur_externe')]" />
 					<field name="job_id" string="Job concerné" />
 					<field name="partner_name" string="Nom du candidat" />
 					<group expand="0" string="Group By...">

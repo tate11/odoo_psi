@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+
 from pychart.arrow import default
 
-from odoo import fields, models, api
+
+from odoo import fields, models, api, netsvc
 from odoo.exceptions import ValidationError, Warning
+from future.utils import native
 
 
 class hr_job(models.Model):
@@ -22,8 +26,7 @@ class hr_job(models.Model):
     tdr_file = fields.Many2one('ir.attachment',string='Termes de Références (TDR)')
     file = fields.Binary("your_file", model='tdr_file.datas')
     
-    name_of_claimant = fields.Char(string=u"Nom du demandeur") 
-    list_of_demand = fields.Many2one('hr.applicant')
+    name_of_claimant = fields.Many2one('res.users', string=u"Nom du demandeur") 
     
     no_of_recruitment = fields.Integer(string=u'Nombre de poste(s) à pouvoir', help=u'Nombre de poste(s) à pouvoir.')
 
@@ -63,8 +66,9 @@ class hr_job(models.Model):
     
     application_deadline_date = fields.Date(string=u"Date limite de candidature")
     date_of_demand = fields.Date(string=u"Date de la demande", help="Date de la demande du relance")
-    ref_of_demand = fields.Char(string=u"Référence de la demande")
-    rr_approbation = fields.Boolean("Approbation par RR", default=True)
+    ref_of_demand = fields.Char(compute="_compute_reference_demande", string=u"Référence de la demande")
+    num_demande = fields.Integer(string=u'num de demande')
+    rr_approbation = fields.Boolean("Approbation par RR", default=False)
     tdr_add = fields.Boolean("TDR")
     psi_memo = fields.Boolean(u"Mémo", default=False)
     psi_date_start = fields.Date(string=u'Date de prise de fonction souhaitée', default=None)
@@ -91,6 +95,24 @@ class hr_job(models.Model):
             raise Warning(u"Vous devez ajouter le fichier TDR.")
         return res
     
+    def wkf_open_to_validation_finance(self):
+        if self.nature_recrutement != "interne":
+            self.write({'state':'validation_finance'})
+        else:
+            self.write({'state':'validation_finance','rr_approbation':False})
+    
+    def wkf_cond_open_to_validation_finance(self):
+        if self.tdr_add==False:
+            raise Warning('Vous devez cocher sur TDR et ajouter une pièce jointe corréspondante!')
+            return False
+        return True
+          
+    @api.model
+    def _compute_reference_demande(self):
+        d = datetime.datetime.today()
+        for record in self:
+            record.ref_of_demand = 'R{:03d}'.format(record.num_demande +1) + "/" + '{:02d}'.format(d.month) + "/" + '{:02d}'.format(d.year)[2:]
+    
     @api.one
     @api.constrains('psi_contract_duration')
     def _check_psi_contract_duration(self):
@@ -110,6 +132,8 @@ class hr_job(models.Model):
     def _change_approbation_rr(self):
         if self.nature_recrutement == 'interne':
             self.rr_approbation = False
+        else:
+            self.rr_approbation = True
     
     @api.onchange('recrutement_type')
     def _change_recrutement_type_id(self):
