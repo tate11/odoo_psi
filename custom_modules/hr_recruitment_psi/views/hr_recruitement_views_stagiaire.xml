@@ -14,7 +14,7 @@
 				<field name="state" position="replace">
 					<field name="state" widget="statusbar"
 						attrs="{'invisible': [('active', '=', False)]}"
-						statusbar_visible="applicant_selected,convoked_for_test,interview,bridger_insight,benefits,internship_contract" />
+						statusbar_visible="applicant_selected,convoked_for_test,interview,bridger_insight,benefits,internship_contract,archived" />
 				</field>
 			</field>
 		</record>
