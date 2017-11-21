@@ -9,7 +9,21 @@ from odoo import fields, models, api, netsvc
 from odoo.exceptions import ValidationError, Warning
 from future.utils import native
 
+class confirm_relance(models.TransientModel):
+    _name = 'confirm.relance'
 
+    yes_no = fields.Char(default='Voulez-vous remetre à zero?')
+    job_id = fields.Many2one('hr.job')
+    
+    def yes(self):
+        self.env['hr.job'].browse(self.job_id.id).signal_workflow('button_relance')
+        applicants=self.env['hr.applicant'].search([('job_id','=',self.job_id.id)])
+        for applicant in applicants:
+            applicant.write({'job_id':False})
+
+    def no(self):
+        self.env['hr.job'].browse(self.job_id.id).signal_workflow('button_relance')
+        
 class hr_job(models.Model):
     
     _inherit = "hr.job"
@@ -87,14 +101,38 @@ class hr_job(models.Model):
     
     @api.model
     def create(self, vals):
-        print "Create"
-        print self.documents_count
-        print vals.get('documents_count'),' documents_count'
         res = super(hr_job, self).create(vals)
         if vals.get('documents_count') == 0:
             raise Warning(u"Vous devez ajouter le fichier TDR.")
         return res
-    
+        
+    def relance(self):
+        
+        ctx = dict() 
+        
+        ctx.update({
+            'default_job_id':self.id, 
+            'default_model':'confirm.relance',
+            'default_use_template': True,
+            'default_template_id':self.env['ir.model.data'].get_object_reference('hr_recruitment_psi','action_confirm_relance')[1]
+        })
+        
+        view_id=self.env['ir.model.data'].get_object_reference('hr_recruitment_psi','confirm_relance_form')[1]
+        
+        
+        return {
+            'name': 'Confirmation',
+            'domain': [],
+            'res_model': 'confirm.relance',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'views': [(view_id, 'form')],
+            'view_id': view_id,
+            'context': ctx,
+            'target': 'new',
+        }
+        
     def wkf_open_to_validation_finance(self):
         if self.nature_recrutement != "interne":
             self.write({'state':'validation_finance'})
@@ -139,7 +177,7 @@ class hr_job(models.Model):
     def _change_recrutement_type_id(self):
         if self.recrutement_type == 'stagiaire':
             self.psi_contract_type = 'convention_stage'
-        
+         
 class SubordinationLink(models.Model):
      _name = 'hr.subordination.link'
      
