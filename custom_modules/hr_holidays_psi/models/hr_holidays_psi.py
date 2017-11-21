@@ -2,19 +2,13 @@
 
 import calendar
 import datetime
-import logging
-import math
 
-import dateutil.parser
 from dateutil.relativedelta import relativedelta
-from werkzeug import url_encode
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, AccessError, Warning
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.tools import float_compare
-from odoo.tools.translate import _
-from openerp.tools import float_compare
 
 
 HOURS_PER_DAY = 8
@@ -71,6 +65,7 @@ class hr_holidays_psi(models.Model):
      
     @api.constrains('number_of_days_temp')
     def _verif_leave_date(self):
+        print "_verif_leave_date"
         holidays = self.env["hr.holidays"].search([('employee_id','=',self.employee_id.name)])
 #        holiday.holiday_status_id.max_leaves = 10
 #        if count holiday.id_psi_holidays_status remaining_leaves > 10 > erreur
@@ -104,18 +99,19 @@ class hr_holidays_psi(models.Model):
         
     @api.model
     def create(self, values):
+        
         holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
-        if self.holiday_status_id.id != holidays_status[0].id :
-            self._verif_leave_date()
-            got_droit = self.check_droit(values)
-            if got_droit == False:
-                raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
-            else:
-                holidays = super(hr_holidays_psi, self).create(values)
-                return holidays
+        if values.get('holiday_status_id') != holidays_status[0].id :
+           self._verif_leave_date()
+           got_droit = self.check_droit(values)
+           if got_droit == False:
+              raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
+           else:
+              holidays = super(hr_holidays_psi, self).create(values)
+              return holidays
         else:
-            holidays = super(hr_holidays_psi, self).create(values)
-            return holidays
+              holidays = super(hr_holidays_psi, self).create(values)
+              return holidays
 
           
     @api.multi
@@ -217,21 +213,23 @@ class hr_holidays_psi(models.Model):
     @api.constrains('date_from')
     def _check_date_from(self):
        print "_check_date_from"
-       
        for record in self :
            if record.date_from != False: 
-               if record.holiday_status_id.holidays_status_id_psi  == 3:
+               holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',3)])
+               if record.holiday_status_id.id == holidays_status[0].id:
                    config = self.env['hr.holidays.configuration'].search([])[0]
                    if record.number_of_days_temp > config.conges_sans_solde :
                       raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
-                  
+                
                date_from_time = datetime.datetime.strptime(record.date_from,"%Y-%m-%d %H:%M:%S")
                date_now = datetime.datetime.strptime(fields.Date().today(),"%Y-%m-%d")
                between = date_from_time - date_now
+              
                if between.days < 0: 
                    raise ValidationError(u"La date de début du congé n'est pas valide.")
                
                holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
+              
                if record.holiday_status_id.id != holidays_status[0].id: # a part maladie
                    if between.days >= 0 and between.days < 3 :
                        raise ValidationError(u"Vous devez faire une demande de congés au moins 3 jours avant votre départ pour congé.")
@@ -404,7 +402,7 @@ class hr_holidays_psi(models.Model):
             holidays = self.env['hr.holidays'].search([('employee_id','=',contract.employee_id.id),('type','=','add')],order='id')
             if len(holidays) > 0:
 
-                dt_write_date = datetime.strptime(holidays[0].write_date,'%Y-%m-%d %H:%M:%S')
+                dt_write_date = datetime.datetime.strptime(holidays[0].write_date,'%Y-%m-%d %H:%M:%S')
 
                 if dt_write_date.month != dt_now.month:
                     number_of_days = holidays[0].number_of_days + 2 
@@ -429,21 +427,23 @@ class hr_holidays_psi(models.Model):
     @api.multi
     @api.constrains('holiday_status_id')  
     def _send_email_rappel_justificatif_conge_maladie(self, automatic=False):
+        print "_send_email_rappel_justificatif_conge_maladie"
+        
         date_debut = self.date_from
         if date_debut != False:
             dt = datetime.datetime.strptime(date_debut,'%Y-%m-%d %H:%M:%S')
-            date_y_m_d = datetime(
+            date_y_m_d = datetime.datetime(
                                          year=dt.year, 
                                          month=dt.month,
                                          day=dt.day,
-                    )   
+                    )
             date_to_notif = date_y_m_d + relativedelta(hours=48)   
             if self.id != False :
                 for record in self:
                     holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
                     if record.holiday_status_id.id == holidays_status[0].id:
                         #if not record.justificatif_file:
-                        if self.attachment_number == 0 and date_to_notif.date() == datetime.today().date() :
+                        if self.attachment_number == 0 and date_to_notif.date() == datetime.datetime.today().date() :
                             template = self.env.ref('hr_holidays_psi.custom_template_rappel_justificatif_conge_maladie')
                             self.env['mail.template'].browse(template.id).send_mail(self.id)               
         if automatic:
@@ -453,7 +453,7 @@ class hr_holidays_psi(models.Model):
     @api.multi
     def _send_email_rappel_absences_to_assist_and_coord(self, automatic=False):
         print "test cron by send mail rappel"
-        today = datetime.today()
+        today = datetime.datetime.today()
         if today.day == 20:
             template = self.env.ref('hr_holidays_psi.custom_template_absences_to_assist_and_coord')
             self.env['mail.template'].browse(template.id).send_mail(self.id)               
@@ -463,13 +463,15 @@ class hr_holidays_psi(models.Model):
             
     @api.constrains('state', 'number_of_days_temp')
     def _check_holidays(self):
-        holidays_status_formation = self.env['hr.holidays.status'].search([('color_name','=','lightpink')])
+        print "_verif_leave_date"
+        holidays_status_formation = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',5)])
         holidays_status_annuel = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
         for holiday in self:
-            
             if holiday.holiday_type != 'employee' or holiday.type != 'remove' or not holiday.employee_id or holiday.holiday_status_id.limit:
+                print "not continue"
                 continue
-            if holidays_status_formation[0].id == holiday.holiday_status_id and holidays_status_annuel[0].id == holiday.holiday_status_id:
+            if holidays_status_formation[0].id == holiday.holiday_status_id.id and holidays_status_annuel[0].id == holiday.holiday_status_id.id:
+                print "not continue"
                 holidays_attribution = self.env['hr.holidays'].search([('employee_id','',holiday.employee_id.id),('type','=','add')])
                 leave_days = holidays_attribution[0].holiday_status_id.get_days(holidays_attribution[0].employee_id.id)[holidays_attribution[0].holiday_status_id.id]
                 if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or \
