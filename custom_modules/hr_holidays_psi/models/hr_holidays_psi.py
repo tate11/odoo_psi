@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
-
-
 import calendar
 import datetime
 import logging
-import math
 import math
 
 import dateutil.parser
@@ -230,16 +227,16 @@ class hr_holidays_psi(models.Model):
                if between.days < 0: #(between_month == 1 and date_from.day >= 3) or between_month < 1:
                    raise ValidationError(u"La date de début du congé n'est pas valide.")
                
-               holidays_status = self.env['hr.holidays.status'].search([('color_name','=','blue')])
+               holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
                if record.holiday_status_id.id != holidays_status[0].id: # a part maladie
                    if between.days >= 0 and between.days < 3 :
                        raise ValidationError(u"Vous devez faire une demande de congés au moins 3 jours avant votre départ pour congé.")
      
     @api.constrains('date_from')
     def _check_date_from_conge_sans_solde(self):
-       print "_check_date_from"
+       print "_check_date_from 2"
        for record in self :
-           if record.date_from != False and record.holiday_status_id.color_name == 'red':
+           if record.date_from != False and record.holiday_status_id.holidays_status_id_psi == 3:
                config = self.env['hr.holidays.configuration'].search([])[0]
                
                #TODO a modifier

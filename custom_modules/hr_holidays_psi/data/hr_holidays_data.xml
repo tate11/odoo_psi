@@ -11,11 +11,10 @@
 		</record>
 		<record model="hr.holidays.status" id="type_maladie">
 			<field name="name">Congés maladies</field>
-			<field name="color_name">blue</field>
+			<field name="holidays_status_id_psi">4</field>
 		</record>
 		<record model="hr.holidays.status" id="type_permission">
 			<field name="name">Absences pour permission</field>
-			<field name="color_name">lightblue</field>
 			<field name="holidays_status_id_psi">1</field>
 		</record>
 		<record model="hr.holidays.status" id="type_maternite">
@@ -23,7 +22,7 @@
 		</record>
 		<record model="hr.holidays.status" id="type_solde">
 			<field name="name">Congés sans soldes</field>
-			<field name="color_name">red</field>
+			<field name="holidays_status_id_psi">3</field>
 		</record>
 
 		<!-- Données par défaut configurations -->
