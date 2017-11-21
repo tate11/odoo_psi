@@ -37,10 +37,11 @@
 				<field name="category_id" invisible="1" />
 				<field name="last_business_day" invisible="1" />
 				<field name="employee_type" invisible="1" />
+				<field name="id_psi_holidays_status" invisible="1" />
 			</field>
 			
 			<xpath expr="//field[@name='holiday_status_id']" position='after'>
-				<!-- <field name="holiday_type_permission" attrs="{'invisible':[('id_psi_holidays_status','!=',1)]}" /> -->
+				<field name="holiday_type_permission" attrs="{'invisible':[('id_psi_holidays_status','!=',1)]}" />
 				<!-- <field name="holiday_type_permission" attrs="{'invisible':['&amp;',('color_name_holiday_status','not in','lightblue'),('type','not in','add')], 'required': [('color_name_holiday_status', '=', 'lightblue')]}" /> -->
 			</xpath>
 			
