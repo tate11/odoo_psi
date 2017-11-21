@@ -108,7 +108,9 @@ class hr_employee(models.Model):
     @api.model
     def create(self, vals):
         if vals.has_key('nombre_conge')  :
-            self.set_nombre_conge(vals.get('nombre_conge'))
+            if vals.get('nombre_conge') != 0.0 :
+                self.set_nombre_conge(vals.get('nombre_conge'))
+
         employee = super(hr_employee, self).create(vals)
         return employee
     
@@ -132,7 +134,7 @@ class hr_employee(models.Model):
                 'employee_id': self.id
             }
             self.env['hr.holidays'].create(values)
-            
+
     # fonction remove sanction after period MONTHS
     def _remove_sanction_data(self, period): #period en mois
         employee_obj = self.env["hr.employee"]

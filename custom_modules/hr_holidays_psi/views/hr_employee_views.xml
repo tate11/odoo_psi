@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+	<data>
+		<!-- Hr employee inherit Legal Leaves -->
+		<record id="view_employee_form_leave_inherit_psi" model="ir.ui.view">
+			<field name="name">hr.employee.leave.form.inherit.psi</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr_holidays.view_employee_form_leave_inherit" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='remaining_leaves']/../.." position="replace">
+					<group string="Congés" groups="base.group_no_one">
+						<label for="nombre_conge" />
+						<div>
+							<field name="nombre_conge" class="oe_inline" /> jour(s)
+						</div>
+					</group>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

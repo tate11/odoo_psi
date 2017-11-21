@@ -18,6 +18,7 @@
         'report/report_request_for_absences_template.xml',
         'security/ir.model.access.csv',
         'views/hr_holidays_views.xml',
+        'views/hr_employee_views.xml',
         ],
     'demo': [],
     'test': [],
