@@ -10,15 +10,13 @@ from dateutil.relativedelta import relativedelta
 from werkzeug import url_encode
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.exceptions import Warning
+from odoo.exceptions import UserError, ValidationError, AccessError, Warning
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.tools import float_compare
 from odoo.tools.translate import _
 from openerp.tools import float_compare
 
 
-#from datetime import  datetime, timedelta
 HOURS_PER_DAY = 8
 
 class hr_holidays_type_psi(models.Model):
@@ -238,10 +236,8 @@ class hr_holidays_psi(models.Model):
            if record.date_from != False and record.holiday_status_id.holidays_status_id_psi == 3:
                config = self.env['hr.holidays.configuration'].search([])[0]
                
-               #TODO a modifier
-               if record.holiday_status_id == 10:
-                   if record.number_of_days_temp > config.conges_sans_solde :
-                      raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
+               if record.number_of_days_temp > config.conges_sans_solde :
+                  raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
 
 
     @api.multi
