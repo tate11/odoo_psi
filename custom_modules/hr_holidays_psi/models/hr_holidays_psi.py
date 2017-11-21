@@ -9,7 +9,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, AccessError, Warning
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.tools import float_compare
-from addons.google_calendar.models.res_users import User
 
 
 HOURS_PER_DAY = 8
