@@ -45,7 +45,7 @@ class hr_wage_grid_details(models.Model):
     echelon_18               = fields.Integer(string='18')
     echelon_19               = fields.Integer(string='19')
     echelon_20               = fields.Integer(string='20')
-    echelon_hc               = fields.Integer(string='HC')
+    echelon_hc               = fields.Char(string='HC',default='-')
 
     wage_grid_id             = fields.Many2one('hr.wage.grid','Wage Grid ID')
     
@@ -91,5 +91,5 @@ class hr_wage_grid_details(models.Model):
         if method == 'echelon_20' :
             return self.echelon_20
         if method == 'echelon_hc' :
-            return self.echelon_hc
+            return 0
         return 0

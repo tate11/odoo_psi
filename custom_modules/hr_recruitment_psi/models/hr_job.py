@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+
 from pychart.arrow import default
 
-from odoo import fields, models, api
-from odoo.exceptions import ValidationError
+
+from odoo import fields, models, api, netsvc
+from odoo.exceptions import ValidationError, Warning
+from future.utils import native
 
 
 class hr_job(models.Model):
@@ -15,17 +19,21 @@ class hr_job(models.Model):
     psi_contract_type = fields.Selection([
         ('cdd', 'CDD'),
         ('cdi', 'CDI'),
-        ('prestataire',u'Préstataire'),
+        ('prestataire','Prestataire'),
         ('convention_stage','Convention de stage')
     ], string='Type de contrat', help="Type de contrat")
     
     tdr_file = fields.Many2one('ir.attachment',string='Termes de Références (TDR)')
     file = fields.Binary("your_file", model='tdr_file.datas')
     
+    name_of_claimant = fields.Many2one('res.users', string=u"Nom du demandeur") 
+    
+    no_of_recruitment = fields.Integer(string=u'Nombre de poste(s) à pouvoir', help=u'Nombre de poste(s) à pouvoir.')
+
     website_published = fields.Boolean(default=False)
     
     psi_contract_duration = fields.Integer(string=u"Durée du contrat (en mois)")
-    psi_motif = fields.Text(string="Motif du recrutement")
+    psi_motif = fields.Char(string="Motif du recrutement")
     poste_description = fields.Text(string=u"Mission")
       
     state = fields.Selection([
@@ -42,12 +50,13 @@ class hr_job(models.Model):
     tdr_file = fields.Binary(string=u'Termes de Références (TDR)')
     #tdr_file = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.job')], string='Termes de Références (TDR)')
     level_of_education_id = fields.Many2one('hr.recruitment.degree', string='Niveau de formation')
-    psi_budget_code_distribution = fields.Many2one('account.analytic.account', string='Code budgetaire')
+    psi_budget_code_distribution = fields.Many2one('account.analytic.account', string=u'Code(s) budgétaire(s)')
     place_of_work = fields.Many2many('hr.recruitment.working.state', string='Lieu de travail')
-    place_of_employment = fields.Many2one('hr.recruitment.lieu.embauche',string="Liei d'embaiche")
+    place_of_employment = fields.Many2one('hr.recruitment.lieu.embauche',string="Lieu d'embauche", default=lambda self: self.env['hr.recruitment.lieu.embauche'].search([('embauche_id','=','1')]))
+#    place_of_employment = fields.Many2one('hr.recruitment.lieu.embauche',string="Lieu d'embauche")
     subordination_link_id = fields.Many2one('hr.subordination.link', string='Lien de Subordination')
-    experience_required_ids = fields.One2many('hr.experience.required', 'job_id', string=u'Expériences requises')
-    
+    experience_required_ids = fields.One2many('hr.experience.required', 'job_id', string=u'Expériences requises', required=True)
+    superior_hierarchical = fields.Many2one('hr.employee', string=u"Supérieur Hiérarchique")
     nature_recrutement = fields.Selection([
         ('conssideration_dossier', u'Reconsidération de dossier'),
         ('conssideration_dossier_by_cvtheque', u'Reconsidération de dossier par CVThèque'),
@@ -56,10 +65,14 @@ class hr_job(models.Model):
         ], string="Nature de recrutement")
     
     application_deadline_date = fields.Date(string=u"Date limite de candidature")
-    rr_approbation = fields.Boolean("Approbation par RR", default=True)
+    date_of_demand = fields.Date(string=u"Date de la demande", help="Date de la demande du relance")
+    ref_of_demand = fields.Char(compute="_compute_reference_demande", string=u"Référence de la demande")
+    num_demande = fields.Integer(string=u'num de demande')
+    rr_approbation = fields.Boolean("Approbation par RR", default=False)
+    tdr_add = fields.Boolean("TDR")
     psi_memo = fields.Boolean(u"Mémo", default=False)
-    psi_date_start = fields.Date(string='Date de prise de fonction souhaitée')
-    psi_job_equipment = fields.One2many('hr.job.equipment', 'job_id', string='Inventaire - Demande d\'equipement')
+    psi_date_start = fields.Date(string=u'Date de prise de fonction souhaitée', default=None)
+    psi_job_equipment = fields.One2many('hr.job.equipment', 'job_id', string=u'Matériels et équipement(s) demandé(s)')
 
     psi_professional_category  = fields.Selection([
                                        ('appui','APPUI'),
@@ -71,6 +84,34 @@ class hr_job(models.Model):
     
     
     psi_category = fields.Many2one('hr.psi.category.details','Catégorie professionnelle')
+    
+    @api.model
+    def create(self, vals):
+        print "Create"
+        print self.documents_count
+        print vals.get('documents_count'),' documents_count'
+        res = super(hr_job, self).create(vals)
+        if vals.get('documents_count') == 0:
+            raise Warning(u"Vous devez ajouter le fichier TDR.")
+        return res
+    
+    def wkf_open_to_validation_finance(self):
+        if self.nature_recrutement != "interne":
+            self.write({'state':'validation_finance'})
+        else:
+            self.write({'state':'validation_finance','rr_approbation':False})
+    
+    def wkf_cond_open_to_validation_finance(self):
+        if self.tdr_add==False:
+            raise Warning('Vous devez cocher sur TDR et ajouter une pièce jointe corréspondante!')
+            return False
+        return True
+          
+    @api.model
+    def _compute_reference_demande(self):
+        d = datetime.datetime.today()
+        for record in self:
+            record.ref_of_demand = 'R{:03d}'.format(record.num_demande +1) + "/" + '{:02d}'.format(d.month) + "/" + '{:02d}'.format(d.year)[2:]
     
     @api.one
     @api.constrains('psi_contract_duration')
@@ -91,6 +132,8 @@ class hr_job(models.Model):
     def _change_approbation_rr(self):
         if self.nature_recrutement == 'interne':
             self.rr_approbation = False
+        else:
+            self.rr_approbation = True
     
     @api.onchange('recrutement_type')
     def _change_recrutement_type_id(self):
@@ -154,7 +197,9 @@ class JobEquipment(models.Model):
     
     equipment_id = fields.Many2one('hr.equipment', string=u"Désignation")
     job_id = fields.Many2one('hr.job')
+    
 class LieuEmbauche(models.Model):
     _name = 'hr.recruitment.lieu.embauche'
     
     name = fields.Char(string="Lieu d' embauche")
+    embauche_id = fields.Integer()

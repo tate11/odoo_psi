@@ -16,7 +16,13 @@ class hr_employee(models.Model):
     
     father_name                     = fields.Char(string=u'Nom du père')
     mother_name                     = fields.Char(string=u'Nom de la mère')
-    spouse_s_name                   = fields.Char(string='Nom du conjoint')
+    
+    conjoint_s_name                 = fields.Char(string='Nom du conjoint')
+    spouse_s_name                   = fields.Char(string='Nom de l\'epoux(se)')
+    matricule                       = fields.Char(string='Matricule')
+    personal_fixed_phone            = fields.Char(string='Téléphone fixe personnel')
+    cnaps_number                    = fields.Char(string='Numéro CNaPS')
+    groupe_sanguin                  = fields.Char(string='Groupe sanguin')
     
     psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la Catégorie')
     psi_category = fields.Selection(related='psi_category_details.psi_professional_category')
@@ -27,7 +33,7 @@ class hr_employee(models.Model):
     beneficiary_of_death_benefit_id = fields.Many2one('hr.person.information', string=u'Bénéficiaire d\'indemnité en cas de décès',
          help='Beneficiary of death benefit')
     
-    information_about_children_id   = fields.Many2one('hr.person', string=' Informations sur les enfants',help='Information about children')
+    information_about_children_id   = fields.One2many('hr.person.children', 'employee_id', string='Informations sur les enfants')
     
     information_cin_id              = fields.Many2one('hr.information.cin', string='Information sur CIN',help='Information about CIN')
 
@@ -62,8 +68,9 @@ class hr_employee(models.Model):
     criminal_records            = fields.Boolean(default=False, string="Casier judiciaires")
     card_cnaps                  = fields.Boolean(default=False, string="Copie Carte CNAPS ")
     birth_certificate_children  = fields.Boolean(default=False, string="Acte de naissance des enfants ")
-    details_certificate_ethics = fields.One2many('hr.declaration.interest', 'employee_id', string=u"Déclaration d'intérêt et cours d\'éthique", track_visibility="onchange")
-	#TODO verification certficats
+    details_declaration_interet = fields.One2many('hr.declaration.interest', 'employee_id', string=u"Déclaration d\'intérêt", track_visibility="onchange")
+    details_cours_ethique       = fields.One2many("hr.cours.ethique", 'employee_id', string=u"Cértificat de cours d\'éthique", track_visibility="onchange")
+    #TODO verification certficats
     ethics_course_certificate   = fields.Boolean(default=False, string=u"Certificat du cours d'éthique")
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.employee')], string='Attachments', track_visibility='always')
@@ -71,12 +78,32 @@ class hr_employee(models.Model):
     sanctions_data = fields.One2many('hr.contract.sanction.data', 'employee_id', string='', track_visibility='always')
     psi_bridger_insight = fields.One2many('hr.employee.bridger.insight', 'employee_id',"Bridger insight")
     
-    psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution", store=True)
+    #psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution", store=True)
+    psi_budget_code_distribution= fields.Many2many('psi.code.budgetaire',string='Code Budgétaire')
+    
 
-    psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat",store=True)
+    psi_contract_type = fields.Selection([
+        ('cdd', 'CDD'),
+        ('cdi', 'CDI'),
+        ('convention_stage','Convention de stage')
+    ], string='Type de contrat', help="Type de contrat", track_visibility='onchange')
+
+    #psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat",store=True)
     
     all_files_checked = fields.Boolean(compute='_all_checked_files', string=u"Pièces completes")
 
+    work_location = fields.Selection([
+        ('antananarivo', 'Antananarivo'),
+        ('toamasina', 'Toamasina'),
+        ('antsiranana', 'Antsiranana'),
+        ('antsirabe', 'Antsirabe'),
+        ('fianarantsoa', 'Fianarantsoa'),
+        ('taolagnaro', 'Taolagnaro'),
+        ('toliary', 'Toliary'),
+        ('morondava', 'Morondava'),
+        ('mahajanga', 'Mahajanga'),
+        ], string="", default="antananarivo")
+    
     @api.model
     def create(self, vals):
         employee = super(hr_employee, self).create(vals)
@@ -100,7 +127,7 @@ class hr_employee(models.Model):
                 if sanction.sanction_date != False:
                     s_date = datetime.strptime(sanction.sanction_date,"%Y-%m-%d")
                     if (today.year - s_date.year) * 12 + today.month - s_date.month >= period:
-                        sanction.write({'sanction_date_effacement' : today})
+                        sanction.unlink()
   
     @api.one
     @api.constrains('personal_information')   
@@ -207,20 +234,65 @@ class hr_employee(models.Model):
         if automatic:
             self._cr.commit()
     
-    # add declaration interest every 2 years
+    # add declaration interest every year
     def _add_declaration_interest(self, automatic=False):
-        print "Verification declaration interet/2ans"
+        print "Verification declaration interet/1ans"
         employees = self.env['hr.employee'].search([])
         for employee in employees:
             date_create = employee.create_date
             date_create_employee = datetime.strptime(date_create,"%Y-%m-%d %H:%M:%S")
-            current_month = datetime.now().month
-            month_date_create = date_create_employee.month
-            print month_date_create ,' # ', current_month
-            if month_date_create == current_month:
-                print "mail"
-                template = self.env.ref('hr_employee_psi.custom_template_add_declaration_interest')
-                self.env['mail.template'].browse(template.id).send_mail(employee.id, force_send=True)
+            date_now = datetime.now().date()  
+            one_week_after = date_create_employee.date() + timedelta(days=7)               
+            one_week_after_time = datetime(
+                    year=one_week_after.year, 
+                    month=one_week_after.month,
+                    day=one_week_after.day,
+                )           
+            date_create_employee_time = datetime(
+                    year=date_create_employee.year, 
+                    month=date_create_employee.month,
+                    day=date_create_employee.day,
+                )
+            date_to_notif = date_create_employee_time - relativedelta(months=12) #1 years
+            date_to_notif_2 = one_week_after_time - relativedelta(months=12) #1 years
+            
+            if date_now == date_create_employee.date() or date_now == one_week_after or date_now == date_to_notif.date() or date_now == date_to_notif_2.date():
+                declaration = self.details_declaration_interet
+                declaration_interet = declaration.verify_year_declaration()
+                if not declaration_interet:
+                    template = self.env.ref('hr_employee_psi.custom_template_add_declaration_interest')
+                    self.env['mail.template'].browse(template.id).send_mail(employee.id, force_send=True)
+        if automatic:
+            self._cr.commit()
+            
+    # add certificate etich every 2 year
+    def _add_certificate_ethics (self, automatic=False):
+        print "Verification certificat cours d'Ã©thique/2ans"
+        employees = self.env['hr.employee'].search([])
+        for employee in employees:
+            date_create = employee.create_date
+            date_create_employee = datetime.strptime(date_create,"%Y-%m-%d %H:%M:%S")
+            date_now = datetime.now().date()
+            one_week_after = date_create_employee.date() + timedelta(days=7)               
+            one_week_after_time = datetime(
+                    year=one_week_after.year, 
+                    month=one_week_after.month,
+                    day=one_week_after.day,
+                )           
+            date_create_employee_time = datetime(
+                    year=date_create_employee.year, 
+                    month=date_create_employee.month,
+                    day=date_create_employee.day,
+                )
+            date_to_notif = date_create_employee_time - relativedelta(months=24) #2 years
+            date_to_notif_2 = one_week_after_time - relativedelta(months=24) #2 years
+            
+            if date_now == date_create_employee.date() or date_now == one_week_after or date_now == date_to_notif.date() or date_now == date_to_notif_2.date():
+                cours_ethique = self.details_cours_ethique
+                ethics = cours_ethique.verify_year_certificate_ethics()
+                if not ethics:
+                    template = self.env.ref('hr_employee_psi.custom_template_add_certificate_ethics')
+                    self.env['mail.template'].browse(template.id).send_mail(employee.id, force_send=True)               
                 #test
 #                mail_failed_list = self.env['mail.mail'].search([('state', '=', 'exception')])
 #                for failed_mail in mail_failed_list:
@@ -246,13 +318,23 @@ class PersonInformation(models.Model):
     _name         = 'hr.person.information'
     
     address       = fields.Char(string='Adresse')
-    contact       = fields.Integer(string='Contact')
+    contact       = fields.Integer(string=u'Téléphone')
     
     relation      = fields.Selection([
         ('enfant', 'Enfant'),
         ('famille', 'Famille'),
         ('conjoint', 'Conjoint')
     ], string='Relation')
+    
+    employee_id = fields.Many2one('hr.employee')
+
+class ChildrenInformation(models.Model):
+    _inherit      = 'hr.person.information'
+    _name         = 'hr.person.children'
+    
+    relation      = fields.Selection([
+        ('enfant', 'Enfant'),
+    ], string='Relation', default="enfant")
     
 
 class InformationCin(models.Model):
@@ -284,11 +366,82 @@ class SanctionData(models.Model):
     sanction_type_id = fields.Many2one('hr.contract.type.sanction', string='Sanction')
     
     sanction_objet = fields.Char(string='Objet')
-    sanction_date_effacement = fields.Date(string=u'Date d\'éffacement', readonly=True)
     sanction_commentaire = fields.Text(string='Commentaires')
 
-    employee_id = fields.Many2one('hr.employee')
+    employee_id = fields.Many2one('hr.employee', string="Employee")
     
+class hr_cours_ethique(models.Model):
+    
+    _name = "hr.cours.ethique"
+    _description = u"Cours d'éthique"
+    
+    name = fields.Char(string=u'Nom', required=True)
+    employee_id = fields.Many2one('hr.employee', string=u'Employé', readonly=True)
+    date_add = fields.Date(string=u'Date d\'ajout',default=lambda *a: datetime.now())
+    year =  fields.Selection([
+                              (num, str(num)) for num in range(2010, (datetime.now().year)+1 
+                                                             )], string=u'Année', required="True", default=datetime.now().year)
+    certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
+    certificate_ethics_filename = fields.Char(u'Cértificat de cours d\'éthique')
+    checked_current_year = fields.Boolean(string='Check')
+    
+    b_edit = fields.Boolean(default=False)
+
+    #@api.onchange()
+    #def filename(self):
+    #    print self.certificate_ethics_filename
+    #    
+    @api.multi
+    def create(self, vals):
+        this_year=datetime.now().strftime("%Y")
+        
+        last_year="{}-".format(int(this_year)-1)
+        cours_ethique_this_year=self.env['hr.cours.ethique'].search([('date_add','like',last_year)])
+        if cours_ethique_this_year is not False:
+            raise Warning("Vous ne pouvez ajouter un cours d'éthique qu'une fois dans 2 années")
+            return False
+        cours_ethique = super(hr_cours_ethique, self).create(vals)
+        document_vals = {'name': cours_ethique.certificate_ethics_filename,
+                         'db_datas': vals.get('certificate_ethics_file').encode('base64'),
+                         'datas_fname': False,
+                         'res_model': 'hr.employee',
+                         'res_id': cours_ethique.employee_id.id,
+                         'type': 'binary' }
+
+        self.env['ir.attachment'].create(document_vals)
+        return cours_ethique
+        #self.env['ir.attachment'].write({'res_model':'hr.employee','res_id':self.id})
+     
+    @api.multi
+    def write(self,vals):
+        cours_ethique = super(hr_cours_ethique, self).write(vals)
+        document_vals = {'name': cours_ethique.certificate_ethics_filename,
+                         'db_datas': vals.get('certificate_ethics_file').encode('base64'),
+                         'datas_fname': False,
+                         'res_model': 'hr.employee',
+                         'res_id': cours_ethique.employee_id.id,
+                         'type': 'binary' }
+
+        self.env['ir.attachment'].write(document_vals)
+        return cours_ethique
+    
+    def verify_year_declaration(self):
+        res = False
+        for record in self:
+            declaration_obj = self.env["hr.declaration.interest"]
+            declarations = declaration_obj.search([('employee_id','=',record.employee_id.name)]) 
+            print declarations
+            if len(declarations) == 1:
+                res = True
+            else:
+                for declaration in declarations[:-1]:               
+                    date_str = str(declaration.year)
+                    if date_str:
+                        if str(record.year) == date_str:
+                            res = False
+                        else: 
+                            res = True
+        return res
 class hr_declaration_interest(models.Model):
     
     _name = "hr.declaration.interest"
@@ -300,24 +453,54 @@ class hr_declaration_interest(models.Model):
     year =  fields.Selection([
                               (num, str(num)) for num in range(2010, (datetime.now().year)+1 
                                                              )], string=u'Année', required="True", default=datetime.now().year)
-    certificate_ethics_file = fields.Binary(string=u'Cértificat de cours d\'éthique')
+    declaration_interet = fields.Binary(string=u'Déclaration d\'interêt')
+    declaration_interet_filename = fields.Char(string=u'Déclaration d\'interêt')
     checked_current_year = fields.Boolean(string='Check')
     
     b_edit = fields.Boolean(default=False)
-
+      
+    @api.multi
+    def create(self, vals):
+        if vals.get('date_add'):
+            this_year="{}-".format(datetime.now().strftime("%Y"))
+            declarations_interest_this_year=self.env['hr.declaration.interest'].search([('date_add','like',this_year)])
+            if declarations_interest_this_year is not False:
+                raise Warning("Vous ne pouvez ajouter plus une declaration d'interêt cette année")
+                return False
+            declaration_interest = super(hr_declaration_interest, self).create(vals)
+            document_vals = {'name': declaration_interest.declaration_interet_filename,
+                             'db_datas': vals.get('declaration_interet').encode('base64'),
+                             'datas_fname': False,
+                             'res_model': 'hr.employee',
+                             'res_id': declaration_interest.employee_id.id,
+                             'type': 'binary' }
+    
+            self.env['ir.attachment'].create(document_vals)
+            return declaration_interest
+      
     @api.multi
     def write(self, vals):
+
         declaration = self.verify_year_declaration()
         if declaration == True:
             #self.b_edit = True
             vals['b_edit'] = True                  
-            super(hr_declaration_interest, self).write(vals)
-            return True
+            declaration_interet=super(hr_declaration_interest, self).write(vals)
+            document_vals = {'name': declaration_interet.declaration_interet_filename,
+                             'db_datas': declaration_interet.declaration_interet.encode('base64'),
+                             'datas_fname': False,
+                             'res_model': 'hr.employee',
+                             'res_id': declaration_interet.employee_id.id,
+                             'type': 'binary' }
+    
+            self.env['ir.attachment'].write(document_vals)
+            return declaration_interet
         else : 
             raise Warning(_(u'Vous avez déjà rempli le formulaire de déclaration cette année'))
             return False
+
         
-    def verify_year_declaration(self):
+    def verify_year_certificate_ethics(self):
         res = False
         for record in self:
             declaration_obj = self.env["hr.declaration.interest"]
@@ -345,3 +528,23 @@ class BrigerInsight(models.Model):
         ('non', 'NON')
        ], string=u'Résultat')    
     employee_id = fields.Many2one('hr.employee')
+    
+class CodeBudgetaire(models.Model):
+    _name = 'psi.code.budgetaire'
+    
+    name = fields.Char(string="Nom");
+    employee_id = fields.Many2one('hr.employee',string='Employée')
+    aanalytic_account_parent_id = fields.Many2one('account.analytic.account', string="Compte analytique parent")
+    analytic_account_id = fields.Many2one('account.analytic.account', string="Compte analytique")
+    taux = fields.Float('Taux')
+
+class HrDureePreavis(models.Model):
+    
+    _name = 'hr.duree.preavis'
+    
+    preavis_id = fields.Integer()
+    name = fields.Char(string=u"Durée du préavis")
+    anciennete = fields.Char(string=u"Ancienneté/groupe")
+    categorie = fields.Char(string=u"Catégorie")
+    sous_cat = fields.Char(string=u"Sous-catégorie")
+    

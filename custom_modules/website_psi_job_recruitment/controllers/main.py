@@ -359,12 +359,14 @@ class WebsiteHrRecruitment(http.Controller):
         if len(name_universitys) > 0 and name_universitys[0] != '' :
             for index, name_university in enumerate(name_universitys):
                 if name_universitys[index] != '' and city_universitys[index] != '' and country_id_universitys[index] != '' and degree_universitys[index] != '' and  study_domain_universitys[index] != '' and from_date_universitys[index] != '' and end_date_universitys[index] != '' :
+                        from_date = datetime.strptime(from_date_universitys[index], '%d/%m/%Y').strftime('%Y-%m-%d')
+                        end_date = datetime.strptime(end_date_universitys[index], '%d/%m/%Y').strftime('%Y-%m-%d')
                         university_line = {
                                            'name': name_universitys[index],
                                            'city': city_universitys[index],
                                            'country_id': country_id_universitys[index],
-                                           'from_date': from_date_universitys[index],
-                                           'end_date': end_date_universitys[index],
+                                           'from_date': from_date,
+                                           'end_date': end_date,
                                            'degree': degree_universitys[index],
                                            'study_domain': study_domain_universitys[index]
     
@@ -377,12 +379,14 @@ class WebsiteHrRecruitment(http.Controller):
         if len(name_secondarys) > 0 and name_secondarys[0] != '' :
             for index, name_secondary in enumerate(name_secondarys):
                 if name_secondarys[index] != '' and city_secondarys[index] != '' and country_id_secondarys[index] != '' and degree_secondarys[index] != '' and  study_domain_secondarys[index] != '' and from_date_secondarys[index] != '' and end_date_secondarys[index] != '' :
+                        from_date = datetime.strptime(from_date_universitys[index], '%d/%m/%Y').strftime('%Y-%m-%d')
+                        end_date = datetime.strptime(end_date_universitys[index], '%d/%m/%Y').strftime('%Y-%m-%d')
                         secondary_line = {
                                            'name': name_secondarys[index],
                                            'city': city_secondarys[index],
                                            'country_id': country_id_secondarys[index],
-                                           'from_date': from_date_secondarys[index],
-                                           'end_date': end_date_secondarys[index],
+                                           'from_date': from_date,
+                                           'end_date': end_date,
                                            'degree': degree_secondarys[index],
                                            'study_domain': study_domain_secondarys[index]
     
@@ -396,10 +400,13 @@ class WebsiteHrRecruitment(http.Controller):
         if len(begin_dates) > 0 and begin_dates[0] != '' :
             for index, begin_date in enumerate(begin_dates):
                 if begin_dates[index] != '' and  end_dates[index] != '' and last_basic_salarys[index] != '' and title_functions[index] != '' and employers[index] != '' and type_of_activitys[index] != '' and addresss[index] != '' and name_of_supervisors[index] != '' and name_of_supervisors[index] != '' and number_of_superviseds[index] != '' and reason_for_leavings[index] != '' and mobile_phones[index] != '' and work_emails[index] != '' and descriptions[index] != '':   
+                    print 'Begin date : ',begin_dates[index]
+                    begin_date = datetime.strptime(begin_dates[index], '%d/%m/%Y').strftime('%Y-%m-%d')
+                    end_date = datetime.strptime(end_dates[index], '%d/%m/%Y').strftime('%Y-%m-%d')
                     previous_functions_line = {
     
-                    'begin_date': begin_dates[index],
-                    'end_date': end_dates[index],
+                    'begin_date': begin_date,
+                    'end_date': end_date,
                     'last_basic_salary': last_basic_salarys[index],
                     'title_function': title_functions[index],
                     'employer': employers[index],

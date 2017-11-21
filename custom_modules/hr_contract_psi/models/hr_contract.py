@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 
+import calendar
 from datetime import date, datetime
 from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, Warning
 
 
 class hr_contract(models.Model):
     _inherit = 'hr.contract'
     
-    place_of_work   = fields.Char(string='Lieu d\'affectaction', track_visibility='onchange') #lieu d'affectation
+    place_of_work   = fields.Selection(related="employee_id.work_location", string='Lieu d\'affectaction', track_visibility='onchange', store=True) #lieu d'affectation
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today, track_visibility='onchange')
     date_end = fields.Date('End Date', track_visibility='onchange')
     #job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
@@ -22,7 +23,7 @@ class hr_contract(models.Model):
     date_demission = fields.Date(string=u'Date de démission')
     #rupture
     date_rupture = fields.Date(string='Date rupture de contrat')
-
+    devise = fields.Many2one('res.currency',string='Devise')
     motif_rupture = fields.Selection([
                                       ('end_deadline_without_renewal',u"Arrivée de l'échéance sans reconduction"),
                                       ('conventional_break',"Rupture conventionnelle"),
@@ -32,7 +33,7 @@ class hr_contract(models.Model):
                                       ('retreat',"Retraite")
                                       ], string="Motif de rupture de contrat", track_visibility="onchange")
     
-    work_years = fields.Integer(compute="_calculate_work_years", string=u'Année de travail')
+    work_years = fields.Integer(compute="_calculate_work_years", string=u'Année de travail (Ancienneté)')
 
     
     result_evaluation = fields.Selection([
@@ -45,12 +46,6 @@ class hr_contract(models.Model):
                                             ])    
     scan_version_file = fields.Binary(string=u'Attacher le version scanner')
 
-#     psi_contract_type = fields.Selection([
-#         ('cdd', 'CDD'),
-#         ('cdi', 'CDI'),
-#         ('convention_stage','Convention de stage')
-#     ], string='Type de contrat', help="Type de contrat", track_visibility='onchange')
-    
     psi_contract_type = fields.Selection(related="employee_id.psi_contract_type", string="Type de contrat",store=True,track_visibility='onchange')
     
     name_employee = fields.Char(related='employee_id.name')
@@ -81,7 +76,7 @@ class hr_contract(models.Model):
                                 ], string="Sous Cat")
     
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
-
+    
     def action_report_certificat(self):
         date = fields.Date().today()
         psi_contract_historicals = self.env['psi.contract.historical'].search([('contract_id', '=', self.id)])
@@ -213,14 +208,14 @@ class hr_contract(models.Model):
     
     psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la Catégorie')
     psi_category = fields.Selection(related='psi_category_details.psi_professional_category')
-    psi_cat_cat = fields.Char(related='psi_category_details.psi_cat', string='CAT')
+    psi_cat_cat = fields.Char(related='psi_category_details.psi_cat', string='Catégorie')
     psi_sub_category            = fields.Selection([
                                         ('1','1'),
                                         ('2','2'),
                                         ('3','3'),
                                         ('4','4')
-                                ], string="Sous Cat")
-    
+                                ], string="Sous-catégorie")
+    matricule = fields.Char(string='Matricule')
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
    
     def action_send_email_desactivate_flottes(self):
@@ -307,7 +302,8 @@ class hr_contract(models.Model):
             wage_grids = self.env['hr.wage.grid.details'].search([('psi_professional_category', '=', self.psi_category),('psi_sub_category', '=', self.psi_sub_category)])
             echelon = 0
             for wage_grid in wage_grids :
-                echelon = wage_grid._get_echelon(vals['psi_echelon'])
+                if vals['psi_echelon'] != 'echelon_hc' :
+                    echelon = wage_grid._get_echelon(vals['psi_echelon'])
             vals['wage'] = echelon if echelon != 0 else data.wage
             
          
@@ -459,10 +455,24 @@ class hr_contract(models.Model):
 #        reprise processus
         print "reprise processus"
         for record in self:
+            
+            if self.job_id.psi_category.test_duration == 0:
+                raise Warning('La période d\'essai pour la catégorie "{}" n\'est pas encore définie.'.format(self.job_id.psi_category.psi_professional_category.upper()))
+            
             contract_obj = self.env['hr.contract']
             contract = contract_obj.browse([record.id])
+            
+            fin = datetime.strptime(contract.trial_date_end,"%Y-%m-%d")
+            if fin.weekday() == calendar.FRIDAY:
+                fin = fin + timedelta(days=3)
+            
+            new_date_start = fin
+            new_date_end = new_date_start + relativedelta(months=contract.job_id.psi_category.test_duration)
+            
             contract.update({
-                             'response_evaluation':'accept'
+                             'response_evaluation' : 'accept',
+                             'trial_date_start': new_date_start,
+                             'trial_date_end' : new_date_end,
             })
             
     def action_renew_trial_decline(self):
@@ -581,3 +591,4 @@ class ContractHistorical(models.Model):
      nouveau = fields.Char('Nouveau')
      
      contract_id = fields.Many2one('hr.contract')
+     

@@ -43,19 +43,32 @@
             <field name="active" eval="True" />
         </record>    
         
-        <!-- Cron add declaration interest every 2 years -->
+         <!-- Cron add declaration interest every years -->
         <record id="ir_cron_notif_add_declaration" forcecreate="True" model="ir.cron">
             <field name="name">PSI - Ajouter le déclaration d'intérêt</field>
             <field name="user_id" ref="base.user_root" />
-            <field name="interval_number">24</field> <!-- 24 -->
-            <field name="interval_type">months</field> <!-- months -->
+            <field name="interval_number">1</field> <!-- 12 -->
+            <field name="interval_type">days</field> <!-- months -->
             <field name="numbercall">-1</field>
             <field name="doall" eval="False" />
             <field name="model" eval="'hr.employee'" />
             <field name="function" eval="'_add_declaration_interest'" /> 
             <field name="args" eval="'(True,)'"/>
             <field name="active" eval="True" />
+        </record> 
+        
+        <!-- Cron add certificate ethics every 2 years -->
+        <record id="ir_cron_notif_add_certificate_ethics" forcecreate="True" model="ir.cron">
+            <field name="name">PSI - Ajouter le certificat de cours d’éthique</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field> <!-- 24 -->
+            <field name="interval_type">days</field> <!-- months -->
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False" />
+            <field name="model" eval="'hr.employee'" />
+            <field name="function" eval="'_add_certificate_ethics'" /> 
+            <field name="args" eval="'(True,)'"/>
+            <field name="active" eval="True" />
         </record>    
-
-    </data>
+    </data>   
 </odoo>

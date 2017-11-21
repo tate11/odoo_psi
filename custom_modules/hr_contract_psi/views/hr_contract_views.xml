@@ -21,6 +21,18 @@
 			</tree>
 		</field>
 	</record>
+	
+	<record id="hr_contract_view_tree_inherit" model="ir.ui.view">
+		<field name="name">Liste Contrats</field>
+		<field name="model">hr.contract</field>
+		<field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+		<field name="arch" type="xml">
+			<field name="name" position="before">
+				<field name="matricule" />
+			</field>
+		</field>
+	</record>
+	
 	<record id="hr_contract_view_form_psi" model="ir.ui.view">
 		<field name="name">hr.contract.form.psi</field>
 		<field name="model">hr.contract</field>
@@ -34,7 +46,9 @@
 					string="Ré-envoyer la notification - Fin du contrat"
 					attrs="{'invisible': ['|',('motif_rupture','=',False),('state_mail','=','draft')]}" />
 			</field>
-			
+			<field name="employee_id" position="before">
+				<field name="matricule" required="1" />
+			</field>
 			<xpath expr="//label" position="before">
 				<field name="response_evaluation" invisible="1" />
 				<div class="oe_button_box" name="button_box">
@@ -44,28 +58,32 @@
 					</button>
 				</div>
 			</xpath>
+			<xpath expr="//label[@for='trial_date_start']" position="replace">
+				<label for="trial_date_start" string="Période d’essai "/>
+			</xpath>
+		
 			<field name="type_id" position='replace'>
 				<field name="type_id" invisible="1" />
 				<field name="state_mail" invisible="1" />
 			</field>
 
 			<field name="wage" position='after'>
+			    <field name="devise" required="1" />
 				<field name="psi_category_details" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 				<field name="psi_cat_cat" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 				<field name="psi_sub_category" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 				<field name="psi_echelon" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 			</field>
-
+			
 			<xpath expr="//field[@name='department_id']" position='after'>
-				<field name="psi_contract_type" attrs="{'readonly' : [('state','=','close')]}"/>
-				<field name="place_of_work" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="psi_contract_type" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="place_of_work" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 			</xpath>
 
 <!-- 			<field name="date_end" position="after">
 				<field name="indetermine" class="oe_inline" attrs="{'invisible': [('psi_contract_type','=','cdd')]}" />
 			</field>
  -->
-			<xpath expr="//notebook" position="inside" />
 			<notebook>
 				<page string="Séparation" attrs="{'invisible': ['|', ('motif_rupture','=',False),('state','=','close')]}">
 					<group>
@@ -90,8 +108,8 @@
 			
 			<group name="duration_group" position="after">
 				<group name="rupture" string="Rupture de contrat">
+					<field name="motif_rupture" attrs="{'readonly' : [('state','=','close')]}" />
 					<field name="date_demission" attrs="{'readonly' : [('state','=','close')]}" />
-					<field name="motif_rupture" attrs="{'readonly' : [('state','=','close')]}" />			
 				</group>
 			</group>
 			
@@ -99,17 +117,18 @@
 				<group name="result_evaluation" string="Evaluation Période d'essai"> <!-- Condition if date_end_trial terminé -->
 					<field name="result_evaluation" attrs="{'readonly' : [('state','=','close')]}"/>
 					<label string="Vous voulez renouveler la période d'essai ?"
-						attrs="{'invisible':['|',('result_evaluation','not in','ko')]}" />
+						confirm="Veuillez confirmer le renouvelement de sa période d'essai."
+						attrs="{'invisible':['|','|',('result_evaluation','not in','ko'),('response_evaluation','=','accept')]}" />
 					<div>
 						<button name="action_renew_trial_accept" string="OUI" type="object"
 							class="btn-primary"
-							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=',True)]}"
+							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=','accept')]}"
 							onClick="$(this).prop('disabled', true);" />
-						-
+						&#x2063;&#x2063;
 						<button name="action_renew_trial_decline" string="NON"
 							type="object" class="btn-primary"
-							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=',True)]}"
-							confirm="Vous ne voulez pas la renouveler?" onClick="$(this).prop('disabled', true);" />
+							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=','accept')]}"
+							confirm="Veuillez confirmer si vous ne voulez pas renouvelement sa période d'essai." onClick="$(this).prop('disabled', true);" />
 					</div>
 
 					<button name="action_result_evaluation_send_ok" string="Envoyer une notification par mail"
@@ -148,7 +167,7 @@
 				<field name="visa_expire" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
 			<field name='department_id' position="replace">
-				<field name="department_id" attrs="{'readonly' : [('state','=','close')]}" />
+				<field name="department_id" required="1" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
 			<field name='wage' position="replace">
 				<field name="wage" attrs="{'readonly' : [('state','=','close')]}" />
@@ -158,18 +177,18 @@
 	            <group name="duration_group" string="Duration">
 		            <label for="trial_date_start" string="Durée de la période d'essai"/>
 		            <div>
-		                <field name="trial_date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/> - <field name="trial_date_end" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/>
+		                <field name="trial_date_start" class="oe_inline" required="1" attrs="{'readonly' : [('state','=','close')]}"/> - <field name="trial_date_end" class="oe_inline" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 		            </div>
 		            <label for="date_start" string="Durée du contrat"/>
 		            <div>
-		                <field name="date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/> - <field name="date_end" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/>
+		                <field name="date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/> - <field name="date_end" required="1" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/>
 		            </div>
 		            <field name="working_hours" attrs="{'readonly' : [('state','=','close')]}"/>
 		        </group>
             </group>
 			
 			<field name="working_hours" position="before">
-				<field name="work_years" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="work_years" attrs="{'readonly' : True}" />
 			</field>
 			<field name='visa_no' position="replace">
 				<field name="visa_expire" attrs="{'readonly' : [('state','=','close')]}" />
@@ -273,7 +292,7 @@
 						<field name="echelon_18" />
 						<field name="echelon_19" />
 						<field name="echelon_20" />
-						<field name="echelon_hc" />
+						<field name="echelon_hc" readonly="1"/>
 					</tree>
 				</field>
 			</form>
@@ -322,15 +341,14 @@
 		<field name="view_id" ref="hr_contract_birthday_view_calendar" />
 	</record>
 
-
 	<menuitem id="hr_menu_contract_psi_config" parent="hr.menu_hr_root"
-		sequence="6" name="PSI Configuration" />
-	<menuitem id="menu_contract_wage_grid" action="open_contract_wage_grid"
-		parent="hr_menu_contract_psi_config" sequence="5" />
-	<menuitem id="menu_contract_category" action="open_contract_category"
-		parent="hr_menu_contract_psi_config" sequence="11" />
-	<menuitem id="hr_menu_contract_rapport" parent="hr.menu_hr_root"
-		sequence="7" name="Rapports" />
-	<menuitem id="hr_menu_contract_rapport_anniversaire" action="action_hr_employee_reporting_birthday"
-		parent="hr_menu_contract_rapport" sequence="8" />
+	  sequence="6" name="PSI Configuration" />
+	 <menuitem id="menu_contract_wage_grid" action="open_contract_wage_grid"
+	  parent="hr_menu_contract_psi_config" sequence="5" />
+	 <menuitem id="menu_contract_category" action="open_contract_category"
+	  parent="hr_menu_contract_psi_config" sequence="11" />
+	 <menuitem id="hr_menu_contract_rapport" parent="hr.menu_hr_root"
+	  sequence="4" name="Rapports" />
+	 <menuitem id="hr_menu_contract_rapport_anniversaire" action="action_hr_employee_reporting_birthday"
+	  parent="hr_menu_contract_rapport" sequence="8" />
 </odoo>

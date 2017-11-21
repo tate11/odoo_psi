@@ -61,6 +61,7 @@
         <record id="activity_open_to_activity_validation_finance" model="workflow.transition">
             <field name="act_from" ref="activity_open"/>
             <field name="act_to" ref="activity_validation_finance"/>
+            <field name="condition">wkf_cond_open_to_validation_finance()</field>
             <field name="signal">button_validation_finance</field>
         </record>
         <record id="activity_open_to_activity_analyse" model="workflow.transition">
