@@ -455,6 +455,7 @@ class PreviousFunctions(models.Model):
     
     begin_date              = fields.Date(string="De")
     end_date                = fields.Date(string="A")
+    vola                    = fields.Selection([("ar","AR"),('euro','EUR'),('dolar','USD')],string="devise")
     last_basic_salary       = fields.Integer(string=u"Dérnier salaire de base")
     title_function          = fields.Char(string="Titre et fonction", required=True)
     employer                = fields.Char(string="Employeur", required=True)
