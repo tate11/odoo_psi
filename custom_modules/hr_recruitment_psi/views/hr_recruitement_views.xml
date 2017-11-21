@@ -10,6 +10,22 @@
 			<field name="model">hr.applicant</field>
 			<field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job" />
 			<field name="arch" type="xml">
+			    <div class="oe_title" position="replace">
+			    		<div class="oe_title">
+	                    <label for="partner_name" class="oe_edit_only"/>
+	                    <h1><field name="partner_name"/></h1>
+	                    <h2 class="o_row">
+	                        <div>
+	                            <span style="font-size: 13px" class="oe_edit_only">Prénom</span>
+	                            <field name="name" nolabel="1"/>
+	                        </div>
+	                        <div>
+	                            <label for="categ_ids" class="oe_edit_only"/>
+	                            <field name="categ_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+	                        </div>
+	                    </h2>
+	                </div>
+			    </div>
 			  <field name="email_from" position="replace">
 			  	<field name="email_from" required="1" />
 			  </field>
@@ -105,12 +121,12 @@
 							<field name="listen" />
 						</tree>
 					</field>
-					<h2>ETUDES</h2>
+					
+					<h2>Etudes Universitaires</h2>
 					<p>Veuillez donner l'intitulé exact de chaque diplôme ou titre
 						universitaire dans la langue dans laquelle il a été établi, et non
 						une traduction ou un équivalent.
 					</p>
-					<h2>Etudes Universitaires</h2>
 					<field name="university_studies">
 						<tree string="" editable="bottom">
 							<field name="name" />
@@ -134,7 +150,7 @@
 							<field name="study_domain" />
 						</tree>
 					</field>
-					<h2>FONCTIONS ANTERIEURES :</h2>
+					<h2>Fonctions Antérieures :</h2>
 					<p>En partant de votre poste actuel, indiquez, dans l'ordre
 						chronologique inverse, tous les postes que vous avez occupés
 					</p>
@@ -143,6 +159,7 @@
 							<field name="begin_date" />
 							<field name="end_date" />
 							<field name="last_basic_salary" />
+							<field name="vola" />
 							<field name="title_function" />
 							<field name="employer" />
 							<field name="type_of_activity" />
@@ -159,7 +176,7 @@
 					</field>
 					<label for="current_employer_report" />
 					<field name="current_employer_report" class="oe_inline"/>
-					<h2>REFERENCES PROFESSIONNELLES</h2>
+					<h2>Références professionnelles</h2>
 					<p>
 						Donnez le nom et l'adresse des trois personnes avec qui vous
 						avez travaillé étroitement, n'ayant avec vous aucun lien de
@@ -178,7 +195,7 @@
 					</field>
 					<b>
 						Par la présente, j'autorise PSI Madagascar à prendre
-						contact avec le personnes
+						contact avec les personnes
 						de références citées ci-dessus.
 					</b>
 					<span><br/><br/></span>
@@ -289,11 +306,13 @@
 						attrs="{'invisible': [('state','!=','notification_of_employment')]}" />
 					<button name="button_internship_contract" string="Etablir Contrat de stagiaire"
 						attrs="{'invisible': [('state','!=','benefits')]}" />
+					<button name="action_archived" string="Déplacer dans candidatures reçues" type="object"
+						attrs="{'invisible': [('state','!=','archived')]}" />
 				</field>
 				<field name="stage_id" position="replace">
 					<field name="state" widget="statusbar"
 						attrs="{'invisible': [('active', '=', False)]}"
-						statusbar_visible="applicant_selected,convoked_for_test,interview,professional_reference,bridger_insight,psi_wage_proposal,notification_of_employment,contract_established" />
+						statusbar_visible="applicant_selected,convoked_for_test,interview,professional_reference,bridger_insight,psi_wage_proposal,notification_of_employment,contract_established,archived" />
 				</field>
 
 				<button name="archive_applicant" position="replace" type='object'>

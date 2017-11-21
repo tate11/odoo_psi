@@ -56,6 +56,11 @@
         <field name="sequence">8</field>
         <field name="stage">contract_established</field>
     </record>
+    <record model="hr.recruitment.stage" id="archived">
+        <field name="name">Candidatures archivées</field>
+        <field name="sequence">9</field>
+        <field name="stage">archived</field>
+    </record>
     <!-- fin etape candidature -->
     
     <!-- type de recrutement -->

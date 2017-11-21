@@ -8,8 +8,23 @@ from pychart.arrow import default
 from odoo import fields, models, api, netsvc
 from odoo.exceptions import ValidationError, Warning
 from future.utils import native
+from odoo.addons.test_impex.tests.test_load import message
 
+class confirm_relance(models.TransientModel):
+    _name = 'confirm.relance'
 
+    yes_no = fields.Char(default='Voulez-vous remetre à zero?')
+    job_id = fields.Many2one('hr.job')
+    
+    def yes(self):
+        self.env['hr.job'].browse(self.job_id.id).signal_workflow('button_relance')
+        applicants=self.env['hr.applicant'].search([('job_id','=',self.job_id.id)])
+        for applicant in applicants:
+            applicant.write({'job_id':False})
+
+    def no(self):
+        self.env['hr.job'].browse(self.job_id.id).signal_workflow('button_relance')
+        
 class hr_job(models.Model):
     
     _inherit = "hr.job"
@@ -87,14 +102,85 @@ class hr_job(models.Model):
     
     @api.model
     def create(self, vals):
-        print "Create"
-        print self.documents_count
-        print vals.get('documents_count'),' documents_count'
-        res = super(hr_job, self).create(vals)
         if vals.get('documents_count') == 0:
             raise Warning(u"Vous devez ajouter le fichier TDR.")
+            return False
+        if not vals.get('tdr_add'):
+            raise Warning(u"Vous devez cochez sur TDR et en ajouter une pièce jointe")
+            return False
+        if not vals.get('experience_required_ids'):
+            raise Warning(u"Vous devez ajouter au moins un élément dans 'Expériences requises'")
+            return False
+        
+        if vals.get('nature_recrutement') and vals.get('nature_recrutement')=="conssideration_dossier":
+            if not vals.get('psi_memo'):
+                raise Warning("Vous devez cochez sur Memo")
+                return False
+            
+        res = super(hr_job, self).create(vals)
         return res
     
+    @api.multi 
+    def write(self,vals):
+        message=""
+        if vals.get('tdr_add') is None:
+            if not self.tdr_add:
+                message=u"Vous devez cochez sur TDR et en ajouter une pièce jointe"
+        else:
+            if not vals.get('tdr_add'):
+                message=u"Vous devez cochez sur TDR et en ajouter une pièce jointe"
+        
+        if vals.get('experience_required_ids') is None:
+            if not self.experience_required_ids:
+                if message!="":
+                    message=u"{} et {}".format(message,u"vous devez ajouter au moins un élément dans 'Expériences requises'")
+                else:
+                    message=u"Vous devez ajouter au moins un élément dans 'Expériences requises'"
+        elif not vals.get('experience_required_ids'):
+            if message!="":
+                    message=u"{} et {}".format(message,u"vous devez ajouter au moins un élément dans 'Expériences requises'")
+            else:
+                message=u"Vous devez ajouter au moins un élément dans 'Expériences requises'"
+        
+        if vals.get('nature_recrutement') and vals.get('nature_recrutement')=="conssideration_dossier":
+            if not vals.get('psi_memo') and not self.psi_memo:
+                if message!="":
+                    message=u"{} et {}".format(message,u"vous devez cocher sur Memo")
+                else:
+                    message=u"Vous devez cocher sur Memo"
+                      
+        if message!="":
+            raise Warning(message)
+            return False
+        
+        res=super(hr_job,self).write(vals)
+        return res
+    
+    def relance(self):
+        
+        ctx = dict()
+        ctx.update({
+            'default_job_id':self.id, 
+            'default_model':'confirm.relance',
+            'default_use_template': True,
+            'default_template_id':self.env['ir.model.data'].get_object_reference('hr_recruitment_psi','action_confirm_relance')[1]
+        })
+        
+        view_id=self.env['ir.model.data'].get_object_reference('hr_recruitment_psi','confirm_relance_form')[1]
+        
+        return {
+            'name': 'Confirmation',
+            'domain': [],
+            'res_model': 'confirm.relance',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'views': [(view_id, 'form')],
+            'view_id': view_id,
+            'context': ctx,
+            'target': 'new',
+        }
+        
     def wkf_open_to_validation_finance(self):
         if self.nature_recrutement != "interne":
             self.write({'state':'validation_finance'})
@@ -139,7 +225,7 @@ class hr_job(models.Model):
     def _change_recrutement_type_id(self):
         if self.recrutement_type == 'stagiaire':
             self.psi_contract_type = 'convention_stage'
-        
+         
 class SubordinationLink(models.Model):
      _name = 'hr.subordination.link'
      
@@ -166,7 +252,12 @@ class ExperienceRequise(models.Model):
       year = fields.Integer(string='en Année', size=2)
       job_id = fields.Many2one('hr.job')
       
-                  
+      @api.one
+      def unlink(self):
+          if self.env['hr.job'].search([('id','=',self.job_id.id)],count=True)==1:
+              raise Warning('Vous ne pouvez pas laisser le champ "Expériences requises" vide!')
+              return False
+          
       @api.constrains('year')
       def _check_length_year(self):
           for record in self:
