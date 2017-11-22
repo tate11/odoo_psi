@@ -46,12 +46,6 @@
 							<label for="correspondance_profil" />
 							<field name="correspondance_profil" />
 						</h2>
-						<h2>
-							<label for="psi_total_note" />
-							<field name="psi_total_note" />
-						</h2>
-						<field name="psi_note_interview" />
-						<field name="b_liste_restreinte" />
 					</group>
 					<group string="Note Shortlist">
 						<field name="psi_note_hr" attrs="{'required': [('state','=',('applicant_selected'))]}" />
@@ -63,6 +57,19 @@
 						<field name="psi_note_test_candidate" attrs="{'required': [('state','=',('convoked_for_test'))]}" />
 						<field name="psi_average_note_test" />
 					</group>
+					<group string="Note Entretien">
+						<field name="psi_note_interview" />
+					</group>
+					<group string="Total des notes">
+						<h2>
+							<label for="psi_total_note" />
+							<field name="psi_total_note" />
+						</h2>
+					</group>
+					<group>
+						<field name="b_liste_restreinte" />
+					</group>
+					
 				</field>
 
 				<field name="type_id" position="replace">
