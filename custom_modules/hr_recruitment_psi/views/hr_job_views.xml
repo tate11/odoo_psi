@@ -15,6 +15,9 @@
 		<field name="model">hr.job</field>
 		<field name="inherit_id" ref="hr_recruitment.hr_job_survey" />
 		<field name="arch" type="xml">
+			<field name="no_of_recruitment" position="attributes">
+				<attribute name="string">Nombre de poste(s) à pouvoir</attribute>
+			</field>
 			<field name="user_id" position="replace">
 				<field name="user_id" required="1" string="Responsable de recrutement *" />
 				<field name="name_of_claimant" />
