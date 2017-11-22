@@ -2,31 +2,31 @@
 <odoo>
   <data>
     <!-- Ville/Bureau PSI -->  
-	<record model="ville" id="antananarivo">
+	<record model="hr.timesheet.psi.ville" id="antananarivo">
         <field name="name">Antananarivo</field>
     </record>  
-	<record model="ville" id="toamasina">
+	<record model="hr.timesheet.psi.ville" id="toamasina">
         <field name="name">Toamasina</field>
     </record>  
-	<record model="ville" id="antsiranana">
+	<record model="hr.timesheet.psi.ville" id="antsiranana">
         <field name="name">Antsiranana</field>
     </record>  
-	<record model="ville" id="antsirabe">
+	<record model="hr.timesheet.psi.ville" id="antsirabe">
         <field name="name">Antsirabe</field>
     </record>  
-	<record model="ville" id="fianarantsoa">
+	<record model="hr.timesheet.psi.ville" id="fianarantsoa">
         <field name="name">Fianarantsoa</field>
     </record>  
-	<record model="ville" id="taolagnaro">
+	<record model="hr.timesheet.psi.ville" id="taolagnaro">
         <field name="name">Taolagnaro</field>
     </record>  
-	<record model="ville" id="toliary">
+	<record model="hr.timesheet.psi.ville" id="toliary">
         <field name="name">Toliary</field>
     </record>  
-	<record model="ville" id="morondava">
+	<record model="hr.timesheet.psi.ville" id="morondava">
         <field name="name">Morondava</field>
     </record>  
-	<record model="ville" id="mahajanga">
+	<record model="hr.timesheet.psi.ville" id="mahajanga">
         <field name="name">Mahajanga</field>
     </record>
 

@@ -2,3 +2,7 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_cours_ethique,hr.cours.ethique,model_hr_cours_ethique,hr.group_hr_user,1,0,0,0
 access_hr_person_children,hr.person.children,model_hr_person_children,hr.group_hr_user,1,0,0,0
 access_hr_person_information,hr.person.information,model_hr_person_information,hr.group_hr_user,1,0,0,0
+access_psi_code_budgetaire,psi.code.budgetaire,model_psi_code_budgetaire,hr.group_hr_user,1,0,0,0
+access_hr_duree_preavis,hr.duree.preavis,model_hr_duree_preavis,hr.group_hr_user,1,0,0,0
+access_hr_duree_preavis,hr.duree.preavis,model_hr_duree_preavis,hr.group_hr_user,1,0,0,0
+

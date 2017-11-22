@@ -13,6 +13,6 @@ class Calendar(models.Model):
 
 class Ville(models.Model):
     
-    _name = 'ville'
+    _name = 'hr.timesheet.psi.ville'
     
     name = fields.Char(string='Ville/Bureau')

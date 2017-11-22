@@ -10,4 +10,7 @@ access_hr_experience_required,hr.experience.required,model_hr_experience_require
 access_hr_job_equipment,hr.job.equipment,model_hr_job_equipment,hr_recruitment.group_hr_recruitment_user,1,0,0,0
 access_hr_subordination_link,hr.subordination.link,model_hr_subordination_link,hr_recruitment.group_hr_recruitment_user,1,0,0,0
 access_hr_recruitment_lieu_embauche,hr.recruitment.lieu.embauche,model_hr_recruitment_lieu_embauche,hr_recruitment.group_hr_recruitment_user,1,0,0,0
-
+access_hr_equipment,hr.equipment,model_hr_equipment,hr_recruitment.group_hr_recruitment_user,1,0,0,0
+access_hr_recruitement_parent_information,hr.recruitement.parent.information,model_hr_recruitement_parent_information,hr_recruitment.group_hr_recruitment_user,1,0,0,0
+access_hr_psi_category,hr.psi.category,model_hr_psi_category,hr_recruitment.group_hr_recruitment_user,1,0,0,0
+access_hr_psi_category_details,hr.psi.category.details,model_hr_psi_category_details,hr_recruitment.group_hr_recruitment_user,1,0,0,0
