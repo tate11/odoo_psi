@@ -8,6 +8,7 @@
     'website': 'https://www.ingenosya.mg',
     'depends': ['hr', 'hr_recruitment_psi'],
     'data':  [
+              'security/ir.model.access.csv',
               'data/hr_employee_cron.xml',
               'data/mail_template_hr_employee_data.xml',
               'data/hr_employee_data.xml',

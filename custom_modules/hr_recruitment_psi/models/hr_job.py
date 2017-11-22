@@ -2,13 +2,9 @@
 
 import datetime
 
-from pychart.arrow import default
-
-
 from odoo import fields, models, api, netsvc
 from odoo.exceptions import ValidationError, Warning
-from future.utils import native
-from odoo.addons.test_impex.tests.test_load import message
+
 
 class confirm_relance(models.TransientModel):
     _name = 'confirm.relance'

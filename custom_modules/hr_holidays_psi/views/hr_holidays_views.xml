@@ -2,8 +2,14 @@
 <odoo>
 	<data>
 	
-   		<!-- Search Filter in HrHolidays -->
-		<record id="hr_holidays_filter_inherit" model="ir.ui.view">
+	<menuitem
+            id="menu_hr_holidays_config_psi"
+            name="Configuration PSI"
+            parent="hr_holidays.menu_hr_holidays_root"
+            sequence="5"/>
+            
+   	<!-- Search Filter in HrHolidays -->
+	<record id="hr_holidays_filter_inherit" model="ir.ui.view">
 			<field name="name">hr.holidays.filter.inherit</field>
 			<field name="model">hr.holidays</field>
 			<field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter" />
@@ -15,7 +21,7 @@
 						/>				
 				</xpath>
 			</field>
-		</record>
+	</record>
 
 	<record id="edit_holiday_new_psi_inherit" model="ir.ui.view">
 		<field name="name">edit.holiday.new.psi.inherit</field>
@@ -37,11 +43,11 @@
 				<field name="category_id" invisible="1" />
 				<field name="last_business_day" invisible="1" />
 				<field name="employee_type" invisible="1" />
+				<field name="id_psi_holidays_status" invisible="1" />
 			</field>
 			
 			<xpath expr="//field[@name='holiday_status_id']" position='after'>
-				<!-- <field name="holiday_type_permission" attrs="{'invisible':[('id_psi_holidays_status','not in','1')]}" /> -->
-				<field name="holiday_type_permission" attrs="{'invisible':[('color_name_holiday_status','not in','lightblue')]}" />
+				<field name="holiday_type_permission" attrs="{'invisible':[('id_psi_holidays_status','!=',1)], 'required': [('id_psi_holidays_status', '=', 1)]}" />
 				<!-- <field name="holiday_type_permission" attrs="{'invisible':['&amp;',('color_name_holiday_status','not in','lightblue'),('type','not in','add')], 'required': [('color_name_holiday_status', '=', 'lightblue')]}" /> -->
 			</xpath>
 			
@@ -51,20 +57,26 @@
 
 			<xpath expr="//button[@name='action_refuse']" position='replace'>
 				<button string="Refuser" name="action_refuse" states="confirm,validate,validate1,validate2" type="object" 
-				groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha"/>
+				groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha,hr_holidays.group_hr_holidays_manager"/>
 			</xpath>
 			<xpath expr="//button[@name='action_validate']" position='replace'>
-				<button string="Valider (DRHA)" name="action_validate" states="validate2" type="object" groups="hr_holidays_psi.group_hr_holidays_drha" class="oe_highlight"/>
+				<button string="Valider (DRHA)" name="action_validate" states="validate2"  type="object" class="oe_highlight"
+				groups="hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha,hr_holidays.group_hr_holidays_manager" />
+			</xpath>
+			<xpath expr="//button[@name='action_approve']" position='after'>
+				<button string="Approbation (Chef de departement)" name="action_approbation_departement" attrs="{'invisible': [('state','not in','validate1')]}"  type="object" class="oe_highlight" 
+				groups="hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha,hr_holidays.group_hr_holidays_manager" />
 			</xpath>
 			<xpath expr="//button[@name='action_approve']" position='replace'>
-				<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" class="oe_highlight" />
+				<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" class="oe_highlight"  />
 			</xpath>
 			<field name="state" position="before">
-			    <button string="Valider (Responsable RH)" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','validate1')]}" states="validate1" type="object" groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa" class="oe_highlight"/>
+			    <button string="Valider (Responsable RH)" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','approbation')]}"  type="object" class="oe_highlight"
+			    groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha,hr_holidays.group_hr_holidays_manager" />
 			</field>
 			
 			<field name="state" position="replace">
-				<field name="state" widget="statusbar" statusbar_visible="draft,confirm, validate1, validate2, validate"/>
+				<field name="state" widget="statusbar" statusbar_visible="confirm, validate1, approbation,validate2, validate"/>
       </field>
 
 		</field>
@@ -92,5 +104,28 @@
 			</xpath>
 		</field>
 	</record>
+	
+	<!-- Hide menu approve -->
+	<record id="make_invisible" model="res.groups">
+	    <field name="name">Invisible</field>
+	 </record>
+	 <record model="ir.ui.menu" id="hr_holidays.menu_open_allocation_holidays">
+	    <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+	</record>
+	 <record model="ir.ui.menu" id="hr_holidays.menu_open_department_leave_allocation_approve">
+	    <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+	</record>
+	 <record model="ir.ui.menu" id="hr_holidays.menu_open_department_leave_approve">
+	    <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+	</record>
+	
+  	<menuitem
+            id="menu_hr_holidays_approvals"
+            name="Congés à valider"
+            parent="hr_holidays.menu_hr_holidays_root"
+            sequence="3"
+            action="hr_holidays.open_department_holidays_approve"
+            groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"/>      
+            
 	</data>
 </odoo>

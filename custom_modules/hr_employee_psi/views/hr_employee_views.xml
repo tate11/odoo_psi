@@ -206,7 +206,7 @@
 						groups="hr.group_hr_user">
 						<group col="2">
 							<group string="Etat civil">
-								<field name="matricule" />
+								<field name="matricule" required="1" />
 								<field name="name" string='Nom et prénom(s)' />
 								<field name="birthday" string='Date de naissance' />
 								<field name="father_name" string='Nom du père' />
