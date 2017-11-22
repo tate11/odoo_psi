@@ -1,5 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_psi_contract_historical,psi.contract.historical,model_psi_contract_historical,hr.group_hr_manager,1,0,0,0
-access_hr_wage_grid,hr.wage.grid,model_hr_wage_grid,hr.group_hr_manager,1,0,0,0
-access_hr_wage_grid_details,hr.wage.grid.details,model_hr_wage_grid_details,hr.group_hr_manager,1,0,0,0
-
+access_hr_wage_grid,hr.wage.grid,model_hr_wage_grid,hr.group_hr_manager,1,1,0,0
+access_hr_wage_grid_details,hr.wage.grid.details,model_hr_wage_grid_details,hr.group_hr_manager,1,1,0,0
+access_hr_duree_preavis,hr.duree.preavis,model_hr_duree_preavis,hr.group_hr_manager,1,1,0,0

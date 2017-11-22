@@ -73,7 +73,7 @@ class hr_holidays_psi(models.Model):
         for holiday in holidays :
             write_date = datetime.datetime.strptime(holiday.write_date,"%Y-%m-%d %H:%M:%S")
             write_date_year = write_date.year
-            if write_date_year == year_now and holidays.holiday_status_id.id == holidays_status[0].id:
+            if write_date_year == year_now and holiday.holiday_status_id.id == holidays_status[0].id:
                 number_days += holiday.number_of_days
         if number_days > 10 :
             raise UserError(u"Vous avez depassé le nombre de jours maximum de permission.")
