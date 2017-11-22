@@ -347,19 +347,20 @@
             <field name="model">hr.duree.preavis</field>
             <field name="arch" type="xml">
                 <search string="Recherche">
+                    <filter string="Ancienneté/groupe" domain="[]" context="{'group_by': 'anciennete'}" />
+	                <filter string="Catégorie" domain="[]" context="{'group_by': 'sous_cat_cat'}" />
+	                <filter string="Durée du préavis" domain="[]" context="{'group_by': 'name'}" />
+	                
                     <field name="name"/>         
                     <field name="anciennete"/>
                     <field name="sous_cat_cat"/>
                 </search>
-                <filter string="Ancienneté/groupe" domain="[]" context="{'group_by': 'anciennete'}" />
-                <filter string="Catégorie" domain="[]" context="{'group_by': 'sous_cat_cat'}" />
-                <filter string="Durée du préavis" domain="[]" context="{'group_by': 'name'}" />
             </field>
        </record>
                 
 		<!-- VUE PREAVIS -->
-		<record id="hr_duree_preavis_view_tree" model="ir.ui.view">
-			<field name="name">hr.duree.preavis.tree</field>
+		<record id="hr_duree_preavis_view_pivot" model="ir.ui.view">
+			<field name="name">hr.duree.preavis.pivot</field>
 			<field name="model">hr.duree.preavis</field>
 			<field name="type">pivot</field>
 			<field name="arch" type="xml">
