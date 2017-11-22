@@ -21,7 +21,7 @@
 			<field name="wkf_id" ref="hr_job_wkf" />
 			<field name="name">activity_validation_finance</field>
 			<field name="kind">function</field>
-			<field name="action">write({'state':'validation_finance'})</field>
+			<field name="action">wkf_validation_finance()</field>
 		</record>
 		<record id="activity_analyse" model="workflow.activity">
 			<field name="wkf_id" ref="hr_job_wkf" />
