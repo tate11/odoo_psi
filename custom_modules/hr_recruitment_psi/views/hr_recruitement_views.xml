@@ -191,23 +191,29 @@
 										<label for="last_basic_salary">Dérnier salaire de base</label>
 										<field name="last_basic_salary"/>
 									</div>
-									<field name="vola" class="pull-right" style="bottom:0px" nolabel="1"/>
+									<div class="pull-right">
+										<field name="vola" style="display:inline-block;bottom:0px" nolabel="1"/>
+									</div>
 								</group>
 								<group>
 									<field name="employer" required="1"/>
 									<field name="type_of_activity" />
 								</group>
-								<field name="address" required="1"/>
+								<group>
+									<field name="address" required="1"/>
+									<field name="description" />
+								</group>
 								<group>
 									<field name="name_of_supervisor" />
 									<field name="number_of_supervised" />
 								</group>
-								<field name="reason_for_leaving" />
+								<group>
+									<field name="reason_for_leaving" />
+								</group>
 								<group>
 									<field name="mobile_phone" required="1"/>
 									<field name="work_email" />
 								</group>
-								<field name="description" />
 								<group>
 									<field name="psi_applicant_id" invisible="1" />
 									<field name="duree"/>
