@@ -2,11 +2,7 @@
 
 import datetime
 
-from future.utils import native
-from pychart.arrow import default
-
 from odoo import fields, models, api, netsvc
-from odoo.addons.test_impex.tests.test_load import message
 from odoo.exceptions import ValidationError, Warning
 
 
@@ -105,16 +101,34 @@ class hr_job(models.Model):
         if vals.get('documents_count') == 0:
             raise Warning(u"Vous devez ajouter le fichier TDR.")
             return False
-            
         res = super(hr_job, self).create(vals)
         return res
     
-    @api.multi 
-    def write(self,vals):
+    def wkf_validation_finance(self):
+        message=""
+        if not self.tdr_add:
+            message=u"Vous devez cochez sur TDR et en ajouter une pièce jointe"
         
-        res=super(hr_job,self).write(vals)
-        return res
-    
+        if self.nature_recrutement=="conssideration_dossier":
+            if not self.psi_memo:
+                if message!="":
+                    message=u"{} et {}".format(message,u"vous devez cocher sur Memo")
+                else:
+                    message=u"Vous devez cocher sur Memo"
+                    
+        if not self.experience_required_ids:
+            if message!="":
+                message=u"{} et {}".format(message,u"vous devez ajouter au moins un élément dans 'Expériences requises'")
+            else:
+                message=u"Vous devez ajouter au moins un élément dans 'Expériences requises'"
+        
+                          
+        if message!="":
+            raise Warning(message)
+            return False
+        else:
+            self.write({'state':'validation_finance'})
+        
     def relance(self):
         
         ctx = dict()
