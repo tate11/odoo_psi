@@ -19,23 +19,23 @@
 				<attribute name="string">Nombre de poste(s) à pouvoir</attribute>
 			</field>
 			<field name="user_id" position="replace">
-				<field name="user_id" required="1" string="Responsable de recrutement *" />
+				<field name="user_id" required="1" string="Responsable de recrutement" />
 				<field name="name_of_claimant" />
 			</field>
 			<field name="address_id" position="after">
 				<field name="ref_of_demand" />
-				<field name="date_of_demand" required="1" string="Date de la demande  *"/>
-				<field name="psi_motif" attrs="{'required': [('state', 'in', ('open'))]}" string="Motif du recrutement *"/>
-				<field name="nature_recrutement" string="Nature de recrutement *" required="1" /> <!-- attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': [('recrutement_type', '=', 'consultant')]}" -->
+				<field name="date_of_demand" required="1" string="Date de la demande"/>
+				<field name="psi_motif" attrs="{'required': [('state', 'in', ('open'))]}" string="Motif du recrutement"/>
+				<field name="nature_recrutement" string="Nature de recrutement" required="1" /> <!-- attrs="{'invisible': [('recrutement_type','!=','consultant')], 'required': [('recrutement_type', '=', 'consultant')]}" -->
 				<field name="place_of_work" widget="many2many_tags"/>
 				<field name="place_of_employment" />
-				<field name="application_deadline_date" string="Date limite de candidature *" attrs="{'required': [('state', 'in', ('open'))]}"/>
+				<field name="application_deadline_date" string="Date limite de candidature" attrs="{'required': [('state', 'in', ('open'))]}"/>
 				<field name="psi_budget_code_distribution" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'required': [('state', '=', 'validation_finance')]}"/>
-				<field name="psi_contract_type" string="Type de contrat  *" attrs="{'required': [('state', 'in', ('open'))]}" />
+				<field name="psi_contract_type" string="Type de contrat" attrs="{'required': [('state', 'in', ('open'))]}" />
 				<field name="psi_contract_duration" attrs="{'invisible': ['|',('psi_contract_type','=','cdi'),('psi_contract_type','=','prestataire')], 'required': [('psi_contract_type', '=', 'cdd')]}" />
 				<field name="rr_approbation" attrs="{'readonly': [('nature_recrutement', '=', 'interne')]}" />
 				<field name="psi_memo" attrs="{'invisible': [('nature_recrutement', '!=', 'conssideration_dossier')]}"/>
-				<field name="tdr_add" required="1" string="TDR *"/>
+				<field name="tdr_add" required="1" string="TDR"/>
 				<field name="psi_job_equipment" colspan="2">
 					<tree string="psi_job_equipment" editable="bottom">
 						<field name="equipment_id" />
@@ -65,14 +65,14 @@
 		<field name="inherit_id" ref="hr.view_hr_job_form" />
 		<field name="arch" type="xml">
 			<field name="department_id" position="after">
-				<field name="recrutement_type_id" string="Type de recrutement *"/>
+				<field name="recrutement_type_id" string="Type de recrutement"/>
 				<field name="recrutement_type" invisible="1" />
-				<field name="psi_category" required="1" string="Catégorie professionnelle *"/>
-				<field name="superior_hierarchical" required="1" string="Supérieur Hiérarchique *"/>
+				<field name="psi_category" required="1" string="Catégorie professionnelle"/>
+				<field name="superior_hierarchical" required="1" string="Supérieur Hiérarchique"/>
 				<field name="subordination_link_id" require="1"/>
-				<field name="psi_date_start" required="1" string="Date de prise de fonction souhaitée *"/>
+				<field name="psi_date_start" required="1" string="Date de prise de fonction souhaitée"/>
 				<field name="level_of_education_id" />
-				<field name="experience_required_ids" string="Expériences requises *" colspan="2">
+				<field name="experience_required_ids" string="Expériences requises" colspan="2">
 					<tree string="Experience requise" editable="bottom">
 						<field name="name" />
 						<field name="month"/>
@@ -82,7 +82,7 @@
 				<field name="poste_description" />
 			</field>
 			<field name="department_id" position="replace">
-				<field name="department_id" required="1" string="Département *" />
+				<field name="department_id" required="1" string="Département" />
 			</field>
 			<button name="set_recruit" position="replace">
 				<button name="set_recruit" invisible="1" />
