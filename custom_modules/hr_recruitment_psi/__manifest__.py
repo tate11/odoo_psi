@@ -11,7 +11,7 @@
              'data/hr_recruitment_data.xml',
 			 'data/hr_psi_category_data.xml',
              'data/mail_template_data.xml',
-             #'security/ir.model.access.csv',
+             'security/ir.model.access.csv',
              'views/hr_job_views.xml',
              'views/hr_job_wkf.xml',
              'views/hr_recruitement_views.xml',
