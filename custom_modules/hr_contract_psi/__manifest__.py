@@ -9,6 +9,7 @@
     'depends': ['base','hr','hr_contract','mail','contacts','hr_recruitment_psi','hr_employee_psi'],
     'data':  [
               'data/mail_template_hr_contract_data.xml',
+              'data/hr_contract_cron.xml',
               'data/hr_contract_data.xml',
               'data/hr_wage_grid_data.xml',
               'data/mail_template_evenement_professionnel.xml',

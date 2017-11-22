@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<!-- Cron send first email RH & collaborator -->
+		<record id="ir_cron_send_email_rh_1" model="ir.cron">
+			<field name="name">PSI Collaborateur - Premier rappel Email à la RH
+			</field>
+			<field name="active" eval="True" />
+			<field name="user_id" ref="base.user_root" />
+			<field name="interval_number">1</field>
+			<field name="interval_type">days</field>
+			<field name="numbercall">-1</field>
+			<field name="doall" eval="False" />
+			<field eval="'hr.contract'" name="model" />
+			<field name="function" eval="'_send_first_email_rh'" />
+		</record>
+		<!-- Cron send email mentor - Fin periode d'essai -->
+		<record id="ir_cron_send_email_trial_date_end" forcecreate="True"
+			model="ir.cron">
+			<field name="name">PSI Contrat - Rappel fin période d'essai</field>
+			<field name="user_id" ref="base.user_root" />
+			<field name="interval_number">1</field>
+			<field name="interval_type">days</field>
+			<field name="numbercall">-1</field>
+			<field name="doall">1</field>
+			<field eval="'hr.contract'" name="model" />
+			<field name="function" eval="'_send_email_trial_date_end'" />
+			<field name="args" eval="'(True,)'" />
+			<field name="active" eval="True" />
+		</record>
+		<!-- Cron send email mentor - Fin contrat -->
+		<record id="ir_cron_send_email_end_contract" forcecreate="True"
+			model="ir.cron">
+			<field name="name">PSI Contrat - Rappel fin contrat</field>
+			<field name="user_id" ref="base.user_root" />
+			<field name="interval_number">1</field>
+			<field name="interval_type">months</field>
+			<field name="numbercall">-1</field>
+			<field name="doall">1</field>
+			<field eval="'hr.contract'" name="model" />
+			<field name="function" eval="'_send_email_end_contract'" />
+			<field name="args" eval="'(True,)'" />
+			<field name="active" eval="True" />
+		</record>
+		<!-- Cron send email collaborateur and RH - Suivi date d’anniversaire - 
+			rappel -->
+		<record id="ir_cron_suivi_date_d_anniversaire" forcecreate="True"
+			model="ir.cron">
+			<field name="name">PSI Suivi date d'anniversaire rappel a Collaborateur et
+				RH</field>
+			<field name="user_id" ref="base.user_root" />
+			<field name="interval_number">1</field>
+			<field name="interval_type">days</field>
+			<field name="numbercall">-1</field>
+			<field name="doall">1</field>
+			<field eval="'hr.contract'" name="model" />
+			<field name="function" eval="'_send_email_birthday_date_tracking'" />
+			<field name="args" eval="" />
+			<field name="active" eval="True" />
+		</record>
+		<!-- Cron cloture profil collabo - Fin contrat -->
+		<record id="ir_cron_close_collabo_end_contract" forcecreate="True"
+			model="ir.cron">
+			<field name="name">PSI Contrat - Rappel fin contrat/ Cloture fin
+				collaborateur</field>
+			<field name="user_id" ref="base.user_root" />
+			<field name="interval_number">1</field>
+			<field name="interval_type">days</field>
+			<field name="numbercall">-1</field>
+			<field name="doall">1</field>
+			<field eval="'hr.contract'" name="model" />
+			<field name="function" eval="'_close_collabo_end_contract'" />
+			<field name="args" eval="'(True,)'" />
+			<field name="active" eval="True" />
+		</record>
+	</data>
+</odoo>

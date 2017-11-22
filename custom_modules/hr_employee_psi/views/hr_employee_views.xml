@@ -381,42 +381,6 @@
 			</field>
 		</record>
 		
-		<!-- SEARCH PREAVIS -->
-        <record id="hr_duree_preavis_filter" model="ir.ui.view">
-            <field name="name">hr.duree.preavis.filter</field>
-            <field name="model">hr.duree.preavis</field>
-            <field name="arch" type="xml">
-                <search string="Recherche">
-                    <field name="name"/>         
-                    <field name="anciennete"/>
-                    <field name="sous_cat"/>
-                </search>
-            </field>
-       </record>
-                
-		<!-- VUE PREAVIS -->
-		<record id="hr_duree_preavis_view_tree" model="ir.ui.view">
-			<field name="name">hr.duree.preavis.tree</field>
-			<field name="model">hr.duree.preavis</field>
-			<field name="arch" type="xml">
-				<tree string="Liste des durée du préavis">
-					<field colspan="4" name="name" />
-					<field name="anciennete" />
-					<field name="categorie" />
-					<field name="sous_cat" />
-				</tree>
-			</field>
-		</record>
-		
-		<!-- ACTIONS DUREE PREAVIS-->
-		<record id="action_hr_duree_preavis" model="ir.actions.act_window">
-			<field name="name">Liste des durée du préavis</field>
-			<field name="res_model">hr.duree.preavis</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="hr_duree_preavis_view_tree" />
-		</record>
-		
 		<!-- MENUS -->
 		<menuitem id="hr_menu_contract_type_sanction_root"
 			parent="hr.menu_hr_root" sequence="5" name="Sanctions"/>
@@ -424,8 +388,6 @@
 			parent="hr_menu_contract_type_sanction_root" sequence="5" />
 		<menuitem id="hr_menu_contract_liste_employee_sanctione" action="action_hr_contract_list_sanction"
 			parent="hr_menu_contract_type_sanction_root" sequence="6" />
-		<menuitem id="hr_menu_duree_preavis" action="action_hr_duree_preavis"
-			parent="hr.menu_hr_root" sequence="4" />
 		
 	</data>
 </odoo>
