@@ -2,13 +2,13 @@
 
 import datetime
 
+from future.utils import native
 from pychart.arrow import default
 
-
 from odoo import fields, models, api, netsvc
-from odoo.exceptions import ValidationError, Warning
-from future.utils import native
 from odoo.addons.test_impex.tests.test_load import message
+from odoo.exceptions import ValidationError, Warning
+
 
 class confirm_relance(models.TransientModel):
     _name = 'confirm.relance'
@@ -105,53 +105,12 @@ class hr_job(models.Model):
         if vals.get('documents_count') == 0:
             raise Warning(u"Vous devez ajouter le fichier TDR.")
             return False
-        if not vals.get('tdr_add'):
-            raise Warning(u"Vous devez cochez sur TDR et en ajouter une pièce jointe")
-            return False
-        if not vals.get('experience_required_ids'):
-            raise Warning(u"Vous devez ajouter au moins un élément dans 'Expériences requises'")
-            return False
-        
-        if vals.get('nature_recrutement') and vals.get('nature_recrutement')=="conssideration_dossier":
-            if not vals.get('psi_memo'):
-                raise Warning("Vous devez cochez sur Memo")
-                return False
             
         res = super(hr_job, self).create(vals)
         return res
     
     @api.multi 
     def write(self,vals):
-        message=""
-        if vals.get('tdr_add') is None:
-            if not self.tdr_add:
-                message=u"Vous devez cochez sur TDR et en ajouter une pièce jointe"
-        else:
-            if not vals.get('tdr_add'):
-                message=u"Vous devez cochez sur TDR et en ajouter une pièce jointe"
-        
-        if vals.get('experience_required_ids') is None:
-            if not self.experience_required_ids:
-                if message!="":
-                    message=u"{} et {}".format(message,u"vous devez ajouter au moins un élément dans 'Expériences requises'")
-                else:
-                    message=u"Vous devez ajouter au moins un élément dans 'Expériences requises'"
-        elif not vals.get('experience_required_ids'):
-            if message!="":
-                    message=u"{} et {}".format(message,u"vous devez ajouter au moins un élément dans 'Expériences requises'")
-            else:
-                message=u"Vous devez ajouter au moins un élément dans 'Expériences requises'"
-        
-        if vals.get('nature_recrutement') and vals.get('nature_recrutement')=="conssideration_dossier":
-            if not vals.get('psi_memo') and not self.psi_memo:
-                if message!="":
-                    message=u"{} et {}".format(message,u"vous devez cocher sur Memo")
-                else:
-                    message=u"Vous devez cocher sur Memo"
-                      
-        if message!="":
-            raise Warning(message)
-            return False
         
         res=super(hr_job,self).write(vals)
         return res
