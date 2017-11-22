@@ -605,5 +605,6 @@ class HrDureePreavis(models.Model):
     
     @api.depends('categorie','sous_cat')
     def _concat_sous_cat_cat(self):
-        self.sous_cat_cat = self.sous_cat+self.categorie
+        self.sous_cat_cat = self.sous_cat
+
     
