@@ -44,7 +44,6 @@ class hr_holidays_psi(models.Model):
     
     job_id = fields.Many2one(related='employee_id.job_id', store=True)
     employee_type = fields.Selection(related='job_id.recrutement_type', store=True)
-    
     all_employee = fields.Boolean(string="Tous les employés")
     
     state = fields.Selection([
@@ -107,14 +106,13 @@ class hr_holidays_psi(models.Model):
         
     @api.model
     def create(self, values):
+        self._verif_leave_date()
         if values.has_key('employee_id'):
             employee = self.env['hr.employee'].browse(values.get('employee_id'))
-            print "employee.job_id.recrutement_type ",employee.job_id.recrutement_type 
             if employee.job_id.recrutement_type != 'collaborateur':
                 raise ValidationError(u'Seulement les employés permanents peuvent faire une demande de congé.')
-        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
-        if values.get('holiday_status_id') != holidays_status[0].id :
-           self._verif_leave_date()
+        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
+        if values.get('holiday_status_id') == holidays_status[0].id :
            got_droit = self.check_droit(values)
            if got_droit == False:
               raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
