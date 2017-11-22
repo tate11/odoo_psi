@@ -560,14 +560,3 @@ class CodeBudgetaire(models.Model):
     aanalytic_account_parent_id = fields.Many2one('account.analytic.account', string="Compte analytique parent")
     analytic_account_id = fields.Many2one('account.analytic.account', string="Compte analytique")
     taux = fields.Float('Taux')
-
-class HrDureePreavis(models.Model):
-    
-    _name = 'hr.duree.preavis'
-    
-    preavis_id = fields.Integer()
-    name = fields.Char(string=u"Durée du préavis")
-    anciennete = fields.Char(string=u"Ancienneté/groupe")
-    categorie = fields.Char(string=u"Catégorie")
-    sous_cat = fields.Char(string=u"Sous-catégorie")
-    

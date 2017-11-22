@@ -340,6 +340,61 @@
 		<field name="view_mode">calendar</field>
 		<field name="view_id" ref="hr_contract_birthday_view_calendar" />
 	</record>
+	
+		<!-- SEARCH PREAVIS -->
+        <record id="hr_duree_preavis_filter" model="ir.ui.view">
+            <field name="name">hr.duree.preavis.filter</field>
+            <field name="model">hr.duree.preavis</field>
+            <field name="arch" type="xml">
+                <search string="Recherche">
+                    <field name="name"/>         
+                    <field name="anciennete"/>
+                    <field name="sous_cat_cat"/>
+                </search>
+                <filter string="Ancienneté/groupe" domain="[]" context="{'group_by': 'anciennete'}" />
+                <filter string="Catégorie" domain="[]" context="{'group_by': 'sous_cat_cat'}" />
+                <filter string="Durée du préavis" domain="[]" context="{'group_by': 'name'}" />
+            </field>
+       </record>
+                
+		<!-- VUE PREAVIS -->
+		<record id="hr_duree_preavis_view_tree" model="ir.ui.view">
+			<field name="name">hr.duree.preavis.tree</field>
+			<field name="model">hr.duree.preavis</field>
+			<field name="type">pivot</field>
+			<field name="arch" type="xml">
+				<pivot string="Durée du Préavis">
+					<field name="name" type="row" /> jours
+					<field name="categorie" type="col" />
+					<field name="anciennete" type="col" />
+					<field name="sous_cat_cat" type="col" />
+				</pivot>
+			</field>
+		</record>
+		<record id="hr_duree_preavis_view_tree" model="ir.ui.view">
+			<field name="name">hr.duree.preavis.tree</field>
+			<field name="model">hr.duree.preavis</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Liste des durée du préavis">
+					<field name="name" />
+					<field name="anciennete" /> jours
+					<field name="categorie" />
+					<field name="sous_cat_cat" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- ACTIONS DUREE PREAVIS-->
+		<record id="action_hr_duree_preavis" model="ir.actions.act_window">
+			<field name="name">Liste des durée du préavis</field>
+			<field name="res_model">hr.duree.preavis</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">pivot, tree, form</field>
+			<field name="context">{'group_by':'name'}</field>
+			<field name="view_id" ref="hr_duree_preavis_view_tree" />
+		</record>
+		
 
 	<menuitem id="hr_menu_contract_psi_config" parent="hr.menu_hr_root"
 	  sequence="6" name="PSI Configuration" />
@@ -351,4 +406,7 @@
 	  sequence="4" name="Rapports" />
 	 <menuitem id="hr_menu_contract_rapport_anniversaire" action="action_hr_employee_reporting_birthday"
 	  parent="hr_menu_contract_rapport" sequence="8" />
+	 <menuitem id="hr_menu_duree_preavis" action="action_hr_duree_preavis"
+	  parent="hr_menu_contract_psi_config" sequence="4" />
+	  
 </odoo>
