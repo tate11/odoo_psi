@@ -180,7 +180,7 @@ class hr_job(models.Model):
     def _compute_reference_demande(self):
         d = datetime.datetime.today()
         for record in self:
-            record.ref_of_demand = 'R{:03d}'.format(record.num_demande +1) + "/" + '{:02d}'.format(d.month) + "/" + '{:02d}'.format(d.year)[2:]
+            record.ref_of_demand = 'R{:03d}'.format(record.id) + "/" + '{:02d}'.format(d.month) + "/" + '{:02d}'.format(d.year)[2:]
     
     @api.one
     @api.constrains('psi_contract_duration')
