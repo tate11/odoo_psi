@@ -6,7 +6,7 @@ from operator import truediv
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError ,Warning
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 
@@ -358,7 +358,12 @@ class Applicant(models.Model):
     @api.multi
     def set_to_liste_restreinte(self, val):
         for obj in self:
-            obj.b_liste_restreinte = val
+            if (obj.correspondance_profil=="oui" and val) or not val:
+                obj.b_liste_restreinte = val
+            elif obj.correspondance_profil!="oui":
+                raise Warning("Vous ne pouvez pas lui ajouter dans la liste restreinte!")
+                return False
+            
             
     @api.depends('birthday')
     def _calcul_age(self):
