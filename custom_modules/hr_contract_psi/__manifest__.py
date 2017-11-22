@@ -11,6 +11,7 @@
               'data/mail_template_hr_contract_data.xml',
               'data/hr_contract_data.xml',
               'data/hr_wage_grid_data.xml',
+              'security/ir.model.access.csv',
               'data/mail_template_evenement_professionnel.xml',
               'views/hr_contract_views.xml',  
               'report/report_certificat_travail.xml',
