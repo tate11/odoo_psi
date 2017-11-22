@@ -320,7 +320,17 @@ class hr_employee(models.Model):
 #                    failed_mail.state = 'outgoing'
         if automatic:
             self._cr.commit()
-                
+            
+    @api.multi
+    def _compute_leaves_count(self):
+        leaves = self.env['hr.holidays'].read_group([
+            ('employee_id', 'in', self.ids),
+            ('state', '=', 'validate')
+        ], fields=['number_of_days', 'employee_id'], groupby=['employee_id'])
+        mapping = dict([(leave['employee_id'][0], leave['number_of_days']) for leave in leaves])
+        for employee in self:
+            employee.leaves_count = mapping.get(employee.id)
+            
 class Person(models.Model):
 
      _name         = 'hr.person'
@@ -331,7 +341,8 @@ class Person(models.Model):
         ('M', 'Masculin'),
         ('F', u'Féminin')
      ], string='Genre')    
-
+     
+     
     
 class PersonInformation(models.Model):
    
