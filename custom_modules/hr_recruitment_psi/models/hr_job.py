@@ -34,8 +34,8 @@ class hr_job(models.Model):
         ('convention_stage','Convention de stage')
     ], string='Type de contrat', help="Type de contrat")
     
-    tdr_file = fields.Many2one('ir.attachment',string='Termes de Références (TDR)')
-    file = fields.Binary("your_file", model='tdr_file.datas')
+    #tdr_file = fields.Many2one('ir.attachment',string='Termes de Références (TDR)')
+    #file = fields.Binary("your_file", model='tdr_file.datas')
     
     name_of_claimant = fields.Many2one('res.users', string=u"Nom du demandeur") 
     
@@ -102,6 +102,16 @@ class hr_job(models.Model):
             raise Warning(u"Vous devez ajouter le fichier TDR.")
             return False
         res = super(hr_job, self).create(vals)
+        if 'tdr_file' in vals:
+            document_vals = {'name': res.name,
+                             'db_datas': vals.get('tdr_file').encode('base64'),
+                             'datas_fname': False,
+                             'res_model': 'hr.job',
+                             'res_id': res.id,
+                             'type': 'binary' }
+            self.env['ir.attachment'].create(document_vals)
+            res.tdr_add=True
+            
         return res
     
     def wkf_validation_finance(self):

@@ -140,7 +140,7 @@
 							<field name="city" />
 							<field name="country_id" />
 							<field name="from_date" />
-							<field name="end_date" />
+							<field name="end_date" string="a"/>
 							<field name="degree" />
 							<field name="study_domain" />
 						</tree>
@@ -152,7 +152,7 @@
 							<field name="city" />
 							<field name="country_id" />
 							<field name="from_date" />
-							<field name="end_date" />
+							<field name="end_date" string="a"/>
 							<field name="degree" />
 							<field name="study_domain" />
 						</tree>
@@ -164,22 +164,62 @@
 					<field name="previous_functions">
 						<tree colspan="2">
 							<field name="begin_date" />
-							<field name="end_date" />
-							<field name="last_basic_salary" />
-							<field name="vola" />
-							<field name="title_function" />
-							<field name="employer" />
+							<field name="end_date" string="a"/>
+							<field name="last_basic_salary"/>
+							<field name="vola"/>
+							<field name="title_function" required="1" />
+							<field name="employer" required="1"/>
 							<field name="type_of_activity" />
-							<field name="address" />
+							<field name="address" required="1"/>
 							<field name="name_of_supervisor" />
 							<field name="number_of_supervised" />
 							<field name="reason_for_leaving" />
-							<field name="mobile_phone" />
+							<field name="mobile_phone" required="1"/>
 							<field name="work_email" />
 							<field name="description" />
 							<field name="psi_applicant_id" invisible="1" />
 							<field name="duree"/>
 						</tree>
+						<form>
+							<group col="2">
+								<group>
+									<field name="begin_date" />
+									<field name="end_date" string="a"/>
+								</group>
+								<group>
+									<div class="pull-left">
+										<label for="last_basic_salary">Dérnier salaire de base</label>
+										<field name="last_basic_salary"/>
+									</div>
+									<div class="pull-right">
+										<field name="vola" style="display:inline-block;bottom:0px" nolabel="1"/>
+									</div>
+								</group>
+								<group>
+									<field name="employer" required="1"/>
+									<field name="type_of_activity" />
+								</group>
+								<group>
+									<field name="address" required="1"/>
+									<field name="description" />
+								</group>
+								<group>
+									<field name="name_of_supervisor" />
+									<field name="number_of_supervised" />
+								</group>
+								<group>
+									<field name="reason_for_leaving" />
+								</group>
+								<group>
+									<field name="mobile_phone" required="1"/>
+									<field name="work_email" />
+								</group>
+								<group>
+									<field name="psi_applicant_id" invisible="1" />
+									<field name="duree"/>
+								</group>
+							</group>
+						</form>
 					</field>
 					<label for="current_employer_report" />
 					<field name="current_employer_report" class="oe_inline"/>
@@ -193,11 +233,11 @@
 					</p>
 					<field name="professional_references">
 						<tree string="" editable="bottom">
-							<field name="name" />
-							<field name="function_title" />
-							<field name="company" />
-							<field name="mobile_phone" />
-							<field name="work_email" />
+							<field name="name" required="1"/>
+							<field name="function_title" required="1"/>
+							<field name="company" required="1"/>
+							<field name="mobile_phone" required="1"/>
+							<field name="work_email" required="1"/>
 						</tree>
 					</field>
 					<b>

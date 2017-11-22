@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+	<!-- data>
+        <template id="assets_backend" name="static_resources_demo assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+		        <script type="text/javascript" src="/website_psi_job_recruitment/static/src/js/website.js"></script>
+            </xpath>
+        </template>
+    </data-->
 	<template id="form_applicant" name="Formulaire de recruitment"
 		inherit_id="website_hr_recruitment.apply">
 		<xpath expr="//section[@id='forms']" position="replace">
 		    					<script>
 				$(function () {
+				
+					$('#add_other_language').click(function () { 
+						setTimeout(function (){
+							$('#table_langues').append('<tr class="autres"><td><input type="text" name="linguistique[]" /></td>    <td><select  class="form-control" name="written[]" required="1"><option value=""></option><option value="basic">Basique</option><option value="intermediate">Intérmediaire</option><option value="good">Bon</option><option value="excellent">Excellent</option><option value="Current">Courant</option></select> </td><td><select  class="form-control" name="spoken[]" required="1"><option value=""></option><option value="basic">Basique</option><option value="intermediate">Intérmediaire</option><option value="good">Bon</option><option value="excellent">Excellent</option><option value="Current">Courant</option></select> </td><td><select  class="form-control" name="listen[]" required="1"><option value=""></option><option value="basic">Basique</option><option value="intermediate">Intérmediaire</option><option value="good">Bon</option><option value="excellent">Excellent</option><option value="Current">Courant</option></select></td></tr>'); 
+						},200);
+					});	
+					
 					$('body').on('focusin', '.date_psi', function(e) {
     					//$(this).datepicker({ dateFormat: 'yy-mm-dd' });
     					
@@ -128,7 +142,7 @@
         
          $('#add_form_previous_functions').click(function () {
             setTimeout(function () {
-               $('#div_functions').append('<table class="table"> <tr> <th>de</th> <th>a</th> <th>Dernier salaire de base</th> <th>Titre et fonction</th> </tr> <tr> <td> <input type="text" class="form-control date_psi" name="begin_date[]"/> </td> <td> <input type="text" class="form-control date_psi" name="end_date[]"/> </td> <td> <input type="text"	name="last_basic_salary[]" class="form-control"/> </td> <td> <input type="text"	class="form-control" name="title_function[]" /> </td> </tr> </table> <table class="table"> <tr> <td> Employeur : <input type="text"  class="form-control" name="employer[]"/> </td> <td> Type d\'activité : <input type="text"  class="form-control" name="type_of_activity[]"/> </td> </tr> <tr> <td> Adresse : <input type="text"  name="address[]" class="form-control"/> </td> <td> Nom du supérieur hiérarchique : <input type="text"  name="name_of_supervisor[]" class="form-control"/> </td> </tr> </table> <table class="table"> <tr> <td> Téléphone : <input type="text"  name="mobile_phone[]" class="form-control"/> <br /> Email : <input type="text"  name="work_email[]" class="form-control"/> </td> <td> Nombre de personne(s) supervisée(s) : <input type="text"  name="number_of_supervised[]" class="form-control"/> </td> <td> Motif de votre départ : <input type="text"  name="reason_for_leaving[]" class="form-control"/> </td> </tr> </table> <p class="text-center">Brève description des tâches et responsabilités</p> <textarea class="form-control" name="description[]"></textarea>');
+               $('#div_functions').append('<table class="table"> <tr> <th>de</th> <th>a</th> <th>Dernier salaire de base</th> <th>Titre et fonction</th> </tr> <tr> <td> <input type="text" class="form-control date_psi" name="begin_date[]"/> </td> <td> <input type="text" class="form-control date_psi" name="end_date[]"/> </td> <td> <div class="col-md-5 col-sm-8">Dernier salaire de base : <input type="text"	name="last_basic_salary[]" class="form-control" /></div><div class="col-md-2 col-sm-8" style="margin-top:20px"><select class="form-control"><option value="Ar">Ariary</option><option value="dollar">Dollar</option><option value="euro">Euro</option></select></div> </td> <td> <input type="text"	class="form-control" name="title_function[]" /> </td> </tr> </table> <table class="table"> <tr> <td> Employeur : <input type="text"  class="form-control" name="employer[]"/> </td> <td> Type d\'activité : <input type="text"  class="form-control" name="type_of_activity[]"/> </td> </tr> <tr> <td> Adresse : <input type="text"  name="address[]" class="form-control"/> </td> <td> Nom du supérieur hiérarchique : <input type="text"  name="name_of_supervisor[]" class="form-control"/> </td> </tr> </table> <table class="table"> <tr> <td> Téléphone : <input type="text"  name="mobile_phone[]" class="form-control"/> <br /> Email : <input type="text"  name="work_email[]" class="form-control"/> </td> <td> Nombre de personne(s) supervisée(s) : <input type="text"  name="number_of_supervised[]" class="form-control"/> </td> <td> Motif de votre départ : <input type="text"  name="reason_for_leaving[]" class="form-control"/> </td> </tr> </table> <p class="text-center">Brève description des tâches et responsabilités</p> <textarea class="form-control" name="description[]"></textarea>');
             }, 200);
         });
         
@@ -160,7 +174,7 @@
 							 '<input type="text" class="form-control date_psi" name="end_date_university[]" />'+
 						'</td>'+
 						'<td>'+
-							 '<input type="text"  class="form-control" name="degree_university[]" />'+
+							 '<select type="text"  class="form-control" name="degree_university[]" ><option value=""></option><option value="DTS">DTS</option><option value="Licence">Licence</option><option value="Maîtrice">Maîtrise</option><option value="M1">M1</option><option value="M2">M2</option><option value="Doctorat">Doctorat</option></select>'+
 						'</td>'+
 						'<td>'+
 							'<input type="text" class="form-control" name="study_domain_university[]" />'+
@@ -212,9 +226,9 @@
 											   '</td><td>'+
 									'<input type="text" class="form-control o_website_form_input" name="post_office_title[]" /> '+
 											   '</td></tr>');
-            }, 200);
-        });
- });
+		            }, 200);
+		        });
+		 });
 						</script>
 	
 		
@@ -579,7 +593,7 @@
 						<h2>Connaissance linguistique</h2>
 					<div id="div_already_answered_application">	
 						Veuillez choisir votre connaissance linguistique
-						<table id="table_already_answered_application" class="table">
+						<table id="table_langues" class="table">
 							<tr>
 								<th></th>
 								<th>Ecrit</th>
@@ -704,7 +718,11 @@
 								</td>
 							</tr>
 						</table>
-					
+						<button type="button" class="btn btn-success"
+							id="add_other_language">
+							<i class="fa fa-plus"></i>
+							Autres
+				         </button>
 					   </div>	
 				</div>
 				<div class="form-group">
@@ -739,6 +757,7 @@
 						</td>
 						<td>
 						     <select name="degree_university[]" class="form-control">
+						     	<option value=""></option>
 						     	<option value="DTS">DTS</option>
 						     		<option value="Licence">Licence</option>
 						     		<option value="Maîtrice">Maîtrise</option>
@@ -908,7 +927,7 @@
                 			<th>Nom et Prénom *</th>
                 			<th>Titre et Fonction *</th>
                 			<th>Sociétés *</th>
-                			<th>Contact *</th>
+                			<th colspan="2">Contact *</th>
                 		</tr>
                 		<tr>
                 			<td>
@@ -921,9 +940,10 @@
                 				<input type="text" name="ref_company[]" class="form-control" required=""/>
                 			</td>
                 			<td>
-                				Mobile * : <input type="text" name="ref_mobile_phone[]" class="form-control" required=""/> 
-                			
-                				Email * : <input type="text" name="ref_work_email[]" class="form-control" required=""/>
+                				<input type="text" placeholder="Mobile *" name="ref_mobile_phone[]" class="form-control" required=""/> 
+                			</td>
+                			<td>
+                				<input type="text" placeholder="Email *" name="ref_work_email[]" class="form-control" required=""/>
                 			</td>
                 		</tr>
                 	</table>
@@ -1000,7 +1020,6 @@
 						</i>
 					</p> 
 				</div>
-				
 			</form>
 		</xpath>
 	</template>

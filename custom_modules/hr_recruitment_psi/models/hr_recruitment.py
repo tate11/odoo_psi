@@ -256,6 +256,7 @@ class Applicant(models.Model):
     
     @api.model
     def create(self, vals):
+        #if vals.get('')
         res = super(Applicant, self).create(vals)
         res['psi_average_note'] = ((res['psi_note_hr'] + res['psi_note_candidate']) / 2)
         return res
