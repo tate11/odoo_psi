@@ -7,7 +7,7 @@ class report_request_for_absences(models.AbstractModel):
    
    
     def _get_all_absences(self, employee_id):
-        return self.env['hr.holidays'].search([('employee_id', '=', employee_id)])
+        return self.env['hr.holidays'].search([('employee_id', '=', employee_id),('type','=','remove')])
     
     @api.multi
     def render_html(self, docids, data=None):
