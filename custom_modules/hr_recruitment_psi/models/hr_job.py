@@ -4,7 +4,12 @@ import datetime
 
 from odoo import fields, models, api, netsvc
 from odoo.exceptions import ValidationError, Warning
-
+   
+class LieuEmbauche(models.Model):
+    _name = 'hr.recruitment.lieu.embauche'
+    
+    name = fields.Char(string="Lieu d' embauche")
+    embauche_id = fields.Integer()
 
 class confirm_relance(models.TransientModel):
     _name = 'confirm.relance'
@@ -271,9 +276,4 @@ class JobEquipment(models.Model):
     
     equipment_id = fields.Many2one('hr.equipment', string=u"Désignation")
     job_id = fields.Many2one('hr.job')
-    
-class LieuEmbauche(models.Model):
-    _name = 'hr.recruitment.lieu.embauche'
-    
-    name = fields.Char(string="Lieu d' embauche")
-    embauche_id = fields.Integer()
+ 
