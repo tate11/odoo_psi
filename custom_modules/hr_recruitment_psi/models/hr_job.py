@@ -102,7 +102,8 @@ class hr_job(models.Model):
             raise Warning(u"Vous devez ajouter le fichier TDR.")
             return False
         res = super(hr_job, self).create(vals)
-        if 'tdr_file' in vals:
+        
+        if 'tdr_file' in vals and vals.get('tdr_file'):
             document_vals = {'name': res.name,
                              'db_datas': vals.get('tdr_file').encode('base64'),
                              'datas_fname': False,
