@@ -178,6 +178,10 @@ class Applicant(models.Model):
     
     date_verification_bridger_insight = fields.Date(string="date verification bridger insight")
    
+    def convoked_for_test(self):
+        print "{'state':'convoked_for_test'}"
+        self.write({'state':'convoked_for_test'})
+   
     def action_briger_insight(self):
         self.write({'state':'bridger_insight','date_verification_bridger_insight': fields.Date().today()})
     

@@ -12,6 +12,7 @@
          <record id="activity_applicant_selected" model="workflow.activity">
             <field name="wkf_id" ref="hr_recruitement_wkf"/>
             <field name="name">activity_applicant_selected</field>
+            <field name="flow_start">True</field>
 			<field name="kind">function</field>
 			<field name="action">write({'state':'applicant_selected'})</field>
 		</record>
@@ -19,7 +20,7 @@
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
             <field name="name">convoked_for_test</field>
             <field name="kind">function</field>
-            <field name="action">write({'state':'convoked_for_test'})</field>
+            <field name="action">convoked_for_test()</field>
         </record>
         <record id="activity_interview" model="workflow.activity">
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
@@ -86,10 +87,15 @@
             <field name="name">internship_contract</field>
             <field name="kind">function</field>
             <field name="action">action_internship_contract()</field>
-        </record>        
+        </record>      
         
 		<!-- transition -->
-		<record id="activity_refused_to_activity_applicant_selected" model="workflow.transition">
+		<record id="activity_applicant_selected_to_activity_convoked_for_test" model="workflow.transition">
+            <field name="act_from" ref="activity_applicant_selected"/>
+            <field name="act_to" ref="activity_convoked_for_test"/>
+            <field name="signal">button_convoked_for_test</field>
+        </record>
+        <record id="activity_refused_to_activity_applicant_selected" model="workflow.transition">
             <field name="act_from" ref="activity_refused"/>
             <field name="act_to" ref="activity_convoked_for_test"/>
             <field name="signal">button_convoked_for_test</field>
@@ -103,11 +109,6 @@
             <field name="act_from" ref="activity_refused"/>
             <field name="act_to" ref="activity_interview"/>
             <field name="signal">button_interview</field>
-        </record>
-		<record id="activity_applicant_selected_to_activity_convoked_for_test" model="workflow.transition">
-            <field name="act_from" ref="activity_applicant_selected"/>
-            <field name="act_to" ref="activity_convoked_for_test"/>
-            <field name="signal">button_convoked_for_test</field>
         </record>
         <record id="activity_applicant_selected_to_activity_professional_reference" model="workflow.transition">
             <field name="act_from" ref="activity_applicant_selected"/>
