@@ -283,7 +283,7 @@
 				</xpath>
 				<xpath expr="//field[@name='salary_expected']" position='replace'>
 					<field name="salary_expected" required="1" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')], 'required':[('state', 'in', ('psi_wage_proposal','honorary_proposal'))]}" />
-				    <field name="devise_extra" class="oe_inline" />
+				    <field name="devise_extra" class="oe_inline" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')], 'required':[('state', 'in', ('psi_wage_proposal','honorary_proposal'))]}" />
 				</xpath>
 				<xpath expr="//field[@name='salary_expected_extra']" position='replace'>
 					<field name="salary_expected_extra" invisible="1" />
@@ -300,7 +300,7 @@
 				<xpath expr="//field[@name='salary_proposed']" position='replace'>
 					<div>
 						<field name="salary_proposed" required="1" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')], 'required':[('state', 'in', ('psi_wage_proposal','honorary_proposal'))]}" class="oe_inline"/>
-				    	<field name="devise_proposed" class="oe_inline"/>
+				    	<field name="devise_proposed" class="oe_inline" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')], 'required':[('state', 'in', ('psi_wage_proposal','honorary_proposal'))]}" />
 				    </div>
 				</xpath>
 				<xpath expr="//field[@name='salary_proposed_extra']" position='replace'>
@@ -308,7 +308,10 @@
 				</xpath>
 				
 				<field name="availability" position="after">
-				    <field name="psi_allowance" attrs="{'invisible': [('recrutement_type', '!=', 'stagiaire')]}" />
+					<group>
+					    <field name="psi_allowance" attrs="{'invisible': [('recrutement_type', '!=', 'stagiaire')]}" />
+					    <field name="devise_for_stage" attrs="{'invisible': [('recrutement_type', '!=', 'stagiaire')]}" nolabel="1"  class="oe_inline"/>
+					</group>
 					<field name="psi_salary_type" attrs="{'invisible': [('recrutement_type', '=', 'consultant')]}" />
 					<field name="psi_salary_negotiable" attrs="{'invisible': [('recrutement_type', '=', 'stagiaire')]}" />
 				</field>
