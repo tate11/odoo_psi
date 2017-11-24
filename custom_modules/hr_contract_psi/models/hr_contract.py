@@ -599,7 +599,7 @@ class HrDureePreavis(models.Model):
     preavis_id = fields.Integer()
     name = fields.Char(string=u"Ancienneté")
     preavis = fields.Integer(string=u"Préavis (en jour(s))")
-    categorie = fields.Char(string=u"Catégorie")
+    categorie = fields.Char(string=u"Cat")
     sous_cat = fields.Char(string=u"Sous-catégorie")
     sous_cat_cat = fields.Char(compute='_concat_sous_cat_cat', store=True, string=u"Catégorie")
     

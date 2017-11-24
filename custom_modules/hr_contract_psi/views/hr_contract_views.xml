@@ -378,6 +378,8 @@
 			<tree string="Liste des durée du préavis">
 				<field name="name" />
 				<field name="sous_cat_cat" />
+				<field name="categorie" />
+				<field name="sous_cat" />
 				<field name="preavis" />
 			</tree>
 		</field>
