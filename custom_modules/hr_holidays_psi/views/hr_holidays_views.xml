@@ -16,7 +16,7 @@
 			<field name="arch" type="xml">
 				<xpath expr="filter[@name='approve']" position="before">					
 					<filter string="Personnel permanent du mois en cours" 
-						domain="['&amp;',('employee_type','=','collaborateur'),('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]" 
+						domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]" 
 						help="Liste des absences de tout le personnel permanent pour le mois courant"
 						/>				
 				</xpath>
@@ -42,7 +42,6 @@
 				<!-- <field name="color_name_holiday_status" invisible="1" /> -->
 				<field name="category_id" invisible="1" />
 				<field name="last_business_day" invisible="1" />
-				<field name="employee_type" invisible="1" />
 				<field name="id_psi_holidays_status" invisible="1" />
 			</field>
 			
