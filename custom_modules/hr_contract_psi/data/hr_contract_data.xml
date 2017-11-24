@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<data>
+	<data noupdate="1">
 		<!-- DUREE DU PREAVIS SELON LA CATEGORIE PROFESSIONNELLE -->
 		<!-- Moins de 8 jours -->
 		<record model="hr.duree.preavis" id="preavis_1">
