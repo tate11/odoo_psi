@@ -43,7 +43,6 @@ class hr_holidays_psi(models.Model):
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
     
     job_id = fields.Many2one(related='employee_id.job_id', store=True)
-    employee_type = fields.Selection(related='job_id.recrutement_type', store=True)
     all_employee = fields.Boolean(string="Tous les employés")
     
     state = fields.Selection([
@@ -76,6 +75,7 @@ class hr_holidays_psi(models.Model):
                 number_days += holiday.number_of_days
         if number_days > 10 :
             raise UserError(u"Vous avez depassé le nombre de jours maximum de permission.")
+            return False
         for record in self:
             get_day_difference = record.number_of_days_temp
             type_permissions = self.env['hr.holidays.type.permission'].search([])            
@@ -83,7 +83,7 @@ class hr_holidays_psi(models.Model):
                 if self.holiday_type_permission.id == permissions.id:
                     if get_day_difference > permissions.number_of_day:
                         raise UserError(u"Vous avez depassé le nombre de jours permi pour ce type de permission.")
-            
+                        return False
 
     
     last_business_day = fields.Date(compute="_get_last_business_day", string="Dernier jour ouvrable du mois")
@@ -106,20 +106,25 @@ class hr_holidays_psi(models.Model):
         
     @api.model
     def create(self, values):
+        print "first print",values
         self._verif_leave_date()
         if values.has_key('employee_id'):
             employee = self.env['hr.employee'].browse(values.get('employee_id'))
-            if employee.job_id.recrutement_type != 'collaborateur':
+            recrutement_type = self.env['hr.recruitment.type'].search([('recrutement_type','=','collaborateur')])
+            if employee.job_id.recrutement_type_id.id != recrutement_type[0].id:
                 raise ValidationError(u'Seulement les employés permanents peuvent faire une demande de congé.')
+                return False
         holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
         if values.get('holiday_status_id') == holidays_status[0].id :
            got_droit = self.check_droit(values)
            if got_droit == False:
               raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
+              return False
            else:
               holidays = super(hr_holidays_psi, self).create(values)
               return holidays
         else:
+              print "second print",values
               holidays = super(hr_holidays_psi, self).create(values)
               return holidays
 
@@ -138,6 +143,7 @@ class hr_holidays_psi(models.Model):
         
         if not self._check_state_access_right(values):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
+            return False
         result = super(hr_holidays_psi, self).write(values)
         self.add_follower(employee_id)
         return result
@@ -234,21 +240,28 @@ class hr_holidays_psi(models.Model):
                    config = self.env['hr.holidays.configuration'].search([])[0]
                    if record.number_of_days_temp > config.conges_sans_solde :
                       raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
-                
+                      return False
                date_from_time = datetime.datetime.strptime(record.date_from,"%Y-%m-%d %H:%M:%S")
                date_now = datetime.datetime.strptime(fields.Date().today(),"%Y-%m-%d")
                between = date_from_time - date_now
               
                if between.days < 0: 
                    raise ValidationError(u"La date de début du congé n'est pas valide.")
-               
+                   return False
                holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
               
                if record.holiday_status_id.id != holidays_status[0].id: # a part maladie
                    if between.days >= 0 and between.days < 3 :
                        raise ValidationError(u"Vous devez faire une demande de congés au moins 3 jours avant votre départ pour congé.")
-
-
+                       return False
+               holidays_status_maternite = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])
+               if record.holiday_status_id.id == holidays_status_maternite[0].id :
+                   if record.employee_id.sexe == 'masculin':
+                       raise ValidationError(u"Le congé maternité est réserve pour les femmes :) .")
+                       return False
+                   if record.number_of_days_temp > 98 :
+                       raise ValidationError(u"Desole, vous avez depassé le nombre de congé maternite.")
+                       return False
     @api.multi
     def action_validate(self):
         print "action_validate"
@@ -463,6 +476,30 @@ class hr_holidays_psi(models.Model):
         if automatic:
             self._cr.commit()
 
+    
+    @api.onchange('date_from')
+    def _onchange_date_from(self):
+        print "_onchange_date_from"
+        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])
+        
+        date_from = self.date_from
+        date_to = self.date_to
+        if self.holiday_status_id.id == holidays_status[0].id:
+            print holidays_status[0].name
+           
+            date_to_with_delta = fields.Datetime.from_string(date_from) + datetime.timedelta(days=98)
+            self.date_to = str(date_to_with_delta)
+        # No date_to set so far: automatically compute one 8 hours later
+        if date_from and not date_to:
+            date_to_with_delta = fields.Datetime.from_string(date_from) + datetime.timedelta(hours=HOURS_PER_DAY)
+            self.date_to = str(date_to_with_delta)
+
+        # Compute and update the number of days
+        if (date_to and date_from) and (date_from <= date_to):
+            self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
+        else:
+            self.number_of_days_temp = 0
+    
     # Mail de rappel aux Assistantes et Coordinateurs
     @api.multi
     def _send_email_rappel_absences_to_assist_and_coord(self, automatic=False):
