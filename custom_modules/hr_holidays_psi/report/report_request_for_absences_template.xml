@@ -55,7 +55,7 @@
 											<span t-field="line.date_to" />
 										</td>
 										<td>
-											<span t-field="line.number_of_days" />
+											<span t-field="line.number_of_days_psi" />
 										</td>
 										<td>
 											<span t-field="line.holiday_status_id.name" />

@@ -45,6 +45,8 @@ class hr_holidays_psi(models.Model):
     job_id = fields.Many2one(related='employee_id.job_id', store=True)
     all_employee = fields.Boolean(string="Tous les employés")
     
+    number_of_days_psi = fields.Float('Number of Days', compute='_compute_number_of_days_psi', store=True)
+    
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -229,6 +231,15 @@ class hr_holidays_psi(models.Model):
                 if diff <= config.droit_conge:
                     return False
         return True     
+    
+    @api.multi
+    @api.depends('number_of_days_temp', 'type')
+    def _compute_number_of_days_psi(self):
+        for holiday in self:
+            if holiday.type == 'remove':
+                holiday.number_of_days_psi = holiday.number_of_days_temp
+            else:
+                holiday.number_of_days_psi = holiday.number_of_days_temp
     
     @api.constrains('date_from')
     def _check_date_from(self):
