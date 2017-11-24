@@ -12,6 +12,7 @@
          <record id="activity_applicant_selected" model="workflow.activity">
             <field name="wkf_id" ref="hr_recruitement_wkf"/>
             <field name="name">activity_applicant_selected</field>
+            <field name="flow_start">True</field>
 			<field name="kind">function</field>
 			<field name="action">write({'state':'applicant_selected'})</field>
 		</record>
@@ -19,7 +20,7 @@
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
             <field name="name">convoked_for_test</field>
             <field name="kind">function</field>
-            <field name="action">write({'state':'convoked_for_test'})</field>
+            <field name="action">convoked_for_test()</field>
         </record>
         <record id="activity_interview" model="workflow.activity">
 		    <field name="wkf_id" ref="hr_recruitement_wkf"/>
@@ -86,30 +87,30 @@
             <field name="name">internship_contract</field>
             <field name="kind">function</field>
             <field name="action">action_internship_contract()</field>
-        </record>        
+        </record>      
         
 		<!-- transition -->
-		<record id="activity_refused_to_activity_applicant_selected" model="workflow.transition">
-            <field name="act_from" ref="activity_refused"/>
-            <field name="act_to" ref="activity_convoked_for_test"/>
-            <field name="signal">button_convoked_for_test</field>
-        </record>
-        <record id="activity_draft_to_activity_interview" model="workflow.transition">
-            <field name="act_from" ref="activity_refused"/>
-            <field name="act_to" ref="activity_interview"/>
-            <field name="signal">button_consultant_consideration_de_dossier</field>
-        </record>
-        <record id="activity_convoked_for_test_to_activity_interview" model="workflow.transition">
-            <field name="act_from" ref="activity_refused"/>
-            <field name="act_to" ref="activity_interview"/>
-            <field name="signal">button_interview</field>
-        </record>
-		<record id="activity_draft_to_activity_convoked_for_test" model="workflow.transition">
+		<record id="activity_applicant_selected_to_activity_convoked_for_test" model="workflow.transition">
             <field name="act_from" ref="activity_applicant_selected"/>
             <field name="act_to" ref="activity_convoked_for_test"/>
             <field name="signal">button_convoked_for_test</field>
         </record>
-        <record id="activity_draft_to_activity_interview" model="workflow.transition">
+        <record id="activity_refused_to_activity_applicant_selected" model="workflow.transition">
+            <field name="act_from" ref="activity_refused"/>
+            <field name="act_to" ref="activity_convoked_for_test"/>
+            <field name="signal">button_convoked_for_test</field>
+        </record>
+        <record id="activity_refused_consultant_consideration_de_dossier_to_activity_interview" model="workflow.transition">
+            <field name="act_from" ref="activity_refused"/>
+            <field name="act_to" ref="activity_interview"/>
+            <field name="signal">button_consultant_consideration_de_dossier</field>
+        </record>
+        <record id="activity_refused_to_activity_interview" model="workflow.transition">
+            <field name="act_from" ref="activity_refused"/>
+            <field name="act_to" ref="activity_interview"/>
+            <field name="signal">button_interview</field>
+        </record>
+        <record id="activity_applicant_selected_to_activity_professional_reference" model="workflow.transition">
             <field name="act_from" ref="activity_applicant_selected"/>
             <field name="act_to" ref="activity_professional_reference"/>
             <field name="signal">button_consultant_consideration_de_dossier</field>
@@ -149,7 +150,7 @@
             <field name="act_to" ref="activity_bridger_insight"/>
             <field name="signal">button_bridger_insight</field>
         </record>
-        <record id="activity_activity_bridger_insight_to_activity_refused" model="workflow.transition">
+        <record id="activity_bridger_insight_to_activity_refused" model="workflow.transition">
             <field name="act_from" ref="activity_bridger_insight"/>
             <field name="act_to" ref="activity_refused"/>
             <field name="signal">button_refuser</field>
@@ -164,12 +165,12 @@
             <field name="act_to" ref="activity_honorary_proposal"/>
             <field name="signal">button_psi_honorary_proposal</field>
         </record>
-         <record id="activity_brigdger_insight_to_activity_benefitsl" model="workflow.transition">
+         <record id="activity_brigdger_insight_to_activity_benefits" model="workflow.transition">
             <field name="act_from" ref="activity_bridger_insight"/>
             <field name="act_to" ref="activity_benefits"/>
             <field name="signal">button_benefits</field>
         </record>
-        <record id="activity_psi_wage_proposalt_to_activity_notification_of_employment" model="workflow.transition">
+        <record id="activity_psi_wage_proposal_to_activity_notification_of_employment" model="workflow.transition">
             <field name="act_from" ref="activity_psi_wage_proposal"/>
             <field name="act_to" ref="activity_notification_of_employment"/>
             <field name="signal">button_notification_of_employment</field>

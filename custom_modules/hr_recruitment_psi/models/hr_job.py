@@ -4,7 +4,12 @@ import datetime
 
 from odoo import fields, models, api, netsvc
 from odoo.exceptions import ValidationError, Warning
-
+   
+class LieuEmbauche(models.Model):
+    _name = 'hr.recruitment.lieu.embauche'
+    
+    name = fields.Char(string="Lieu d' embauche")
+    embauche_id = fields.Integer()
 
 class confirm_relance(models.TransientModel):
     _name = 'confirm.relance'
@@ -102,7 +107,7 @@ class hr_job(models.Model):
             raise Warning(u"Vous devez ajouter le fichier TDR.")
             return False
         res = super(hr_job, self).create(vals)
-        
+
         if 'tdr_file' in vals and vals.get('tdr_file'):
             document_vals = {'name': res.name,
                              'db_datas': vals.get('tdr_file').encode('base64'),
@@ -181,7 +186,7 @@ class hr_job(models.Model):
     def _compute_reference_demande(self):
         d = datetime.datetime.today()
         for record in self:
-            record.ref_of_demand = 'R{:03d}'.format(record.num_demande +1) + "/" + '{:02d}'.format(d.month) + "/" + '{:02d}'.format(d.year)[2:]
+            record.ref_of_demand = 'R{:03d}'.format(record.id) + "/" + '{:02d}'.format(d.month) + "/" + '{:02d}'.format(d.year)[2:]
     
     @api.one
     @api.constrains('psi_contract_duration')
@@ -272,9 +277,4 @@ class JobEquipment(models.Model):
     
     equipment_id = fields.Many2one('hr.equipment', string=u"Désignation")
     job_id = fields.Many2one('hr.job')
-    
-class LieuEmbauche(models.Model):
-    _name = 'hr.recruitment.lieu.embauche'
-    
-    name = fields.Char(string="Lieu d' embauche")
-    embauche_id = fields.Integer()
+ 
