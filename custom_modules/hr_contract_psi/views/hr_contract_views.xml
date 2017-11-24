@@ -388,9 +388,9 @@
 		<field name="name">Liste des durées du préavis</field>
 		<field name="res_model">hr.duree.preavis</field>
 		<field name="view_type">form</field>
-		<field name="view_mode">form,tree,pivot</field>
+		<field name="view_mode">pivot,form,tree</field>
 		<field name="context">{'group_by':'name'}</field>
-		<field name="view_id" ref="hr_duree_preavis_view_tree" />
+		<field name="view_id" ref="hr_duree_preavis_view_pivot" />
 	</record>
 		
 

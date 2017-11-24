@@ -63,56 +63,56 @@
 		<record model="hr.duree.preavis" id="preavis_9">
 			<field name='preavis_id'>9</field>
 			<field name="name">Moins de 3 mois</field>
-			<field name="preavis">1</field>
+			<field name="preavis">3</field>
 			<field name="categorie">B</field>
 			<field name="sous_cat">1</field>
 		</record>
 		<record model="hr.duree.preavis" id="preavis_10">
 			<field name='preavis_id'>10</field>
 			<field name="name">Moins de 3 mois</field>
-			<field name="preavis">2</field>
+			<field name="preavis">8</field>
 			<field name="categorie">B</field>
 			<field name="sous_cat">2</field>
 		</record>
 		<record model="hr.duree.preavis" id="preavis_11">
 			<field name='preavis_id'>11</field>
 			<field name="name">Moins de 3 mois</field>
-			<field name="preavis">2</field>
+			<field name="preavis">8</field>
 			<field name="categorie">A</field>
 			<field name="sous_cat">3</field>
 		</record>
 		<record model="hr.duree.preavis" id="preavis_12">
 			<field name='preavis_id'>12</field>
 			<field name="name">Moins de 3 mois</field>
-			<field name="preavis">3</field>
+			<field name="preavis">15</field>
 			<field name="categorie">A</field>
 			<field name="sous_cat">4</field>
 		</record>
 		<record model="hr.duree.preavis" id="preavis_13">
 			<field name='preavis_id'>13</field>
 			<field name="name">Moins de 3 mois</field>
-			<field name="preavis">3</field>
+			<field name="preavis">15</field>
 			<field name="categorie">B</field>
 			<field name="sous_cat">4</field>
 		</record>
 		<record model="hr.duree.preavis" id="preavis_14">
 			<field name='preavis_id'>14</field>
 			<field name="name">Moins de 3 mois</field>
-			<field name="preavis">3</field>
+			<field name="preavis">15</field>
 			<field name="categorie">B</field>
 			<field name="sous_cat">5</field>
 		</record>
 		<record model="hr.duree.preavis" id="preavis_15">
 			<field name='preavis_id'>15</field>
 			<field name="name">Moins de 3 mois</field>
-			<field name="preavis">4</field>
+			<field name="preavis">30</field>
 			<field name="categorie">HC</field>
 			<field name="sous_cat">1</field>
 		</record>
 		<record model="hr.duree.preavis" id="preavis_16">
 			<field name='preavis_id'>16</field>
 			<field name="name">Moins de 3 mois</field>
-			<field name="preavis">5</field>
+			<field name="preavis">30</field>
 			<field name="categorie">HC</field>
 			<field name="sous_cat">2</field>
 		</record>
