@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError, Warning
 class LieuEmbauche(models.Model):
     _name = 'hr.recruitment.lieu.embauche'
     
-    name = fields.Char(string="Lieu d' embauche")
+    name = fields.Char(string="Lieu d'embauche")
     embauche_id = fields.Integer()
 
 class confirm_relance(models.TransientModel):
