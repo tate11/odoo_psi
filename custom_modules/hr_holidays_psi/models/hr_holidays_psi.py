@@ -510,6 +510,29 @@ class hr_holidays_psi(models.Model):
             self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
         else:
             self.number_of_days_temp = 0
+            
+    @api.onchange('holiday_status_id')
+    def _onchange_holiday_status_id(self):
+        print "_onchange_holiday_status_id"
+        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])
+        
+        date_from = self.date_from
+        date_to = self.date_to
+        if self.holiday_status_id.id == holidays_status[0].id:
+            print holidays_status[0].name
+           
+            date_to_with_delta = fields.Datetime.from_string(date_from) + datetime.timedelta(days=98)
+            self.date_to = str(date_to_with_delta)
+        # No date_to set so far: automatically compute one 8 hours later
+        if date_from and not date_to:
+            date_to_with_delta = fields.Datetime.from_string(date_from) + datetime.timedelta(hours=HOURS_PER_DAY)
+            self.date_to = str(date_to_with_delta)
+
+        # Compute and update the number of days
+        if (date_to and date_from) and (date_from <= date_to):
+            self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
+        else:
+            self.number_of_days_temp = 0
     
     # Mail de rappel aux Assistantes et Coordinateurs
     @api.multi
