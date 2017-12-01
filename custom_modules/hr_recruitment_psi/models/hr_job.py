@@ -214,6 +214,13 @@ class hr_job(models.Model):
     def _change_recrutement_type_id(self):
         if self.recrutement_type == 'stagiaire':
             self.psi_contract_type = 'convention_stage'
+    
+    @api.multi
+    def _compute_application_count(self):
+        read_group_result = self.env['hr.applicant'].read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
+        result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
+        for job in self:
+            job.application_count = result.get(job.id, 0)
          
 class SubordinationLink(models.Model):
      _name = 'hr.subordination.link'
