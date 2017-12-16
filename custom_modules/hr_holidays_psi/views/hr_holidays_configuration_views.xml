@@ -4,9 +4,10 @@
 		<field name="name">hr.holiday.configuration.form</field>
 		<field name="model">hr.holidays.configuration</field>
 		<field name="arch" type="xml">
-			<form create="false">
+			<form create="false" string="Configuration">
 				<group>
 					<field name="droit_conge" />
+					<field name="droit_conge_nb_jr" />
 					<field name="conges_sans_solde" />
 				</group>
 			</form>
@@ -57,11 +58,11 @@
 	</record>
 	
 	<menuitem id="hr_menu_holidays_psi_config" parent="hr_holidays.menu_hr_holidays_root"
-		sequence="5" name="PSI Configuration" />
+		sequence="5" name="PSI Configuration" groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa"/>
 		
 	<menuitem id="menu_holidays_config" action="open_configuration"
 		parent="hr_menu_holidays_psi_config" sequence="6" />
 		
 	<menuitem id="menu_holidays_type_permission" action="open_holidays_type_permission"
-		parent="hr_menu_holidays_psi_config" sequence="6" />
+		parent="hr_menu_holidays_psi_config" sequence="7" />
 </odoo>

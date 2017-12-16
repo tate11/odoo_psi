@@ -143,7 +143,7 @@ class AccountAnalyticLine(models.Model):
                     raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans cette tâche qui est {}!'.format(self.float_time_to_time(task.planned_hours)))  
                     return False
                 
-        if len(str(unit_amount))>2:
+        if len(str(unit_amount))>2 and unit_amount != None:
             
             heure,min=str(unit_amount).split(".")
             
@@ -203,7 +203,7 @@ class AccountAnalyticLine(models.Model):
                     return False
             
         if vals.get('unit_amount'):
-            employees = self.env['hr.employee'].search([('id', '=', self.env.user.id)])
+            employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
             heure_par_jour = 0.0
             for employee in employees:
                 attendance_ids = employee.calendar_id.attendance_ids
