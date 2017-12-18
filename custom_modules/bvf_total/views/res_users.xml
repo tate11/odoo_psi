@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>  
+   	    <record id="res_users_form" model="ir.ui.view">
+	        <field name="name">res.users.form</field>
+	        <field name="model">res.users</field>
+	        <field name="inherit_id" ref="base.view_users_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//label[@for='name']" position="attributes">
+                	<attribute name="invisible">1</attribute>
+                </xpath>
+	        	<xpath expr="//field[@name='name']"  position="attributes">
+                	<attribute name="invisible">1</attribute>
+                </xpath>
+	        	<xpath expr="//h2" position="after">
+		        	<label for="name" string="Nom"/>
+	                <h3><field name="name"/></h3>
+	        		<label for="prenom" string="Prénoms"/>
+                    <h3><field name="prenom"/></h3>
+                	<label for="direction_id" string="Direction"/>
+                    <h3><field name="direction_id"/></h3>
+                    <label for="service_id" string="Service"/>
+                    <h3><field name="service_id"/></h3>
+                    <label for="mail" string="Mail"/>
+                    <h3><field name="mail"/></h3>
+                    
+                </xpath>
+                <xpath expr="//label[@for='login']" position="attributes">
+                	<attribute name="string">Login(IGG)</attribute>
+                </xpath>
+	        </field>
+	    </record> 
+	    
+     	<record id="res_users_tree" model="ir.ui.view">
+	        <field name="name">res.users.tree</field>
+	        <field name="model">res.users</field>
+	        <field name="inherit_id" ref="base.view_users_tree"/>
+	        <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']"  position="attributes">
+                	<attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='lang']"  position="attributes">
+                	<attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='login_date']"  position="attributes">
+                	<attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='login']" position="after">
+                    <field name="name"/>
+                    <field name="prenom"/>
+                    <field name="mail"/>
+                    <!-- <field name="login_date"/>  -->
+	                <field name="direction_id"/>
+	                <field name="service_id"/>	                
+                </xpath>
+                <xpath expr="//field[@name='login']"  position="attributes">
+                	<attribute name="string">Login(IGG)</attribute>
+                </xpath>
+	        </field>
+	    </record> 
+    </data>
+</odoo>

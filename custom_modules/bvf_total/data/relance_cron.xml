@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record model="ir.cron" id="relance_normal_cron">
+        <field name="name">Relance bvf normal toutes les semaines</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">weeks</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model" eval="'relancer.bvf'"/>
+        <field name="function" eval="'_cron_bvf_normal'"/>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 07:00:00')"/>
+    </record>
+    
+    <record model="ir.cron" id="relance_07h00_cron">
+        <field name="name">Cron à lancer à 7h00</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model" eval="'relancer.bvf'"/>
+        <field name="function" eval="'_cron_7h00'"/>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 07:00:00')"/>
+    </record>
+    
+    <record model="ir.cron" id="relance_12h00_cron">
+        <field name="name">Cron à lancer à 12h00</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model" eval="'relancer.bvf'"/>
+        <field name="function" eval="'_cron_tres_urgent_bvf'"/>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 12:00:00')"/>
+    </record>
+
+    <record model="ir.cron" id="relance_16h00_cron">
+        <field name="name">Cron à lancer à 16h00</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model" eval="'relancer.bvf'"/>
+        <field name="function" eval="'_cron_tres_urgent_bvf'"/>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 16:00:00')"/>
+    </record>    
+</odoo>

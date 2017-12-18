@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>  	    
+	    <record model="ir.actions.act_window" id="action_account_payement">
+	       <field name="name">Délai de paiement</field>
+	       <field name="res_model">account.payment.term</field>
+	       <field name="view_type">form</field>
+	       <field name="view_mode">tree,form</field>
+	       <field name="help" type="html">
+	         <p class="oe_view_nocontent_create">
+	             Cliquer pour ajouter un delai de paiement
+	         </p>
+	       </field>
+	   </record>  
+    </data>
+</odoo>

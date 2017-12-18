@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- workflow -->
+        <record id="bvf_total_wkf" model="workflow">
+            <field name="name">Workflow évaluation</field>
+            <field name="osv">bvf.total</field>
+            <field name="on_create">True</field>
+        </record>
+        
+        <!-- activity -->
+        <record id="act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="flow_start">True</field>
+            <field name="name">recu_verifiee</field>
+			<field name="kind">dummy</field>
+		</record>
+		<record id="act_envoi_presc" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">envoi_presc</field>
+            <field name="kind">function</field>
+            <field name="action">action_envoi_presc()</field>
+        </record>
+        <record id="act_irreguliere" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">irreguliere</field>
+            <field name="kind">function</field>
+            <field name="action">action_irreguliere()</field>
+        </record>
+        <record id="act_ok_paimt_normal" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">ok_paimt_normal</field>
+            <field name="kind">function</field>
+            <field name="action">action_ok_paimt_normal()</field>
+        </record>
+        <record id="act_refacturer" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">refacturer</field>
+            <field name="kind">function</field>
+            <field name="action">action_refacturer()</field>
+        </record>
+        <record id="act_compta_gen_pour_nd" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">compta_gen_pour_nd</field>
+            <field name="kind">function</field>
+            <field name="action">action_compta_gen_pour_nd()</field>
+        </record>
+        <record id="act_retour_prescr_compta" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">retour_prescr_compta</field>
+            <field name="kind">function</field>
+            <field name="action">action_retour_prescr_compta()</field>
+        </record>
+        <record id="act_retour_modif_compta" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">retour_modif_compta</field>
+            <field name="kind">function</field>
+            <field name="action">action_retour_modif_compta()</field>
+        </record>
+        <record id="act_ok_paimt_immediat" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">ok_paimt_immediat</field>
+            <field name="kind">function</field>
+            <field name="action">action_ok_paimt_immediat()</field>
+        </record>
+        <record id="act_bon_a_payer" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">bon_a_payer</field>
+            <field name="kind">function</field>
+            <field name="action">action_bon_a_payer()</field>
+        </record>
+        <record id="act_retour_compta" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">retour_compta</field>
+            <field name="kind">function</field>
+            <field name="action">action_retour_compta()</field>
+        </record>
+        <record id="act_retour_modif_treso" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">retour_modif_treso</field>
+            <field name="kind">function</field>
+            <field name="action">action_retour_modif_treso()</field>
+        </record>
+        <record id="act_retour_prescr_treso" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">retour_prescr_treso</field>
+            <field name="kind">function</field>
+            <field name="action">action_retour_prescr_treso()</field>
+        </record>
+    	<record id="act_recu_treso" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">recu_treso</field>
+            <field name="kind">function</field>
+            <field name="action">action_recu_treso()</field>
+        </record>
+        <record id="act_payee" model="workflow.activity">
+		    <field name="wkf_id" ref="bvf_total_wkf"/>
+            <field name="name">payee</field>
+            <field name="kind">function</field>
+            <field name="action">action_payee()</field>
+        </record>
+		
+		<!-- transition -->
+		<record id="act_1_to_2" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_envoi_presc"/>
+            <field name="signal">envoi_presc</field>
+        </record>
+        <record id="act_2_to_act_3" model="workflow.transition">
+            <field name="act_from" ref="act_envoi_presc"/>
+            <field name="act_to" ref="act_ok_paimt_normal"/>
+            <field name="signal">ok_paimt_normal</field>
+        </record>
+        <record id="act_3_to_act_4" model="workflow.transition">
+            <field name="act_from" ref="act_ok_paimt_normal"/>
+            <field name="act_to" ref="act_bon_a_payer"/>
+            <field name="signal">bon_a_payer</field>
+        </record>
+        <!-- <record id="act_formation_to_act_done" model="workflow.transition">
+            <field name="act_from" ref="act_formation"/>
+            <field name="act_to" ref="act_done"/>
+            <field name="signal">done</field>
+        </record>
+        <record id="act_bonus_to_act_done" model="workflow.transition">
+            <field name="act_from" ref="act_bonus"/>
+            <field name="act_to" ref="act_done"/>
+            <field name="signal">done</field>
+        </record> -->
+    </data>
+</odoo>

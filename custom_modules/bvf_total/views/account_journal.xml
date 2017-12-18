@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>  	    
+	    <record model="ir.actions.act_window" id="action_account_journal">
+	       <field name="name">Comptes bancaires</field>
+	       <field name="res_model">account.journal</field>
+	       <field name="view_type">form</field>
+	       <field name="view_mode">tree,form</field>
+	       <field name="help" type="html">
+	         <p class="oe_view_nocontent_create">
+	             Cliquer pour ajouter un établissement bancaire
+	         </p>
+	       </field>
+	   </record>  
+    </data>
+</odoo>

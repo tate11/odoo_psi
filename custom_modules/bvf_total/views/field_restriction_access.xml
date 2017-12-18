@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>  
+		<record id="creation_BVF_form_agent_adm" model="ir.ui.view">
+	        <field name="name">bordereau.verification.facture.form.agent.adm</field>
+	        <field name="model">bvf.total</field>
+	        <field name="groups_id" eval="[(4, ref('bvf_total.group_agent_administratif'))]"/>
+	        <field name="inherit_id" ref="bvf_total.bordereau_verification_facture_form"/>
+	        <field name="arch" type="xml">
+                <xpath expr="//field[@name='acompte']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', '!=', 'recu_verifiee')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='definitive']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', '!=', 'recu_verifiee')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='avoir']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', '!=', 'recu_verifiee')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='fournisseur']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', '!=', 'recu_verifiee')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='numero_facture']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', '!=', 'recu_verifiee')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_facture']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', '!=', 'recu_verifiee')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='montant_ttc']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', '!=', 'recu_verifiee')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_facture']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', '!=', 'recu_verifiee')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='devise']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', '!=', 'recu_verifiee')]}</attribute>
+                </xpath>
+	        </field>
+	    </record> 
+		<record id="creation_BVF_form_prescripteur" model="ir.ui.view">
+	        <field name="name">bordereau.verification.facture.form.prescripteur</field>
+	        <field name="model">bvf.total</field>
+	        <field name="groups_id" eval="[(4, ref('bvf_total.group_prescripteur'))]"/>
+	        <field name="inherit_id" ref="bvf_total.bordereau_verification_facture_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='numero_commande']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', '!=', 'envoi_presc')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='numero_ded']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', '!=', 'envoi_presc')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='numero_em']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', '!=', 'envoi_presc')]}</attribute>
+                </xpath>
+	        </field>
+	    </record> 
+	    <record id="creation_BVF_form_comptable" model="ir.ui.view">
+	        <field name="name">bordereau.verification.facture.form.comptable</field>
+	        <field name="model">bvf.total</field>
+	        <field name="groups_id" eval="[(4, ref('bvf_total.group_comptables'))]"/>
+	        <field name="inherit_id" ref="bvf_total.bordereau_verification_facture_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='numero_fiche_immo']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', 'not in', ['ok_paimt_normal', 'refacturer', 'compta_gen_nd'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='numero_ef']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', 'not in', ['ok_paimt_normal', 'refacturer', 'compta_gen_nd'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='a_refacturer']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', 'not in', ['ok_paimt_normal', 'refacturer', 'compta_gen_nd'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='compensation']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', 'not in', ['ok_paimt_normal', 'refacturer', 'compta_gen_nd'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='numero_nd']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', 'not in', ['ok_paimt_normal', 'refacturer', 'compta_gen_nd'])]}</attribute>
+                </xpath>
+	        </field>
+	    </record> 		
+	    <record id="creation_BVF_form_tresorerie" model="ir.ui.view">
+	        <field name="name">bordereau.verification.facture.form.tresorerie</field>
+	        <field name="model">bvf.total</field>
+	        <field name="groups_id" eval="[(4, ref('bvf_total.group_tresoriers'))]"/>
+	        <field name="inherit_id" ref="bvf_total.bordereau_verification_facture_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='date_reglement']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', 'not in', ['recu_treso', 'ok_paimt_immediat', 'bon_a_payer'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_bon_a_payer']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', 'not in', ['recu_treso', 'ok_paimt_immediat', 'bon_a_payer'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='banque_reglement']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', 'not in', ['recu_treso', 'ok_paimt_immediat', 'bon_a_payer'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='numero_cheque']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', 'not in', ['recu_treso', 'ok_paimt_immediat', 'bon_a_payer'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_virement']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', 'not in', ['recu_treso', 'ok_paimt_immediat', 'bon_a_payer'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='numero_piece_reglement']" position="attributes">
+                	<attribute name="readonly"/>
+                	<attribute name="attrs">{'readonly': [('state', 'not in', ['recu_treso', 'ok_paimt_immediat', 'bon_a_payer'])]}</attribute>
+                </xpath>
+	        </field>
+	    </record> 
+	</data>
+</odoo>

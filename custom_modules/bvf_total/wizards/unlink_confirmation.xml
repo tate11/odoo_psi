@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>    
+	    <record id="unlink_confirmation_form" model="ir.ui.view">
+	        <field name="name">unlink.confirmation.form</field>
+	        <field name="model">unlink.confirmation</field>
+	        <field name="arch" type="xml">
+	            <form>
+	            	<b>Souhaitez-vous supprimer ce fournisseur ?</b>
+	            	<footer>
+                        <button string="Oui" name="unlink_fournisseur" type="object" class="btn-primary"/>
+                        <button string="Non" class="btn-default" special="cancel"/>
+                    </footer>
+	            </form>
+	        </field>
+	    </record>   
+	    	     
+	    <record model="ir.actions.act_window" id="unlink_confirmation_action">
+	       <field name="name">Confirmation de suppression de fournisseur</field>
+	       <field name="res_model">unlink.confirmation</field>
+	       <field name="view_type">form</field>
+	       <field name="view_mode">form</field>	       
+	       <field name="target">new</field>
+	       <field name="context">{'default_name':active_id}</field>
+	   </record>
+	         
+    </data>
+</odoo>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+    
+    	<!-- Email template for normal relance 
+            bla bla ${bvf_list} 
+            bli bli ${object.utilisateur_id.partner_id.email|safe} -->
+        <record id="relancer_normal_bvf" model="mail.template">
+            <field name="name">Relancer un BVF Normal</field>
+            <field name="model_id" ref="bvf_total.model_relancer_bvf"/>
+            <field name="email_from"><![CDATA[${(user.email)|safe}]]></field>
+            <field name="email_to">${object.utilisateur_id.partner_id.email|safe}</field>
+            <field name="subject">Relance de BVF(s)</field>
+            <field name="body_html"><![CDATA[
+            % set bvf_list = object.env['bvf.total'].browse(ctx.get('bvf_ids'))
+				<p> Bonjour </p>
+				<p> La/les facture(s) suivante(s) est/sont à votre niveau : </p>
+				<table border="1" cellspacing="0" cellpadding="0">
+				<thead>
+					<th> NOM DU FOURNISSEUR</th>
+					<th> DATE DE RECEPTION</th>
+					<th> N° FACTURE</th>
+					<th> MONTANT FACTURE</th>
+					<th> DEVISE</th>
+					<th> DATE D'ECHEANCE FACTURE</th>
+				</thead>
+				<tbody>
+				% for bvf in object.env['bvf.total'].browse(ctx.get('bvf_ids')):
+					<tr>
+						<td>${bvf.fournisseur.raison_social} </td>
+						<td> ${bvf.date_reception_facture}</td>
+						<td> ${bvf.numero_facture.numero}</td>
+						<td> ${bvf.montant_ttc}</td>
+						<td> ${bvf.devise.name}</td>
+						<td> ${bvf.date_echeance}</td>
+					</tr>
+				% endfor
+				</tbody>
+				</table>
+				<br/><br/>
+				<p> Merci de bien vouloir traiter et le (les) mettre dans le circuit de validation.</p>
+				]]></field>
+            <field name="user_signature" eval="False"/>
+        </record>
+        
+       	<!-- Email template for urgent relance -->
+        <record id="relancer_urgent_bvf" model="mail.template">
+            <field name="name">Relancer un BVF Urgent</field>
+            <field name="model_id" ref="bvf_total.model_relancer_bvf"/>
+            <field name="email_from"><![CDATA[${(user.email)|safe}]]></field>
+            <field name="email_to">${object.utilisateur_id.partner_id.email|safe}</field>
+            <field name="subject">Relance de BVF(s)</field>
+            <field name="body_html"><![CDATA[
+            % set bvf_list = object.env['bvf.total'].browse(ctx.get('bvf_ids'))
+				<p> Bonjour </p>
+				<p> La/les facture(s) suivante(s), et qui sont à votre niveau arriveront à échéance bientôt: </p>
+				<table border="1" cellspacing="0" cellpadding="0">
+				<thead>
+					<th> NOM DU FOURNISSEUR</th>
+					<th> DATE DE RECEPTION</th>
+					<th> N° FACTURE</th>
+					<th> MONTANT FACTURE</th>
+					<th> DEVISE</th>
+					<th> DATE D'ECHEANCE FACTURE</th>
+				</thead>
+				<tbody>
+				% for bvf in object.env['bvf.total'].browse(ctx.get('bvf_ids')):
+					<tr>
+						<td>${bvf.fournisseur.raison_social} </td>
+						<td> ${bvf.date_reception_facture}</td>
+						<td> ${bvf.numero_facture.numero}</td>
+						<td> ${bvf.montant_ttc}</td>
+						<td> ${bvf.devise.name}</td>
+						<td> ${bvf.date_echeance}</td>
+					</tr>
+				% endfor
+				</tbody>
+				</table>
+				<p> De ce fait, merci à vous de les mettre rapidement dans le circuit de validation.<br/>Le cas échéant, veuillez nous informer d’un éventuel blocage svp.</p>
+				]]></field>
+            <field name="user_signature" eval="False"/>
+        </record>
+        
+        <!-- Email template for très urgent relance -->
+        <record id="relancer_tres_urgent_bvf" model="mail.template">
+            <field name="name">Relancer un BVF Très Urgent</field>
+            <field name="model_id" ref="bvf_total.model_relancer_bvf"/>
+            <field name="email_from"><![CDATA[${(user.email)|safe}]]></field>
+            <field name="email_to">${object.utilisateur_id.partner_id.email|safe}</field>
+            <field name="subject">Relance de BVF(s)</field>
+            <field name="body_html"><![CDATA[
+            % set bvf_list = object.env['bvf.total'].browse(ctx.get('bvf_ids'))
+				<p> Bonjour </p>
+				<p> La/les facture(s) suivante(s) : </p>
+				<ul>
+					<li>sont déjà échues</li>
+					<li>ou arriveront à échéance à la date d'échéance indiquée ci-dessous</li>
+				</ul>
+				<table border="1" cellspacing="0" cellpadding="0">
+				<thead>
+					<th> NOM DU FOURNISSEUR</th>
+					<th> DATE DE RECEPTION</th>
+					<th> N° FACTURE</th>
+					<th> MONTANT FACTURE</th>
+					<th> DEVISE</th>
+					<th> DATE D'ECHEANCE FACTURE</th>
+				</thead>
+				<tbody>
+				% for bvf in object.env['bvf.total'].browse(ctx.get('bvf_ids')):
+					<tr>
+						<td>${bvf.fournisseur.raison_social} </td>
+						<td> ${bvf.date_reception_facture}</td>
+						<td> ${bvf.numero_facture.numero}</td>
+						<td> ${bvf.montant_ttc}</td>
+						<td> ${bvf.devise.name}</td>
+						<td> ${bvf.date_echeance}</td>
+					</tr>
+				% endfor
+				</tbody>
+				</table>
+				<p> Prière de les valider ASAP.</p>
+				]]></field>
+            <field name="user_signature" eval="False"/>
+        </record>
+    </data>
+</odoo>

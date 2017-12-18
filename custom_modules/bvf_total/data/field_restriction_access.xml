@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>  
+		<record id="creation_BVF_form_agent_adm" model="ir.ui.view">
+	        <field name="name">bordereau.verification.facture.form.agent.adm</field>
+	        <field name="model">bvf.total</field>
+	        <field name="groups_id" eval="[(4, ref('bvf_total.group_agent_administratif'))]"/>
+	        <field name="inherit_id" ref="bvf_total.bordereau_verification_facture_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='nature']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='fournisseur']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='numero_facture']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='date_facture']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='montant_ttc']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='date_facture']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='devise']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='observation']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+	        </field>
+	    </record> 
+		<record id="creation_BVF_form_prescripteur" model="ir.ui.view">
+	        <field name="name">bordereau.verification.facture.form.prescripteur</field>
+	        <field name="model">bvf.total</field>
+	        <field name="groups_id" eval="[(4, ref('bvf_total.group_prescripteur'))]"/>
+	        <field name="inherit_id" ref="bvf_total.bordereau_verification_facture_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='numero_commande']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='numero_ded']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='numero_em']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+	        </field>
+	    </record> 
+	    <record id="creation_BVF_form_comptable" model="ir.ui.view">
+	        <field name="name">bordereau.verification.facture.form.comptable</field>
+	        <field name="model">bvf.total</field>
+	        <field name="groups_id" eval="[(4, ref('bvf_total.group_comptables'))]"/>
+	        <field name="inherit_id" ref="bvf_total.bordereau_verification_facture_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='numero_fiche_immo']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='numero_ef']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='a_refacturer']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='compensation']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='numero_nd']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+	        </field>
+	    </record> 		
+	    <record id="creation_BVF_form_tresorerie" model="ir.ui.view">
+	        <field name="name">bordereau.verification.facture.form.tresorerie</field>
+	        <field name="model">bvf.total</field>
+	        <field name="groups_id" eval="[(4, ref('bvf_total.group_tresoriers'))]"/>
+	        <field name="inherit_id" ref="bvf_total.bordereau_verification_facture_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='date_reglement']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='date_bon_a_payer']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='banque_reglement']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='numero_cheque']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='date_virement']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+                <xpath expr="//field[@name='numero_piece_reglement']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+	        </field>
+	    </record> 
+	</data>
+</odoo>

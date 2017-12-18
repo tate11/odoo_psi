@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<!-- access sur la facture -->
+	<record id="res_agent_administratif_access" model="ir.model.access">
+            <field name="name">agent_administratif_facture_total</field>
+            <field name="model_id" ref="bvf_total.model_facture_total"/>
+            <field name="group_id" ref="bvf_total.group_agent_administratif"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+     </record>
+     <record id="res_agent_prescripteur_access" model="ir.model.access">
+            <field name="name">prescripteur_facture_total</field>
+            <field name="model_id" ref="bvf_total.model_facture_total"/>
+            <field name="group_id" ref="bvf_total.group_prescripteur"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+     <record id="res_agent_comptables_access" model="ir.model.access">
+            <field name="name">comptable_facture_total</field>
+            <field name="model_id" ref="bvf_total.model_facture_total"/>
+            <field name="group_id" ref="bvf_total.group_comptables"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+     <record id="res_agent_tresoriers_access" model="ir.model.access">
+            <field name="name">tresorier_facture_total</field>
+            <field name="model_id" ref="bvf_total.model_facture_total"/>
+            <field name="group_id" ref="bvf_total.group_tresoriers"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+     <record id="res_agent_tresoriers_access_account_journal" model="ir.model.access">
+            <field name="name">tresorier_account_journal</field>
+            <field name="model_id" ref="account.model_account_journal"/>
+            <field name="group_id" ref="bvf_total.group_tresoriers"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+     
+     <!-- access sur le fournisseur -->
+     	<record id="res_agent_administratif_access_frnsr" model="ir.model.access">
+            <field name="name">agent_administratif_fournisseur_total</field>
+            <field name="model_id" ref="bvf_total.model_fournisseur_total"/>
+            <field name="group_id" ref="bvf_total.group_agent_administratif"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+     </record>
+     <record id="res_agent_prescripteur_access_frnsr" model="ir.model.access">
+            <field name="name">prescripteur_fournisseur_total</field>
+            <field name="model_id" ref="bvf_total.model_fournisseur_total"/>
+            <field name="group_id" ref="bvf_total.group_prescripteur"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+     <record id="res_agent_comptables_access_frnsr" model="ir.model.access">
+            <field name="name">comptable_fournisseur_total</field>
+            <field name="model_id" ref="bvf_total.model_fournisseur_total"/>
+            <field name="group_id" ref="bvf_total.group_comptables"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+     <record id="res_agent_tresoriers_access_frnsr" model="ir.model.access">
+            <field name="name">tresorier_fournisseur_total</field>
+            <field name="model_id" ref="bvf_total.model_fournisseur_total"/>
+            <field name="group_id" ref="bvf_total.group_tresoriers"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+     
+     <!-- access sur le BVF -->
+     <record id="res_agent_administratif_access_bvf" model="ir.model.access">
+            <field name="name">agent_administratif_bvf_total</field>
+            <field name="model_id" ref="bvf_total.model_bvf_total"/>
+            <field name="group_id" ref="bvf_total.group_agent_administratif"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+     </record>
+     <record id="res_agent_prescripteur_access_bvf" model="ir.model.access">
+            <field name="name">prescripteur_bvf_total</field>
+            <field name="model_id" ref="bvf_total.model_bvf_total"/>
+            <field name="group_id" ref="bvf_total.group_prescripteur"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+     <record id="res_agent_comptables_access_bvf" model="ir.model.access">
+            <field name="name">comptable_bvf_total</field>
+            <field name="model_id" ref="bvf_total.model_bvf_total"/>
+            <field name="group_id" ref="bvf_total.group_comptables"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+     <record id="res_agent_tresoriers_access_bvf" model="ir.model.access">
+            <field name="name">tresorier_bvf_total</field>
+            <field name="model_id" ref="bvf_total.model_bvf_total"/>
+            <field name="group_id" ref="bvf_total.group_tresoriers"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+     
+     <!-- access sur le service -->
+     <record id="res_agent_administratif_access_service" model="ir.model.access">
+            <field name="name">agent_administratif_service_total</field>
+            <field name="model_id" ref="bvf_total.model_service_total"/>
+            <field name="group_id" ref="bvf_total.group_agent_administratif"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+     </record>
+     <record id="res_agent_prescripteur_access_service" model="ir.model.access">
+            <field name="name">prescripteur_service_total</field>
+            <field name="model_id" ref="bvf_total.model_service_total"/>
+            <field name="group_id" ref="bvf_total.group_prescripteur"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+     <record id="res_agent_comptables_access_service" model="ir.model.access">
+            <field name="name">comptable_service_total</field>
+            <field name="model_id" ref="bvf_total.model_service_total"/>
+            <field name="group_id" ref="bvf_total.group_comptables"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+     <record id="res_agent_tresoriers_access_service" model="ir.model.access">
+            <field name="name">tresorier_service_total</field>
+            <field name="model_id" ref="bvf_total.model_service_total"/>
+            <field name="group_id" ref="bvf_total.group_tresoriers"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+     
+    <!-- access sur la direction -->
+     <record id="res_agent_administratif_access_direction" model="ir.model.access">
+            <field name="name">agent_administratif_direction_total</field>
+            <field name="model_id" ref="bvf_total.model_direction_total"/>
+            <field name="group_id" ref="bvf_total.group_agent_administratif"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+     </record>
+</odoo> 

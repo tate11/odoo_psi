@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>    
+	    <record id="relancer_bvf_form" model="ir.ui.view">
+	        <field name="name">relancer.bvf.form</field>
+	        <field name="model">relancer.bvf</field>
+	        <field name="arch" type="xml">
+	            <form>
+	            	<group>
+		            	<group>
+		            		<field name="bvf_ids" invisible='1'/>
+			            	<field name="direction_id"/>
+			            	<field name="service_id"/>
+			            	<field name="utilisateur_id"  context="{'dans_relance':True}" />
+			            	<field name="commentaire" placeholder="Notes supplémentaires"/>
+			            	<field name="utilisateur_ids"  invisible='1' widget="many2many_tags" />
+		            	</group>	            	
+	            	</group>
+	            	<footer>
+                        <button string="Valider" name="relancer_bvf_action" type="object" class="btn-primary"/>
+                        <button string="Annuler" class="btn-default" special="cancel"/>
+                    </footer>
+	            </form>
+	        </field>
+	    </record> 	        
+	    
+	   <!-- action relance dans le tree BVF  -->
+	           
+        <act_window id="action_relancer" 
+	        name="Relance" 
+	        res_model="relancer.bvf"  
+	        view_mode="form"
+	        target="new"   
+	        context="{'dans_relance':True}"    
+	        />
+	        <!-- src_model="bvf.total" key2="client_action_multi"-->
+    </data>
+</odoo>

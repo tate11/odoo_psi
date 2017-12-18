@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>    
+        <record id="select_prescripteur_form" model="ir.ui.view">
+            <field name="name">select.prescripteur.form</field>
+            <field name="model">select.prescripteur</field>
+            <field name="arch" type="xml">
+                <form>
+                    <separator string="Souhaitez-vous envoyer ce bvf aux prescripteurs? Si oui, veuillez sélectionner un prescripteur."/>
+                    <field name="bvf_ids" invisible='1'/>
+                    <label for="utilisateur_id"/>
+                    <field name="utilisateur_id"/>
+                    <footer>
+                        <button string="Valider" name="select_prescripteur_confirm_action" type="object" class="btn-primary"/>
+                        <button string="Annuler" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>           
+        
+       <!-- action relance dans le tree BVF  -->
+               
+        <act_window id="action_select_prescripteur" 
+            name="Selectionner le prescripteur responsable" 
+            res_model="select.prescripteur"  
+            view_mode="form"
+            target="new"       
+            />
+            <!-- src_model="bvf.total" key2="client_action_multi"-->
+    </data>
+</odoo>

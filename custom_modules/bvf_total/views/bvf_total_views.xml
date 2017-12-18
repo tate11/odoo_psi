@@ -1,0 +1,387 @@
+<odoo>
+    <data>	
+	    
+	    <!-- form view-->
+	    <record id="bordereau_verification_facture_form" model="ir.ui.view">
+	        <field name="name">bordereau.verification.facture.form</field>
+	        <field name="model">bvf.total</field>
+	        <field name="arch" type="xml">
+	            <form colors="red:statut_label=='Très urgent';#FFA500:statut_label=='Urgent';#3CB371:statut_label=='Normal'">
+	                <header>
+	                	<button string="ENVOI AUX PRESCRIPTEURS" name="action_envoi_presc" type="object" class="oe_highlight" attrs="{'invisible': ['|',('state', '!=', 'recu_verifiee'),('create_uid', '=', False)]}" groups='bvf_total.group_agent_administratif'/>	                	
+	                	<button string="IRREGULIERE" name="action_irreguliere" type="object" class="oe_highlight" attrs="{'invisible': [('state', '&lt;&gt;', 'envoi_presc')]}" groups='bvf_total.group_prescripteur'/>
+	                	<button string="OK POUR PAIEMENT NORMAL" name="action_ok_paimt_normal" type="object" class="oe_highlight" attrs="{'invisible': [('state', '&lt;&gt;', 'envoi_presc')]}"  groups='bvf_total.group_prescripteur'/>
+	                	<button string="REFACTURER" name="action_refacturer" type="object" class="oe_highlight" attrs="{'invisible': [('state', '&lt;&gt;', 'ok_paimt_normal')]}"  groups='bvf_total.group_comptables'/>
+	                	<button string="COMPTA GEN POUR ND" name="action_compta_gen_pour_nd" type="object" class="oe_highlight" attrs="{'invisible': [('state', '&lt;&gt;', 'refacturer')]}"  groups='bvf_total.group_comptables'/>
+	                	<button string="BON A PAYER" name="action_bon_a_payer" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['ok_paimt_normal', 'compta_gen_nd'])]}" groups='bvf_total.group_comptables'/>
+	                	<button string="RETOUR AU PRESCRIPTEUR COMPTA" name="action_retour_prescr_compta" type="object" class="oe_highlight" attrs="{'invisible': [('state', '&lt;&gt;', 'ok_paimt_normal')]}" groups='bvf_total.group_comptables'/>	                	
+	                	<button string="RETOUR MODIF BVF COMPTA" name="action_retour_modif_compta" type="object" class="oe_highlight" attrs="{'invisible': [('state', '&lt;&gt;', 'ok_paimt_normal')]}" groups='bvf_total.group_comptables'/>
+	                	<button string="OK POUR PAIEMENT IMMEDIAT" name="action_ok_paimt_immediat" type="object" class="oe_highlight" attrs="{'invisible': [('state', '&lt;&gt;', 'envoi_presc')]}"  groups='bvf_total.group_prescripteur'/>  
+	                	<button string="RETOUR A LA COMPTA" name="action_retour_compta" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['recu_treso', 'bon_a_payer'])]}" groups='bvf_total.group_tresoriers'/>
+	                	<button string="RETOUR MODIF BVF TRESO" name="action_retour_modif_treso" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['recu_treso', 'bon_a_payer'])]}"  groups='bvf_total.group_tresoriers'/>
+	                	<button string="RETOUR AU PRESCRIPTEUR TRESO" name="action_retour_prescr_treso" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['ok_paimt_immediat', 'recu_treso', 'bon_a_payer'])]}"  groups='bvf_total.group_tresoriers'/>	                	
+	                	<button string="REçUE TRESO" name="action_recu_treso" type="object" class="oe_highlight" attrs="{'invisible': [('state', '&lt;&gt;', 'bon_a_payer')]}"  groups='bvf_total.group_tresoriers'/>
+	                	<button string="PAYEE" name="action_payee" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['recu_treso'])]}"  groups='bvf_total.group_tresoriers'/>
+	                	
+	                	<!--<button string="REATTRIBUER" name="%(action_reattribuer)d" type="action" class="oe_highlight"/>-->
+	                	
+	                	<button string="REATTRIBUER" name="%(action_reattribuer)d" type="action" class="oe_highlight" attrs="{'invisible': ['|',('state', '!=', 'recu_verifiee'),('create_uid', '=', False)]}" groups='bvf_total.group_agent_administratif'/>
+	                	<button string="REATTRIBUER" name="%(action_reattribuer)d" type="action" class="oe_highlight" attrs="{'invisible': [('state', '&lt;&gt;', 'envoi_presc')]}" groups='bvf_total.group_prescripteur'/>
+	                	<button string="REATTRIBUER" name="%(action_reattribuer)d" type="action" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['ok_paimt_normal', 'refacturer', 'compta_gen_nd'])]}"  groups='bvf_total.group_comptables'/>
+	                	<button string="REATTRIBUER" name="%(action_reattribuer)d" type="action" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['ok_paimt_immediat','bon_a_payer', 'recu_treso'])]}"  groups='bvf_total.group_tresoriers'/>
+	                	
+		                <!--<button string="RELANCE" name="relancer" type="object"/>
+		                <button string="IMPRIMER" name="imprimer" type="object"/>-->
+		                <!-- <field name="state" widget="statusbar" clickable="0" statusbar_visible="recu_verifiee, irreguliere, envoi_presc, ok_paimt_normal,retour_bvf_compta, retour_prescr_treso, ok_paimt_immediat, bon_a_payer,  retour_bvf_treso, retour_prescr_treso,recu_treso, payee" /> -->
+	                    <field name="state" widget="statusbar" statusbar_visible="recu_verifiee, irreguliere, envoi_presc, ok_paimt_normal, ok_paimt_immediat, bon_a_payer, recu_treso, payee" />   
+                    </header>
+	                <sheet>
+		                <!--<div style="background-color:red">-->
+		                	<group> 
+		                		<p align='center'>BORDEREAU DE VERIFICATION FACTURE</p>
+		                		<field name="create_uid"  invisible='1'/>
+		                	</group>
+		                	<group> 
+		                		<p align='center'><field name="numero" style="font-size:medium;font-weight: bold;" nolabel="1" attrs="{'invisible':[('numero','=',False)]}"/></p> 	                		
+		                	</group>
+		                    <group>   
+			                    <group>
+				                    <div id="left" style="float: left; margin:0 auto;"> 
+								        <p>Date Réception</p>
+								    </div>							
+								    <div id="right" style="float: left; margin:0 auto;">
+								        <p>Date Réception Direction approbatrice </p>
+								    </div>	 
+								    <div id="left" style="float: left; margin:0 auto;"> 
+								        <field name="date_reception_facture"/>
+								    </div>							
+								    <div id="right" style="float: left; margin:0 auto;">
+								        <field name="date_approbation_dir"/>
+								    </div>	                   	
+			                    </group>
+			                    <group>
+				                    <div id="left" style="float: left; margin:0 auto;"> 
+								        <p>Date Réception Compta</p>
+								    </div>							
+								    <div id="right" style="float: left; margin:0 auto;">
+								        <p>Date de réception Tréso </p>
+								    </div>	 
+								    <div id="left" style="float: left; margin:0 auto;"> 
+								        <field name="date_reception_compte"/>
+								    </div>							
+								    <div id="right" style="float: left; margin:0 auto;">
+								        <field name="date_reception_compte_banque"/> 
+								    </div>	
+				               </group>
+				            </group>
+		                    <group> 			
+		                    	<table style="padding:0px;width:100px;margin:auto;">
+		                			<!-- <field name="nature" widget="radio" nolabel="1" options="{'horizontal': true}"  readonly='1'/> -->
+		                			<tr>
+		                			<td style="padding:10px;"> Acompte </td>
+		                			<td> <field style="width:20%;" name="acompte" readonly='1' class="oe_inline"/></td>
+		                			<td style="padding:10px;"> Definitive</td>
+		                			<td> <field style="width:20%;" name="definitive" readonly='1'  class="oe_inline"/></td>
+		                			<td style="padding:10px;"> Avoir</td>
+		                			<td> <field style="width:20%;" name="avoir" readonly='1'  class="oe_inline"/></td>
+		                			</tr>
+		                		</table>	  
+			                </group>
+		                    <group> 
+				               <group>
+				               		<field name="responsable_id" invisible="1"/>
+				               		<field name="responsable_ids" invisible='1'/>
+								    <field name="fournisseur" readonly='1'/>
+								    <field name="numero_facture" readonly='1'/>
+								    <field name="date_reception" invisible="True"/>
+								    <field name="date_facture"  readonly='1'/>
+								    <field name="montant_ttc" readonly='1'/>
+								    <field name="devise" readonly='1'/>
+			                    	<field name="observation" placeholder="Notes Supplémentaires"/>
+			                    	<field name="a_refacturer" readonly='1'/>
+			                    	<field name="compensation" readonly='1'/>
+				               </group>
+				               <group>
+			                    	<field name="numero_commande" readonly='1'/>
+			                    	<field name="numero_ded" readonly='1'/>
+					                <field name="numero_fiche_immo" readonly='1'/>  
+					                <field name="numero_em" readonly='1' attrs="{'required':[('numero_commande','!=',False)]}"/>  
+					                <field name="echeance"/> 
+					                <field name="space" readonly='1'/> 
+					                <field name="numero_ef" readonly='1' attrs="{'required':[('state', 'in', ['ok_paimt_normal', 'refacturer'])]}"/> 
+					                <field name="space"/> 
+					                <field name="numero_nd" readonly='1'/> 
+			                    </group>
+			               </group>
+			               <group> 
+				               <group>		                    	
+			                    	<p align='center'>BON A PAYER</p> 
+				               </group>
+				               <group>	
+				                	<field name="space_reglement"/> 			            		                
+						            <field name="date_reglement" readonly='1'/> 
+			                    </group>
+			               </group>
+			               <group> 
+				               <group>	  
+			                    	<field name="date_bon_a_payer" readonly='1' attrs="{'required':[('state','=','bon_a_payer')]}" />
+			                    	<field name="space"/> 
+								    <label for="space" string="Signature"/>
+				               </group>
+				               <group>		
+			                		<field name="banque_reglement" readonly='1'/>
+			                		<field name="space"/> 
+					                <field name="numero_cheque" readonly='1' attrs="{'required':[('date_virement','=',False), ('state','=','bon_a_payer')]}"/>  
+					                <field name="date_virement" readonly='1' attrs="{'required':[('numero_cheque','=',False), ('state','=','bon_a_payer')]}"/>  
+					                <field name="numero_piece_reglement" readonly='1'/>  
+			                    </group>
+			               </group>
+		               <!-- </div>-->
+	                </sheet>
+	            	<div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+	            </form>
+	        </field>
+	    </record>
+	    
+	    <!--  Tree View -->
+	    <record model="ir.ui.view" id="bordereau_verification_facture_tree">
+	        <field name="name">bordereau.verification.facture.tree</field>
+	        <field name="model">bvf.total</field>
+	        <field name="arch" type="xml">
+	            <tree string="Bordereau de vérification des factures" colors="red:statut_label=='Très urgent' and state!='payee';#FFA500:statut_label=='Urgent' and state!='payee';#3CB371:statut_label=='Normal' and state!='payee';black:state=='payee'">
+	                <field name="responsable_id" invisible='1'/>
+	                <field name="loginIgg"/>
+	                <field name="fournisseur"/>
+	                <field name="date_facture"/>
+	                <field name="numero_facture"/>
+	                <field name="date_reception"/>
+	                <field name="echeance"/>
+	                <field name="date_echeance" invisible="1"/>
+	                <field name="nature"/>
+	                <field name="statut_label"/>
+	                <field name="montant_ttc"/>
+	                <field name="devise"/>
+	                <field name="state"/>	                
+	            </tree>   
+	        </field>
+	    </record>
+	    
+	    <record id="bordereau_verification_facture_search" model="ir.ui.view">
+	        <field name="name">bordereau.verification.facture.search</field>
+	        <field name="model">bvf.total</field>
+	        <field name="arch" type="xml">
+	            <search>
+	            	<field name="responsable_id"/>
+                	<field name="loginIgg"/>
+	                <field name="numero"/>
+	                <field name="date_reception"/>
+	                <field name="fournisseur"/>
+	                <field name="numero_facture"/>
+	                <field name="montant_ttc"/>
+	                <field name="devise"/>
+	                <field name="nature"/>
+	                <field name="echeance"/>	                
+	                <field name="statut_label"/>
+	                <field name="state"/>
+	                <filter string="Active" name="bvf_active" domain="[('state', 'not in',['recu_verifiee', 'payee'])]"/>
+	            </search>
+	        </field>
+	    </record>
+	    
+	    <!-- <record id="creation_BVF_form_prescripteur" model="ir.ui.view">
+	        <field name="name">bordereau.verification.facture.form.prescripteur</field>
+	        <field name="model">bvf.total</field>
+	        <field name="groups_id" eval="[(4, ref('bvf_total.group_prescripteur'))]"/>
+	        <field name="inherit_id" ref="bvf_total.bordereau_verification_facture_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='fournisseur']" position="attributes">
+                	<attribute name="readonly"/>
+                </xpath>
+	        </field>
+	    </record>    -->
+	    
+	    <record id="creation_fournisseur_search" model="ir.ui.view">
+	        <field name="name">creation.fournisseur.search</field>
+	        <field name="model">fournisseur.total</field>
+	        <field name="arch" type="xml">
+	            <search>
+                		<field name="raison_social"/>
+		                <field name="code_sap"/>
+		                <field name="nif"/>
+		                <field name="num_stat"/>
+	            </search>
+	        </field>
+	    </record>
+	    	    
+	    <record model="ir.ui.view" id="creation_fournisseur_tree">
+	        <field name="name">creation.fournisseur.tree</field>
+	        <field name="model">fournisseur.total</field>
+	        <field name="arch" type="xml">
+	            <tree string="Réception des factures">
+	                <field name="raison_social"/>
+	                <field name="code_sap"/>
+	                <field name="nif"/>
+	                <field name="num_stat"/>
+	                <field name="adresse"/>
+	                <field name="pays"/>
+	                <field name="delai_paiement"/>
+	                <field name="bvf_liaison" invisible='1'/>
+	                <button type='action' name='%(unlink_confirmation_action)d' icon='fa-trash-o' attrs="{'invisible':[('bvf_liaison','=',True)]}" />
+	            </tree>	            
+	        </field>
+	    </record>
+	    
+	    <record id="creation_fournisseur_form" model="ir.ui.view">
+	        <field name="name">creation.fournisseur.form</field>
+	        <field name="model">fournisseur.total</field>
+	        <field name="arch" type="xml">
+	            <form>
+	                <sheet>
+	                	<!-- <div> 
+	                		<label for='raison_social'/>
+			                <field name="raison_social" nolabel='1'/>
+			            </div>-->
+	                	<group> 
+	                		<field name="raison_social"/>
+			                <field name="code_sap"/>
+			                <field name="nif"/>
+			                <field name="num_stat"/>
+			                <field name="adresse"/>
+			                <field name="pays"/>
+			                <field name="delai_paiement"/>
+		               </group>
+	                </sheet>
+	            </form>
+	        </field>
+	    </record>    
+	    
+	    <record id="creation_facture_search" model="ir.ui.view">
+	        <field name="name">creation.facture.search</field>
+	        <field name="model">facture.total</field>
+	        <field name="arch" type="xml">
+	            <search>
+                		<field name="fournisseur"/>
+		                <field name="numero"/>
+		                <field name="date_reception"/>
+		                <filter string="Active" name="facture_active" domain="[('state', '!=','resent')]"/>
+	            </search>
+	        </field>
+	    </record>
+	    	    
+	    	    
+	    <record id="creation_facture_form" model="ir.ui.view">
+	        <field name="name">creation.facture.form</field>
+	        <field name="model">facture.total</field>
+	        <field name="arch" type="xml">
+	            <form>
+	                <header>
+			            <!-- <button string="REçUE ET VERIFIEE" name="set_to_recue_et_verifiee" type="object" class="oe_highlight" attrs="{'invisible': [('state', !=', 'draft')]}"/>
+		                <button string="RETOUR AU FOURNISSEUR" name="set_to_resent" type="object" attrs="{'invisible': [('state', '!=', 'draft, verified')]}" groups='bvf_total.group_agent_administratif'/>
+		                <button string="CREER BVF" name="set_to_be_created" type="object" attrs="{'invisible': [('state', '!=', 'createdbvf, verified')]}, 'readonly': [('state', '=', 'createdbvf')]}"/> -->
+		                
+		                <button string="REçUE ET VERIFIEE" name="set_to_recue_et_verifiee" type="object" class="oe_highlight" attrs="{'invisible': ['|',('state', '!=', 'draft'),('create_uid', '=', False)]}"/>
+		                <button string="RETOUR AU FOURNISSEUR" name="set_to_resent" type="object" class="oe_highlight" attrs="{'invisible': ['|',('state', '!=', 'draft'),('create_uid', '=', False)]}"/>
+		                <button string="CREER BVF" name="set_to_be_created" type="object" attrs="{'invisible': [('state', 'in', ['draft', 'resent', 'createdbvf'])]}"  groups='bvf_total.group_agent_administratif'/>
+	                    <field name="state" widget="statusbar" statusbar_visible="resent,verified,createdbvf" />   
+                    </header>
+	                <sheet>
+	                	<group> 
+	                		<p align='center'>RECEPTION FACTURE</p> 
+	                		<field name="create_uid"  invisible='1'/>
+	                	</group>
+	                    <group> 
+			               <group>
+							    <field name="numero"/>
+							    <field name="comment"/>
+			               </group>
+			               <group>
+			               		<field name="fournisseur"/>
+		                    	<field name="date_reception"/>
+		                    </group>
+		                   <group>
+		                    	<field name="facture_scannee" filename='filename' widget="binary"/>
+		                    	<field name="filename" invisible='1'/>
+		                    </group>
+		               </group>
+	                </sheet>
+	            </form>
+	        </field>
+	    </record>
+	    	    
+	    <record model="ir.ui.view" id="creation_facture_tree">
+	        <field name="name">creation.facture.tree</field>
+	        <field name="model">facture.total</field>
+	        <field name="arch" type="xml">
+	            <tree string="Réception des factures">
+	            	<field name="fournisseur"/>
+	                <field name="numero"/>
+	                <field name="date_reception"/>
+	                <field name="state"/>
+	            </tree>	            
+	        </field>
+	    </record>	    
+	    
+	    <!-- menu action -->	   
+	    <record model="ir.actions.act_window" id="action_hr_bvf">
+	       <field name="name">Bordereau de Vérification des factures  </field>
+	       <field name="res_model">bvf.total</field>
+	       <!-- <field name="view_type">tree</field>-->
+	       <field name="view_type">form</field>
+	       <field name="view_mode">tree,form</field>
+	       <field name="context">{'search_default_bvf_active':1}</field>
+	       <field name="help" type="html">
+	         <p class="oe_view_nocontent_create">
+	             Cliquer sur créer pour créer un bordereau de vérification
+	         </p>
+	       </field>
+	   </record>
+	   
+	  <record model="ir.actions.act_window" id="action_hr_facture" >
+	       <field name="name">Réception des factures  </field>
+	       <field name="res_model">facture.total</field>
+	       <!-- <field name="view_type">tree</field>-->
+	       <field name="view_type">form</field>
+	       <field name="view_mode">tree,form</field>	       
+	       <field name="context">{'search_default_facture_active':1}</field>
+	       <field name="help" type="html">
+	         <p class="oe_view_nocontent_create">
+	             Cliquer sur créer pour créer une facture
+	         </p>
+	       </field>
+	   </record>
+	   
+	   <record model="ir.actions.act_window" id="action_hr_frns">
+	       <field name="name">Fournisseur </field>
+	       <field name="res_model">fournisseur.total</field>
+	       <!-- <field name="view_type">tree</field>-->
+	       <field name="view_type">form</field>
+	       <field name="view_mode">tree,form</field>
+	       <field name="help" type="html">
+	         <p class="oe_view_nocontent_create">
+	             Cliquer sur créer pour créer un fournisseur
+	         </p>
+	       </field>
+	   </record>
+	   	   
+	   <!-- Menu Type de Facture et BVF -->
+	   <menuitem id="menu_hr_sbvf" name="Suivi Factures" action="action_hr_facture" web_icon="bvf_total,static/src/img/suivi_facture.png" />
+	   <menuitem id="menu_hr_fournisseur" name="Fournisseurs" action="action_hr_frns" web_icon="bvf_total,static/src/img/fournisseur.png"/>
+	   <menuitem id="menu_hr_utilisateur" name="Utilisateurs" action="base.action_res_users" web_icon="bvf_total,static/src/img/utilisateurs.png"/>
+	   <menuitem id="menu_non_stoke" parent="menu_hr_sbvf" action="action_hr_facture" name="Réception des Factures" sequence="1"/>
+	   <menuitem id="menu_stoke" parent="menu_hr_sbvf" action="action_hr_bvf" name="BVF" sequence="2"/>  
+	   <menuitem id="menu_relance" parent="menu_hr_sbvf" name="Relancer" sequence="3" action="action_relancer" groups='bvf_total.group_agent_administratif'/>
+	   <menuitem id="menu_config" parent="menu_hr_sbvf" name="Configuration" sequence="4"/>   
+	   
+	   <menuitem id="menu_multi_devise" parent="menu_config" name="Multi-devises"/>   
+	   <menuitem id="menu_devises" parent="menu_multi_devise" action="action_currency_total" name="Devises"/>  
+	   
+	   <menuitem id="menu_comptabilite" parent="menu_config" name="Comptabilité"/>   
+	   <menuitem id="menu_compte_bancaire" parent="menu_comptabilite" action="action_account_journal" name="Comptes bancaires"/>  
+	   
+	   <menuitem id="menu_gestion" parent="menu_config" name="Gestion"/>   
+	   <menuitem id="menu_condition_reglement" parent="menu_gestion" action="action_account_payement" name="Condition de règlement"/>  
+	</data>
+</odoo>

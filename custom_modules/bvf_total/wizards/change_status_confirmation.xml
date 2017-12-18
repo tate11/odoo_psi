@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>    
+        <record id="change_status_form" model="ir.ui.view">
+            <field name="name">change.status.form</field>
+            <field name="model">change.status</field>
+            <field name="arch" type="xml">
+                <form edit="0">
+                    <group>                        
+                        <b><label for="status" string="Souhaitez-vous passer en: "/> <field name="status" nolabel='1' readonly="1"/></b>
+                        <field name="bfv_total_id" invisible='1'/>
+                    </group>
+                    <footer>
+                        <button string="Oui" name="change_status_action" type="object" class="btn-primary"/>
+                        <button string="Non" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

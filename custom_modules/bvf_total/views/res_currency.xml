@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>  
+   	    <record id="res_currency_search" model="ir.ui.view">
+	        <field name="name">res.currency.search</field>
+	        <field name="model">res.currency</field>
+	        <field name="inherit_id" ref="base.view_currency_search"/>
+	        <field name="arch" type="xml">
+                <xpath expr="//filter[@name='inactive']" position="after">
+                	<!-- <filter name="devise_total" string="MGA EUR USD" domain="['|', '|', ('name','=','MGA'),('name','=','USD'),('name','=','EUR')]" help="Devise Total"/> -->
+                	<filter name="devise_total" string="MGA EUR USD" domain="[ ('active','=',True)]" help="Devise Total"/>
+                </xpath>
+	        </field>
+	    </record>  
+	    
+	     <record id="res_currency_form_total" model="ir.ui.view">
+	        <field name="name">res.currency.search</field>
+	        <field name="model">res.currency</field>
+	        <field name="inherit_id" ref="base.view_currency_search"/>
+	        <field name="arch" type="xml">
+                <xpath expr="//filter[@name='inactive']" position="after">
+                	<!-- <filter name="devise_total" string="MGA EUR USD" domain="['|', '|', ('name','=','MGA'),('name','=','USD'),('name','=','EUR')]" help="Devise Total"/> -->
+                	<filter name="devise_total" string="MGA EUR USD" domain="[ ('active','=',True)]" help="Devise Total"/>
+                </xpath>
+	        </field>
+	    </record>  
+	    
+	    <record model="ir.actions.act_window" id="action_currency_total">
+	       <field name="name">Devise MGA-EUR-USD </field>
+	       <field name="res_model">res.currency</field>
+	       <field name="view_type">form</field>
+	       <field name="view_mode">tree,form</field>
+	       <field name="help" type="html">
+	         <p class="oe_view_nocontent_create">
+	             Cliquer pour voir les devises de total
+	         </p>
+	       </field>
+	   </record>  
+    </data>
+</odoo>

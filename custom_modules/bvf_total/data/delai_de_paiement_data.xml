@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<odoo>
+	<data>
+		<record id="delai_paiement_1" model="delai_paiement.total">
+			<field name="code">Z030</field>
+			<field name="libelle">PAYABLE A 30 JOURS DATE DE FACTURE</field>
+			<field name="valeur">30</field>
+		</record>
+		<record id="delai_paiement_2" model="delai_paiement.total">
+			<field name="code">Z060</field>
+			<field name="libelle">NET 60 JOURS</field>
+			<field name="valeur">60</field>
+		</record>
+		<record id="delai_paiement_3" model="delai_paiement.total">
+			<field name="code">Z090</field>
+			<field name="libelle">PAYABLE A 90 JOURS DATE DE FACTURE</field>
+			<field name="valeur">90</field>
+		</record>
+		<record id="delai_paiement_4" model="delai_paiement.total">
+			<field name="code">ZA00</field>
+			<field name="libelle">PAYABLE IMMEDIATEMENT</field>
+			<field name="valeur">0</field>
+		</record>
+	</data>
+</odoo>

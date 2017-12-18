@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>        
+	    <record id="reattribuer_bvf_form" model="ir.ui.view">
+	        <field name="name">reattribuer.bvf.form</field>
+	        <field name="model">reattribuer.bvf</field>
+	        <field name="arch" type="xml">
+	            <form>
+	            	<group>
+		            	<group>
+			            	<field name="utilisateur_id"/>
+			            	<field name="commentaire" placeholder="Notes supplémentaires"/>
+		            	</group>	            	
+	            	</group>
+	            	<footer>
+                        <button string="Valider" name="reattribuer_bvf_action" type="object" class="btn-primary"/>
+                        <button string="Annuler" class="btn-default" special="cancel"/>
+                    </footer>
+	            </form>
+	        </field>
+	    </record> 	
+	    
+	   <!-- action reattribuer dans le tree BVF -->
+	           
+        <act_window id="action_reattribuer" 
+	        name="Transfert / Réattribution"         
+	        src_model="bvf.total"
+	        res_model="reattribuer.bvf"  
+	        view_mode="form"
+	        target="new"
+	        key2="client_action_multi"/>         
+    </data>
+</odoo>
