@@ -9,4 +9,14 @@ class AccountJournal(models.Model):
         return self.env['res.currency'].search([('name', '=', 'MGA')])[0].id
     
     currency_id = fields.Many2one('res.currency', string="Currency", oldname='currency', default=_default_currency_id)
+    
+    @api.multi
+    @api.depends('name', 'currency_id', 'company_id', 'company_id.currency_id')
+    def name_get(self):
+        res = []
+        for journal in self:
+            currency = journal.currency_id or journal.company_id.currency_id
+            name = journal.name
+            res += [(journal.id, name)]
+        return res
         
