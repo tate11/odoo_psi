@@ -47,6 +47,25 @@
             <field name="perm_unlink" eval="0"/>
      </record>
      
+     <!-- access sur l'utilisateur -->
+     	<record id="res_agent_administratif_access_user" model="ir.model.access">
+            <field name="name">agent_administratif_utilisateur_total</field>
+            <field name="model_id" ref="bvf_total.model_res_users"/>
+            <field name="group_id" ref="bvf_total.group_agent_administratif"/>
+            <field name="perm_read" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+     </record>
+    <!--  <record id="res_administrateurs_access_user" model="ir.model.access">
+            <field name="name">administrateurs_utilisateur_total</field>
+            <field name="model_id" ref="bvf_total.model_res_users"/>
+            <field name="group_id" ref="bvf_total.group_administrateurs"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+     </record> -->
      <!-- access sur le fournisseur -->
      	<record id="res_agent_administratif_access_frnsr" model="ir.model.access">
             <field name="name">agent_administratif_fournisseur_total</field>

@@ -25,11 +25,11 @@
             <field name="users" eval="[(4,ref('base.user_root'))]"/>
         </record>
         
-        <!-- <record id="group_administrateurs" model="res.groups">
+        <record id="group_administrateurs" model="res.groups">
             <field name="name">Administrateurs</field>
              <field name="category_id" ref="category_total"/>
-            <field name="users" eval="[(4,ref('base.user_root'))]"/>
-            <field name="implied_ids" eval="[(4, ref('group_tresoriers,group_comptables,group_prescripteur,group_agent_administratif'))]"/>
-        </record> -->
+             <field name="implied_ids" eval="[(4, [ref('base.user_root'),ref('group_tresoriers'), ref('group_comptables'), ref('group_prescripteur'), ref('group_agent_administratif'), ref('base.group_system')])]"/>
+           <!--  <field name="implied_ids" eval="[(4, [ref('base.user_root'),ref('group_tresoriers'), ref('group_comptables'), ref('group_prescripteur'), ref('group_agent_administratif')])]"/> -->
+        </record>
     </data>
 </odoo>

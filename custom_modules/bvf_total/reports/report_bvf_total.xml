@@ -1,149 +1,198 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <template id="report_bvf_total" name="Report name">
-        <t t-call="report.html_container">
-            <t t-foreach="docs" t-as="doc">
-                <t t-call="report.external_layout">
-                    <div class="page">
-                        <div class="row">
-                            <div class="col-xs-2 text-center">
-                                <img src="/bvf_total/static/src/img/logo_photo_total.png"  style="margin-right:50px;width:80px;height:80px;"/>
-                            </div>
-                            <div class="col-xs-10 text-center">
-                                <p><span style="font-size:24px;">BORDEREAU DE VERIFICATION FACTURE</span></p>
-                                <div class="row text-center">
-                                    <div class="col-xs-2 text-center col-xs-offset-5" style="border:1px solid black !important;">
-                                        <span t-field="doc.numero"/>
-                                    </div>
-                                </div>                              
-                            </div>
-                        </div>
-                        
-                        <table class="table table-bordered" style="border-bottom: 1px solid black !important;">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">Date Réception</th>
-                                    <th class="text-center">Direction approbatrice</th>
-                                    <th class="text-center">Date Réception Compta</th>
-                                    <th class="text-center">Date de réception Tréso</th>
-                                </tr>
-                           </thead>
-                           <tbody class="sale_tbody">
-                                <tr>
-                                    <td class="text-center"><span t-field="doc.date_reception"/></td>
-                                    <td class="text-center"><span t-field="doc.date_approbation_dir"/></td>
-                                    <td class="text-center"><span t-field="doc.date_reception_compte"/></td>
-                                    <td class="text-center"><span t-field="doc.date_reception_compte_banque"/></td>
-                                </tr>
-                           </tbody>
-                       </table>
-                       
-                        <div class="row mt32">
-                            <div class="col-xs-2"><b>Nature:</b></div>
-                            <div class="col-xs-10 text-center">
-                                <span style="font-size:16px;">ACOMPTE </span><i t-if="doc.acompte" class="fa fa-check-square-o" style="margin-right:15px;"/>
-                                <i t-if="not doc.acompte" class="fa fa-square-o" style="margin-right:15px;"/>
-                                <span style="font-size:16px;">DEFINITIVE </span><i t-if="doc.definitive" class="fa fa-check-square-o" style="margin-right:15px;"/>
-                                <i t-if="not doc.definitive" class="fa fa-square-o" style="margin-right:15px;"/>
-                                <span style="font-size:16px;">AVOIR </span><i t-if="doc.avoir" class="fa fa-check-square-o" style="margin-right:15px;"/>
-                                <i t-if="not doc.avoir" class="fa fa-square-o" style="margin-right:15px;"/>
-                            </div>
-                        </div>
-                        
-                        <div class="row mt32">
-                            <div class="col-xs-12">
-                                <table class="table table-bordered"  style="border-bottom: 1px solid black !important;">
-                                       <tbody class="sale_tbody">
-                                            <tr>
-                                                <th class="text-left">Fournisseur:</th>
-                                                <td class="text-left"><span t-field="doc.fournisseur"/></td>
-                                                <th class="text-left">Commande:</th>
-                                                <td class="text-left"><span t-field="doc.numero_commande"/></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-left"></td>
-                                                <td class="text-left"></td>
-                                                <th class="text-left">AFE:</th>
-                                                <td class="text-left"><span t-field="doc.numero_ded"/></td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-left">Numéro Facture:</th>
-                                                <td class="text-left"><span t-field="doc.numero_facture"/></td>
-                                                <th class="text-left">Fiche Immo:</th>
-                                                <td class="text-left"><span t-field="doc.numero_fiche_immo"/></td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-left">Date de facturation:</th>
-                                                <td class="text-left"><span t-field="doc.date_facture"/></td>
-                                                <th class="text-left">EM</th>
-                                                <td class="text-left"><span t-field="doc.numero_em"/></td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-left">Montant TTC:</th>
-                                                <td class="text-left"><span t-field="doc.montant_ttc"/> Ar</td>
-                                                <th class="text-left">Date d'échéance:</th>
-                                                <td class="text-left"><span t-field="doc.echeance"/></td>
-                                            </tr>
-                                       </tbody>
-                                   </table>
-                                </div>
-                            </div>
-                           
-                            <div class="row mt32">
-                                <div class="col-xs-6">
-                                    <p><u><b>Observations :</b></u></p>
-                                    <p><span t-field="doc.observation" style="display:block;height=700;border:0px solid black !important;"/></p> 
-                                </div>
-                                <div class="col-xs-6" style="border:1px solid black !important;">
-                                    <p><b style="margin-right:15px;">N° EF</b><span t-field="doc.numero_ef"/></p>                                   
-                                </div>
-                            </div>
-                            
-                            <div class="row mt32 col-xs-offset-2"  style="border:1px solid black !important;">
-                                <div class="row mt20 mb20">
-                                        <div class="col-xs-2">A refacturer:</div>
-                                        <div class="col-xs-5"><span t-field="doc.a_refacturer"/></div>
-                                        <div class="col-xs-2">ND N°:</div>
-                                        <div class="col-xs-3"><span t-field="doc.numero_nd"/></div>
-                                </div>
-                                <div class="row mt20 mb20">
-                                        <div class="col-xs-3">Compensation:</div>
-                                        <div class="col-xs-9"><span t-field="doc.compensation"/></div>
-                                </div>
-                            </div>     
-                        
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <table>
-                                    <tr>
-                                        <th class="text-center">BON A PAYER</th>
-                                        <th class="text-center">REGLEMENT</th>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="text-center" colspan="2"><span t-field="doc.date_bon_a_payer"/></td>
-                                        <td class="text-center"><b>REGLEMENT</b></td>
-                                        <td class="text-center">Date : <span t-field="doc.date_reglement"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </t>
-            </t>
-        </t>
-    </template>
-
-    <report
-        id="action_report_bvf_total"
-        model="bvf.total"
-        report_type="qweb-pdf"
-        string="BVF"
-        name="bvf_total.report_bvf_total"
-        file="bvf_total.report_bvf_total"
-        groups='bvf_total.group_agent_administratif' />
-
+	<template id="report_bvf_total" name="Report name">
+		<t t-call="report.html_container">
+			<t t-foreach="docs" t-as="doc">
+				<!-- <t t-call="report.external_layout"> -->
+				<div class="page">
+					<div class="row">
+						<div class="col-xs-2 text-center">
+							<img src="/bvf_total/static/src/img/logo_photo_total.png"
+								style="margin-right:50px;width:80px;height:80px;" />
+						</div>
+						<div class="col-xs-10 text-center">
+							<p>
+								<span style="font-size:24px;">BORDEREAU DE VERIFICATION FACTURE</span>
+							</p>
+							<div class="row">
+								<div class="col-xs-4">
+								</div>
+								<div class="col-xs-4" style="border:1px solid black !important;">
+									<span t-field="doc.numero" />
+								</div>
+								<div class="col-xs-4">
+								</div>
+							</div>
+						</div>
+					</div>
+					<table class="table table-bordered" style="border-bottom: 1px solid black !important;">
+						<thead>
+							<tr>
+								<th class="text-center">Date Réception</th>
+								<th class="text-center">Direction approbatrice</th>
+								<th class="text-center">Date Réception Compta</th>
+								<th class="text-center">Date de réception Tréso</th>
+							</tr>
+						</thead>
+						<tbody class="sale_tbody">
+							<tr>
+								<td class="text-center">
+									<span t-field="doc.date_reception" />
+								</td>
+								<td class="text-center">
+									<span t-field="doc.date_approbation_dir" />
+								</td>
+								<td class="text-center">
+									<span t-field="doc.date_reception_compte" />
+								</td>
+								<td class="text-center">
+									<span t-field="doc.date_reception_compte_banque" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="row mt32">
+						<div class="col-xs-2">
+							<b>Nature:</b>
+						</div>
+						<div class="col-xs-10 text-center">
+							<span style="font-size:16px;">ACOMPTE</span>
+							<i t-if="doc.acompte" class="fa fa-check-square-o" style="margin-right:15px;" />
+							<i t-if="not doc.acompte" class="fa fa-square-o" style="margin-right:15px;" />
+							<span style="font-size:16px;">DEFINITIVE</span>
+							<i t-if="doc.definitive" class="fa fa-check-square-o" style="margin-right:15px;" />
+							<i t-if="not doc.definitive" class="fa fa-square-o" style="margin-right:15px;" />
+							<span style="font-size:16px;">AVOIR</span>
+							<i t-if="doc.avoir" class="fa fa-check-square-o" style="margin-right:15px;" />
+							<i t-if="not doc.avoir" class="fa fa-square-o" style="margin-right:15px;" />
+						</div>
+					</div>
+					<div class="row mt32">
+						<div class="col-xs-12">
+							<table class="table table-bordered" style="border-bottom: 1px solid black !important;">
+								<tbody class="sale_tbody">
+									<tr>
+										<th class="text-left">Fournisseur : <span t-field="doc.fournisseur" /></th>
+										<!-- <td class="text-left">
+											<span t-field="doc.fournisseur" />
+										</td> -->
+										<th class="text-left">Commande : <span t-field="doc.numero_commande" /></th>
+										<!-- <td class="text-left">
+											<span t-field="doc.numero_commande" />
+										</td> -->
+									</tr>
+									<tr>
+										<td class="text-left"></td><!-- 
+										<td class="text-left"></td> -->
+										<th class="text-left">AFE: <span t-field="doc.numero_ded" /></th>
+										<!-- <td class="text-left">
+											<span t-field="doc.numero_ded" /> 
+										</td> -->
+									</tr>
+									<tr>
+										<th class="text-left">Numéro Facture : <span t-field="doc.numero_facture" /></th>
+										<!-- <td class="text-left">
+											<span t-field="doc.numero_facture" />
+										</td> -->
+										<th class="text-left">Fiche Immo : <span t-field="doc.numero_fiche_immo" /></th>
+										<!-- <td class="text-left">
+											<span t-field="doc.numero_fiche_immo" />
+										</td> -->
+									</tr>
+									<tr>
+										<th class="text-left">Date de facturation : <span t-field="doc.date_facture" /></th>
+										<!-- <td class="text-left">
+											<span t-field="doc.date_facture" />
+										</td> -->
+										<th class="text-left">EM : <span t-field="doc.numero_em" /></th>
+										<!-- <td class="text-left">
+											<span t-field="doc.numero_em" />
+										</td> -->
+									</tr>
+									<tr>
+										<th class="text-left">Montant TTC : <span t-field="doc.montant_ttc" />
+											Ar</th>
+										<!-- <td class="text-left">
+											<span t-field="doc.montant_ttc" />
+											Ar
+										</td> -->
+										<th class="text-left">Date d'échéance : <span t-field="doc.echeance" /></th>
+										<!-- <td class="text-left">
+											<span t-field="doc.echeance" />
+										</td> -->
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="row mt32">
+						<div class="col-xs-6">
+							<p>
+								<u>
+									<h3>Observations :</h3>
+								</u>
+							</p>
+							<p>
+								<span t-field="doc.observation"
+									style="display:block;height=700;border:0px solid black !important;" />
+							</p>
+						</div>
+						<div class="col-xs-6" style="border:1px solid black !important;">
+							<p>
+								<b style="margin-right:15px;">N° EF</b>
+								<span t-field="doc.numero_ef" />
+							</p>
+						</div>
+					</div>
+					<div class="row mt32 col-xs-offset-2" style="border:1px solid black !important;">
+						<div class="row mt20 mb20">
+							<div class="col-xs-2">A refacturer:</div>
+							<div class="col-xs-5">
+								<span t-field="doc.a_refacturer" />
+							</div>
+							<div class="col-xs-2">ND N°:</div>
+							<div class="col-xs-3">
+								<span t-field="doc.numero_nd" />
+							</div>
+						</div>
+						<div class="row mt20 mb20">
+							<div class="col-xs-3">Compensation:</div>
+							<div class="col-xs-9">
+								<span t-field="doc.compensation" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<table>
+								<tr>
+									<th class="text-center">BON A PAYER</th>
+									<th class="text-center">REGLEMENT</th>
+								</tr>
+								<tr>
+									<td class="text-center" colspan="2">
+										<span t-field="doc.date_bon_a_payer" />
+									</td>
+									<td class="text-center">
+										<b>REGLEMENT</b>
+									</td>
+									<td class="text-center">
+										Date :
+										<span t-field="doc.date_reglement" />
+									</td>
+								</tr>
+								<tr>
+									<td></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</t>
+			<!-- </t> -->
+		</t>
+	</template>
+	<report id="action_report_bvf_total" model="bvf.total"
+		report_type="qweb-pdf" string="BVF" name="bvf_total.report_bvf_total"
+		file="bvf_total.report_bvf_total" groups='bvf_total.group_agent_administratif' />
 </odoo>
