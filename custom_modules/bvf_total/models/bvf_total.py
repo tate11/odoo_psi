@@ -180,15 +180,18 @@ class BVF_total(models.Model):
     @api.depends('echeance')             
     def _compute_statut(self):
         for record in self:            
-            #diff_day = record.echeance - datetime.date      
+            #diff_day = record.echeance - datetime.date   
+            diff_day = 0   
             date_format = "%Y-%m-%d"
             a = record.echeance and datetime.strptime(record.echeance, date_format)
             b = datetime.strptime(date.today().strftime('%Y-%m-%d'), date_format)
-            diff_day = abs((b - a).days)
-            #print '------------------------> _compute_statut'
-            #print diff_day
+            if a != False:
+                diff_day = abs((b - a).days)
+                #print '------------------------> _compute_statut'
+                #print diff_day
+                
             if (diff_day <=7):
-                record.statut_label = u'TrÃ¨s urgent'
+                record.statut_label = u'Très urgent'
             else:
                 if(diff_day <=15):
                     record.statut_label = 'Urgent'
