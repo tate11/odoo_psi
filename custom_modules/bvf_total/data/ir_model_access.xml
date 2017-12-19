@@ -76,7 +76,7 @@
      </record>
      <record id="res_agent_administratif_account_payment" model="ir.model.access">
             <field name="name">agent_administratif_account_payment</field>
-            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="model_id" ref="account.model_account_payment_term"/>
             <field name="group_id" ref="bvf_total.group_agent_administratif"/>
             <field name="perm_read" eval="1"/>
             <field name="perm_create" eval="1"/>
@@ -86,6 +86,15 @@
       <record id="res_agent_administratif_account_payment_method" model="ir.model.access">
             <field name="name">agent_administratif_account_payment_method</field>
             <field name="model_id" ref="account.model_account_payment_method" />
+            <field name="group_id" ref="bvf_total.group_agent_administratif"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+     </record>
+     <record id="res_agent_administratif_res_currency" model="ir.model.access">
+            <field name="name">agent_administratif_res_currency</field>
+            <field name="model_id" ref="base.model_res_currency"/>
             <field name="group_id" ref="bvf_total.group_agent_administratif"/>
             <field name="perm_read" eval="1"/>
             <field name="perm_create" eval="1"/>
