@@ -7,22 +7,22 @@
         <record id="group_agent_administratif" model="res.groups">
             <field name="name">Agents Administratifs</field>
             <field name="category_id" ref="category_total"/>
-            <field name="users" eval="[(4,ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4,[ref('base.user_root'),ref('base.user_demo')])]"/>
         </record> 
         <record id="group_prescripteur" model="res.groups">
             <field name="name">Prescripteur</field>
              <field name="category_id" ref="category_total"/>
-            <field name="users" eval="[(4,ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4,[ref('base.user_root'),ref('base.user_demo')])]"/>
         </record>   
         <record id="group_comptables" model="res.groups">
             <field name="name">Comptabilité</field>
              <field name="category_id" ref="category_total"/>
-            <field name="users" eval="[(4,ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4,[ref('base.user_root'),ref('base.user_demo')])]"/>
         </record>     
         <record id="group_tresoriers" model="res.groups">
             <field name="name">Trésorerie</field>
              <field name="category_id" ref="category_total"/>
-            <field name="users" eval="[(4,ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4,[ref('base.user_root'),ref('base.user_demo')])]"/>
         </record>
         
         <record id="group_administrateurs" model="res.groups">

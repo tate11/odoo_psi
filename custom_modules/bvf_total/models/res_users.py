@@ -14,7 +14,6 @@ class res_users(models.Model):
     @api.multi
     @api.depends('name', 'prenom', 'login')
     def name_get(self):
-        print self._context
         res = []
         for record in self:
             if self._context.get('dans_relance'):                
@@ -34,3 +33,10 @@ class res_users(models.Model):
             self.service_id = False
             res['domain'] = {'service_id':[('direction_id','=',self.direction_id.id)]}
         return res
+
+    @api.model
+    def create(self, vals):
+        vals['in_group_' + str(self.env['res.groups'].search([('name','=','Employé')])[0].id)]=True
+        #user.partner_id.write({'company_id': user.company_id.id})
+        user = super(res_users, self).create(vals)
+        return user
