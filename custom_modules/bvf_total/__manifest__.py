@@ -21,6 +21,7 @@
              'wizards/reattribuer.xml',
              'wizards/select_prescripteur.xml',
              'wizards/second_confirm.xml',
+             'wizards/second_confirm_facture.xml',
              'views/res_users.xml',
              'views/res_currency.xml',
              'views/account_journal.xml',
