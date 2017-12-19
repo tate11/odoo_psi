@@ -13,11 +13,6 @@ class change_status(models.TransientModel):
     @api.multi
     def change_status_action(self):
         if self._context.get('state') != 'envoi_presc':
-            print 'self.bfv_total_id.state ------------ '
-            print self._context.get('state') 
-            print self.bfv_total_id.id
-            print self._context.get('default_status')
-            
             return {
                 'type': 'ir.actions.act_window',
                     'name': 'Confirmation de changement de statut',

@@ -9,7 +9,7 @@
                     <separator string="Souhaitez-vous envoyer ce bvf aux prescripteurs? Si oui, veuillez sélectionner un prescripteur."/>
                     <field name="bvf_ids" invisible='1'/>
                     <label for="utilisateur_id"/>
-                    <field name="utilisateur_id"/>
+                    <field name="utilisateur_id" required="1"/>
                     <footer>
                         <button string="Valider" name="select_prescripteur_confirm_action" type="object" class="btn-primary"/>
                         <button string="Annuler" class="btn-default" special="cancel"/>

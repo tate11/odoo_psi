@@ -6,10 +6,10 @@
 	        <field name="model">change.status.facture</field>
 	        <field name="arch" type="xml">
 	            <form>
-	            	<b>Souhaitez-vous passer en <field name="status" nolabel='1'/>?</b>
+	            	<b>Souhaitez-vous passer en <field name="status" readonly="1" class="oe_inline" nolabel='1'/>?</b>
 	            	<field name="facture_total_id" invisible='1'/>
 	            	<footer>
-                        <button string="Oui" name="change_status_action" type="object" class="btn-primary"/>
+                        <button string="Oui" name="change_status_facture_action" type="object" class="btn-primary"/>
                         <button string="Non" class="btn-default" special="cancel"/>
                     </footer>
 	            </form>

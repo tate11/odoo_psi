@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form edit="0">
                     <group>                        
-                        <b><label for="status" string="Souhaitez-vous passer en: "/> <field name="status" nolabel='1' readonly="1"/></b>
+                        <b>Souhaitez-vous passer en <field name="status" class="oe_inline" nolabel='1' readonly="1"/>?</b>
                         <field name="bfv_total_id" invisible='1'/>
                     </group>
                     <footer>

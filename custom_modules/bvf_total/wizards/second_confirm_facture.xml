@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>    
-	    <record id="second_confirm_form" model="ir.ui.view">
-	        <field name="name">second.confirm.form</field>
-	        <field name="model">second.confirm</field>
+	    <record id="second_confirm_facture_form" model="ir.ui.view">
+	        <field name="name">second.confirm.facture.form</field>
+	        <field name="model">second.confirm.facture</field>
 	        <field name="arch" type="xml">
 	            <form>
 	            	<b>Confirmez-vous de passer en <field class="oe_inline" readonly="1" name="status" nolabel='1'/>?</b>
-	            	<field name="bfv_total_id" invisible='1'/>
+	            	<field name="facture_total_id" invisible='1'/>
 	            	<footer>
-                        <button string="Oui" name="second_confirm_action" type="object" class="btn-primary"/>
+                        <button string="Oui" name="second_confirm_facture_action" type="object" class="btn-primary"/>
                         <button string="Non" class="btn-default" special="cancel"/>
                     </footer>
 	            </form>
