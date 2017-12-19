@@ -6,7 +6,10 @@ class AccountJournal(models.Model):
     _inherit = "account.journal"
     
     def _default_currency_id(self):
-        return self.env['res.currency'].search([('name', '=', 'MGA')])[0].id
+        length_currency = len(self.env['res.currency'].search([('name', '=', 'MGA')]))
+        if length_currency != 0 :
+            return self.env['res.currency'].search([('name', '=', 'MGA')])[0].id
+        return 0;
     
     currency_id = fields.Many2one('res.currency', string="Currency", oldname='currency', default=_default_currency_id)
     
