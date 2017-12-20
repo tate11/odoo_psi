@@ -303,7 +303,7 @@
 			<field name="model">hr.contract.sanction.data</field>
 			<field name="arch" type="xml">
 				<tree string="Liste des sanctions">
-					<field name="employee_id" />
+					<field name="employee_id" string="Employé"/>
 					<field name="name" />
 					<field name="sanction_type_id" />
 					<field name="sanction_date" />
@@ -339,7 +339,7 @@
             </field>
         </record>	
 		<record id="action_hr_contract_list_sanction" model="ir.actions.act_window">
-			<field name="name">Liste des employées sanctionées</field>
+			<field name="name">Liste des employés sanctionés</field>
 			<field name="res_model">hr.contract.sanction.data</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
