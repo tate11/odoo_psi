@@ -12,7 +12,7 @@
         'data/hr_holidays_cron.xml',
         'data/hr_holidays_data.xml',
         'data/mail_template_hr_holidays_data.xml',
-        'data/holiday_timesheet_data.xml',
+        'data/holidays_timesheet_data.xml',
         'views/hr_holidays_configuration_views.xml',
         'report/report_request_for_absences.xml',
         'report/report_request_for_absences_template.xml',
