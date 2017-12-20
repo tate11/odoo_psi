@@ -333,8 +333,7 @@ class hr_holidays_psi(models.Model):
                         hours = HOURS_PER_DAY
                         
                         date_str = str(date)
-                        self.create_leave_analytic_line(
-                                holiday, employee, date_str, hours)
+                        self.create_leave_analytic_line(holiday, employee, date_str, hours)
                  
                 #Add the partner_id (if exist) as an attendee
                 if holiday.user_id and holiday.user_id.partner_id :
