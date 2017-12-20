@@ -339,7 +339,7 @@
             </field>
         </record>	
 		<record id="action_hr_contract_list_sanction" model="ir.actions.act_window">
-			<field name="name">Liste des employés sanctionés</field>
+			<field name="name">Liste des employés sanctionnés</field>
 			<field name="res_model">hr.contract.sanction.data</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
