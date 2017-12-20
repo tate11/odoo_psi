@@ -428,8 +428,11 @@ class hr_holidays_psi(models.Model):
     @api.multi
     def name_get(self):
         res = []
+        leave_display_name = ''
         for leave in self:
-            res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name or leave.psi_category_id.psi_professional_category, leave.holiday_status_id.name, leave.number_of_days_temp)))
+            if (leave.employee_id.name or leave.psi_category_id.psi_professional_category) and leave.holiday_status_id.name and leave.number_of_days_temp:
+                leave_display_name = _("%s on %s : %.2f day(s)") % (leave.employee_id.name or leave.psi_category_id.psi_professional_category, leave.holiday_status_id.name, leave.number_of_days_temp)
+            res.append((leave.id, leave_display_name))
         return res
     
     def _increment_doit_conge(self):
