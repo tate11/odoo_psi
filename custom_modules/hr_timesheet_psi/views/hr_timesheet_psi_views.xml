@@ -1,160 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-       <record id="hr_timesheet_sheet_tree_simplified" model="ir.ui.view">
-            <field name="name">hr.timesheet.psi.tree</field>
-            <field name="model">hr_timesheet_psi.sheet</field>
-            <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'done'" decoration-bf="message_needaction == True" string="Timesheets">
-                    <field name="employee_id"/>
-                    <field name="time_from"/>
-                    <field name="time_to"/>
-                    <field name="department_id" invisible="1"/>
-                    <field name="state"/>
-                    <field name="message_needaction" invisible="1"/>
-                </tree>
-            </field>
-        </record>
+	<record id="hr_timesheet_sheet_tree_simplified" model="ir.ui.view">
+		<field name="name">hr.timesheet.psi.tree</field>
+		<field name="model">hr_timesheet_psi.sheet</field>
+		<field name="arch" type="xml">
+			<tree decoration-info="state == 'draft'" decoration-muted="state == 'done'"
+				decoration-bf="message_needaction == True" string="Timesheets">
+				<field name="employee_id" />
+				<field name="time_from" />
+				<field name="time_to" />
+				<field name="department_id" invisible="1" />
+				<field name="state" />
+				<field name="message_needaction" invisible="1" />
+			</tree>
+		</field>
+	</record>
 
-        <record id="hr_timesheet_psi_form" model="ir.ui.view">
-            <field name="name">hr.timesheet.psi.form</field>
-            <field name="model">hr_timesheet_psi.sheet</field>
-            <field name="arch" type="xml">
-                <form string="Timesheet">
-                <header>
-                    <button name="action_timesheet_confirm" states="draft" string="Soumettre au responsable" type="object" class="oe_highlight"/>
-                    <button name="action_timesheet_done" states="confirm" string="Approuver par le supérieur hiérarchique" type="object" groups="hr_timesheet.group_hr_timesheet_user" class="oe_highlight"/>
-                    <button name="action_timesheet_draft" states="done" string="Mettre en brouillion" type="object" groups="hr_timesheet.group_hr_timesheet_user"/>
-                    <button name="action_timesheet_draft" states="confirm" string="Refuser" type="object" groups="hr_timesheet.group_hr_timesheet_user"/>
-                    <field name="state" widget="statusbar" statusbar_visible="new,confirm,done"/>
-                </header>
-                <sheet>
-                    <div class="oe_title">
-                        <label for="employee_id" class="oe_edit_only"/>
-                        <h1><field name="employee_id" class="oe_inline" placeholder="Employee's Name"/></h1>
-                        <field name="user_id" invisible="1"/>
-                    </div>
-                    <group>
-                        <group>
-                        	<field name="project_id_normal" attrs="{'invisible': [('project_choice', 'not in', 'heure_normal')]}"/>
-                        	<field name="project_id_heure_sup" attrs="{'invisible': [('project_choice', 'not in', 'heure_supp')]}" readonly="True"/>
-                        	<field name="project_id_prestataire" attrs="{'invisible': [('project_choice', 'not in', 'prestataire')]}" readonly="True"/>
-                        	<field name="motif" />
-                        	<field name="date" />
-                        	<label for="time_from" string="Intervalle d'heures"/>
-                        	<div>
-                        		<field name="time_from" class="oe_inline" widget="float_time" sum="Hours"/> - <field name="time_to" class="oe_inline" widget="float_time" sum="Hours"/> = <field name="hours" /> Hr(s)
-                        	</div>
-                        	
-                            <field name="name" invisible="1"/>
-                            <field name="department_id" invisible="1"/>
-                            <field name="project_time_id" invisible="1"/>
-                            <field name="project_choice" invisible="1" />
-                            <field name="company_id" groups="base.group_multi_company"/>
-                        </group>
-                    </group>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread"/>
-                </div>
-                </form>
-            </field>
-        </record>
+	<record id="hr_timesheet_psi_form" model="ir.ui.view">
+		<field name="name">hr.timesheet.psi.form</field>
+		<field name="model">hr_timesheet_psi.sheet</field>
+		<field name="arch" type="xml">
+			<form string="Timesheet">
+				<header>
+					<button name="action_timesheet_confirm" states="draft"
+						string="Soumettre au responsable" type="object" class="oe_highlight" />
+					<button name="action_timesheet_done" states="confirm"
+						string="Approuver par le supérieur hiérarchique" type="object"
+						groups="hr_timesheet.group_hr_timesheet_user" class="oe_highlight" />
+					<button name="action_timesheet_draft" states="done"
+						string="Mettre en brouillion" type="object"
+						groups="hr_timesheet.group_hr_timesheet_user" />
+					<button name="action_timesheet_draft" states="confirm"
+						string="Refuser" type="object" groups="hr_timesheet.group_hr_timesheet_user" />
+					<field name="state" widget="statusbar" statusbar_visible="new,confirm,done" />
+				</header>
+				<sheet>
+					<div class="oe_title">
+						<label for="employee_id" class="oe_edit_only" />
+						<h1>
+							<field name="employee_id" class="oe_inline" placeholder="Employee's Name" />
+						</h1>
+						<field name="user_id" invisible="1" />
+					</div>
+					<group>
+						<group>
+							<field name="project_id_normal"
+								attrs="{'invisible': [('project_choice', 'not in', 'heure_normal')]}" />
+							<field name="project_id_heure_sup"
+								attrs="{'invisible': [('project_choice', 'not in', 'heure_supp')]}"
+								readonly="True" />
+							<field name="project_id_prestataire"
+								attrs="{'invisible': [('project_choice', 'not in', 'prestataire')]}"
+								readonly="True" />
+							<field name="motif" />
+							<field name="date" />
+							<label for="time_from" string="Intervalle d'heures" />
+							<div>
+								<field name="time_from" class="oe_inline" widget="float_time"
+									sum="Hours" />
+								-
+								<field name="time_to" class="oe_inline" widget="float_time"
+									sum="Hours" />
+								=
+								<field name="hours" />
+								Hr(s)
+							</div>
 
-        <record id="view_hr_timesheet_psi_filter" model="ir.ui.view">
-            <field name="name">hr_timesheet_psi.sheet.filter</field>
-            <field name="model">hr_timesheet_psi.sheet</field>
-            <field name="arch" type="xml">
-                <search string="Recherche feuille de temps">
-                    <field name="date_from"/>
-                    <filter name="new" string="En brouillon" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
-                    <filter name="to_approve" string="A aprouvé" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
-                    <field name="employee_id"/>
-                    <field name="department_id"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Employée" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter string="Type du feuille de temps" domain="[]" context="{'group_by':'project_choice'}" />
-                    </group>
-                </search>
-            </field>
-        </record>
-     
-        <record id="act_hr_timesheet_psi_my_timesheets" model="ir.actions.act_window">
-            <field name="name">Demande heures supplémentaires</field>
-            <field name="res_model">hr_timesheet_psi.sheet</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'default_project_choice':'heure_supp'}</field>
-            <!-- <field name="domain">[('employee_id.user_id', '=', uid)]</field> -->
-            <field name="search_view_id" ref="view_hr_timesheet_psi_filter"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Nouvelle feuille demande heures supplémentaires.
-              </p><p>
-                Vous devez remplir votre feuille de temps chaque jour, 
-                et les confirmer à la fin de la semaine. 
-                Une fois la feuille confirmée, elle doit être validée par un gestionnaire.
-              </p>
-            </field>
-        </record>
+							<field name="name" invisible="1" />
+							<field name="department_id" invisible="1" />
+							<field name="project_time_id" invisible="1" />
+							<field name="project_choice" invisible="1" />
+							<field name="company_id" groups="base.group_multi_company" />
+						</group>
+					</group>
+				</sheet>
+				<div class="oe_chatter">
+					<field name="message_follower_ids" widget="mail_followers" />
+					<field name="message_ids" widget="mail_thread" />
+				</div>
+			</form>
+		</field>
+	</record>
 
-        <menuitem action="act_hr_timesheet_psi_my_timesheets" id="menu_act_hr_timesheet_psi_my_timesheets" parent="hr_timesheet.menu_hr_time_tracking"
-             sequence="3"/>
-        
-		<!-- <record id="act_hr_timesheet_psi_prestataire" model="ir.actions.act_window">
-            <field name="name">Prestataire</field>
-            <field name="res_model">hr_timesheet_psi.sheet</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'default_project_choice':'prestataire'}</field>
-            <field name="domain">[('employee_id.user_id', '=', uid)]</field>
-            <field name="search_view_id" ref="view_hr_timesheet_psi_filter"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Nouvelle feuille prestataire.
-              </p><p>
-                Vous devez remplir votre feuille de temps chaque jour, 
-                et les confirmer à la fin de la semaine. 
-                Une fois la feuille confirmée, elle doit être validée par un gestionnaire.
-              </p>
-            </field>
-        </record>
-        <menuitem action="act_hr_timesheet_psi_prestataire" id="menu_act_hr_timesheet_psi_prestataire" parent="hr_timesheet.menu_hr_time_tracking"
-             sequence="3"/> -->
+	<record id="view_hr_timesheet_psi_filter" model="ir.ui.view">
+		<field name="name">hr_timesheet_psi.sheet.filter</field>
+		<field name="model">hr_timesheet_psi.sheet</field>
+		<field name="arch" type="xml">
+			<search string="Recherche feuille de temps">
+				<field name="date_from" />
+				<filter name="new" string="En brouillon" domain="[('state','in',('draft', 'new'))]"
+					help="Unvalidated Timesheets" />
+				<filter name="to_approve" string="A aprouvé" domain="[('state','=','confirm')]"
+					help="Confirmed Timesheets" />
+				<field name="employee_id" />
+				<field name="department_id" />
+				<group expand="0" string="Group By">
+					<filter string="Employée" domain="[]"
+						context="{'group_by':'employee_id'}" />
+					<filter string="Type du feuille de temps" domain="[]"
+						context="{'group_by':'project_choice'}" />
+				</group>
+			</search>
+		</field>
+	</record>
 
-        <!-- <record id="act_hr_timesheet_psi_form" model="ir.actions.act_window">
-            <field name="name">Feuilles de temps à approuver</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_timesheet_psi.sheet</field>
-            <field name="view_type">form</field>
-            <field name="view_id" eval="False"/>
-            <field name="context">{'search_default_to_approve':1}</field>
-            <field name="search_view_id" ref="view_hr_timesheet_psi_filter"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Nouvelle feuille de temps à approuver. 
-              </p><p>
-                Vous devez remplir votre feuille de temps chaque jour, 
-                et les confirmer à la fin de la semaine. Une fois la feuille 
-                confirmée, elle doit être validée par un gestionnaire.
-              </p><p>
-                Les feuilles de temps peuvent être facturées au client, 
-                en fonction de la configuration de chaque projet / contrat.
-              </p>
-            </field>
-        </record>
+	<record id="act_hr_timesheet_psi_my_timesheets" model="ir.actions.act_window">
+		<field name="name">Demande heures supplémentaires</field>
+		<field name="res_model">hr_timesheet_psi.sheet</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="context">{'default_project_choice':'heure_supp'}</field>
+		<!-- <field name="domain">[('employee_id.user_id', '=', uid)]</field> -->
+		<field name="search_view_id" ref="view_hr_timesheet_psi_filter" />
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+				Nouvelle feuille demande heures supplémentaires.
+			</p>
+			<p>
+				Vous devez remplir votre feuille de temps chaque jour,
+				et les
+				confirmer à la fin de la semaine.
+				Une fois la feuille confirmée, elle
+				doit être validée par un
+				gestionnaire.
+			</p>
+		</field>
+	</record>
 
-        <record model="ir.actions.act_window.view" id="action_open_timesheet_sheet_holidays_tree">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="hr_timesheet_sheet_tree_simplified"/>
-            <field name="act_window_id" ref="act_hr_timesheet_psi_form"/>
-        </record>
+	<record id="view_timesheet_list_psi_inherit" model="ir.ui.view">
+		<field name="name">Timesheet lines for grid psi</field>
+		<field name="model">account.analytic.line</field>
+		<field name="inherit_id" ref="timesheet_grid.view_timesheet_list" />
+		<field name="arch" type="xml">
+			<field name="task_id" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</field>
+		</field>
+	</record>
+	<record id="view_timesheet_grid_psi_inherit" model="ir.ui.view">
+		<field name="name">timesheet grid psi</field>
+		<field name="model">account.analytic.line</field>
+		<field name="inherit_id" ref="timesheet_grid.view_timesheet_grid" />
+		<field name="mode">primary</field>
+		<field name="arch" type="xml">
 
-        <menuitem id="menu_hr_to_approve" name="A approuver" parent="hr_timesheet.timesheet_menu_root" sequence="7"/>
+			<xpath expr="//field[@name='task_id']" position="replace" />
+		</field>
+	</record>
 
-        <menuitem action="act_hr_timesheet_psi_form" id="menu_act_hr_timesheet_psi_form" parent="menu_hr_to_approve"
-             sequence="11" groups="hr_timesheet.group_hr_timesheet_user"/> -->
+	<record id="view_timesheet_form_psi_inherit" model="ir.ui.view">
+		<field name="name">timesheet form psi</field>
+		<field name="model">account.analytic.line</field>
+		<field name="inherit_id" ref="timesheet_grid.view_timesheet_form" />
+		<field name="arch" type="xml">
+			<field name="task_id" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</field>
+		</field>
+	</record>
+	<menuitem action="act_hr_timesheet_psi_my_timesheets" id="menu_act_hr_timesheet_psi_my_timesheets"
+		parent="hr_timesheet.menu_hr_time_tracking" sequence="3" />
+
+	<!-- <record id="act_hr_timesheet_psi_prestataire" model="ir.actions.act_window"> 
+		<field name="name">Prestataire</field> <field name="res_model">hr_timesheet_psi.sheet</field> 
+		<field name="view_type">form</field> <field name="view_mode">tree,form</field> 
+		<field name="context">{'default_project_choice':'prestataire'}</field> <field 
+		name="domain">[('employee_id.user_id', '=', uid)]</field> <field name="search_view_id" 
+		ref="view_hr_timesheet_psi_filter"/> <field name="help" type="html"> <p class="oe_view_nocontent_create"> 
+		Nouvelle feuille prestataire. </p><p> Vous devez remplir votre feuille de 
+		temps chaque jour, et les confirmer à la fin de la semaine. Une fois la feuille 
+		confirmée, elle doit être validée par un gestionnaire. </p> </field> </record> 
+		<menuitem action="act_hr_timesheet_psi_prestataire" id="menu_act_hr_timesheet_psi_prestataire" 
+		parent="hr_timesheet.menu_hr_time_tracking" sequence="3"/> -->
+
+	<!-- <record id="act_hr_timesheet_psi_form" model="ir.actions.act_window"> 
+		<field name="name">Feuilles de temps à approuver</field> <field name="type">ir.actions.act_window</field> 
+		<field name="res_model">hr_timesheet_psi.sheet</field> <field name="view_type">form</field> 
+		<field name="view_id" eval="False"/> <field name="context">{'search_default_to_approve':1}</field> 
+		<field name="search_view_id" ref="view_hr_timesheet_psi_filter"/> <field 
+		name="help" type="html"> <p class="oe_view_nocontent_create"> Nouvelle feuille 
+		de temps à approuver. </p><p> Vous devez remplir votre feuille de temps chaque 
+		jour, et les confirmer à la fin de la semaine. Une fois la feuille confirmée, 
+		elle doit être validée par un gestionnaire. </p><p> Les feuilles de temps 
+		peuvent être facturées au client, en fonction de la configuration de chaque 
+		projet / contrat. </p> </field> </record> <record model="ir.actions.act_window.view" 
+		id="action_open_timesheet_sheet_holidays_tree"> <field name="sequence" eval="2"/> 
+		<field name="view_mode">tree</field> <field name="view_id" ref="hr_timesheet_sheet_tree_simplified"/> 
+		<field name="act_window_id" ref="act_hr_timesheet_psi_form"/> </record> <menuitem 
+		id="menu_hr_to_approve" name="A approuver" parent="hr_timesheet.timesheet_menu_root" 
+		sequence="7"/> <menuitem action="act_hr_timesheet_psi_form" id="menu_act_hr_timesheet_psi_form" 
+		parent="menu_hr_to_approve" sequence="11" groups="hr_timesheet.group_hr_timesheet_user"/> -->
 
 </odoo>
