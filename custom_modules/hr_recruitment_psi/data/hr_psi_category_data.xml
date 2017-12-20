@@ -6,31 +6,37 @@
 			<field name="psi_professional_category">appui</field>
 			<field name="name">APPUI</field>
 			<field name="psi_cat">A</field>
+			<field name="test_duration">3</field>
 		</record>
 		<record model="hr.psi.category.details" id="category2">
 			<field name="psi_professional_category">execution</field>
 			<field name="name">EXECUTION</field>
 			<field name="psi_cat">B</field>
+			<field name="test_duration">3</field>
 		</record>
 		<record model="hr.psi.category.details" id="category3">
 			<field name="name">SUPERVISEUR</field>
 			<field name="psi_professional_category">superviseur</field>
 			<field name="psi_cat">C</field>
+			<field name="test_duration">3</field>
 		</record>
 		<record model="hr.psi.category.details" id="category4">
 			<field name="name">COORDINATEUR</field>
 			<field name="psi_professional_category">coordinateur</field>
 			<field name="psi_cat">D</field>
+			<field name="test_duration">4</field>
 		</record>
 		<record model="hr.psi.category.details" id="category5">
 			<field name="name">DIRECTEUR</field>
 			<field name="psi_professional_category">directeur</field>
 			<field name="psi_cat">E</field>
+			<field name="test_duration">6</field>
 		</record>
 		<record model="hr.psi.category.details" id="category6">
 			<field name="name">RRA</field>
 			<field name="psi_professional_category">rra</field>
 			<field name="psi_cat">HC</field>
+			<field name="test_duration">6</field>
 		</record>
 
 		<record model="hr.psi.category" id="psi-category">
