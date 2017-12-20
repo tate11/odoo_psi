@@ -104,6 +104,17 @@
 		</field>
 	</record>
 	
+	<record id="view_holiday_status_normal_tree_psi" model="ir.ui.view">
+		<field name="name">view.holiday.status.normal.tree.psi</field>
+		<field name="model">hr.holidays.status</field>
+		<field name="inherit_id" ref="hr_holidays.view_holiday_status_normal_tree" />
+		<field name="arch" type="xml">
+			<field name="limit" position="replace">
+				<field name="limit" invisible="1"/>
+			</field>
+		</field>
+	</record>
+	
 	<!-- Hide menu approve -->
 	<record id="make_invisible" model="res.groups">
 	    <field name="name">Invisible</field>
