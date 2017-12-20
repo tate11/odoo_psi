@@ -288,6 +288,8 @@ class hr_holidays_psi(models.Model):
                 raise UserError(_('Only an HR Manager can apply the second approval on leave requests.'))
 
             holiday.write({'state': 'validate'})
+            print "holiday.write({'state': 'validate'})"
+            
             if holiday.double_validation:
                 holiday.write({'manager_id2': manager.id})
             else:
@@ -330,8 +332,8 @@ class hr_holidays_psi(models.Model):
                         date = timestamp.date()
                         hours = HOURS_PER_DAY
                         
-                        #self.create_leave_analytic_line(
-                        #        holiday, employee, date, hours)
+                        date_str = str(date)
+                        self.create_leave_analytic_line(holiday, employee, date_str, hours)
                  
                 #Add the partner_id (if exist) as an attendee
                 if holiday.user_id and holiday.user_id.partner_id :
@@ -403,14 +405,12 @@ class hr_holidays_psi(models.Model):
 
         return fields.Datetime.context_timestamp(self.env.user, time_obj)
     
+#     Creation timesheet
     def create_leave_analytic_line(self, holiday, employee, concerned_day, hours):
 
         account = self.env.ref('hr_holidays_psi.account_leave')
         project = self.env.ref('hr_holidays_psi.project_leave')
-        print holiday,' holiday'
-        print employee,' employee'
-        print concerned_day,' concerned_day'
-        print hours, ' hours'
+
         return self.env['account.analytic.line'].sudo().create({
             'account_id': account.id,
             'project_id': project.id,
@@ -424,7 +424,7 @@ class hr_holidays_psi(models.Model):
             'user_id': employee.user_id.id,
             'leave_id': self.id
         })
-        
+        print "done"
     @api.multi
     def name_get(self):
         res = []
