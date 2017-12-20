@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--inherit project.project view -->
+    <record id="edit_project_psi" model="ir.ui.view">
+        <field name="name">project.project.form.psi</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='settings']">
+                <group string="Employés">
+                    <field name="employee_ids"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
