@@ -331,7 +331,7 @@ class hr_holidays_psi(models.Model):
                     heure_par_jour = 0.0
                     attendance_ids = employee.calendar_id.attendance_ids
                     print "attendance_ids ",attendance_ids
-                    date_now = datetime.datetime.strptime(fields.Date().today(),'%Y-%m-%d')
+                    date_now = datetime.datetime.strptime(fields.Date().today(),'%Y-%m-%d') 
                     dayofweek = int(datetime.datetime.strptime(str(date_now.date()), '%Y-%m-%d').strftime('%w'))-1
                     for attendance_id in attendance_ids:
                         attendances = self.env['resource.calendar.attendance'].search([['id', '=', attendance_id.id], ['dayofweek', '=', dayofweek]])
