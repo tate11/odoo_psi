@@ -6,7 +6,7 @@
     'sequence': 0,
     'description': """Gestion des Projets chez PSI-M""",
     'website': 'https://www.ingenosya.mg',
-    'depends': ['project'],
+    'depends': ['project','hr_employee_psi','hr_timesheet_psi'],
     'data':  [
               'views/project_views.xml',
              ],
