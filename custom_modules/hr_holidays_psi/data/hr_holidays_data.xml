@@ -121,6 +121,17 @@
 	        <field name="name">Formalités administratives (réunions des parent d’élèves, demande de divers certificats ou actes officiels…)</field>
 	        <field name="number_of_day">0.5</field>
 	    </record>		
-
+		
+		<!-- rules -->
+		<record id="hr_holidays.property_rule_holidays_employee" model="ir.rule">
+	        <field name="name">Employee Holidays</field>
+	        <field name="model_id" ref="model_hr_holidays"/>
+	        <field name="domain_force">['|', ('employee_id.user_id','=',user.id),('employee_id.coach_id.user_id','=', user.id)]</field>
+	        <field name="perm_create" eval="False"/>
+	        <field name="perm_write" eval="False"/>
+	        <field name="perm_unlink" eval="False"/>
+	        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+	    </record>
+		
 	</data>
 </odoo>
