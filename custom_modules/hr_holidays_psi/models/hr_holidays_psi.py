@@ -66,15 +66,27 @@ class hr_holidays_psi(models.Model):
     @api.constrains('number_of_days_temp')
     def _verif_leave_date(self):
         print "_verif_leave_date"
+        
         holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
         year_now = datetime.datetime.today().year
         holidays = self.env["hr.holidays"].search([('employee_id','=',self.employee_id.name)])
         number_days = 0
+        public_holidays_line = self.env['hr.holidays.public.line'].search([])
         for holiday in holidays :
             write_date = datetime.datetime.strptime(holiday.write_date,"%Y-%m-%d %H:%M:%S")
             write_date_year = write_date.year
             if write_date_year == year_now and holiday.holiday_status_id.id == holidays_status[0].id:
                 number_days += holiday.number_of_days
+            
+            # Verification public holiday JOUR FERIES
+            for public_holidays in public_holidays_line:
+                date_from_ = str(datetime.datetime.strptime(holiday.date_from,"%Y-%m-%d %H:%M:%S").date())
+                date_to_ = str(datetime.datetime.strptime(holiday.date_to,"%Y-%m-%d %H:%M:%S").date())
+                date = str(public_holidays.date)
+                if date_from_ == date or date_to_ == date:
+                    raise ValidationError(u'Vous ne pouvez pas demander du congé durant les jours fériés.')
+                    return False
+            
         if number_days > 10 :
             raise UserError(u"Vous avez depassé le nombre de jours maximum de permission.")
             return False
