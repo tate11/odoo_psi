@@ -10,9 +10,12 @@ from odoo.exceptions import UserError, ValidationError, AccessError, Warning
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.tools import float_compare
 
-
 HOURS_PER_DAY = 8
 
+class HrPublicHolidaysLine(models.Model):
+    _inherit = 'hr.holidays.public.line'
+    variable = fields.Boolean(string=u'La date peut changer')
+    
 class hr_holidays_type_psi(models.Model):
     
     _inherit = "hr.holidays.status"

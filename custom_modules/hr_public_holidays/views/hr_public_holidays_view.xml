@@ -25,7 +25,7 @@
                     <group string="Public Holidays">
                         <field name="line_ids" nolabel="1">
                             <tree string="Public Holidays"
-                                editable="top">
+                                editable="top" open="false">
                                 <field name="date" />
                                 <field name="name" />
                                 <field name="state_ids" widget="many2many_tags"
