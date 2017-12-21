@@ -80,7 +80,7 @@ class hr_holidays_psi(models.Model):
             return False
         for record in self:
             get_day_difference = record.number_of_days_temp
-            type_permissions = self.env['hr.holidays.type.permission'].search([])            
+            type_permissions = self.env['hr.holidays.type.permission'].sudo().search([])            
             for permissions in type_permissions:
                 if self.holiday_type_permission.id == permissions.id:
                     if get_day_difference > permissions.number_of_day:
