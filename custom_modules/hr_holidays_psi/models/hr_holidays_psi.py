@@ -326,10 +326,21 @@ class hr_holidays_psi(models.Model):
                     time_from = self.str_to_timezone(holiday.date_from)
                     time_to = self.str_to_timezone(holiday.date_to)
         
+                    # Horaire de travail par region
+                    heure_par_jour = 0.0
+                    attendance_ids = employee.calendar_id.attendance_ids
+                    print "attendance_ids ",attendance_ids
+                    date_now = datetime.datetime.strptime(fields.Date().today(),'%Y-%m-%d')
+                    dayofweek = int(datetime.datetime.strptime(str(date_now.date()), '%Y-%m-%d').strftime('%w'))
+                    for attendance_id in attendance_ids:
+                        attendances = self.env['resource.calendar.attendance'].search([['id', '=', attendance_id.id], ['dayofweek', '=', dayofweek]])
+                        for attendance in attendances:
+                            heure_par_jour += attendance.hour_to - attendance.hour_from
+                    
                     for timestamp in self.datespan(time_from, time_to):
                         company = employee.company_id
                         date = timestamp.date()
-                        hours = HOURS_PER_DAY
+                        hours = heure_par_jour
                         
                         date_str = str(date)
                         self.create_leave_analytic_line(holiday, employee, date_str, hours)
@@ -423,7 +434,7 @@ class hr_holidays_psi(models.Model):
             'user_id': employee.user_id.id,
             'leave_id': self.id
         })
-        print "done"
+        
     @api.multi
     def name_get(self):
         res = []
