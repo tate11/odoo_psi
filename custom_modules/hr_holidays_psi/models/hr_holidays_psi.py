@@ -10,7 +10,6 @@ from odoo.exceptions import UserError, ValidationError, AccessError, Warning
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.tools import float_compare
 
-
 HOURS_PER_DAY = 8
 
 class hr_holidays_type_psi(models.Model):
@@ -62,7 +61,7 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'Refused', when holiday request is refused by manager." +
             "\nThe status is 'Approved', when holiday request is approved by manager.")
 
-     
+
     @api.constrains('number_of_days_temp')
     def _verif_leave_date(self):
         print "_verif_leave_date"
@@ -273,6 +272,7 @@ class hr_holidays_psi(models.Model):
                    if record.number_of_days_temp > 98 :
                        raise ValidationError(u"Desole, vous avez depassé le nombre de congé maternite.")
                        return False
+
     @api.multi
     def action_validate(self):
         print "action_validate"
@@ -327,10 +327,21 @@ class hr_holidays_psi(models.Model):
                     time_from = self.str_to_timezone(holiday.date_from)
                     time_to = self.str_to_timezone(holiday.date_to)
         
+                    # Horaire de travail par region
+                    heure_par_jour = 0.0
+                    attendance_ids = employee.calendar_id.attendance_ids
+                    print "attendance_ids ",attendance_ids
+                    date_now = datetime.datetime.strptime(fields.Date().today(),'%Y-%m-%d')
+                    dayofweek = int(datetime.datetime.strptime(str(date_now.date()), '%Y-%m-%d').strftime('%w'))-1
+                    for attendance_id in attendance_ids:
+                        attendances = self.env['resource.calendar.attendance'].search([['id', '=', attendance_id.id], ['dayofweek', '=', dayofweek]])
+                        for attendance in attendances:
+                            heure_par_jour += attendance.hour_to - attendance.hour_from
+                    
                     for timestamp in self.datespan(time_from, time_to):
                         company = employee.company_id
                         date = timestamp.date()
-                        hours = HOURS_PER_DAY
+                        hours = heure_par_jour
                         
                         date_str = str(date)
                         self.create_leave_analytic_line(holiday, employee, date_str, hours)
@@ -428,8 +439,11 @@ class hr_holidays_psi(models.Model):
     @api.multi
     def name_get(self):
         res = []
+        leave_display_name = ''
         for leave in self:
-            res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name or leave.psi_category_id.psi_professional_category, leave.holiday_status_id.name, leave.number_of_days_temp)))
+            if (leave.employee_id.name or leave.psi_category_id.psi_professional_category) and leave.holiday_status_id.name and leave.number_of_days_temp:
+                leave_display_name = _("%s on %s : %.2f day(s)") % (leave.employee_id.name or leave.psi_category_id.psi_professional_category, leave.holiday_status_id.name, leave.number_of_days_temp)
+            res.append((leave.id, leave_display_name))
         return res
     
     def _increment_doit_conge(self):
