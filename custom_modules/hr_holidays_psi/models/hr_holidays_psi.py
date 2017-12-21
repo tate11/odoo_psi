@@ -225,7 +225,7 @@ class hr_holidays_psi(models.Model):
             if values['date_from'] != False :
                 date_start = datetime.datetime.strptime(current_employee.date_start,"%Y-%m-%d")
                 date_from = datetime.datetime.strptime(values['date_from'],"%Y-%m-%d %H:%M:%S")
-                config = self.env['hr.holidays.configuration'].search([])[0]
+                config = self.env['hr.holidays.configuration'].sudo().search([])[0]
                 diff = (date_from.year - date_start.year) * 12 + date_from.month - date_start.month
                 if diff <= config.droit_conge:
                     return False
@@ -247,7 +247,7 @@ class hr_holidays_psi(models.Model):
            if record.date_from != False: 
                holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',3)])
                if record.holiday_status_id.id == holidays_status[0].id:
-                   config = self.env['hr.holidays.configuration'].search([])[0]
+                   config = self.env['hr.holidays.configuration'].sudo().search([])[0]
                    if record.number_of_days_temp > config.conges_sans_solde :
                       raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
                       return False
