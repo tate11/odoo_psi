@@ -13,6 +13,6 @@ class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
     project_id = fields.Many2one('project.project', 'Project', domain=lambda self: 
                                      [('id','in', tuple([x.id for x in tuple([y.project_ids for y in (
-                                     									self.env['hr.employee'].search([('user_id','=',self.env.user.id)]))])]
+                                     									self.env['hr.employee'].sudo().search([('user_id','=',self.env.user.id)]))])]
                                      								)
                                      				   )])
