@@ -55,7 +55,7 @@
 			</field>
 
 			<xpath expr="//button[@name='action_refuse']" position='replace'>
-				<button string="Refuser" name="action_refuse" states="confirm,validate,validate1,validate2" type="object" 
+				<button string="Refuser" name="action_refuse" states="confirm,validate1,validate2" type="object" 
 				groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha,hr_holidays.group_hr_holidays_manager"/>
 			</xpath>
 			<xpath expr="//button[@name='action_validate']" position='replace'>
@@ -63,7 +63,7 @@
 				groups="hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha,hr_holidays.group_hr_holidays_manager" />
 			</xpath>
 			<xpath expr="//button[@name='action_approve']" position='after'>
-				<button string="Approbation (Chef de departement)" name="action_approbation_departement" attrs="{'invisible': [('state','not in','validate1')]}"  type="object" class="oe_highlight" 
+				<button string="Approuver (Chef de departement)" name="action_approbation_departement" attrs="{'invisible': [('state','not in','validate1')]}"  type="object" class="oe_highlight" 
 				groups="hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha,hr_holidays.group_hr_holidays_manager" />
 			</xpath>
 			<xpath expr="//button[@name='action_approve']" position='replace'>

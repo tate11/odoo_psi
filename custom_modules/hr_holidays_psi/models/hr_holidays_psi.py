@@ -52,10 +52,10 @@ class hr_holidays_psi(models.Model):
         ('cancel', 'Cancelled'),
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
-        ('validate1', u'Validation par Supérieur hiérarchique'),
-        ('approbation','Approbation du chef de département de rattachement'),
-        ('validate2', 'Validation par RH'),
-        ('validate', 'Validation par DRHA')
+        ('validate1', u'Validé par Supérieur hiérarchique'),
+        ('approbation', u'Approuvé par chef de département'),
+        ('validate2', u'Validé par RH'),
+        ('validate', u'Validé par DRHA')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
             help="The status is set to 'To Submit', when a holiday request is created." +
             "\nThe status is 'To Approve', when holiday request is confirmed by user." +
@@ -108,11 +108,10 @@ class hr_holidays_psi(models.Model):
         
     @api.model
     def create(self, values):
-        print "first print",values
         self._verif_leave_date()
         if values.has_key('employee_id'):
             employee = self.env['hr.employee'].browse(values.get('employee_id'))
-            recrutement_type = self.env['hr.recruitment.type'].search([('recrutement_type','=','collaborateur')])
+            recrutement_type = self.env['hr.recruitment.type'].sudo().search([('recrutement_type','=','collaborateur')])
             if employee.job_id.recrutement_type_id.id != recrutement_type[0].id:
                 raise ValidationError(u'Seulement les employés permanents peuvent faire une demande de congé.')
                 return False
@@ -282,8 +281,8 @@ class hr_holidays_psi(models.Model):
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
-            if holiday.state not in ['confirm', 'validate1','validate2']:
-                raise UserError(_('Leave request must be confirmed in order to approve it.'))
+            if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2']:
+                raise UserError(u'La demande ne peut pas être refusée que si elle est déjà validée par un supérieur')
             if holiday.state == 'validate2' and not holiday.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
                 raise UserError(_('Only an HR Manager can apply the second approval on leave requests.'))
 
@@ -566,3 +565,25 @@ class hr_holidays_psi(models.Model):
                   float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
                     raise ValidationError(_('The number of remaining leaves is not sufficient for this leave type.\n'
                                             'Please verify also the leaves waiting for validation.'))
+    
+    @api.multi
+    def action_refuse(self):
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
+
+        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        for holiday in self:
+            if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2']:
+                raise UserError(u'La demande ne peut pas être refusée que si elle est déjà validée par un supérieur')
+
+            if holiday.state == 'validate1':
+                holiday.write({'state': 'refuse', 'manager_id': manager.id})
+            else:
+                holiday.write({'state': 'refuse', 'manager_id2': manager.id})
+            # Delete the meeting
+            if holiday.meeting_id:
+                holiday.meeting_id.unlink()
+            # If a category that created several holidays, cancel all related
+            holiday.linked_request_ids.action_refuse()
+        self._remove_resource_leave()
+        return True
