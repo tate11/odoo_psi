@@ -12,7 +12,7 @@ class Hr_employee_psi(models.Model):
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
     project_id = fields.Many2one('project.project', 'Project', domain=lambda self: 
-                                     [('id','in', tuple([x.id for x in ([y.project_ids for y in(
+                                     [('id','in', tuple([x.id for x in tuple([y.project_ids for y in (
                                      									self.env['hr.employee'].search([('user_id','=',self.env.user.id)]))])]
                                      								)
                                      				   )])
