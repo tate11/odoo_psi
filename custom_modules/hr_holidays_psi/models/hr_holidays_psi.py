@@ -574,7 +574,7 @@ class hr_holidays_psi(models.Model):
         if self.holiday_status_id.id == holidays_status[0].id:
             print holidays_status[0].name
            
-            date_to_with_delta = fields.Date.from_string(date_from) + datetime.timedelta(days=98)
+            date_to_with_delta = fields.Date.from_string(date_from) + datetime.timedelta(days=97)
             self.date_to = str(date_to_with_delta)
         # No date_to set so far: automatically compute one 8 hours later
         #if date_from and not date_to:
