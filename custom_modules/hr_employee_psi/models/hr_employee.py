@@ -13,8 +13,8 @@ from odoo.exceptions import Warning
 class hr_employee(models.Model):
     
     _inherit                        = 'hr.employee'
-
     psi_name                        = fields.Char(string=u'Nom')
+
     father_name                     = fields.Char(string=u'Nom du père')
     mother_name                     = fields.Char(string=u'Nom de la mère')
     
@@ -108,10 +108,11 @@ class hr_employee(models.Model):
     
     @api.model
     def create(self, vals):
+        print "create"
         if vals.has_key('nombre_conge')  :
             if vals.get('nombre_conge') != 0.0 :
                 self.set_nombre_conge(vals.get('nombre_conge'))
-        if vals.has_key('matricule') :
+        if vals.has_key('matricule'):
             employees = self.env['hr.employee'].search([('matricule','=',vals.get('matricule'))])
             if len(employees) > 0:
                 raise Warning('Le matricule est dèja utilisés par un autre employée.')  
@@ -123,6 +124,10 @@ class hr_employee(models.Model):
         print "write"
         if vals.has_key('nombre_conge')  :
             self.set_nombre_conge(vals.get('nombre_conge'))
+        if vals.has_key('matricule')  and not vals.has_key('employee_id')  :
+            employees = self.env['hr.employee'].search([('matricule','=',vals.get('matricule')),('id','<>', self.id)])
+            if len(employees) > 0:
+                raise Warning('Le matricule est dèja utilisés par un autre employée.') 
         employee = super(hr_employee, self).write(vals)
         return employee
     
