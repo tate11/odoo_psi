@@ -277,7 +277,7 @@ class hr_holidays_psi(models.Model):
 
     
     def check_droit(self, values):
-        current_employee = self.env['hr.contract'].search([('employee_id', '=', values['employee_id'])])
+        current_employee = self.env['hr.contract'].sudo().search([('employee_id', '=', values['employee_id'])])
         
         if values.has_key('date_from') and current_employee.date_start != False :
             if values['date_from'] != False :
@@ -504,7 +504,7 @@ class hr_holidays_psi(models.Model):
         return res
     
     def _increment_doit_conge(self):
-        contracts = self.env['hr.contract'].search([])
+        contracts = self.env['hr.contract'].sudo().search([])
         dt_now = datetime.datetime.strptime(fields.Date().today(),'%Y-%m-%d')
         
         for contract in contracts :
