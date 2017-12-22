@@ -209,7 +209,7 @@ class AccountAnalyticLine(models.Model):
                     raise Warning('Vous ne devez pas travailler le week-end!')   
                     return False
 
-            current_timesheets = self.env['account.analytic.line'].search([('project_id', '=', vals.get('project_id'))], [('task_id', '=', vals.get('task_id'))], [('user_id', '=', self.env.user.id)])
+            current_timesheets = self.env['account.analytic.line'].search([('project_id', '=', vals.get('project_id')),('task_id', '=', vals.get('task_id'))])
             task = self.env['project.task'].search([('id','=',vals.get('task_id'))])[0]
             total_planned_hours = 0
             for current_timesheet in current_timesheets:
@@ -225,7 +225,7 @@ class AccountAnalyticLine(models.Model):
                 raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans cette tâche qui est {}!'.format(self.float_time_to_time(task.planned_hours)))   
                 return False
 
-            current_timesheets = self.env['account.analytic.line'].search([('date', '=', vals.get('date'))], [('user_id', '=', self.env.user.id)])
+            current_timesheets = self.env['account.analytic.line'].search([('date', '=', vals.get('date')),('user_id', '=', self.env.user.id)])
             total_planned_hours = 0
             for current_timesheet in current_timesheets:
                 total_planned_hours += float(current_timesheet.unit_amount)
@@ -234,7 +234,7 @@ class AccountAnalyticLine(models.Model):
 
             employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
             
-            heure_par_jour=self.get_heure_par_jour(employee,vals)
+            heure_par_jour=self.get_heure_par_jour(employees,vals)
 
             if total_planned_hours>heure_par_jour:
                     if heure_par_jour==0.0:
@@ -248,14 +248,14 @@ class AccountAnalyticLine(models.Model):
                 
         
         if vals.get('project_id') and vals.get('unit_amount') and vals.get('unit_amount') != 0.0:
-            current_timesheets = self.env['account.analytic.line'].search([('project_id', '=', vals.get('project_id'))], [('user_id', '=', self.env.user.id)])
+            current_timesheets = self.env['account.analytic.line'].search([('user_id', '=', self.env.user.id)])
             total_planned_hours = 0
             for current_timesheet in current_timesheets:
                 total_planned_hours += float(current_timesheet.unit_amount)
             
             total_planned_hours += vals.get('unit_amount')
             employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
-            heure_par_jour=self.get_heure_par_jour(employee,vals)
+            heure_par_jour=self.get_heure_par_jour(employees,vals)
 
             if unit_amount>heure_par_jour:
                     if heure_par_jour==0.0:
