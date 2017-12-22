@@ -106,6 +106,10 @@ class hr_employee(models.Model):
         ('mahajanga', 'Mahajanga'),
         ], string="", default="antananarivo")
     
+    @api.onchange('name') 
+    def _check_change(self):
+        self.psi_name = self.name
+        
     @api.model
     def create(self, vals):
         if vals.has_key('nombre_conge')  :
