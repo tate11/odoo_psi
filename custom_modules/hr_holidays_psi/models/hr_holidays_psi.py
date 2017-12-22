@@ -199,6 +199,7 @@ class hr_holidays_psi(models.Model):
         employee_id = values.get('employee_id', False)
         self._send_email_rappel_absences_to_assist_and_coord(False)
         self._verif_leave_date()
+        
 #         if self.env.user == self.employee_id.user_id:
 #             raise AccessError(u'Vous ne pouvez plus modifier votre demande, veuillez contacter votre supérieur hiérarchique.')
 
@@ -206,9 +207,10 @@ class hr_holidays_psi(models.Model):
 #            raise AccessError(u'Vous ne pouvez pas modifier cette demande de congé.')
 
         
-        if not self._check_state_access_right(values):
-            raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
-            return False
+#         if not self._check_state_access_right(values):
+#             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
+#             return False
+
         result = super(hr_holidays_psi, self).write(values)
         self.add_follower(employee_id)
         return result
@@ -241,7 +243,7 @@ class hr_holidays_psi(models.Model):
     def action_approve_candidate1(self):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+        if not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_rh') and not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_spa'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -254,7 +256,7 @@ class hr_holidays_psi(models.Model):
     def action_approbation_departement(self):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+        if not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_chef_departement'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -340,15 +342,15 @@ class hr_holidays_psi(models.Model):
     def action_validate(self):
         print "action_validate"
 
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+        if not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_drha'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2']:
                 raise UserError(u'La demande ne peut pas être refusée que si elle est déjà validée par un supérieur')
-            if holiday.state == 'validate2' and not holiday.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                raise UserError(_('Only an HR Manager can apply the second approval on leave requests.'))
+            if holiday.state == 'validate2' and not holiday.env.user.has_group('hr_holidays_psi.group_hr_holidays_drha'):
+                raise UserError('Seul DRHA peut valider la demande.')
 
             holiday.write({'state': 'validate'})
             print "holiday.write({'state': 'validate'})"
@@ -619,9 +621,9 @@ class hr_holidays_psi(models.Model):
     
     @api.multi
     def action_refuse(self):
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+        if not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_rh') and not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_spa') and not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_crh') and not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_drha'):
             raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
-
+        
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2']:

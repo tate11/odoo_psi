@@ -255,6 +255,13 @@
             sequence="7"
             action="open_holidays_approve_drha"
             groups="hr_holidays_psi.group_hr_holidays_drha" />
+    
+    <menuitem
+            id="hr_holidays.menu_hr_holidays_report"
+            name="Reports"
+            parent="hr_holidays.menu_hr_holidays_root"
+            sequence="99"
+            groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha"/>
             
 	</data>
 </odoo>
