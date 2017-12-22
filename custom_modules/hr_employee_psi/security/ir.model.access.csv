@@ -1,15 +1,15 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hr_cours_ethique,hr.cours.ethique,model_hr_cours_ethique,hr.group_hr_user,1,0,0,0
-access_hr_person_children,hr.person.children,model_hr_person_children,hr.group_hr_user,1,0,0,0
-access_hr_person_information,hr.person.information,model_hr_person_information,hr.group_hr_user,1,0,0,0
-access_psi_code_budgetaire,psi.code.budgetaire,model_psi_code_budgetaire,hr.group_hr_user,1,0,0,0
-access_hr_contract_sanction_data,hr.contract.sanction.data,model_hr_contract_sanction_data,hr.group_hr_user,1,0,0,0
-access_hr_contract_type_sanction,hr.contract.type.sanction,model_hr_contract_type_sanction,hr.group_hr_user,1,0,0,0
-access_hr_declaration_interest,hr.declaration.interest,model_hr_declaration_interest,hr.group_hr_user,1,0,0,0
-access_hr_information_cin,hr.information.cin,model_hr_information_cin,hr.group_hr_user,1,0,0,0
-access_hr_person_information,hr.person.information,model_hr_person_information,hr.group_hr_user,1,0,0,0
-access_hr_person,hr.person,model_hr_person,hr.group_hr_user,1,0,0,0
-access_hr_employee_bridger_insight,hr.employee.bridger.insight,model_hr_employee_bridger_insight,hr.group_hr_user,1,0,0,0
+access_hr_cours_ethique,hr.cours.ethique,model_hr_cours_ethique,base.group_user,1,0,0,0
+access_hr_person_children,hr.person.children,model_hr_person_children,base.group_user,1,0,0,0
+access_hr_person_information,hr.person.information,model_hr_person_information,base.group_user,1,0,0,0
+access_psi_code_budgetaire,psi.code.budgetaire,model_psi_code_budgetaire,base.group_user,1,0,0,0
+access_hr_contract_sanction_data,hr.contract.sanction.data,model_hr_contract_sanction_data,base.group_user,1,0,0,0
+access_hr_contract_type_sanction,hr.contract.type.sanction,model_hr_contract_type_sanction,base.group_user,1,0,0,0
+access_hr_declaration_interest,hr.declaration.interest,model_hr_declaration_interest,base.group_user,1,0,0,0
+access_hr_information_cin,hr.information.cin,model_hr_information_cin,base.group_user,1,0,0,0
+access_hr_person_information,hr.person.information,model_hr_person_information,base.group_user,1,0,0,0
+access_hr_person,hr.person,model_hr_person,base.group_user,1,0,0,0
+access_hr_employee_bridger_insight,hr.employee.bridger.insight,model_hr_employee_bridger_insight,base.group_user,1,0,0,0
 
 
 
