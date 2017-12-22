@@ -7,7 +7,7 @@
 	        <field name="inherit_id" ref="base.view_users_form"/>
 	        <field name="arch" type="xml">
 	        	<xpath expr="//h2" position="after">
-                    <label for="mail" string="Mail"/>
+                    <label for="mail" string="e-mail"/>
                     <h3><field name="mail" required="1" /></h3>
                 </xpath>
                 
