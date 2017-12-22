@@ -109,7 +109,7 @@ class hr_holidays_psi(models.Model):
         
         holidays_status = self.env['hr.holidays.status'].sudo().search([('holidays_status_id_psi','=',4)])
         year_now = datetime.datetime.today().year
-        holidays = self.env["hr.holidays"].sudo().search([('employee_id', '=', self.employee_id.id), ('type', '=', 'remove')])
+        holidays = self.env["hr.holidays"].search([('employee_id', '=', self.employee_id.id), ('type', '=', 'remove')])
         number_days = 0
         public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
         for holiday in holidays :
@@ -202,7 +202,10 @@ class hr_holidays_psi(models.Model):
         result = super(hr_holidays_psi, self).write(values)
         self.add_follower(employee_id)
         return result
-
+    
+    def _check_state_access_right(self, vals):
+        return True
+    
     def action_report_request_for_absences(self):
         return {
                'type': 'ir.actions.report.xml',
