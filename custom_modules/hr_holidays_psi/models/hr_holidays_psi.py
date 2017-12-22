@@ -117,11 +117,11 @@ class hr_holidays_psi(models.Model):
     def _verif_leave_date(self):
         print "_verif_leave_date"
         
-        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
+        holidays_status = self.env['hr.holidays.status'].sudo().search([('holidays_status_id_psi','=',4)])
         year_now = datetime.datetime.today().year
-        holidays = self.env["hr.holidays"].search([('employee_id','=',self.employee_id.name)])
+        holidays = self.env["hr.holidays"].sudo().search([('employee_id','=',self.employee_id.name)])
         number_days = 0
-        public_holidays_line = self.env['hr.holidays.public.line'].search([])
+        public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
         for holiday in holidays :
             write_date = datetime.datetime.strptime(holiday.write_date,"%Y-%m-%d %H:%M:%S")
             write_date_year = write_date.year
@@ -130,8 +130,8 @@ class hr_holidays_psi(models.Model):
             
             # Verification public holiday JOUR FERIES
             for public_holidays in public_holidays_line:
-                date_from_ = str(datetime.datetime.strptime(holiday.date_from,"%Y-%m-%d %H:%M:%S").date())
-                date_to_ = str(datetime.datetime.strptime(holiday.date_to,"%Y-%m-%d %H:%M:%S").date())
+                date_from_ = str(datetime.datetime.strptime(holiday.date_from,"%Y-%m-%d").date())
+                date_to_ = str(datetime.datetime.strptime(holiday.date_to,"%Y-%m-%d").date())
                 date = str(public_holidays.date)
                 if date_from_ == date or date_to_ == date:
                     raise ValidationError(u'Vous ne pouvez pas demander du congé durant les jours fériés.')
@@ -313,7 +313,7 @@ class hr_holidays_psi(models.Model):
                    if record.number_of_days_temp > config.conges_sans_solde :
                       raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
                       return False
-               date_from_time = datetime.datetime.strptime(record.date_from,"%Y-%m-%d %H:%M:%S")
+               date_from_time = datetime.datetime.strptime(record.date_from,"%Y-%m-%d 0:00:00")
                date_now = datetime.datetime.strptime(fields.Date().today(),"%Y-%m-%d")
                between = date_from_time - date_now
               
@@ -572,18 +572,18 @@ class hr_holidays_psi(models.Model):
         if self.holiday_status_id.id == holidays_status[0].id:
             print holidays_status[0].name
            
-            date_to_with_delta = fields.Datetime.from_string(date_from) + datetime.timedelta(days=98)
+            date_to_with_delta = fields.Date.from_string(date_from) + date.timedelta(days=98)
             self.date_to = str(date_to_with_delta)
         # No date_to set so far: automatically compute one 8 hours later
-        if date_from and not date_to:
-            date_to_with_delta = fields.Datetime.from_string(date_from) + datetime.timedelta(hours=HOURS_PER_DAY)
-            self.date_to = str(date_to_with_delta)
+        #if date_from and not date_to:
+        #    date_to_with_delta = fields.Date.from_string(date_from) + datetime.timedelta(hours=HOURS_PER_DAY)
+        #    self.date_to = str(date_to_with_delta)
 
         # Compute and update the number of days
-        if (date_to and date_from) and (date_from <= date_to):
-            self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
-        else:
-            self.number_of_days_temp = 0
+        #if (date_to and date_from) and (date_from <= date_to):
+        #    self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
+        #else:
+        #    self.number_of_days_temp = 0
     
     # Mail de rappel aux Assistantes et Coordinateurs
     @api.multi
