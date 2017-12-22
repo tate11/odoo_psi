@@ -6,7 +6,7 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project" />
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='settings']">
+            <xpath expr="//field[@name='partner_id']/.." position="after">
                 <group string="Employés">
                     <field name="employee_ids"/>
                 </group>

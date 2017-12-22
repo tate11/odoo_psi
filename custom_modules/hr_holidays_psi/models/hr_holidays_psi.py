@@ -56,10 +56,10 @@ class hr_holidays_psi(models.Model):
         ('cancel', 'Cancelled'),
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
-        ('validate1', u'Validation par Supérieur hiérarchique'),
-        ('approbation','Approbation du chef de département de rattachement'),
-        ('validate2', 'Validation par RH'),
-        ('validate', 'Validation par DRHA')
+        ('validate1', u'Validé par Supérieur hiérarchique'),
+        ('approbation', u'Approuvé par chef de département'),
+        ('validate2', u'Validé par RH'),
+        ('validate', u'Validé par DRHA')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
             help="The status is set to 'To Submit', when a holiday request is created." +
             "\nThe status is 'To Approve', when holiday request is confirmed by user." +
@@ -109,21 +109,33 @@ class hr_holidays_psi(models.Model):
     @api.constrains('number_of_days_temp')
     def _verif_leave_date(self):
         print "_verif_leave_date"
+        
         holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
         year_now = datetime.datetime.today().year
         holidays = self.env["hr.holidays"].search([('employee_id','=',self.employee_id.name)])
         number_days = 0
+        public_holidays_line = self.env['hr.holidays.public.line'].search([])
         for holiday in holidays :
             write_date = datetime.datetime.strptime(holiday.write_date,"%Y-%m-%d %H:%M:%S")
             write_date_year = write_date.year
             if write_date_year == year_now and holiday.holiday_status_id.id == holidays_status[0].id:
                 number_days += holiday.number_of_days
+            
+            # Verification public holiday JOUR FERIES
+            for public_holidays in public_holidays_line:
+                date_from_ = str(datetime.datetime.strptime(holiday.date_from,"%Y-%m-%d %H:%M:%S").date())
+                date_to_ = str(datetime.datetime.strptime(holiday.date_to,"%Y-%m-%d %H:%M:%S").date())
+                date = str(public_holidays.date)
+                if date_from_ == date or date_to_ == date:
+                    raise ValidationError(u'Vous ne pouvez pas demander du congé durant les jours fériés.')
+                    return False
+            
         if number_days > 10 :
             raise UserError(u"Vous avez depassé le nombre de jours maximum de permission.")
             return False
         for record in self:
             get_day_difference = record.number_of_days_temp
-            type_permissions = self.env['hr.holidays.type.permission'].search([])            
+            type_permissions = self.env['hr.holidays.type.permission'].sudo().search([])            
             for permissions in type_permissions:
                 if self.holiday_type_permission.id == permissions.id:
                     if get_day_difference > permissions.number_of_day:
@@ -151,11 +163,10 @@ class hr_holidays_psi(models.Model):
         
     @api.model
     def create(self, values):
-        print "first print",values
         self._verif_leave_date()
         if values.has_key('employee_id'):
             employee = self.env['hr.employee'].browse(values.get('employee_id'))
-            recrutement_type = self.env['hr.recruitment.type'].search([('recrutement_type','=','collaborateur')])
+            recrutement_type = self.env['hr.recruitment.type'].sudo().search([('recrutement_type','=','collaborateur')])
             if employee.job_id.recrutement_type_id.id != recrutement_type[0].id:
                 raise ValidationError(u'Seulement les employés permanents peuvent faire une demande de congé.')
                 return False
@@ -269,7 +280,7 @@ class hr_holidays_psi(models.Model):
             if values['date_from'] != False :
                 date_start = datetime.datetime.strptime(current_employee.date_start,"%Y-%m-%d")
                 date_from = datetime.datetime.strptime(values['date_from'],"%Y-%m-%d %H:%M:%S")
-                config = self.env['hr.holidays.configuration'].search([])[0]
+                config = self.env['hr.holidays.configuration'].sudo().search([])[0]
                 diff = (date_from.year - date_start.year) * 12 + date_from.month - date_start.month
                 if diff <= config.droit_conge:
                     return False
@@ -291,7 +302,7 @@ class hr_holidays_psi(models.Model):
            if record.date_from != False: 
                holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',3)])
                if record.holiday_status_id.id == holidays_status[0].id:
-                   config = self.env['hr.holidays.configuration'].search([])[0]
+                   config = self.env['hr.holidays.configuration'].sudo().search([])[0]
                    if record.number_of_days_temp > config.conges_sans_solde :
                       raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
                       return False
@@ -325,12 +336,14 @@ class hr_holidays_psi(models.Model):
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
-            if holiday.state not in ['confirm', 'validate1','validate2']:
-                raise UserError(_('Leave request must be confirmed in order to approve it.'))
+            if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2']:
+                raise UserError(u'La demande ne peut pas être refusée que si elle est déjà validée par un supérieur')
             if holiday.state == 'validate2' and not holiday.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
                 raise UserError(_('Only an HR Manager can apply the second approval on leave requests.'))
 
             holiday.write({'state': 'validate'})
+            print "holiday.write({'state': 'validate'})"
+            
             if holiday.double_validation:
                 holiday.write({'manager_id2': manager.id})
             else:
@@ -368,13 +381,24 @@ class hr_holidays_psi(models.Model):
                     time_from = self.str_to_timezone(holiday.date_from)
                     time_to = self.str_to_timezone(holiday.date_to)
         
+                    # Horaire de travail par region
+                    heure_par_jour = 0.0
+                    attendance_ids = employee.calendar_id.attendance_ids
+                    print "attendance_ids ",attendance_ids
+                    date_now = datetime.datetime.strptime(fields.Date().today(),'%Y-%m-%d')
+                    dayofweek = int(datetime.datetime.strptime(str(date_now.date()), '%Y-%m-%d').strftime('%w'))
+                    for attendance_id in attendance_ids:
+                        attendances = self.env['resource.calendar.attendance'].search([['id', '=', attendance_id.id], ['dayofweek', '=', dayofweek]])
+                        for attendance in attendances:
+                            heure_par_jour += attendance.hour_to - attendance.hour_from
+                    
                     for timestamp in self.datespan(time_from, time_to):
                         company = employee.company_id
                         date = timestamp.date()
-                        hours = HOURS_PER_DAY
+                        hours = heure_par_jour
                         
-                        #self.create_leave_analytic_line(
-                        #        holiday, employee, date, hours)
+                        date_str = str(date)
+                        self.create_leave_analytic_line(holiday, employee, date_str, hours)
                  
                 #Add the partner_id (if exist) as an attendee
                 if holiday.user_id and holiday.user_id.partner_id :
@@ -446,14 +470,12 @@ class hr_holidays_psi(models.Model):
 
         return fields.Datetime.context_timestamp(self.env.user, time_obj)
     
+#     Creation timesheet
     def create_leave_analytic_line(self, holiday, employee, concerned_day, hours):
 
         account = self.env.ref('hr_holidays_psi.account_leave')
         project = self.env.ref('hr_holidays_psi.project_leave')
-        print holiday,' holiday'
-        print employee,' employee'
-        print concerned_day,' concerned_day'
-        print hours, ' hours'
+
         return self.env['account.analytic.line'].sudo().create({
             'account_id': account.id,
             'project_id': project.id,
@@ -585,3 +607,25 @@ class hr_holidays_psi(models.Model):
                   float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
                     raise ValidationError(_('The number of remaining leaves is not sufficient for this leave type.\n'
                                             'Please verify also the leaves waiting for validation.'))
+    
+    @api.multi
+    def action_refuse(self):
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
+
+        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        for holiday in self:
+            if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2']:
+                raise UserError(u'La demande ne peut pas être refusée que si elle est déjà validée par un supérieur')
+
+            if holiday.state == 'validate1':
+                holiday.write({'state': 'refuse', 'manager_id': manager.id})
+            else:
+                holiday.write({'state': 'refuse', 'manager_id2': manager.id})
+            # Delete the meeting
+            if holiday.meeting_id:
+                holiday.meeting_id.unlink()
+            # If a category that created several holidays, cancel all related
+            holiday.linked_request_ids.action_refuse()
+        self._remove_resource_leave()
+        return True

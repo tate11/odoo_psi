@@ -11,3 +11,5 @@ access_hr_holidays_status_rh,hr.holidays.status,hr_holidays.model_hr_holidays_st
 access_hr_holidays_configuration_spa,hr.holidays.configuration,model_hr_holidays_configuration,group_hr_holidays_spa,1,1,0,0
 access_hr_psi_category_details_spa,hr.psi.category.details,hr_recruitment_psi.model_hr_psi_category_details,group_hr_holidays_spa,1,1,0,0
 access_hr_holidays_status_spa,hr.holidays.status,hr_holidays.model_hr_holidays_status,group_hr_holidays_spa,1,1,1,1
+
+access_hr_holidays_status_employe,hr.holidays.status,hr_holidays.model_hr_holidays_status,group_hr_holidays_employe,1,1,0,0
