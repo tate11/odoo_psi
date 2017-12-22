@@ -106,6 +106,9 @@
 			<field name="model">hr.employee</field>
 			<field name="inherit_id" ref="hr.view_employee_form" />
 			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="replace">
+					<field name="name" placeholder="Nom et prénom(s) de l'employé" string="Nom et prénom(s)" />
+				</xpath>
 				<notebook>
 					<page string="Pièces à fournir">
 						<group col="1">
