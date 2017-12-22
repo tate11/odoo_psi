@@ -41,12 +41,16 @@ class hr_holidays_psi(models.Model):
     
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
+    date_from = fields.Date('Start Date', readonly=True, index=True, copy=False,states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    date_to = fields.Date('End Date', readonly=True, index=True, copy=False,states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    demi_jour = fields.Boolean(string="Demi-journée")
+    matin_soir = fields.Selection([('matin','Matin'),('soir','Soir')], string=u'Matin ou Soir')
     
     job_id = fields.Many2one(related='employee_id.job_id', store=True)
     all_employee = fields.Boolean(string="Tous les employés")
     
     number_of_days_psi = fields.Float('Number of Days', compute='_compute_number_of_days_psi', store=True)
-    
+    number_of_days_temp = fields.Float('Allocation', default="1.0", readonly=True, copy=False, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -62,7 +66,46 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'Refused', when holiday request is refused by manager." +
             "\nThe status is 'Approved', when holiday request is approved by manager.")
 
-     
+
+    @api.onchange('demi_jour')
+    def _onchange_number_of_days_psi(self):
+        if self.demi_jour==True:
+            self.number_of_days_temp=0.5
+        else:
+            self.number_of_days_temp=1.0
+
+    @api.onchange('date_from')
+    def _onchange_date_from(self):
+        #super(hr_holidays_psi,self)._onchange_date_from()
+        if self.date_from>self.date_to:
+            self.date_to=self.date_from
+        if self.demi_jour==True:
+            self.number_of_days_temp=0.5
+        else:
+            day_hours=str(datetime.datetime.strptime(self.date_to,"%Y-%m-%d")-datetime.datetime.strptime(self.date_from,"%Y-%m-%d")).split(" day")
+            if day_hours:
+                if day_hours[0]=="0:00:00":
+                    self.number_of_days_temp=1.0
+                else:
+                    self.number_of_days_temp=day_hours[0]
+            
+
+    @api.onchange('date_to')
+    def _onchange_date_to(self):
+        #super(hr_holidays_psi,self)._onchange_date_to()
+        if self.date_to<self.date_from:
+            self.date_from=self.date_to
+        if self.demi_jour==True:
+            self.number_of_days_temp=0.5
+        else:
+            print self.date_from,self.date_to
+            day_hours=str(datetime.datetime.strptime(self.date_to,"%Y-%m-%d")-datetime.datetime.strptime(self.date_from,"%Y-%m-%d")).split(" day")
+            if day_hours:
+                if day_hours[0]=="0:00:00":
+                    self.number_of_days_temp=1.0
+                else:
+                    self.number_of_days_temp=day_hours[0]
+            
     @api.constrains('number_of_days_temp')
     def _verif_leave_date(self):
         print "_verif_leave_date"
@@ -512,30 +555,6 @@ class hr_holidays_psi(models.Model):
         if automatic:
             self._cr.commit()
 
-    
-    @api.onchange('date_from')
-    def _onchange_date_from(self):
-        print "_onchange_date_from"
-        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])
-        
-        date_from = self.date_from
-        date_to = self.date_to
-        if self.holiday_status_id.id == holidays_status[0].id:
-            print holidays_status[0].name
-           
-            date_to_with_delta = fields.Datetime.from_string(date_from) + datetime.timedelta(days=98)
-            self.date_to = str(date_to_with_delta)
-        # No date_to set so far: automatically compute one 8 hours later
-        if date_from and not date_to:
-            date_to_with_delta = fields.Datetime.from_string(date_from) + datetime.timedelta(hours=HOURS_PER_DAY)
-            self.date_to = str(date_to_with_delta)
-
-        # Compute and update the number of days
-        if (date_to and date_from) and (date_from <= date_to):
-            self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
-        else:
-            self.number_of_days_temp = 0
-            
     @api.onchange('holiday_status_id')
     def _onchange_holiday_status_id(self):
         print "_onchange_holiday_status_id"
