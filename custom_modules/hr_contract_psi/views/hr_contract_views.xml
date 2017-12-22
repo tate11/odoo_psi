@@ -47,7 +47,7 @@
 					attrs="{'invisible': ['|',('motif_rupture','=',False),('state_mail','=','draft')]}" />
 			</field>
 			<field name="employee_id" position="before">
-				<field name="matricule" required="1" />
+				<field name="matricule" readonly="1" />
 			</field>
 			<xpath expr="//label" position="before">
 				<field name="response_evaluation" invisible="1" />
