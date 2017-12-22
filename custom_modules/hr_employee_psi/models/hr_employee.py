@@ -119,7 +119,7 @@ class hr_employee(models.Model):
         if vals.has_key('matricule'):
             employees = self.env['hr.employee'].search([('matricule','=',vals.get('matricule'))])
             if len(employees) > 0:
-                raise Warning('Le matricule est dèja utilisés par un autre employée.')  
+                raise Warning('Ce matricule correspond déjà au matricule d\'un autre employé.')  
         employee = super(hr_employee, self).create(vals)
         return employee
     
@@ -131,7 +131,7 @@ class hr_employee(models.Model):
         if vals.has_key('matricule')  and not vals.has_key('employee_id')  :
             employees = self.env['hr.employee'].search([('matricule','=',vals.get('matricule')),('id','<>', self.id)])
             if len(employees) > 0:
-                raise Warning('Le matricule est dèja utilisés par un autre employée.') 
+                raise Warning('Ce matricule correspond déjà au matricule d\'un autre employé.') 
         employee = super(hr_employee, self).write(vals)
         return employee
     

@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>  
-   	    <record id="res_users_form" model="ir.ui.view">
-	        <field name="name">res.users.form</field>
-	        <field name="model">res.users</field>
-	        <field name="inherit_id" ref="base.view_users_form"/>
-	        <field name="arch" type="xml">
-	        	<xpath expr="//h2" position="after">
-                    <label for="mail" string="e-mail"/>
-                    <h3><field name="mail" required="1" /></h3>
-                </xpath>
-                
-	        </field>
-	    </record> 
-	    
-     	<record id="res_users_tree" model="ir.ui.view">
-	        <field name="name">res.users.tree</field>
-	        <field name="model">res.users</field>
-	        <field name="inherit_id" ref="base.view_users_tree"/>
-	        <field name="arch" type="xml">
-                <xpath expr="//field[@name='login']" position="after">
-                    <field name="mail" />
-                </xpath>
-	        </field>
-	    </record> 
-    </data>
+	<data>
+		<record id="res_users_form" model="ir.ui.view">
+			<field name="name">res.users.form</field>
+			<field name="model">res.users</field>
+			<field name="inherit_id" ref="base.view_users_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//h2" position="after">
+					<label for="mail" string="e-mail" />
+					<h3>
+						<field name="mail" required="1" />
+					</h3>
+				</xpath>
+				<xpath expr="//field[@name='login']" position="attributes">
+					<attribute name="string">Login</attribute>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="res_users_tree" model="ir.ui.view">
+			<field name="name">res.users.tree</field>
+			<field name="model">res.users</field>
+			<field name="inherit_id" ref="base.view_users_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='login']" position="replace">
+					<field name="login" string="Login" />
+				</xpath>
+				<xpath expr="//field[@name='login']" position="after">
+					<field name="mail" />
+				</xpath>
+			</field>
+		</record>
+	</data>
 </odoo>
