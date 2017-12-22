@@ -106,6 +106,9 @@
 			<field name="model">hr.employee</field>
 			<field name="inherit_id" ref="hr.view_employee_form" />
 			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="replace">
+					<field name="name" placeholder="Nom et prénom(s) de l'employé" string="Nom et prénom(s)" />
+				</xpath>
 				<notebook>
 					<page string="Pièces à fournir">
 						<group col="1">
@@ -207,7 +210,7 @@
 						<group col="2">
 							<group string="Etat civil">
 								<field name="matricule" required="1" />
-								<field name="name" string='Nom et prénom(s)' />
+								<field name="psi_name" string='Nom et prénom(s)' />
 								<field name="birthday" string='Date de naissance' />
 								<field name="father_name" string='Nom du père' />
 								<field name="mother_name" string='Nom de la mère' />

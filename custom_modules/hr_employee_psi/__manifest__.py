@@ -13,6 +13,7 @@
               'data/mail_template_hr_employee_data.xml',
               'data/hr_employee_data.xml',
               'views/hr_employee_views.xml',
+              'views/res_users_view.xml',
              ],
     'demo': [],
     'test': [],

@@ -163,15 +163,53 @@ class AccountAnalyticLine(models.Model):
                 min=75
                 
             vals['unit_amount']=float("{}.{}".format(heure,min))
+
+    def modif_val_unit_amount(vals):
+        unit_amount=vals.get('unit_amount');
+        if len(str(unit_amount))>2 and unit_amount != None:
+            heure,min=str(unit_amount).split(".")
+            
+            if len(str(min))>1:
+                min=float("{}.{}".format(min[0],min[1]))
+            else:
+                min=float(min)
                 
+            if min<2.5:
+                min=0
+            elif min>=2.5 and min<5:
+                min=25
+            elif min>=5 and min<7.5:
+                min=5
+            elif min>=7.5:
+                min=75
+                
+            vals['unit_amount']=float("{}.{}".format(heure,min))
+    
+    def get_heure_par_jour(employee,vals):
+        heure_par_jour = 0.0
+        for employee in employees:
+            attendance_ids = employee.calendar_id.attendance_ids
+            for attendance_id in attendance_ids:
+                attendances = self.env['resource.calendar.attendance'].search([['id', '=', attendance_id.id], ['dayofweek', '=', datetime.strptime(vals.get('date'), '%Y-%m-%d').strftime('%w')]])
+                for attendance in attendances:
+                    heure_par_jour += attendance.hour_to - attendance.hour_from
+        return heure_par_jour
+
     @api.model
     def create(self, vals):
         
         #if vals.get('unit_amount') <= 0.0:
             #raise Warning('Veuillez saisir l\'heure.')
         
-        if vals.get('task_id') and vals.get('project_id') and vals.get('unit_amount') and vals.get('unit_amount') != 0.0:
-            current_timesheets = self.env['account.analytic.line'].search([['project_id', '=', vals.get('project_id')], ['task_id', '=', vals.get('task_id')]])
+        if vals.get('task_id') and vals.get('date') and vals.get('project_id') and vals.get('unit_amount') and vals.get('unit_amount') != 0.0:
+            
+            if vals.get('date'):
+                current_day=datetime.strptime(vals.get('date'), '%Y-%m-%d').strftime('%w')
+                if current_day == "6" or current_day == "0" :
+                    raise Warning('Vous ne devez pas travailler le week-end!')   
+                    return False
+
+            current_timesheets = self.env['account.analytic.line'].search([('project_id', '=', vals.get('project_id'))], [('task_id', '=', vals.get('task_id'))], [('user_id', '=', self.env.user.id)])
             task = self.env['project.task'].search([('id','=',vals.get('task_id'))])[0]
             total_planned_hours = 0
             for current_timesheet in current_timesheets:
@@ -182,17 +220,52 @@ class AccountAnalyticLine(models.Model):
             if total_planned_hours > task.planned_hours:
                 raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time(total_planned_hours - task.planned_hours ))) 
                 return False
+
+            if unit_amount>task.planned_hours:
+                raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans cette tâche qui est {}!'.format(self.float_time_to_time(task.planned_hours)))   
+                return False
+
+            current_timesheets = self.env['account.analytic.line'].search([('date', '=', vals.get('date'))], [('user_id', '=', self.env.user.id)])
+            total_planned_hours = 0
+            for current_timesheet in current_timesheets:
+                total_planned_hours += float(current_timesheet.unit_amount)
             
-        if vals.get('task_id'):
-            unit_amount=vals.get('unit_amount')
-            tasks=self.env['project.task'].search([('id','=',vals.get('task_id'))])
-            for task in tasks:
-                if unit_amount>task.planned_hours:
-                    raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans cette tâche qui est {}!'.format(self.float_time_to_time(task.planned_hours)))   
+            total_planned_hours += vals.get('unit_amount')
+
+            employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
+            
+            heure_par_jour=self.get_heure_par_jour(employee,vals)
+
+            if total_planned_hours>heure_par_jour:
+                    if heure_par_jour==0.0:
+                        raise Warning('Vous ne pouvez pas travailler aujourd\'hui ou peut-être que vous n\'êtes pas affecté à un horaire de travail!')
+                    else:
+                        raise Warning('Vous ne pouvez pas travailler plus de {} aujourd\'hui!'.format(self.float_time_to_time(heure_par_jour)))
                     return False
-            
-        self.traiter_unit_amount(vals)
+
+            self.modif_val_unit_amount(vals)
+                   
+                
         
+        if vals.get('project_id') and vals.get('unit_amount') and vals.get('unit_amount') != 0.0:
+            current_timesheets = self.env['account.analytic.line'].search([('project_id', '=', vals.get('project_id'))], [('user_id', '=', self.env.user.id)])
+            total_planned_hours = 0
+            for current_timesheet in current_timesheets:
+                total_planned_hours += float(current_timesheet.unit_amount)
+            
+            total_planned_hours += vals.get('unit_amount')
+            employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
+            heure_par_jour=self.get_heure_par_jour(employee,vals)
+
+            if unit_amount>heure_par_jour:
+                    if heure_par_jour==0.0:
+                        raise Warning('Vous ne pouvez pas travailler aujourd\'hui ou peut-être que vous n\'êtes pas affecté à un horaire de travail!')
+                    else:
+                        raise Warning('Vous ne pouvez pas travailler plus de {} aujourd\'hui!'.format(self.float_time_to_time(heure_par_jour)))
+                    return False
+
+            self.modif_val_unit_amount(vals)
+
         return super(AccountAnalyticLine, self).create(vals)
 
     @api.multi

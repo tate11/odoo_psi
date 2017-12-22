@@ -44,12 +44,16 @@ class hr_holidays_psi(models.Model):
     
     attachment_number           = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids              = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.holidays')], string='Attachments', track_visibility='always')
+    date_from = fields.Date('Start Date', readonly=True, index=True, copy=False,states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    date_to = fields.Date('End Date', readonly=True, index=True, copy=False,states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    demi_jour = fields.Boolean(string="Demi-journée")
+    matin_soir = fields.Selection([('matin','Matin'),('soir','Soir')], default="matin", string=u'Matin ou Soir')
     
     job_id = fields.Many2one(related='employee_id.job_id', store=True)
     all_employee = fields.Boolean(string="Tous les employés")
     
     number_of_days_psi = fields.Float('Number of Days', compute='_compute_number_of_days_psi', store=True)
-    
+    number_of_days_temp = fields.Float(compute='_compute_date_from_to', string='Allocation', default="1.0", copy=False, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -65,16 +69,49 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'Refused', when holiday request is refused by manager." +
             "\nThe status is 'Approved', when holiday request is approved by manager.")
 
+
+    @api.depends('date_from', 'date_to', 'demi_jour')
+    def _compute_date_from_to(self):
+        #super(hr_holidays_psi,self)._onchange_date_from()
+        for record in self:
+            if record.date_from and record.date_to:
+                if record.demi_jour == True:
+                    record.number_of_days_temp = 0.5
+                    record.date_to = record.date_from
+                else:
+                    record.number_of_days_temp = 1.0
+                    
+                if record.date_from > record.date_to:
+                    record.date_to = record.date_from
+                if record.demi_jour == True:
+                    record.number_of_days_temp = 0.5
+                    record.date_to = record.date_from
+                else:
+                    day_hours = str(datetime.datetime.strptime(record.date_to, "%Y-%m-%d") - datetime.datetime.strptime(record.date_from, "%Y-%m-%d")).split(" day")
+                    if day_hours:
+                        if day_hours[0] == "0:00:00":
+                            record.number_of_days_temp = 1.0
+                        else:
+                            record.number_of_days_temp = float(day_hours[0]) + 1.0
+                
      
+    @api.onchange('date_from')
+    def _onchange_date_from(self):
+        return {}
+
+    @api.onchange('date_to')
+    def _onchange_date_to(self):
+        return {}
+    
     @api.constrains('number_of_days_temp')
     def _verif_leave_date(self):
         print "_verif_leave_date"
         
-        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
+        holidays_status = self.env['hr.holidays.status'].sudo().search([('holidays_status_id_psi','=',4)])
         year_now = datetime.datetime.today().year
-        holidays = self.env["hr.holidays"].search([('employee_id','=',self.employee_id.name)])
+        holidays = self.env["hr.holidays"].search([('employee_id', '=', self.employee_id.id), ('type', '=', 'remove')])
         number_days = 0
-        public_holidays_line = self.env['hr.holidays.public.line'].search([])
+        public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
         for holiday in holidays :
             
             date_from_ = str(datetime.datetime.strptime(holiday.date_from,"%Y-%m-%d").date())
@@ -86,6 +123,8 @@ class hr_holidays_psi(models.Model):
             
             # Verification public holiday JOUR FERIES
             for public_holidays in public_holidays_line:
+                date_from_ = str(datetime.datetime.strptime(holiday.date_from,"%Y-%m-%d").date())
+                date_to_ = str(datetime.datetime.strptime(holiday.date_to,"%Y-%m-%d").date())
                 date = str(public_holidays.date)
                 if date_from_ == date or date_to_ == date:
                     raise ValidationError(u'Vous ne pouvez pas demander du congé durant les jours fériés.')
@@ -159,6 +198,7 @@ class hr_holidays_psi(models.Model):
         employee_id = values.get('employee_id', False)
         self._send_email_rappel_absences_to_assist_and_coord(False)
         self._verif_leave_date()
+        
 #         if self.env.user == self.employee_id.user_id:
 #             raise AccessError(u'Vous ne pouvez plus modifier votre demande, veuillez contacter votre supérieur hiérarchique.')
 
@@ -166,13 +206,17 @@ class hr_holidays_psi(models.Model):
 #            raise AccessError(u'Vous ne pouvez pas modifier cette demande de congé.')
 
         
-        if not self._check_state_access_right(values):
-            raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
-            return False
+#         if not self._check_state_access_right(values):
+#             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
+#             return False
+
         result = super(hr_holidays_psi, self).write(values)
         self.add_follower(employee_id)
         return result
-
+    
+    def _check_state_access_right(self, vals):
+        return True
+    
     def action_report_request_for_absences(self):
         return {
                'type': 'ir.actions.report.xml',
@@ -201,7 +245,7 @@ class hr_holidays_psi(models.Model):
     def action_approve_candidate1(self):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+        if not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_rh') and not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_spa'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -214,7 +258,7 @@ class hr_holidays_psi(models.Model):
     def action_approbation_departement(self):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+        if not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_chef_departement'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -243,12 +287,12 @@ class hr_holidays_psi(models.Model):
 
     
     def check_droit(self, values):
-        current_employee = self.env['hr.contract'].search([('employee_id', '=', values['employee_id'])])
+        current_employee = self.env['hr.contract'].sudo().search([('employee_id', '=', values['employee_id'])])
         
         if values.has_key('date_from') and current_employee.date_start != False :
             if values['date_from'] != False :
                 date_start = datetime.datetime.strptime(current_employee.date_start,"%Y-%m-%d")
-                date_from = datetime.datetime.strptime(values['date_from'],"%Y-%m-%d %H:%M:%S")
+                date_from = datetime.datetime.strptime(values['date_from'],"%Y-%m-%d")
                 config = self.env['hr.holidays.configuration'].sudo().search([])[0]
                 diff = (date_from.year - date_start.year) * 12 + date_from.month - date_start.month
                 if diff <= config.droit_conge:
@@ -275,7 +319,7 @@ class hr_holidays_psi(models.Model):
                    if record.number_of_days_temp > config.conges_sans_solde :
                       raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
                       return False
-               date_from_time = datetime.datetime.strptime(record.date_from,"%Y-%m-%d %H:%M:%S")
+               date_from_time = datetime.datetime.strptime(record.date_from,"%Y-%m-%d")
                date_now = datetime.datetime.strptime(fields.Date().today(),"%Y-%m-%d")
                between = date_from_time - date_now
               
@@ -300,15 +344,15 @@ class hr_holidays_psi(models.Model):
     def action_validate(self):
         print "action_validate"
 
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+        if not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_drha'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2']:
                 raise UserError(u'La demande ne peut pas être refusée que si elle est déjà validée par un supérieur')
-            if holiday.state == 'validate2' and not holiday.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                raise UserError(_('Only an HR Manager can apply the second approval on leave requests.'))
+            if holiday.state == 'validate2' and not holiday.env.user.has_group('hr_holidays_psi.group_hr_holidays_drha'):
+                raise UserError('Seul DRHA peut valider la demande.')
 
             holiday.write({'state': 'validate'})
             print "holiday.write({'state': 'validate'})"
@@ -470,7 +514,7 @@ class hr_holidays_psi(models.Model):
         return res
     
     def _increment_doit_conge(self):
-        contracts = self.env['hr.contract'].search([])
+        contracts = self.env['hr.contract'].sudo().search([])
         dt_now = datetime.datetime.strptime(fields.Date().today(),'%Y-%m-%d')
         
         for contract in contracts :
@@ -506,7 +550,7 @@ class hr_holidays_psi(models.Model):
         
         date_debut = self.date_from
         if date_debut != False:
-            dt = datetime.datetime.strptime(date_debut,'%Y-%m-%d %H:%M:%S')
+            dt = datetime.datetime.strptime(date_debut,'%Y-%m-%d')
             date_y_m_d = datetime.datetime(
                                          year=dt.year, 
                                          month=dt.month,
@@ -524,30 +568,6 @@ class hr_holidays_psi(models.Model):
         if automatic:
             self._cr.commit()
 
-    
-    @api.onchange('date_from')
-    def _onchange_date_from(self):
-        print "_onchange_date_from"
-        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])
-        
-        date_from = self.date_from
-        date_to = self.date_to
-        if self.holiday_status_id.id == holidays_status[0].id:
-            print holidays_status[0].name
-           
-            date_to_with_delta = fields.Datetime.from_string(date_from) + datetime.timedelta(days=98)
-            self.date_to = str(date_to_with_delta)
-        # No date_to set so far: automatically compute one 8 hours later
-        if date_from and not date_to:
-            date_to_with_delta = fields.Datetime.from_string(date_from) + datetime.timedelta(hours=HOURS_PER_DAY)
-            self.date_to = str(date_to_with_delta)
-
-        # Compute and update the number of days
-        if (date_to and date_from) and (date_from <= date_to):
-            self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
-        else:
-            self.number_of_days_temp = 0
-            
     @api.onchange('holiday_status_id')
     def _onchange_holiday_status_id(self):
         print "_onchange_holiday_status_id"
@@ -558,18 +578,18 @@ class hr_holidays_psi(models.Model):
         if self.holiday_status_id.id == holidays_status[0].id:
             print holidays_status[0].name
            
-            date_to_with_delta = fields.Datetime.from_string(date_from) + datetime.timedelta(days=98)
+            date_to_with_delta = fields.Date.from_string(date_from) + datetime.timedelta(days=97)
             self.date_to = str(date_to_with_delta)
         # No date_to set so far: automatically compute one 8 hours later
-        if date_from and not date_to:
-            date_to_with_delta = fields.Datetime.from_string(date_from) + datetime.timedelta(hours=HOURS_PER_DAY)
-            self.date_to = str(date_to_with_delta)
+        #if date_from and not date_to:
+        #    date_to_with_delta = fields.Date.from_string(date_from) + datetime.timedelta(hours=HOURS_PER_DAY)
+        #    self.date_to = str(date_to_with_delta)
 
         # Compute and update the number of days
-        if (date_to and date_from) and (date_from <= date_to):
-            self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
-        else:
-            self.number_of_days_temp = 0
+        #if (date_to and date_from) and (date_from <= date_to):
+        #    self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
+        #else:
+        #    self.number_of_days_temp = 0
     
     # Mail de rappel aux Assistantes et Coordinateurs
     @api.multi
@@ -603,9 +623,9 @@ class hr_holidays_psi(models.Model):
     
     @api.multi
     def action_refuse(self):
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+        if not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_rh') and not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_spa') and not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_crh') and not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_drha'):
             raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
-
+        
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2']:

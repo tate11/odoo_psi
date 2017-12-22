@@ -215,7 +215,7 @@ class hr_contract(models.Model):
                                         ('3','3'),
                                         ('4','4')
                                 ], string="Sous-catégorie")
-    matricule = fields.Char(string='Matricule')
+    matricule = fields.Char(string='Matricule', related="employee_id.matricule")
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
    
     def action_send_email_desactivate_flottes(self):

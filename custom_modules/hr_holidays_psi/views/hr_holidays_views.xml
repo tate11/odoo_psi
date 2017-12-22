@@ -14,11 +14,19 @@
 			<field name="model">hr.holidays</field>
 			<field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter" />
 			<field name="arch" type="xml">
+				<xpath expr="filter[@name='approve']" position="attributes">
+					<attribute name="domain">[('state','=','confirm')]</attribute>
+				</xpath>
 				<xpath expr="filter[@name='approve']" position="before">					
 					<filter string="Personnel permanent du mois en cours" 
 						domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]" 
 						help="Liste des absences de tout le personnel permanent pour le mois courant"
-						/>				
+						/>
+					<separator />
+					<filter domain="[('state','=','validate1')]" string="Validé par supérieur hierarchique" name="valide_superieur_hierarchique"/>
+					<filter domain="[('state','=','approbation')]" string="Approuvé par chef de département" name="approuve_chef_departement"/>
+					<filter domain="[('state','=','validate2')]" string="Validé par RH" name="valide_rh"/>
+					<filter domain="[('state','=','validate')]" string="Validé par DRHA" name="valide_drha"/>
 				</xpath>
 			</field>
 	</record>
@@ -28,6 +36,28 @@
 		<field name="model">hr.holidays</field>
 		<field name="inherit_id" ref="hr_holidays.edit_holiday_new" />
 		<field name="arch" type="xml">
+			<xpath expr="//field[@name='name']/.." position="replace">
+				<group>
+					<field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
+            		<field name="holiday_status_id" context="{'employee_id':employee_id}"/>
+            	</group>
+			    <group>
+	            	<div attrs="{'invisible': [('type', '=', 'add')]}">
+                        <field name="date_from" attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
+                        <label string="-" class="oe_inline"/>
+                        <field name="date_to"  attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
+                    </div>
+                    <div>
+	                    <div>
+	                    	<label for="number_of_days_temp" string="Durée"/>
+		                	<field name="number_of_days_temp" readonly="1"/> jour(s)
+	                	</div>
+	                    <label for="demi_jour" string="Demi-journée" />
+		                <field name="demi_jour" class="oe_inline" />
+	                    <field name="matin_soir" attrs="{'invisible':[('demi_jour', '=', False)]}" class="oe_inline"/>
+	                </div>
+	            </group>
+    		</xpath>
 			<xpath expr="//div[@class='oe_title']">
 				<div name="button_box" position="inside">
 					<button name="action_get_attachment_tree_view" 
@@ -38,6 +68,7 @@
 					</button>
 				</div>
 			</xpath>
+			
 			<field name="category_id" position="replace">
 				<!-- <field name="color_name_holiday_status" invisible="1" /> -->
 				<field name="category_id" invisible="1" />
@@ -56,22 +87,22 @@
 
 			<xpath expr="//button[@name='action_refuse']" position='replace'>
 				<button string="Refuser" name="action_refuse" states="confirm,validate1,validate2" type="object" 
-				groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha,hr_holidays.group_hr_holidays_manager"/>
+				groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha"/>
 			</xpath>
 			<xpath expr="//button[@name='action_validate']" position='replace'>
 				<button string="Valider (DRHA)" name="action_validate" states="validate2"  type="object" class="oe_highlight"
-				groups="hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha,hr_holidays.group_hr_holidays_manager" />
+				groups="hr_holidays_psi.group_hr_holidays_drha" />
 			</xpath>
 			<xpath expr="//button[@name='action_approve']" position='after'>
 				<button string="Approuver (Chef de departement)" name="action_approbation_departement" attrs="{'invisible': [('state','not in','validate1')]}"  type="object" class="oe_highlight" 
-				groups="hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha,hr_holidays.group_hr_holidays_manager" />
+				groups="hr_holidays_psi.group_hr_holidays_chef_departement" />
 			</xpath>
 			<xpath expr="//button[@name='action_approve']" position='replace'>
-				<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" class="oe_highlight"  />
+				<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
 			</xpath>
 			<field name="state" position="before">
 			    <button string="Valider (Responsable RH)" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','approbation')]}"  type="object" class="oe_highlight"
-			    groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha,hr_holidays.group_hr_holidays_manager" />
+			    groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa" />
 			</field>
 			
 			<field name="state" position="replace">
@@ -134,6 +165,46 @@
 		</field>
 	</record>
 	
+	<record id="open_holidays_approve_hierarchique" model="ir.actions.act_window">
+        <field name="name">Congés des subordonnées</field>
+        <field name="res_model">hr.holidays</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{'search_default_approve':1}</field>
+        <field name="domain">[('type','=','remove')]</field>
+        <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+    </record>
+    
+    <record id="open_holidays_approve_cdp" model="ir.actions.act_window">
+        <field name="name">Congés à valider</field>
+        <field name="res_model">hr.holidays</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{'search_default_valide_superieur_hierarchique':1}</field>
+        <field name="domain">[('type','=','remove')]</field>
+        <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+    </record>
+    
+    <record id="open_holidays_approve_rh_spa" model="ir.actions.act_window">
+        <field name="name">Congés à valider</field>
+        <field name="res_model">hr.holidays</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{'search_default_approuve_chef_departement':1}</field>
+        <field name="domain">[('type','=','remove')]</field>
+        <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+    </record>
+    
+    <record id="open_holidays_approve_drha" model="ir.actions.act_window">
+        <field name="name">Congés à valider</field>
+        <field name="res_model">hr.holidays</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{'search_default_valide_rh':1}</field>
+        <field name="domain">[('type','=','remove')]</field>
+        <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+    </record>    
+	
 	<!-- Hide menu approve -->
 	<record id="make_invisible" model="res.groups">
 	    <field name="name">Invisible</field>
@@ -148,13 +219,51 @@
 	    <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
 	</record>
 	
-  	<menuitem
-            id="menu_hr_holidays_approvals"
-            name="Congés à valider"
+	<menuitem
+            id="hr_holidays.menu_hr_holidays_approvals"
+            name="Leaves to Approve"
             parent="hr_holidays.menu_hr_holidays_root"
             sequence="3"
-            action="hr_holidays.open_department_holidays_approve"
-            groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"/>      
+            groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique,hr_holidays_psi.group_hr_holidays_chef_departement,hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_drha"/>
+	
+	<menuitem
+            id="menu_hr_holidays_approvals_hierarchique"
+            name="Congés des subordonnés"
+            parent="hr_holidays.menu_hr_holidays_approvals"
+            sequence="4"
+            action="open_holidays_approve_hierarchique"
+            groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
+    
+    <menuitem
+            id="menu_hr_holidays_approvals_cdp"
+            name="Congés validés par supérieur hierarchique"
+            parent="hr_holidays.menu_hr_holidays_approvals"
+            sequence="5"
+            action="open_holidays_approve_cdp"
+            groups="hr_holidays_psi.group_hr_holidays_chef_departement" />
+    
+    <menuitem
+            id="menu_hr_holidays_approvals_rh"
+            name="Congés validés par chef de département"
+            parent="hr_holidays.menu_hr_holidays_approvals"
+            sequence="6"
+            action="open_holidays_approve_rh_spa"
+            groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa" />
+            
+  	<menuitem
+            id="menu_hr_holidays_approvals_drha"
+            name="Congés validés par RH"
+            parent="hr_holidays.menu_hr_holidays_approvals"
+            sequence="7"
+            action="open_holidays_approve_drha"
+            groups="hr_holidays_psi.group_hr_holidays_drha" />
+    
+    <menuitem
+            id="hr_holidays.menu_hr_holidays_report"
+            name="Reports"
+            parent="hr_holidays.menu_hr_holidays_root"
+            sequence="99"
+            groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha"/>
             
 	</data>
 </odoo>
