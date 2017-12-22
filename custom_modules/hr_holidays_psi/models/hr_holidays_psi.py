@@ -44,7 +44,7 @@ class hr_holidays_psi(models.Model):
     date_from = fields.Date('Start Date', readonly=True, index=True, copy=False,states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     date_to = fields.Date('End Date', readonly=True, index=True, copy=False,states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     demi_jour = fields.Boolean(string="Demi-journée")
-    matin_soir = fields.Selection([('matin','Matin'),('soir','Soir')], string=u'Matin ou Soir')
+    matin_soir = fields.Selection([('matin','Matin'),('soir','Soir')], default="matin", string=u'Matin ou Soir')
     
     job_id = fields.Many2one(related='employee_id.job_id', store=True)
     all_employee = fields.Boolean(string="Tous les employés")
@@ -71,8 +71,10 @@ class hr_holidays_psi(models.Model):
     def _onchange_number_of_days_psi(self):
         if self.demi_jour==True:
             self.number_of_days_temp=0.5
+            self.date_to = self.date_from
         else:
             self.number_of_days_temp=1.0
+
 
     @api.onchange('date_from')
     def _onchange_date_from(self):
@@ -81,13 +83,14 @@ class hr_holidays_psi(models.Model):
             self.date_to=self.date_from
         if self.demi_jour==True:
             self.number_of_days_temp=0.5
+            self.date_to = self.date_from
         else:
             day_hours=str(datetime.datetime.strptime(self.date_to,"%Y-%m-%d")-datetime.datetime.strptime(self.date_from,"%Y-%m-%d")).split(" day")
             if day_hours:
                 if day_hours[0]=="0:00:00":
                     self.number_of_days_temp=1.0
                 else:
-                    self.number_of_days_temp=day_hours[0]
+                    self.number_of_days_temp=float(day_hours[0])+1.0
             
 
     @api.onchange('date_to')
@@ -97,6 +100,7 @@ class hr_holidays_psi(models.Model):
             self.date_from=self.date_to
         if self.demi_jour==True:
             self.number_of_days_temp=0.5
+            self.date_to = self.date_from
         else:
             print self.date_from,self.date_to
             day_hours=str(datetime.datetime.strptime(self.date_to,"%Y-%m-%d")-datetime.datetime.strptime(self.date_from,"%Y-%m-%d")).split(" day")
@@ -104,7 +108,7 @@ class hr_holidays_psi(models.Model):
                 if day_hours[0]=="0:00:00":
                     self.number_of_days_temp=1.0
                 else:
-                    self.number_of_days_temp=day_hours[0]
+                    self.number_of_days_temp=float(day_hours[0])+1.0
             
     @api.constrains('number_of_days_temp')
     def _verif_leave_date(self):
