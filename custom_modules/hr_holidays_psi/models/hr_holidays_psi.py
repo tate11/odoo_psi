@@ -82,37 +82,39 @@ class hr_holidays_psi(models.Model):
     @api.onchange('date_from')
     def _onchange_date_from(self):
         #super(hr_holidays_psi,self)._onchange_date_from()
-        if self.date_from>self.date_to:
-            self.date_to=self.date_from
-        if self.demi_jour==True:
-            self.number_of_days_temp=0.5
-            self.date_to = self.date_from
-        else:
-            day_hours=str(datetime.datetime.strptime(self.date_to,"%Y-%m-%d")-datetime.datetime.strptime(self.date_from,"%Y-%m-%d")).split(" day")
-            if day_hours:
-                if day_hours[0]=="0:00:00":
-                    self.number_of_days_temp=1.0
-                else:
-                    self.number_of_days_temp=float(day_hours[0])+1.0
-            
+        if self.date_from and self.date_to:
+            if self.date_from>self.date_to:
+                self.date_to=self.date_from
+            if self.demi_jour==True:
+                self.number_of_days_temp=0.5
+                self.date_to = self.date_from
+            else:
+                day_hours=str(datetime.datetime.strptime(self.date_to,"%Y-%m-%d")-datetime.datetime.strptime(self.date_from,"%Y-%m-%d")).split(" day")
+                if day_hours:
+                    if day_hours[0]=="0:00:00":
+                        self.number_of_days_temp=1.0
+                    else:
+                        self.number_of_days_temp=float(day_hours[0])+1.0
+                
 
     @api.onchange('date_to')
     def _onchange_date_to(self):
         #super(hr_holidays_psi,self)._onchange_date_to()
-        if self.date_to<self.date_from:
-            self.date_from=self.date_to
-        if self.demi_jour==True:
-            self.number_of_days_temp=0.5
-            self.date_to = self.date_from
-        else:
-            print self.date_from,self.date_to
-            day_hours=str(datetime.datetime.strptime(self.date_to,"%Y-%m-%d")-datetime.datetime.strptime(self.date_from,"%Y-%m-%d")).split(" day")
-            if day_hours:
-                if day_hours[0]=="0:00:00":
-                    self.number_of_days_temp=1.0
-                else:
-                    self.number_of_days_temp=float(day_hours[0])+1.0
-            
+        if self.date_from and self.date_to:
+            if self.date_to<self.date_from:
+                self.date_from=self.date_to
+            if self.demi_jour==True:
+                self.number_of_days_temp=0.5
+                self.date_to = self.date_from
+            else:
+                print self.date_from,self.date_to
+                day_hours=str(datetime.datetime.strptime(self.date_to,"%Y-%m-%d")-datetime.datetime.strptime(self.date_from,"%Y-%m-%d")).split(" day")
+                if day_hours:
+                    if day_hours[0]=="0:00:00":
+                        self.number_of_days_temp=1.0
+                    else:
+                        self.number_of_days_temp=float(day_hours[0])+1.0
+                
     @api.constrains('number_of_days_temp')
     def _verif_leave_date(self):
         print "_verif_leave_date"
@@ -313,7 +315,7 @@ class hr_holidays_psi(models.Model):
                    if record.number_of_days_temp > config.conges_sans_solde :
                       raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
                       return False
-               date_from_time = datetime.datetime.strptime(record.date_from,"%Y-%m-%d 0:00:00")
+               date_from_time = datetime.datetime.strptime(record.date_from,"%Y-%m-%d")
                date_now = datetime.datetime.strptime(fields.Date().today(),"%Y-%m-%d")
                between = date_from_time - date_now
               
