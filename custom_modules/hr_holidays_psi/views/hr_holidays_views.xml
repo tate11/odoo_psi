@@ -130,6 +130,23 @@
 		</field>
 	</record>
 	
+	<!-- Inherit public holiday (change field name) -->
+	<record id="view_public_holidays_form_inherit" model="ir.ui.view">
+            <field name="name">hr.holidays.public.form.inherit</field>
+            <field name="inherit_id" ref="hr_public_holidays.view_public_holidays_form" />
+            <field name="model">hr.holidays.public</field>
+            <field name="arch" type="xml">
+            	<xpath expr="//tree" position="replace">
+            		<tree string="Public Holidays" create="false" edit="false" editable="bottom">
+                        <field name="date" string="Date" />
+                        <field name="name" string="Nom" />
+                        <field name="state_ids" widget="many2many_tags" domain="[('country_id','=',parent.country_id)]" string='Etat liés' />
+                        <field name="variable" string="La date peut changer"/>
+                	</tree>
+                </xpath>                
+            </field>
+	</record>
+
 	<record id="view_holiday_status_normal_tree_psi" model="ir.ui.view">
 		<field name="name">view.holiday.status.normal.tree.psi</field>
 		<field name="model">hr.holidays.status</field>
