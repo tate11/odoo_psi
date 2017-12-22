@@ -8,7 +8,7 @@
 			<field name="inherit_id" ref="hr_holidays.view_employee_form_leave_inherit" />
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='remaining_leaves']/../.." position="replace">
-					<group string="Congés" groups="group_hr_manager">
+					<group string="Congés" groups="hr.group_hr_manager">
 						<label for="nombre_conge" />
 						<div>
 							<field name="nombre_conge" class="oe_inline" /> jour(s)
