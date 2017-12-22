@@ -130,12 +130,12 @@ class hr_holidays_psi(models.Model):
                     raise ValidationError(u'Vous ne pouvez pas demander du congé durant les jours fériés.')
                     return False 
             
-            date_from_w = datetime.datetime.strptime(date_from_, '%Y-%m-%d').strftime('%w')
-            date_to_w = datetime.datetime.strptime(date_to_, '%Y-%m-%d').strftime('%w')
-                 
-            if date_from_w == "6" or date_from_w == "0" or date_to_w == "6" or date_to_w == "0":
-                    raise Warning('Vous ne devez pas travailler le week-end!')   
-                    return False
+#             date_from_w = datetime.datetime.strptime(date_from_, '%Y-%m-%d').strftime('%w')
+#             date_to_w = datetime.datetime.strptime(date_to_, '%Y-%m-%d').strftime('%w')
+#                  
+#             if date_from_w == "6" or date_from_w == "0" or date_to_w == "6" or date_to_w == "0":
+#                     raise Warning('Vous ne devez pas travailler le week-end!')   
+#                     return False
 
 
         if number_days > 10 :
