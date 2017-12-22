@@ -119,6 +119,7 @@ class hr_employee(models.Model):
     
     @api.multi
     def write(self, vals):
+        print "write"
         if vals.has_key('nombre_conge')  :
             self.set_nombre_conge(vals.get('nombre_conge'))
         employee = super(hr_employee, self).write(vals)
