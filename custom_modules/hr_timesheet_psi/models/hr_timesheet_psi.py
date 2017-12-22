@@ -24,6 +24,10 @@ class RessourceCalendar(models.Model):
     
     resource_calendar_id_psi = fields.Integer()
 
+class Project(models.Model):
+    _inherit = "project.project"
+    employee_ids = fields.Many2many('hr.employee',string='Employés')
+
 class HrTimesheetPsi(models.Model):
     _name = "hr_timesheet_psi.sheet"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -135,7 +139,7 @@ class HrTimesheetPsi(models.Model):
             employee = self.env['hr.employee'].browse(vals.get('employee_id'))
             attendances = employee.calendar_id.attendance_ids
             if len(attendances) == 0:
-               raise Warning(u'L\'utilisateur doit être attaché à une temps de travail')
+               raise Warning(u'L\'utilisateur doit être attaché à un horaire de travail')
             for attendance in attendances:
                 if vals.get('project_choice') == "heure_supp":                    
                     if  float(vals.get('time_from')) >= int(attendance.hour_from) and float(vals.get('time_to')) <= int(attendance.hour_to):
