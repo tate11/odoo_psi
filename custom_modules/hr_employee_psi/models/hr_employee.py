@@ -13,7 +13,8 @@ from odoo.exceptions import Warning
 class hr_employee(models.Model):
     
     _inherit                        = 'hr.employee'
-    
+
+    psi_name                        = fields.Char(string=u'Nom')
     father_name                     = fields.Char(string=u'Nom du père')
     mother_name                     = fields.Char(string=u'Nom de la mère')
     
