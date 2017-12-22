@@ -121,10 +121,6 @@ class hr_employee(models.Model):
     def write(self, vals):
         if vals.has_key('nombre_conge')  :
             self.set_nombre_conge(vals.get('nombre_conge'))
-        if vals.has_key('matricule') :
-            employees = self.env['hr.employee'].search([('matricule','=',vals.get('matricule'))])
-            if len(employees) > 0:
-                raise Warning('Le matricule est dèja utilisés par un autre employée.')
         employee = super(hr_employee, self).write(vals)
         return employee
     
