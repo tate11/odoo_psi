@@ -53,7 +53,7 @@ class hr_holidays_psi(models.Model):
     all_employee = fields.Boolean(string="Tous les employés")
     
     number_of_days_psi = fields.Float('Number of Days', compute='_compute_number_of_days_psi', store=True)
-    number_of_days_temp = fields.Float('Allocation', default="1.0", readonly=True, copy=False, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    number_of_days_temp = fields.Float(compute='_compute_date_from_to', string='Allocation', default="1.0", copy=False, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -70,58 +70,46 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'Approved', when holiday request is approved by manager.")
 
 
-    @api.onchange('demi_jour')
-    def _onchange_number_of_days_psi(self):
-        if self.demi_jour==True:
-            self.number_of_days_temp=0.5
-            self.date_to = self.date_from
-        else:
-            self.number_of_days_temp=1.0
-
-
+    @api.depends('date_from', 'date_to', 'demi_jour')
+    def _compute_date_from_to(self):
+        #super(hr_holidays_psi,self)._onchange_date_from()
+        for record in self:
+            if record.date_from and record.date_to:
+                if record.demi_jour == True:
+                    record.number_of_days_temp = 0.5
+                    record.date_to = record.date_from
+                else:
+                    record.number_of_days_temp = 1.0
+                    
+                if record.date_from > record.date_to:
+                    record.date_to = record.date_from
+                if record.demi_jour == True:
+                    record.number_of_days_temp = 0.5
+                    record.date_to = record.date_from
+                else:
+                    day_hours = str(datetime.datetime.strptime(record.date_to, "%Y-%m-%d") - datetime.datetime.strptime(record.date_from, "%Y-%m-%d")).split(" day")
+                    if day_hours:
+                        if day_hours[0] == "0:00:00":
+                            record.number_of_days_temp = 1.0
+                        else:
+                            record.number_of_days_temp = float(day_hours[0]) + 1.0
+                
+     
     @api.onchange('date_from')
     def _onchange_date_from(self):
-        #super(hr_holidays_psi,self)._onchange_date_from()
-        if self.date_from and self.date_to:
-            if self.date_from>self.date_to:
-                self.date_to=self.date_from
-            if self.demi_jour==True:
-                self.number_of_days_temp=0.5
-                self.date_to = self.date_from
-            else:
-                day_hours=str(datetime.datetime.strptime(self.date_to,"%Y-%m-%d")-datetime.datetime.strptime(self.date_from,"%Y-%m-%d")).split(" day")
-                if day_hours:
-                    if day_hours[0]=="0:00:00":
-                        self.number_of_days_temp=1.0
-                    else:
-                        self.number_of_days_temp=float(day_hours[0])+1.0
-                
+        return {}
 
     @api.onchange('date_to')
     def _onchange_date_to(self):
-        #super(hr_holidays_psi,self)._onchange_date_to()
-        if self.date_from and self.date_to:
-            if self.date_to<self.date_from:
-                self.date_from=self.date_to
-            if self.demi_jour==True:
-                self.number_of_days_temp=0.5
-                self.date_to = self.date_from
-            else:
-                print self.date_from,self.date_to
-                day_hours=str(datetime.datetime.strptime(self.date_to,"%Y-%m-%d")-datetime.datetime.strptime(self.date_from,"%Y-%m-%d")).split(" day")
-                if day_hours:
-                    if day_hours[0]=="0:00:00":
-                        self.number_of_days_temp=1.0
-                    else:
-                        self.number_of_days_temp=float(day_hours[0])+1.0
-                
+        return {}
+    
     @api.constrains('number_of_days_temp')
     def _verif_leave_date(self):
         print "_verif_leave_date"
         
         holidays_status = self.env['hr.holidays.status'].sudo().search([('holidays_status_id_psi','=',4)])
         year_now = datetime.datetime.today().year
-        holidays = self.env["hr.holidays"].sudo().search([('employee_id','=',self.employee_id.name)])
+        holidays = self.env["hr.holidays"].sudo().search([('employee_id', '=', self.employee_id.id), ('type', '=', 'remove')])
         number_days = 0
         public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
         for holiday in holidays :
