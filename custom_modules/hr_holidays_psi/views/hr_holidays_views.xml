@@ -47,8 +47,8 @@
 	                    	<label for="number_of_days_temp" string="Durée"/>
 		                	<field name="number_of_days_temp" readonly="1"/> jour(s)
 	                	</div>
-	                    <label for="demi_jour" string="Demi-journée"/>
-		                <field name="demi_jour" class="oe_inline"/>
+	                    <label for="demi_jour" string="Demi-journée" />
+		                <field name="demi_jour" class="oe_inline" />
 	                    <field name="matin_soir" attrs="{'invisible':[('demi_jour', '=', False)]}" class="oe_inline"/>
 	                </div>
 	            </group>
