@@ -312,7 +312,7 @@ class hr_holidays_psi(models.Model):
                    if record.number_of_days_temp > config.conges_sans_solde :
                       raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
                       return False
-               date_from_time = datetime.datetime.strptime(record.date_from,"%Y-%m-%d 0:00:00")
+               date_from_time = datetime.datetime.strptime(record.date_from,"%Y-%m-%d")
                date_now = datetime.datetime.strptime(fields.Date().today(),"%Y-%m-%d")
                between = date_from_time - date_now
               
