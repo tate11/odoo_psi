@@ -22,6 +22,11 @@
 						domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]" 
 						help="Liste des absences de tout le personnel permanent pour le mois courant"
 						/>
+					<separator />
+					<filter domain="[('state','=','validate1')]" string="Validé par supérieur hierarchique" name="valide_superieur_hierarchique"/>
+					<filter domain="[('state','=','approbation')]" string="Approuvé par chef de département" name="approuve_chef_departement"/>
+					<filter domain="[('state','=','validate2')]" string="Validé par RH" name="valide_rh"/>
+					<filter domain="[('state','=','validate')]" string="Validé par DRHA" name="valide_drha"/>
 				</xpath>
 			</field>
 	</record>
@@ -90,7 +95,7 @@
 			</xpath>
 			<xpath expr="//button[@name='action_approve']" position='after'>
 				<button string="Approuver (Chef de departement)" name="action_approbation_departement" attrs="{'invisible': [('state','not in','validate1')]}"  type="object" class="oe_highlight" 
-				groups="hr_holidays_psi.group_hr_holidays_crh" />
+				groups="hr_holidays_psi.group_hr_holidays_chef_departement" />
 			</xpath>
 			<xpath expr="//button[@name='action_approve']" position='replace'>
 				<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
@@ -159,19 +164,44 @@
 	</record>
 	
 	<record id="open_holidays_approve_hierarchique" model="ir.actions.act_window">
-            <field name="name">Congés des subordonnées</field>
-            <field name="res_model">hr.holidays</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="context">{'search_default_approve':1}</field>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click here to create a new leave request.
-                </p>
-            </field>
-            <field name="domain">[('type','=','remove')]</field>
-            <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
-        </record>
+        <field name="name">Congés des subordonnées</field>
+        <field name="res_model">hr.holidays</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{'search_default_approve':1}</field>
+        <field name="domain">[('type','=','remove')]</field>
+        <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+    </record>
+    
+    <record id="open_holidays_approve_cdp" model="ir.actions.act_window">
+        <field name="name">Congés à valider</field>
+        <field name="res_model">hr.holidays</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{'search_default_valide_superieur_hierarchique':1}</field>
+        <field name="domain">[('type','=','remove')]</field>
+        <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+    </record>
+    
+    <record id="open_holidays_approve_rh_spa" model="ir.actions.act_window">
+        <field name="name">Congés à valider</field>
+        <field name="res_model">hr.holidays</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{'search_default_approuve_chef_departement':1}</field>
+        <field name="domain">[('type','=','remove')]</field>
+        <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+    </record>
+    
+    <record id="open_holidays_approve_drha" model="ir.actions.act_window">
+        <field name="name">Congés à valider</field>
+        <field name="res_model">hr.holidays</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{'search_default_valide_rh':1}</field>
+        <field name="domain">[('type','=','remove')]</field>
+        <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+    </record>    
 	
 	<!-- Hide menu approve -->
 	<record id="make_invisible" model="res.groups">
@@ -188,21 +218,43 @@
 	</record>
 	
 	<menuitem
-            id="menu_hr_holidays_approvals_hierarchique"
-            name="Congés à valider"
+            id="hr_holidays.menu_hr_holidays_approvals"
+            name="Leaves to Approve"
             parent="hr_holidays.menu_hr_holidays_root"
+            sequence="3"
+            groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique,hr_holidays_psi.group_hr_holidays_chef_departement,hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_drha"/>
+	
+	<menuitem
+            id="menu_hr_holidays_approvals_hierarchique"
+            name="Congés des subordonnés"
+            parent="hr_holidays.menu_hr_holidays_approvals"
             sequence="4"
             action="open_holidays_approve_hierarchique"
             groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
+    
+    <menuitem
+            id="menu_hr_holidays_approvals_cdp"
+            name="Congés validés par supérieur hierarchique"
+            parent="hr_holidays.menu_hr_holidays_approvals"
+            sequence="5"
+            action="open_holidays_approve_cdp"
+            groups="hr_holidays_psi.group_hr_holidays_chef_departement" />
+    
+    <menuitem
+            id="menu_hr_holidays_approvals_rh"
+            name="Congés validés par chef de département"
+            parent="hr_holidays.menu_hr_holidays_approvals"
+            sequence="6"
+            action="open_holidays_approve_rh_spa"
+            groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa" />
             
   	<menuitem
-            id="hr_holidays.menu_hr_holidays_approvals"
-            name="Congés à valider"
-            parent="hr_holidays.menu_hr_holidays_root"
-            sequence="3"
-            action="hr_holidays.open_department_holidays_approve"
-            groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha" />
-            
+            id="menu_hr_holidays_approvals_drha"
+            name="Congés validés par RH"
+            parent="hr_holidays.menu_hr_holidays_approvals"
+            sequence="7"
+            action="open_holidays_approve_drha"
+            groups="hr_holidays_psi.group_hr_holidays_drha" />
             
 	</data>
 </odoo>
