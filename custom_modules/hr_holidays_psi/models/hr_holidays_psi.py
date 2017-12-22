@@ -288,7 +288,7 @@ class hr_holidays_psi(models.Model):
         if values.has_key('date_from') and current_employee.date_start != False :
             if values['date_from'] != False :
                 date_start = datetime.datetime.strptime(current_employee.date_start,"%Y-%m-%d")
-                date_from = datetime.datetime.strptime(values['date_from'],"%Y-%m-%d %H:%M:%S")
+                date_from = datetime.datetime.strptime(values['date_from'],"%Y-%m-%d")
                 config = self.env['hr.holidays.configuration'].sudo().search([])[0]
                 diff = (date_from.year - date_start.year) * 12 + date_from.month - date_start.month
                 if diff <= config.droit_conge:
@@ -546,7 +546,7 @@ class hr_holidays_psi(models.Model):
         
         date_debut = self.date_from
         if date_debut != False:
-            dt = datetime.datetime.strptime(date_debut,'%Y-%m-%d %H:%M:%S')
+            dt = datetime.datetime.strptime(date_debut,'%Y-%m-%d')
             date_y_m_d = datetime.datetime(
                                          year=dt.year, 
                                          month=dt.month,
