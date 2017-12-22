@@ -111,7 +111,7 @@
             <field name="model">hr.holidays.public</field>
             <field name="arch" type="xml">
             	<xpath expr="//tree" position="replace">
-            		<tree string="Public Holidays" edit="false" editable="bottom">
+            		<tree string="Public Holidays" editable="bottom">
                         <field name="date" string="Date" />
                         <field name="name" string="Nom" />
                         <field name="state_ids" widget="many2many_tags" domain="[('country_id','=',parent.country_id)]" string='Etat liés' />
