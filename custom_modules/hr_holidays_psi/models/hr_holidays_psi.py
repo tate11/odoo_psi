@@ -126,6 +126,7 @@ class hr_holidays_psi(models.Model):
                 date_from_ = str(datetime.datetime.strptime(holiday.date_from,"%Y-%m-%d").date())
                 date_to_ = str(datetime.datetime.strptime(holiday.date_to,"%Y-%m-%d").date())
                 date = str(public_holidays.date)
+                print date_from_," == ",date," or ",date_to_," == ",date
                 if date_from_ == date or date_to_ == date:
                     raise ValidationError(u'Vous ne pouvez pas demander du congé durant les jours fériés.')
                     return False 
