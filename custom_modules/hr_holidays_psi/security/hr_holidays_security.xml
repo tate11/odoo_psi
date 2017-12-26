@@ -11,7 +11,7 @@
         <field name="name">PSI-Supérieur Hiérarchique</field>
         <field name="category_id" ref="base.module_category_hr_holidays"/>
         <!-- <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/> --> 	<!-- OLD -->
-        <field name="implied_ids" eval="[(4, ref('group_hr_holidays_rh'))]"/>	<!-- NEW -->
+        <field name="implied_ids" eval="[(4, ref('group_hr_holidays_rh'))]"/>		<!-- NEW -->
     </record>
     
     <record id="group_hr_holidays_chef_departement" model="res.groups">
