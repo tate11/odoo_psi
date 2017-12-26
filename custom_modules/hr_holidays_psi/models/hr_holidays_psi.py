@@ -486,7 +486,7 @@ class hr_holidays_psi(models.Model):
             current_date += delta
               
     def str_to_timezone(self, time_string):
-        time_obj = datetime.datetime.strptime(time_string, DTF)
+        time_obj = datetime.datetime.strptime(time_string, '%Y-%m-%d')
 
         return fields.Datetime.context_timestamp(self.env.user, time_obj)
     
