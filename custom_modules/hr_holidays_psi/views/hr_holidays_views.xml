@@ -31,6 +31,18 @@
 			</field>
 	</record>
 
+
+   	<record id="view_holiday_simple_inherit" model="ir.ui.view">
+		<field name="name">view.holiday.simple.inherit</field>
+		<field name="model">hr.holidays</field>
+		<field name="inherit_id" ref="hr_holidays.view_holiday_simple" />
+		<field name="arch" type="xml">
+   			<xpath expr="//field[@name='number_of_days']" position="replace">
+   				<field name="number_of_days_temp" string="Nombre de jour(s)" />
+   			</xpath>
+   		</field>
+   	</record>
+
 	<record id="edit_holiday_new_psi_inherit" model="ir.ui.view">
 		<field name="name">edit.holiday.new.psi.inherit</field>
 		<field name="model">hr.holidays</field>
