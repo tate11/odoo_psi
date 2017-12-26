@@ -203,7 +203,7 @@ class AccountAnalyticLine(models.Model):
         print "create one"
         #if vals.get('unit_amount') <= 0.0:
             #raise Warning('Veuillez saisir l\'heure.')
-        
+        project_holidays = self.env['project.project'].sudo().search([('name','=','Absences/Permission/Conges')])
         if vals.get('task_id') and vals.get('date') and vals.get('project_id') and vals.get('unit_amount') and vals.get('unit_amount') != 0.0:
             
             if vals.get('date'):
@@ -238,7 +238,7 @@ class AccountAnalyticLine(models.Model):
             employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
             
             heure_par_jour=self.get_heure_par_jour(employees,vals)
-            project_holidays = self.env['project.project'].sudo().search([('name','=','Absences/Permission/Conges')])
+            
             if total_planned_hours>heure_par_jour and project_holidays[0].id != self.project_id.id:
                     if heure_par_jour==0.0:
                         raise Warning('Vous ne pouvez pas travailler aujourd\'hui ou peut-être que vous n\'êtes pas affecté à un horaire de travail!')
@@ -260,7 +260,7 @@ class AccountAnalyticLine(models.Model):
             employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
             heure_par_jour=self.get_heure_par_jour(employees,vals)
 
-            if vals.get('unit_amount') > heure_par_jour:
+            if vals.get('unit_amount') > heure_par_jour  and project_holidays[0].id != self.project_id.id:
                     if heure_par_jour==0.0:
                         raise Warning('Vous ne pouvez pas travailler aujourd\'hui ou peut-être que vous n\'êtes pas affecté à un horaire de travail!')
                     else:
@@ -295,7 +295,7 @@ class AccountAnalyticLine(models.Model):
             
             print "heure_par_jour", heure_par_jour
             
-            if vals.get('unit_amount')>heure_par_jour:
+            if vals.get('unit_amount')>heure_par_jour :
                 raise Warning('Vous ne pouvez pas travailler plus de {} aujourd\'hui!'.format(self.float_time_to_time(heure_par_jour)))
                 return False
           
