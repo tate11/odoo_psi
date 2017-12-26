@@ -106,6 +106,20 @@ class hr_employee(models.Model):
         ('mahajanga', 'Mahajanga'),
         ], string="", default="antananarivo")
     
+    
+    # image: all image fields are base64 encoded and PIL-supported
+    image = fields.Binary("Photo", attachment=False,
+        help="This field holds the image used as photo for the employee, limited to 1024x1024px.")
+    image_medium = fields.Binary("Medium-sized photo", attachment=False,
+        help="Medium-sized photo of the employee. It is automatically "
+             "resized as a 128x128px image, with aspect ratio preserved. "
+             "Use this field in form views or some kanban views.")
+    image_small = fields.Binary("Small-sized photo", attachment=False,
+        help="Small-sized photo of the employee. It is automatically "
+             "resized as a 64x64px image, with aspect ratio preserved. "
+             "Use this field anywhere a small image is required.")
+    
+    
     @api.onchange('name') 
     def _check_change(self):
         self.psi_name = self.name
