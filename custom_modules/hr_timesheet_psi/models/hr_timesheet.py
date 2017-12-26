@@ -124,6 +124,7 @@ class AccountAnalyticLine(models.Model):
         return time
 
     def traiter_unit_amount(self,vals):
+        print "traiter_unit_amount"
         unit_amount=vals.get('unit_amount');
         
         if vals.get('project_id'):
@@ -165,6 +166,7 @@ class AccountAnalyticLine(models.Model):
             vals['unit_amount']=float("{}.{}".format(heure,min))
 
     def modif_val_unit_amount(self, vals):
+        print "modif_val_unit_amount"
         unit_amount=vals.get('unit_amount');
         if len(str(unit_amount))>2 and unit_amount != None:
             heure,min=str(unit_amount).split(".")
@@ -197,7 +199,7 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def create(self, vals):
-        
+        print "create one"
         #if vals.get('unit_amount') <= 0.0:
             #raise Warning('Veuillez saisir l\'heure.')
         
@@ -217,9 +219,9 @@ class AccountAnalyticLine(models.Model):
             
             total_planned_hours += vals.get('unit_amount')
                 
-            if total_planned_hours > task.planned_hours:
-                raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time(total_planned_hours - task.planned_hours ))) 
-                return False
+            #if total_planned_hours > task.planned_hours:
+            #    raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time(total_planned_hours - task.planned_hours ))) 
+            #    return False
 
             if vals.get('unit_amount') > task.planned_hours:
                 raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans cette tâche qui est {}!'.format(self.float_time_to_time(task.planned_hours)))   
@@ -270,7 +272,7 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def write(self, vals):
-        
+        print "write"
         if vals.get('task_id'):
             unit_amount=self.unit_amount
             tasks=self.env['project.task'].search([('id','=',vals.get('task_id'))])
@@ -280,6 +282,7 @@ class AccountAnalyticLine(models.Model):
                     return False
             
         if vals.get('unit_amount'):
+            print "UNIT AMOUNT : ",vals.get('unit_amount')
             employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
             heure_par_jour = 0.0
             for employee in employees:
@@ -289,19 +292,22 @@ class AccountAnalyticLine(models.Model):
                     for attendance in attendances:
                         heure_par_jour += attendance.hour_to - attendance.hour_from
             
+            print "heure_par_jour", heure_par_jour
+            
             if vals.get('unit_amount')>heure_par_jour:
                 raise Warning('Vous ne pouvez pas travailler plus de {} aujourd\'hui!'.format(self.float_time_to_time(heure_par_jour)))
                 return False
-        
-            if vals.get('unit_amount') > self.unit_amount:
-                    total_planned_hours = 0
-                    current_timesheets = self.env['account.analytic.line'].search([['project_id', '=', self.project_id.id], ['task_id', '=', self.task_id.id]])
-                    for current_timesheet in current_timesheets:
-                        total_planned_hours += float(current_timesheet.unit_amount)
-                        
-                    if (total_planned_hours + vals.get('unit_amount') - self.unit_amount) > self.task_id.planned_hours:
-                        raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time((total_planned_hours + vals.get('unit_amount') - self.unit_amount) - self.task_id.planned_hours)))
-                        return False
+          
+#             if vals.get('unit_amount') > self.unit_amount:
+#                     print "self.task_id.planned_hours : ",self.task_id.planned_hours
+#                     total_planned_hours = 0
+#                     current_timesheets = self.env['account.analytic.line'].search([['project_id', '=', self.project_id.id], ['task_id', '=', self.task_id.id]])
+#                     for current_timesheet in current_timesheets:
+#                         total_planned_hours += float(current_timesheet.unit_amount)
+#                         
+#                     if (total_planned_hours + vals.get('unit_amount') - self.unit_amount) > self.task_id.planned_hours:
+#                         raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time((total_planned_hours + vals.get('unit_amount') - self.unit_amount) - self.task_id.planned_hours)))
+#                         return False
                     
         self.traiter_unit_amount(vals)
         
