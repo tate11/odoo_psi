@@ -11,6 +11,14 @@ class Employee(models.Model):
     _inherit = "hr.employee"
     
     @api.multi
+    def _compute_leaves_count(self):
+       
+        for employee in self:
+            holidays = self.env['hr.holidays'].search([('type','=','add'),('employee_id','=', employee.id)])
+            if len(holidays) > 0 :
+                employee.leaves_count = holidays[0].nombre_conge
+            
+    @api.multi
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
         holidays = self.env['hr.holidays'].sudo().search([

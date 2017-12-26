@@ -54,6 +54,8 @@ class hr_holidays_psi(models.Model):
     
     number_of_days_psi = fields.Float('Number of Days', compute='_compute_number_of_days_psi', store=True)
     number_of_days_temp = fields.Float(compute='_compute_date_from_to', string='Allocation', default="1.0", copy=False, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    nombre_conge = fields.Float(string="Nombre de conge attribuer")
+    
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -103,7 +105,7 @@ class hr_holidays_psi(models.Model):
     def _onchange_date_to(self):
         return {}
     
-    @api.constrains('number_of_days_temp')
+    #@api.constrains('number_of_days_temp')
     def _verif_leave_date(self):
         print "_verif_leave_date"
         
@@ -178,7 +180,7 @@ class hr_holidays_psi(models.Model):
         
     @api.model
     def create(self, values):
-        self._verif_leave_date()
+        
         if values.has_key('employee_id'):
             employee = self.env['hr.employee'].browse(values.get('employee_id'))
             recrutement_type = self.env['hr.recruitment.type'].sudo().search([('recrutement_type','=','collaborateur')])
@@ -202,9 +204,10 @@ class hr_holidays_psi(models.Model):
           
     @api.multi
     def write(self, values):
+        print values
         employee_id = values.get('employee_id', False)
-        self._send_email_rappel_absences_to_assist_and_coord(False)
-        self._verif_leave_date()
+        #self._send_email_rappel_absences_to_assist_and_coord(False)
+        #self._verif_leave_date()
         
 #         if self.env.user == self.employee_id.user_id:
 #             raise AccessError(u'Vous ne pouvez plus modifier votre demande, veuillez contacter votre supérieur hiérarchique.')
@@ -218,7 +221,7 @@ class hr_holidays_psi(models.Model):
 #             return False
 
         result = super(hr_holidays_psi, self).write(values)
-        self.add_follower(employee_id)
+        #self.add_follower(employee_id)
         return result
     
     def _check_state_access_right(self, vals):
@@ -550,8 +553,8 @@ class hr_holidays_psi(models.Model):
 
                 
     # Send mail - rappel piece justificatif - conge maladie  
-    @api.multi
-    @api.constrains('holiday_status_id')  
+    #@api.multi
+    #@api.constrains('holiday_status_id')  
     def _send_email_rappel_justificatif_conge_maladie(self, automatic=False):
         print "_send_email_rappel_justificatif_conge_maladie"
         
@@ -610,20 +613,20 @@ class hr_holidays_psi(models.Model):
             self._cr.commit()
             
             
-    @api.constrains('state', 'number_of_days_temp')
+    #@api.constrains('state', 'number_of_days_temp')
     def _check_holidays(self):
         print "_check_holidays"
         holidays_status_formation = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',5)])
         holidays_status_annuel = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
         for holiday in self:
             if holiday.holiday_type != 'employee' or holiday.type != 'remove' or not holiday.employee_id or holiday.holiday_status_id.limit:
-                print "not continue"
+              
                 continue
             if holidays_status_formation[0].id == holiday.holiday_status_id.id and holidays_status_annuel[0].id == holiday.holiday_status_id.id:
-                print "not continue"
+           
                 holidays_attribution = self.env['hr.holidays'].search([('employee_id','',holiday.employee_id.id),('type','=','add')])
                 leave_days = holidays_attribution[0].holiday_status_id.get_days(holidays_attribution[0].employee_id.id)[holidays_attribution[0].holiday_status_id.id]
-                if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or \
+                if float_compare(leave_days['nombre_conge'], 0, precision_digits=2) == -1 or \
                   float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
                     raise ValidationError(_('The number of remaining leaves is not sufficient for this leave type.\n'
                                             'Please verify also the leaves waiting for validation.'))

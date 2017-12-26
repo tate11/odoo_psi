@@ -127,7 +127,8 @@ class hr_employee(models.Model):
     def write(self, vals):
         print "write"
         if vals.has_key('nombre_conge')  :
-            self.set_nombre_conge(vals.get('nombre_conge'))
+            if vals.get('nombre_conge') != 0.0 :
+                self.set_nombre_conge(vals.get('nombre_conge'))
         if vals.has_key('matricule')  and not vals.has_key('employee_id')  :
             employees = self.env['hr.employee'].search([('matricule','=',vals.get('matricule')),('id','<>', self.id)])
             if len(employees) > 0:
@@ -136,7 +137,7 @@ class hr_employee(models.Model):
         return employee
     
     def set_nombre_conge(self, nombre_conge):
-       
+            print "set_nombre_conge"
             holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
             values = {
                 'name': self.name,
@@ -144,10 +145,17 @@ class hr_employee(models.Model):
                 'state': 'validate',
                 'holiday_type': 'employee',
                 'holiday_status_id': holidays_status[0].id,
-                'number_of_days_temp': nombre_conge,
+                'nombre_conge': nombre_conge,
                 'employee_id': self.id
             }
-            self.env['hr.holidays'].create(values)
+            print "self.id", self.id
+            holidays = self.env['hr.holidays'].search([('type','=','add'),('employee_id','=', self.id)])
+            print "len(holidays): ",len(holidays)
+            if len(holidays) > 0 :
+                print "write holidays"
+                holidays[0].write(values)
+            else :
+                self.env['hr.holidays'].create(values)
 
     # fonction remove sanction after period MONTHS
     def _remove_sanction_data(self, period): #period en mois
@@ -335,15 +343,7 @@ class hr_employee(models.Model):
         if automatic:
             self._cr.commit()
             
-    @api.multi
-    def _compute_leaves_count(self):
-        leaves = self.env['hr.holidays'].read_group([
-            ('employee_id', 'in', self.ids),
-            ('state', '=', 'validate')
-        ], fields=['number_of_days', 'employee_id'], groupby=['employee_id'])
-        mapping = dict([(leave['employee_id'][0], leave['number_of_days']) for leave in leaves])
-        for employee in self:
-            employee.leaves_count = mapping.get(employee.id)
+   
             
 class Person(models.Model):
 
