@@ -126,12 +126,17 @@ class hr_holidays_psi(models.Model):
                 date_from_ = str(datetime.datetime.strptime(holiday.date_from,"%Y-%m-%d").date())
                 date_to_ = str(datetime.datetime.strptime(holiday.date_to,"%Y-%m-%d").date())
                 date = str(public_holidays.date)
-                print date_from_," == ",date," or ",date_to_," == ",date 
+#                 print date_from_," == ",date," or ",date_to_," == ",date 
                 
-                if self.env['hr.holidays.public'].is_public_holiday(date_from_, employee_id=self.employee_id.id) or self.env['hr.holidays.public'].is_public_holiday(date_to_, employee_id=self.employee_id.id):
-                    raise ValidationError(u'Vous ne pouvez pas demander du congé durant les jours fériés.')
-                    return False 
-   
+#                 if date_from_ == date or date_to_ == date:
+#                     raise ValidationError(u'Vous ne pouvez pas demander du congé durant les jours fériés.')
+#                     return False 
+            
+            
+#                 if self.env['hr.holidays.public'].is_public_holiday(date_from_, employee_id=self.employee_id.id) or self.env['hr.holidays.public'].is_public_holiday(date_to_, employee_id=self.employee_id.id):
+#                     raise ValidationError(u'Vous ne pouvez pas demander du congé durant les jours fériés.')
+#                     return False 
+                
 #             date_from_w = datetime.datetime.strptime(date_from_, '%Y-%m-%d').strftime('%w')
 #             date_to_w = datetime.datetime.strptime(date_to_, '%Y-%m-%d').strftime('%w')
 #                  
