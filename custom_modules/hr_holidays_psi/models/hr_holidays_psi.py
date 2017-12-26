@@ -228,10 +228,10 @@ class hr_holidays_psi(models.Model):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
         
-        print "self.env.user.id ",self.env.user.id
+        print "self.env.user.id ",self.env.uid
         print "self.employee_id.coach_id.user_id.id ", self.employee_id.coach_id.user_id.id
         
-        if self.env.user.id != self.employee_id.coach_id.user_id.id:
+        if self.env.uid != self.employee_id.coach_id.user_id.id:
             raise AccessError(u'Vous n\'avez pas le droit de valider cette demande sauf le supérieur hiérarchique.')
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)

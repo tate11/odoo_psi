@@ -1,2 +1,3 @@
 import hr_holidays_configuration
 import hr_holidays_psi
+import hr
