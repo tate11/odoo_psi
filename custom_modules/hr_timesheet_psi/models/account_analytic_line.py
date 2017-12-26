@@ -40,10 +40,11 @@ class AccountAnalyticLine(models.Model):
         for account in account_analytic_line_s :
             if self.env.user.id == account.user_id.id:
                 total += account.unit_amount
-        print "total : ",total
+        print "total 1 : ",total
         
         if vals.get('unit_amount') :
-            total += vals.get('unit_amount')
+            total = ( total - self.unit_amount ) + vals.get('unit_amount')
+            print "total 2 : ",total
             if total > heure_par_jour :
                 raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time(heure_par_jour)))
                 return False
