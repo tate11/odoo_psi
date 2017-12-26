@@ -164,7 +164,7 @@ class AccountAnalyticLine(models.Model):
                 
             vals['unit_amount']=float("{}.{}".format(heure,min))
 
-    def modif_val_unit_amount(vals):
+    def modif_val_unit_amount(self, vals):
         unit_amount=vals.get('unit_amount');
         if len(str(unit_amount))>2 and unit_amount != None:
             heure,min=str(unit_amount).split(".")
@@ -185,7 +185,7 @@ class AccountAnalyticLine(models.Model):
                 
             vals['unit_amount']=float("{}.{}".format(heure,min))
     
-    def get_heure_par_jour(employee,vals):
+    def get_heure_par_jour(self, employees,vals):
         heure_par_jour = 0.0
         for employee in employees:
             attendance_ids = employee.calendar_id.attendance_ids
@@ -221,7 +221,7 @@ class AccountAnalyticLine(models.Model):
                 raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time(total_planned_hours - task.planned_hours ))) 
                 return False
 
-            if unit_amount>task.planned_hours:
+            if vals.get('unit_amount') > task.planned_hours:
                 raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans cette tâche qui est {}!'.format(self.float_time_to_time(task.planned_hours)))   
                 return False
 
@@ -257,7 +257,7 @@ class AccountAnalyticLine(models.Model):
             employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
             heure_par_jour=self.get_heure_par_jour(employees,vals)
 
-            if unit_amount>heure_par_jour:
+            if vals.get('unit_amount') > heure_par_jour:
                     if heure_par_jour==0.0:
                         raise Warning('Vous ne pouvez pas travailler aujourd\'hui ou peut-être que vous n\'êtes pas affecté à un horaire de travail!')
                     else:
