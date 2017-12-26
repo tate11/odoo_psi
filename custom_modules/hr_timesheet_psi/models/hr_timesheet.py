@@ -238,8 +238,8 @@ class AccountAnalyticLine(models.Model):
             employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
             
             heure_par_jour=self.get_heure_par_jour(employees,vals)
-
-            if total_planned_hours>heure_par_jour:
+            project_holidays = self.env['project.project'].sudo().search([('name','=','Absences/Permission/Conges')])
+            if total_planned_hours>heure_par_jour and project_holidays[0].id != self.project_id.id:
                     if heure_par_jour==0.0:
                         raise Warning('Vous ne pouvez pas travailler aujourd\'hui ou peut-être que vous n\'êtes pas affecté à un horaire de travail!')
                     else:
