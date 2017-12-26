@@ -192,9 +192,10 @@ class AccountAnalyticLine(models.Model):
         for employee in employees:
             attendance_ids = employee.calendar_id.attendance_ids
             for attendance_id in attendance_ids:
-                attendances = self.env['resource.calendar.attendance'].search([['id', '=', attendance_id.id], ['dayofweek', '=', datetime.strptime(vals.get('date'), '%Y-%m-%d').strftime('%w')]])
-                for attendance in attendances:
-                    heure_par_jour += attendance.hour_to - attendance.hour_from
+                if vals.get('date') :
+                    attendances = self.env['resource.calendar.attendance'].search([['id', '=', attendance_id.id], ['dayofweek', '=', datetime.strptime(vals.get('date'), '%Y-%m-%d').strftime('%w')]])
+                    for attendance in attendances:
+                        heure_par_jour += attendance.hour_to - attendance.hour_from
         return heure_par_jour
 
     @api.model
