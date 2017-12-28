@@ -3,6 +3,8 @@
 import calendar
 import datetime
 
+from datetime import date, timedelta
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
@@ -177,9 +179,29 @@ class hr_holidays_psi(models.Model):
     def get_last_month(self,date):  
         result = calendar.monthrange(date.year,date.month)[1]
         return result
+    
+    # Contrôle week-end et jours fériés
+    def verif_day_off(self, date):
+        current_day=datetime.datetime.strptime(date, '%Y-%m-%d').strftime('%w')
+        if current_day == "6" or current_day == "0" :
+            raise Warning('Vous ne pouvez pas demander du congé le week-end.')  
+            return False
         
+        public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
+        for public_holiday in public_holidays_line:
+            if public_holiday.date == date:
+                raise Warning('Vous ne pouvez pas demander du congé pendant les jours fériés.')
+            
     @api.model
     def create(self, values):
+        
+        print "create hr.holidays"
+        date_from = datetime.datetime.strptime(values.get('date_from'),"%Y-%m-%d").date()
+        date_to = datetime.datetime.strptime(values.get('date_to'),"%Y-%m-%d").date()
+        delta = date_to - date_from
+        for i in range(delta.days + 1):
+            self.verif_day_off(str(date_from + timedelta(days=i)))
+            
         
         if values.has_key('employee_id'):
             employee = self.env['hr.employee'].browse(values.get('employee_id'))
