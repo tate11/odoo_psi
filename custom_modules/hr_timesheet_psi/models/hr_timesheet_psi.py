@@ -136,6 +136,15 @@ class HrTimesheetPsi(models.Model):
     @api.model
     def create(self, vals):
         if 'employee_id' in vals:
+            print "create account.analytic.line"
+            account_analytic_line_s = self.env['account.analytic.line'].search([('project_id', '=', vals['project_id']), ('date', '=', vals['date'])])
+            if vals['name'] == False :
+                vals['name'] = '.'
+            if len(account_analytic_line_s) != 0 :
+                for account in account_analytic_line_s :
+                    if self.env.user.id == account.user_id.id  and vals.get('tag_ids'):
+                        account.write({'unit_amount' : vals['unit_amount'] + self.unit_amount })
+                        return account
             employee = self.env['hr.employee'].browse(vals.get('employee_id'))
             attendances = employee.calendar_id.attendance_ids
             if len(attendances) == 0:

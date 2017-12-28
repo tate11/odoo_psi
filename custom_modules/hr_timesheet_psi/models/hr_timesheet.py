@@ -43,7 +43,11 @@ class AccountAnalyticLine(models.Model):
 #                                             ])
 #                                           )
 #                                      ])
-
+    
+    @api.v8
+    @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
+    def on_change_unit_amount(self):
+        print "on_change_unit_amount"
 
     def _send_email_rappel_envoie_abscence_membres(self, automatic=False):
         this_year=datetime.now().strftime("%Y")
@@ -201,8 +205,30 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def create(self, vals):
         print "create one"
-        #if vals.get('unit_amount') <= 0.0:
-            #raise Warning('Veuillez saisir l\'heure.')
+        total = 0.0
+        print vals
+        print "date : ",vals['date']
+        employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
+        heure_par_jour = self.get_heure_par_jour(employees, vals)
+        print "heure_par_jour", heure_par_jour
+        print "date", self.date
+        unit_amount_old = 0.0
+        account_analytic_line_s = self.env['account.analytic.line'].search([('date', '=', vals['date'])])
+        for account in account_analytic_line_s :
+            if account.id == vals['account_id']:
+                unit_amount_old = account.unit_amount
+            if self.env.user.id == account.user_id.id:
+                total += account.unit_amount
+        print "total 1 : ",total
+        if vals.get('unit_amount'):
+            total = ( total - unit_amount_old ) + vals.get('unit_amount')
+            print "total 2 : ",total
+            if total > heure_par_jour :
+                raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time(heure_par_jour)))
+                return False
+            if vals.get('unit_amount') > heure_par_jour :
+                raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time(heure_par_jour)))
+                return False
         project_holidays = self.env['project.project'].sudo().search([('name','=','Absences/Permission/Conges')])
         if project_holidays[0].id != vals.get('project_id'):
             if vals.get('task_id') and vals.get('date') and vals.get('project_id') and vals.get('unit_amount') and vals.get('unit_amount') != 0.0:
@@ -274,7 +300,19 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def write(self, vals):
-        print "write"
+        print "write  account.analytic.line"
+        total = 0.0
+        print self.date
+        vals_emp = { 'date' : self.date}
+        employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
+        heure_par_jour = self.get_heure_par_jour(employees, vals_emp)
+        print "heure_par_jour", heure_par_jour
+        print "date", self.date
+        account_analytic_line_s = self.env['account.analytic.line'].search([('date', '=', self.date)])
+        for account in account_analytic_line_s :
+            if self.env.user.id == account.user_id.id:
+                total += account.unit_amount
+        print "total 1 : ",total
         if vals.get('task_id'):
             unit_amount=self.unit_amount
             tasks=self.env['project.task'].search([('id','=',vals.get('task_id'))])
@@ -284,6 +322,14 @@ class AccountAnalyticLine(models.Model):
                     return False
             
         if vals.get('unit_amount'):
+            total = ( total - self.unit_amount ) + vals.get('unit_amount')
+            print "total 2 : ",total
+            if total > heure_par_jour :
+                raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time(heure_par_jour)))
+                return False
+            if vals.get('unit_amount') > heure_par_jour :
+                raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time(heure_par_jour)))
+                return False
             print "UNIT AMOUNT : ",vals.get('unit_amount')
             employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
             heure_par_jour = 0.0
