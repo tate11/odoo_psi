@@ -185,6 +185,7 @@ class hr_holidays_psi(models.Model):
     
     # Contrôle week-end et jours fériés
     def verif_day_off(self, date):
+        print "Verification +"
         current_day=datetime.datetime.strptime(date, '%Y-%m-%d').strftime('%w')
         if current_day == "6" or current_day == "0" :
             raise Warning('Vous ne pouvez pas demander du congé le week-end.')  
@@ -202,9 +203,21 @@ class hr_holidays_psi(models.Model):
         date_from = datetime.datetime.strptime(values.get('date_from'),"%Y-%m-%d").date()
         date_to = datetime.datetime.strptime(values.get('date_to'),"%Y-%m-%d").date()
         delta = date_to - date_from
+        
+        self.verif_day_off(str(date_from))
+        self.verif_day_off(str(date_to))
+        
         for i in range(delta.days + 1):
-            self.verif_day_off(str(date_from + timedelta(days=i)))
-            
+            day = datetime.datetime.strptime(str(date_from + timedelta(days=i)), '%Y-%m-%d').strftime('%w')   
+#             print day                                             
+            public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
+#             print public_holidays_line,'  public_holidays_line'
+            for public_holiday in public_holidays_line:
+                print  public_holiday.date, " == ",date_from + timedelta(days=i)
+                if public_holiday.date == date_from + timedelta(days=i):
+                    print "ENTER"
+                    if day == "6" or day =="0":
+                        raise Warning('Erreur.')
         
         if values.has_key('employee_id'):
             employee = self.env['hr.employee'].browse(values.get('employee_id'))
@@ -354,20 +367,28 @@ class hr_holidays_psi(models.Model):
                    if record.number_of_days_temp > config.conges_sans_solde :
                       raise ValidationError(u"Votre demande de congés depasse la limite de congés sans soldes.")
                       return False
+                  
                date_from_time = datetime.datetime.strptime(record.date_from,"%Y-%m-%d")
                date_now = datetime.datetime.strptime(fields.Date().today(),"%Y-%m-%d")
                between = date_from_time - date_now
               
                holidays_status = self.env['hr.holidays.status'].search([('is_not_limited_j3','=',True)])
-              
+               
+               temp_not_limited = False
                for holidays_status_not_limited in holidays_status:
                    print holidays_status_not_limited.id,' holidays_status_not_limited'
                    print "#"
                    print record.holiday_status_id.id,' record.holiday_status_id.id' 
-                   if record.holiday_status_id.id != holidays_status_not_limited.id: # a part maladie
-                       if between.days < 3 :
-                           raise ValidationError(u"Vous devez faire une demande de congés au moins 3 jours avant votre départ pour congé.")
-                           return False
+#                    if record.holiday_status_id.id != holidays_status_not_limited.id: 
+#                        if between.days < 3 :
+#                              raise ValidationError(u"Vous devez effectuer votre demande au moins 3 jours avant votre départ en congé.")
+#                              return False
+                   if record.holiday_status_id.id == holidays_status_not_limited.id: 
+                        temp_not_limited = True
+               if not temp_not_limited:
+                    if between.days < 3 :
+                        raise ValidationError(u"Vous devez effectuer votre demande au moins 3 jours avant votre départ en congé.")
+                        return False
                holidays_status_maternite = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])
                if record.holiday_status_id.id == holidays_status_maternite[0].id :
                    if record.employee_id.sexe == 'masculin':
@@ -579,12 +600,13 @@ class hr_holidays_psi(models.Model):
 
                 
     # Send mail - rappel piece justificatif - conge maladie  
-    #@api.multi
-    #@api.constrains('holiday_status_id')  
+    @api.multi
+    @api.constrains('holiday_status_id')  
     def _send_email_rappel_justificatif_conge_maladie(self, automatic=False):
         print "_send_email_rappel_justificatif_conge_maladie"
         
         date_debut = self.date_from
+        print date_debut,' date_debut'
         if date_debut != False:
             dt = datetime.datetime.strptime(date_debut,'%Y-%m-%d')
             date_y_m_d = datetime.datetime(
@@ -593,6 +615,7 @@ class hr_holidays_psi(models.Model):
                                          day=dt.day,
                     )
             date_to_notif = date_y_m_d + relativedelta(hours=48)   
+            print date_to_notif,' date_to_notif'
             if self.id != False :
                 for record in self:
                     holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
