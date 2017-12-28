@@ -144,7 +144,11 @@
 		<field name="inherit_id" ref="timesheet_grid.view_timesheet_grid" />
 		<field name="mode">primary</field>
 		<field name="arch" type="xml">
-			<xpath expr="//field[@name='task_id']" position="replace" />
+			 <xpath expr="/grid" position="attributes">
+                    <attribute name="create">false</attribute>
+                    <attribute name="edit">false</attribute>
+                </xpath>
+                <xpath expr="//field[@name='task_id']" position="replace"/>
 		</field>
 	</record>
 
@@ -158,7 +162,26 @@
 			</field>
 		</field>
 	</record>
+	 <record id="action_timesheet_current_psi" model="ir.actions.act_window">
+            <field name="name">My Timesheet PSI</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_mode">grid,tree</field>
+            <field name="search_view_id" ref="timesheet_grid.view_timesheet_grid_search"/>
+            <field name="view_ids" eval="[
+                (5, 0, 0),
+                (0, 0, {'view_mode': 'grid', 'view_id': ref('view_timesheet_grid_psi_inherit')}),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('timesheet_grid.view_timesheet_list')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('timesheet_grid.view_timesheet_form')}),
+            ]"/>
+            <field name="domain">['&amp;', ('user_id', '=', uid), ('is_timesheet', '=', True)]</field>
+            <field name="context">{'user_id': uid}</field>
+        </record>
 	<menuitem action="act_hr_timesheet_psi_my_timesheets" id="menu_act_hr_timesheet_psi_my_timesheets"
 		parent="hr_timesheet.menu_hr_time_tracking" sequence="3" />
+	
+	 <menuitem name="My Timesheet PSI" id="menu_timesheet_grid_my_psi"
+                  parent="hr_timesheet.menu_hr_time_tracking"
+                  action="action_timesheet_current_psi"
+                  sequence="2"/>
 
 </odoo>
