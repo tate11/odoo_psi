@@ -5,37 +5,44 @@
 		<record model="hr.holidays.status" id="type_permission">
 			<field name="name">Absences pour permission</field>
 			<field name="holidays_status_id_psi">1</field>
+            <field name="is_not_limited_j3" eval="True"/>
             <field name="limit" eval="True"/>
         </record>
 		<record model="hr.holidays.status" id="type_conge_annuel">
 			<field name="name">Absences pour congé annuel</field>
 			<field name="holidays_status_id_psi">2</field>
+            <field name="is_not_limited_j3" eval="False"/>
             <field name="limit" eval="True"/>
 		</record>
 		<record model="hr.holidays.status" id="type_solde">
 			<field name="name">Congés sans soldes</field>
 			<field name="holidays_status_id_psi">3</field>
+            <field name="is_not_limited_j3" eval="False"/>
             <field name="limit" eval="True"/>
 		</record>
 		<record model="hr.holidays.status" id="type_maladie">
 			<field name="name">Congés maladies</field>
 			<field name="holidays_status_id_psi">4</field>
+            <field name="is_not_limited_j3" eval="True"/>
             <field name="limit" eval="True"/>
 		</record>
 		<record model="hr.holidays.status" id="type_formation">
 			<field name="name">Absences pour formation</field>
 			<field name="holidays_status_id_psi">5</field>
+            <field name="is_not_limited_j3" eval="False"/>
 			<field name="limit" eval="True"/>
 		</record>
 		<record model="hr.holidays.status" id="type_maternite">
 			<field name="name">Congés de maternité</field>
-            <field name="limit" eval="True"/>
 			<field name="holidays_status_id_psi">6</field>
+            <field name="is_not_limited_j3" eval="True"/>
+            <field name="limit" eval="True"/>
 		</record>
 		<record model="hr.holidays.status" id="type_conge_paye">
 			<field name="name">Congés payés</field>
-            <field name="limit" eval="True"/>
 			<field name="holidays_status_id_psi">7</field>
+            <field name="is_not_limited_j3" eval="False"/>
+            <field name="limit" eval="True"/>
 		</record>
 		
 		<delete id="hr_holidays_psi.holiday_status_cl" model="hr.holidays.status"/>

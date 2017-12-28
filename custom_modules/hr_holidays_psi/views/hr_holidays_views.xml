@@ -164,6 +164,23 @@
             </field>
 	</record>
 
+	<!-- INHERIT view_holiday_status_tree - CHANGE NAME COLUMN -->
+	<record id="view_holiday_status_tree_inherit" model="ir.ui.view">
+            <field name="name">hr.holidays.status.tree.inherit</field>
+            <field name="inherit_id" ref="hr_holidays.view_holiday_status_tree" />
+            <field name="model">hr.holidays.status</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="replace">
+	                <tree>
+	                    <field name="name" string="Type de congé"/>
+	                    <field name="max_leaves" string="Jours autorisés"/>
+	                    <field name="leaves_taken" string="Jours consommés"/>
+	                    <field name="remaining_leaves" string="Jours restants"/>
+	                </tree>
+                </xpath>
+            </field>
+        </record>
+        
 	<delete id="hr_public_holidays.menu_create_next_year_public_holidays" model="ir.ui.menu"/>
 
 	<record id="view_holiday_status_normal_tree_psi" model="ir.ui.view">

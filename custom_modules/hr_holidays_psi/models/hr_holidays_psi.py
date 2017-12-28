@@ -21,10 +21,12 @@ class HrPublicHolidaysLine(models.Model):
 class hr_holidays_type_psi(models.Model):
     
     _inherit = "hr.holidays.status"
-    
+        
     type_permission = fields.Many2one('hr.holidays.type.permission', string="Type de permission")
     holidays_status_id_psi = fields.Integer(string=u"id type de congé psi")
     limit = fields.Boolean(string=u'Dépassement de limite autorisé ', readonly=True)
+    is_not_limited_j3 = fields.Boolean(string=u'is_not_limited_j3')
+    
     
 class hr_holidays_type_permission(models.Model):
     
@@ -32,7 +34,8 @@ class hr_holidays_type_permission(models.Model):
     _description = "Type de permission"
     
     name = fields.Char('Type de permission', required=True)
-    number_of_day = fields.Float('Nombre de jours', required=True)
+    number_of_day = fields.Float('Jours autorisés', required=True)
+    cosomme = fields.Char('Consommés ?')
     
 class hr_holidays_psi(models.Model):
     
@@ -355,15 +358,16 @@ class hr_holidays_psi(models.Model):
                date_now = datetime.datetime.strptime(fields.Date().today(),"%Y-%m-%d")
                between = date_from_time - date_now
               
-               if between.days < 0: 
-                   raise ValidationError(u"La date de début du congé n'est pas valide.")
-                   return False
-               holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',4)])
+               holidays_status = self.env['hr.holidays.status'].search([('is_not_limited_j3','=',True)])
               
-               if record.holiday_status_id.id != holidays_status[0].id: # a part maladie
-                   if between.days >= 0 and between.days < 3 :
-                       raise ValidationError(u"Vous devez faire une demande de congés au moins 3 jours avant votre départ pour congé.")
-                       return False
+               for holidays_status_not_limited in holidays_status:
+                   print holidays_status_not_limited.id,' holidays_status_not_limited'
+                   print "#"
+                   print record.holiday_status_id.id,' record.holiday_status_id.id' 
+                   if record.holiday_status_id.id != holidays_status_not_limited.id: # a part maladie
+                       if between.days < 3 :
+                           raise ValidationError(u"Vous devez faire une demande de congés au moins 3 jours avant votre départ pour congé.")
+                           return False
                holidays_status_maternite = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])
                if record.holiday_status_id.id == holidays_status_maternite[0].id :
                    if record.employee_id.sexe == 'masculin':

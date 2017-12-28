@@ -37,6 +37,7 @@
 			<tree string="Type de permission" editable="bottom" create="false" delete="false">
 				<field name="name" />
 				<field name="number_of_day" />
+				<field name="cosomme" />
 			</tree>
 		</field>
 	</record>
