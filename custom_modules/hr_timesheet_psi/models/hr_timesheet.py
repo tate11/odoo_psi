@@ -382,7 +382,7 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def write(self, vals):
-        self.verif_day_off(vals['date'])
+        self.verif_day_off(self.date)
         print "write  account.analytic.line"
         total = 0.0
         print self.date
