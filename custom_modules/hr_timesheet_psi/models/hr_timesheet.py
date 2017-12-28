@@ -8,17 +8,17 @@ from datetime import datetime, date
 from odoo import api, fields, models
 from odoo.exceptions import Warning
 
-# class confirm_relance(models.TransientModel):
-#     _name = 'confirm.refresh.grid'
-# 
-#     yes_no = fields.Char(default='Voulez-vous remetre à zero?')
-#     
-#     def yes(self):
-#         return {
-#                 'type': 'ir.actions.client',
-#                 'tag': 'reload',
-#         }
-#         
+class confirm_relance(models.TransientModel):
+    _name = 'confirm.refresh.grid'
+ 
+    yes_no = fields.Char(default='Voulez-vous remetre à zero?')
+     
+    def yes(self):
+        return {
+                'type': 'ir.actions.client',
+                'tag': 'reload',
+        }
+         
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
@@ -237,7 +237,31 @@ class AccountAnalyticLine(models.Model):
                     for attendance in attendances:
                         heure_par_jour += attendance.hour_to - attendance.hour_from
         return heure_par_jour
-
+    
+    def _refresh_grid(self):
+        
+        ctx = dict()
+        ctx.update({
+            'default_model':'confirm.refresh.grid',
+            'default_use_template': True,
+            'default_template_id':self.env['ir.model.data'].get_object_reference('hr_timesheet_psi','action_confirm_refresh_grid')[1]
+        })
+        
+        view_id=self.env['ir.model.data'].get_object_reference('hr_timesheet_psi','confirm.refresh.grid.form')[1]
+        
+        return {
+            'name': 'Confirmation',
+            'domain': [],
+            'res_model': 'confirm.refresh.grid',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'views': [(view_id, 'form')],
+            'view_id': view_id,
+            'context': ctx,
+            'target': 'new',
+        }
+        
      # Contrôle week-end et jours fériés
     def verif_day_off(self, date):
         current_day=datetime.strptime(date, '%Y-%m-%d').strftime('%w')
@@ -275,11 +299,11 @@ class AccountAnalyticLine(models.Model):
             total = (total - unit_amount_old) + vals.get('unit_amount')
             print "total 2 : ", total
             if total > heure_par_jour :
-                self._refresh_grid()
+                #self._refresh_grid()
                 raise Warning(u'Vous ne pouvez pas saisir plus de {} heures sur cette journée'.format(self.float_time_to_time(heure_par_jour)))
                 
             if vals.get('unit_amount') > heure_par_jour :
-                self._refresh_grid()
+                #self._refresh_grid()
                 raise Warning(u'Vous ne pouvez pas saisir plus de {} heures sur cette journée'.format(self.float_time_to_time(heure_par_jour)))
                 
         project_holidays = self.env['project.project'].sudo().search([('name', '=', 'Absences/Permission/Conges')])
