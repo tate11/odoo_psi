@@ -121,23 +121,20 @@ class hr_holidays_psi(models.Model):
                 date_from = datetime.datetime.strptime(record.date_from, "%Y-%m-%d").date()
                 date_to = datetime.datetime.strptime(record.date_to, "%Y-%m-%d").date()
 
-                holidays_status = self.env['hr.holidays.status'].sudo().search([('holidays_status_id_psi','!=',3)]) # NO CONGE SANS SOLDE
-              
-                if holidays_status[0].id:
+                holidays_status_maternite = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])   #  CONGE MATERNITE
+                holidays_status_sans_solde = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',3)])  #  CONGE SANS SOLDE
+                
+                if record.holiday_status_id.id != holidays_status_maternite[0].id and record.holiday_status_id.id != holidays_status_sans_solde[0].id:
+                    print "NO MATERNITE and NO SANS SOLD"
                     delta = date_to - date_from
-                    print delta,' delta'
                     for i in range(delta.days + 1):
                             current_day=datetime.datetime.strptime(str(date_from + timedelta(days=i)), '%Y-%m-%d').strftime('%w')
-                            print date_from + timedelta(days=i)
-                            print current_day,' JOUR SEMAINE'
                             if current_day == "6" or current_day == "0" :                                   # VERIFICATION W-END
-                                print "W-end"
+#                                 print "W-end"
                                 record.number_of_days_temp -= 1
-            #                 record.number_of_days_temp -= compute_day_off(from_dt + timedelta(days=i))
                             for public_holiday in public_holidays_line:                                     # VERIFICATION JOUR FERIE
-                                print "JOUR FERIE ",public_holiday.date
                                 if str(public_holiday.date) == str(date_from + timedelta(days=i)):
-                                    print "OUI JF"
+#                                     print "OUI JF"
                                     record.number_of_days_temp -= 1
                 
             
@@ -662,15 +659,42 @@ class hr_holidays_psi(models.Model):
     @api.onchange('holiday_status_id')
     def _onchange_holiday_status_id(self):
         print "_onchange_holiday_status_id"
-        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])
+        
+        public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
+        
+        holidays_status_maternite = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])
+        holidays_status_sans_solde = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',3)])
         
         date_from = self.date_from
         date_to = self.date_to
-        if self.holiday_status_id.id == holidays_status[0].id:
-            print holidays_status[0].name
-           
-            date_to_with_delta = fields.Date.from_string(date_from) + datetime.timedelta(days=97)
-            self.date_to = str(date_to_with_delta)
+        
+        if date_from and date_to:
+            if self.holiday_status_id.id == holidays_status_maternite[0].id:
+                print holidays_status_maternite[0].name
+               
+                date_to_with_delta = fields.Date.from_string(date_from) + datetime.timedelta(days=97)
+                self.date_to = str(date_to_with_delta)
+                
+    #             date_from = datetime.datetime.strptime(date_from, "%Y-%m-%d").date()
+    #             date_to = datetime.datetime.strptime(date_to, "%Y-%m-%d").date()
+    #         
+#             delta = date_to - date_from
+#             print delta,' delta'
+#             for i in range(delta.days + 1):
+#                             current_day=datetime.datetime.strptime(str(date_from + timedelta(days=i)), '%Y-%m-%d').strftime('%w')
+#                             print date_from + timedelta(days=i)
+#                             print current_day,' JOUR SEMAINE'
+#                             if current_day == "6" or current_day == "0" :                                   # VERIFICATION W-END
+#                                 print "W-end"
+#                                 self.number_of_days_temp += 1
+#                             for public_holiday in public_holidays_line:                                     # VERIFICATION JOUR FERIE
+#                                 print "JOUR FERIE ",public_holiday.date
+#                                 if str(public_holiday.date) == str(date_from + timedelta(days=i)):
+#                                     print "OUI JF"
+#                                     self.number_of_days_temp += 1
+#             print self.number_of_days_temp,' self.number_of_days_temp'
+            
+            
         # No date_to set so far: automatically compute one 8 hours later
         #if date_from and not date_to:
         #    date_to_with_delta = fields.Date.from_string(date_from) + datetime.timedelta(hours=HOURS_PER_DAY)
