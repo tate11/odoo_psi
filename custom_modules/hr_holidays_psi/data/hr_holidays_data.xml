@@ -44,6 +44,18 @@
             <field name="is_not_limited_j3" eval="False"/>
             <field name="limit" eval="True"/>
 		</record>
+		<record model="hr.holidays.status" id="type_conge_paye">
+			<field name="name">Absences pour hospitalisation</field>
+			<field name="holidays_status_id_psi">8</field>
+            <field name="is_not_limited_j3" eval="True"/>
+            <field name="limit" eval="True"/>
+		</record>
+		<record model="hr.holidays.status" id="type_conge_paye">
+			<field name="name">Absences pour convalescance</field>
+			<field name="holidays_status_id_psi">9</field>
+            <field name="is_not_limited_j3" eval="True"/>
+            <field name="limit" eval="True"/>
+		</record>
 		
 		<delete id="hr_holidays_psi.holiday_status_cl" model="hr.holidays.status"/>
 		<!-- Casual leave -->

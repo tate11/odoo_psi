@@ -118,15 +118,11 @@ class hr_holidays_psi(models.Model):
                 
                 
                 # ENLEVE WEEK END ET JOUR FERIE (sauf CONGE SANS SOLDE)
-                print from_dt
-                print to_dt,' to date'
-                date_from = datetime.datetime.strptime(from_dt, "%Y-%m-%d").date()
-                date_to = datetime.datetime.strptime(to_dt, "%Y-%m-%d").date()
-                print date_from,' date_from'
-                print date_to,' date_to'
-                
+                date_from = datetime.datetime.strptime(record.date_from, "%Y-%m-%d").date()
+                date_to = datetime.datetime.strptime(record.date_to, "%Y-%m-%d").date()
+
                 holidays_status = self.env['hr.holidays.status'].sudo().search([('holidays_status_id_psi','!=',3)]) # NO CONGE SANS SOLDE
-                pr
+              
                 if holidays_status[0].id:
                     delta = date_to - date_from
                     print delta,' delta'
