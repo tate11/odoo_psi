@@ -176,10 +176,10 @@
             <field name="domain">['&amp;', ('user_id', '=', uid), ('is_timesheet', '=', True)]</field>
             <field name="context">{'user_id': uid}</field>
         </record>
-	<menuitem action="act_hr_timesheet_psi_my_timesheets" id="menu_act_hr_timesheet_psi_my_timesheets"
+	<!--  <menuitem action="act_hr_timesheet_psi_my_timesheets" id="menu_act_hr_timesheet_psi_my_timesheets"
 		parent="hr_timesheet.menu_hr_time_tracking" sequence="2" />
 	
-	<!--  <menuitem name="Ma feuille de temps" id="menu_timesheet_grid_my_psi"
+	<menuitem name="Ma feuille de temps" id="menu_timesheet_grid_my_psi"
                   parent="hr_timesheet.menu_hr_time_tracking"
                   action="action_timesheet_current_psi"
                   sequence="0"/>
