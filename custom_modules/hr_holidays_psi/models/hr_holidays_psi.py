@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from datetime import date, timedelta
+
 import calendar
 import datetime
 
-from datetime import date, timedelta
 
 from dateutil.relativedelta import relativedelta
 
@@ -76,11 +77,27 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'Refused', when holiday request is refused by manager." +
             "\nThe status is 'Approved', when holiday request is approved by manager.")
 
-
+    # Contrôle week-end et jours fériés
+    def compute_day_off(self, date):
+        result = 0
+        current_day=datetime.datetime.strptime(date, '%Y-%m-%d').strftime('%w')
+        if current_day == "6" or current_day == "0" :
+            result += 1
+        
+        public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
+        for public_holiday in public_holidays_line:
+            if public_holiday.date == date:
+                result += 1
+        return result
+            
+    @api.multi
     @api.depends('date_from', 'date_to', 'demi_jour')
     def _compute_date_from_to(self):
         #super(hr_holidays_psi,self)._onchange_date_from()
+        public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
         for record in self:
+            print record.date_from,' record.date_from'
+            print record.date_to, 'record.date_to'
             if record.date_from and record.date_to:
                 if record.demi_jour == True:
                     record.number_of_days_temp = 0.5
@@ -100,8 +117,37 @@ class hr_holidays_psi(models.Model):
                             record.number_of_days_temp = 1.0
                         else:
                             record.number_of_days_temp = float(day_hours[0]) + 1.0
-                
-     
+            
+            from_dt = record.date_from
+            to_dt = record.date_to
+            
+            # ENLEVE WEEK END ET JOUR FERIE (sauf CONGE SANS SOLDE)
+            print from_dt
+            print to_dt,' to date'
+            date_from = datetime.datetime.strptime(from_dt, "%Y-%m-%d").date()
+            date_to = datetime.datetime.strptime(to_dt, "%Y-%m-%d").date()
+            print date_from,' date_from'
+            print date_to,' date_to'
+            
+#             holidays_status = self.env['hr.holidays.status'].sudo().search([('holidays_status_id_psi','!=',3)]) # NO CONGE SANS SOLDE
+#             if holidays_status[0].id:
+            delta = date_to - date_from
+            print delta,' delta'
+            for i in range(delta.days + 1):
+                        current_day=datetime.datetime.strptime(str(date_from + timedelta(days=i)), '%Y-%m-%d').strftime('%w')
+                        print date_from + timedelta(days=i)
+                        print current_day,' JOUR SEMAINE'
+                        if current_day == "6" or current_day == "0" :                                   # VERIFICATION W-END
+                            print "W-end"
+                            record.number_of_days_temp -= 1
+        #                 record.number_of_days_temp -= compute_day_off(from_dt + timedelta(days=i))
+                        for public_holiday in public_holidays_line:                                     # VERIFICATION JOUR FERIE
+                            print "JOUR FERIE ",public_holiday.date
+                            if str(public_holiday.date) == str(date_from + timedelta(days=i)):
+                                print "OUI JF"
+                                record.number_of_days_temp -= 1
+            
+            
     @api.onchange('date_from')
     def _onchange_date_from(self):
         return {}
@@ -213,8 +259,9 @@ class hr_holidays_psi(models.Model):
             public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
             print public_holidays_line,'  public_holidays_line'
             for public_holiday in public_holidays_line:
-                print  public_holiday.date, " == ",date_from + timedelta(days=i)
-                if public_holiday.date == date_from + timedelta(days=i):
+                print  public_holiday.date, u" liste jour ferié == date_from > date_to ",date_from + timedelta(days=i)
+                if str(public_holiday.date) == str(date_from + timedelta(days=i)):
+                    print 'ENTER'
                     if day == "6" or day =="0":
                         raise Warning('Erreur.')
         
@@ -375,18 +422,10 @@ class hr_holidays_psi(models.Model):
                
                temp_not_limited = False
                for holidays_status_not_limited in holidays_status:
-                   print holidays_status_not_limited.id,' holidays_status_not_limited'
-                   print "#"
-                   print record.holiday_status_id.id,' record.holiday_status_id.id' 
-#                    if record.holiday_status_id.id != holidays_status_not_limited.id: 
-#                        if between.days < 3 :
-#                              raise ValidationError(u"Vous devez effectuer votre demande au moins 3 jours avant votre départ en congé.")
-#                              return False
                    if record.holiday_status_id.id == holidays_status_not_limited.id: 
                         temp_not_limited = True
                if not temp_not_limited:
                     if between.days < 3 :
-                        print "*******************between.days < 3 ***********************"
                         raise ValidationError(u"Vous devez effectuer votre demande au moins 3 jours avant votre départ en congé.")
                         return False
                holidays_status_maternite = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])
