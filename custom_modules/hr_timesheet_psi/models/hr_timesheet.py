@@ -177,13 +177,13 @@ class AccountAnalyticLine(models.Model):
                 raise Warning('Vous ne devez pas travailler le week-end!')   
                 return False
         
-        if vals.get('task_id'):
-            # unit_amount=self.unit_amount
-            tasks = self.env['project.task'].search([('id', '=', vals.get('task_id'))])
-            for task in tasks:
-                if unit_amount > task.planned_hours:
-                    raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans cette tâche qui est {}!'.format(self.float_time_to_time(task.planned_hours)))  
-                    return False
+#         if vals.get('task_id'):
+#             # unit_amount=self.unit_amount
+#             tasks = self.env['project.task'].search([('id', '=', vals.get('task_id'))])
+#             for task in tasks:
+#                 if unit_amount > task.planned_hours:
+#                     raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans cette tâche qui est {}!'.format(self.float_time_to_time(task.planned_hours)))  
+#                     return False
                 
         if len(str(unit_amount)) > 2 and unit_amount != None:
             
@@ -277,107 +277,49 @@ class AccountAnalyticLine(models.Model):
                   
     @api.model
     def create(self, vals):
-        self.verif_day_off(vals['date'])
-        print "create one"
-        total = 0.0
-        print vals
-        print "date : ", vals['date']
-        employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
-        heure_par_jour = self.get_heure_par_jour(employees, vals)
-        print "heure_par_jour", heure_par_jour
-        print "date", self.date
-        unit_amount_old = 0.0
-        account_analytic_line_s = self.env['account.analytic.line'].search([('date', '=', vals['date'])])
-        for account in account_analytic_line_s :
-            if self.env.user.id == account.user_id.id:
-                if vals.get('account_id') :
-                    if account.id == vals['account_id']:
-                        unit_amount_old = account.unit_amount
-                total += account.unit_amount
-        print "total 1 : ", total
-        if vals.get('unit_amount'):
-            total = (total - unit_amount_old) + vals.get('unit_amount')
-            print "total 2 : ", total
-            if total > heure_par_jour :
-                #self._refresh_grid()
-                raise Warning(u'Vous ne pouvez pas saisir plus de {} heures sur cette journée'.format(self.float_time_to_time(heure_par_jour)))
-                
-            if vals.get('unit_amount') > heure_par_jour :
-                #self._refresh_grid()
-                raise Warning(u'Vous ne pouvez pas saisir plus de {} heures sur cette journée'.format(self.float_time_to_time(heure_par_jour)))
-                
+        
         project_holidays = self.env['project.project'].sudo().search([('name', '=', 'Absences/Permission/Conges')])
         if project_holidays[0].id != vals.get('project_id'):
-            print vals.get('task_id')
-            print vals.get('date'), ' DATE'
-            print vals.get('project_id'), ' ID PROJET'
-            print vals.get('unit_amount')
+
+            self.verif_day_off(vals['date'])
+            print "create one"
+            total = 0.0
+            print vals
+            print "date : ", vals['date']
+            employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
+            heure_par_jour = self.get_heure_par_jour(employees, vals)
+            print "heure_par_jour", heure_par_jour
+            print "date", self.date
+            unit_amount_old = 0.0
+            account_analytic_line_s = self.env['account.analytic.line'].search([('date', '=', vals['date'])])
+            for account in account_analytic_line_s :
+                if self.env.user.id == account.user_id.id:
+                    if vals.get('account_id') :
+                        if account.id == vals['account_id']:
+                            unit_amount_old = account.unit_amount
+                    total += account.unit_amount
+            print "total 1 : ", total
+            if vals.get('unit_amount'):
+                total = (total - unit_amount_old) + vals.get('unit_amount')
+                print "total 2 : ", total
+                if total > heure_par_jour :
+                    #self._refresh_grid()
+                    raise Warning(u'Vous ne pouvez pas saisir plus de {} heures sur cette journée'.format(self.float_time_to_time(heure_par_jour)))
+                    
+                if vals.get('unit_amount') > heure_par_jour :
+                    #self._refresh_grid()
+                    raise Warning(u'Vous ne pouvez pas saisir plus de {} heures sur cette journée'.format(self.float_time_to_time(heure_par_jour)))
+                     
+                    if total > heure_par_jour:
+                            print total, ' total_planned_hours'
+                            print heure_par_jour, ' heure_par_jour'
+                            if heure_par_jour == 0.0:
+                                    raise Warning('Vous ne pouvez pas travailler aujourd\'hui ou peut-être que vous n\'êtes pas affecté à un horaire de travail!')
+                            else:
+                                    raise Warning('Vous ne pouvez pas travailler plus de {} aujourd\'hui!'.format(self.float_time_to_time(heure_par_jour)))
+                            return False
             
-            if vals.get('date') and vals.get('project_id') and vals.get('unit_amount'):
-                print 'IF 1'
-                self.verif_day_off(vals.get('date'))
-                
-                
-                current_timesheets = self.env['account.analytic.line'].search([('project_id', '=', vals.get('project_id')), ('task_id', '=', vals.get('task_id'))])
-                task = self.env['project.task'].search([('id', '=', vals.get('task_id'))])[0]
-                total_planned_hours = 0
-                for current_timesheet in current_timesheets:
-                        total_planned_hours += float(current_timesheet.unit_amount)
-                    
-                total_planned_hours += vals.get('unit_amount')
-                        
-                    # if total_planned_hours > task.planned_hours:
-                    #    raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time(total_planned_hours - task.planned_hours ))) 
-                    #    return False
-        
-                if vals.get('unit_amount') > task.planned_hours:
-                        raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans cette tâche qui est {}!'.format(self.float_time_to_time(task.planned_hours)))   
-                        return False
-        
-                current_timesheets = self.env['account.analytic.line'].search([('date', '=', vals.get('date')), ('user_id', '=', self.env.user.id)])
-                total_planned_hours = 0
-                for current_timesheet in current_timesheets:
-                        total_planned_hours += float(current_timesheet.unit_amount)
-                    
-                total_planned_hours += vals.get('unit_amount')
-        
-                employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
-                    
-                heure_par_jour = self.get_heure_par_jour(employees, vals)
-                
-                if total_planned_hours > heure_par_jour:
-                        print total_planned_hours, ' total_planned_hours'
-                        print heure_par_jour, ' heure_par_jour'
-                        if heure_par_jour == 0.0:
-                                raise Warning('Vous ne pouvez pas travailler aujourd\'hui ou peut-être que vous n\'êtes pas affecté à un horaire de travail!')
-                        else:
-                                raise Warning('Vous ne pouvez pas travailler plus de {} aujourd\'hui!'.format(self.float_time_to_time(heure_par_jour)))
-                        return False
-        
-                self.modif_val_unit_amount(vals)
-                       
-                    
-            
-#             if vals.get('project_id') and vals.get('unit_amount') and vals.get('unit_amount') != 0.0:
-#                 print 'IF 2'
-#                 current_timesheets = self.env['account.analytic.line'].search([('user_id', '=', self.env.user.id)])
-#                 total_planned_hours = 0
-#                 for current_timesheet in current_timesheets:
-#                     total_planned_hours += float(current_timesheet.unit_amount)
-#                 
-#                 total_planned_hours += vals.get('unit_amount')
-#                 employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
-#                 heure_par_jour=self.get_heure_par_jour(employees,vals)
-#     
-#                 if vals.get('unit_amount') > heure_par_jour:
-#                         if heure_par_jour==0.0:
-#                             raise Warning('Vous ne pouvez pas travailler aujourd\'hui ou peut-être que vous n\'êtes pas affecté à un horaire de travail!')
-#                         else:
-#                             raise Warning('Vous ne pouvez pas travailler plus de {} aujourd\'hui!'.format(self.float_time_to_time(heure_par_jour)))
-#                         return False
-#     
-#                 self.modif_val_unit_amount(vals)
-    
+                    self.modif_val_unit_amount(vals)
         return super(AccountAnalyticLine, self).create(vals)
 
     @api.multi
@@ -396,13 +338,13 @@ class AccountAnalyticLine(models.Model):
             if self.env.user.id == account.user_id.id:
                 total += account.unit_amount
         print "total 1 : ", total
-        if vals.get('task_id'):
-            unit_amount = self.unit_amount
-            tasks = self.env['project.task'].search([('id', '=', vals.get('task_id'))])
-            for task in tasks:
-                if unit_amount > task.planned_hours:
-                    raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans cette tâche qui est {}!'.format(self.float_time_to_time(task.planned_hours)))  
-                    return False
+#         if vals.get('task_id'):
+#             unit_amount = self.unit_amount
+#             tasks = self.env['project.task'].search([('id', '=', vals.get('task_id'))])
+#             for task in tasks:
+#                 if unit_amount > task.planned_hours:
+#                     raise Warning('La durée du Timesheet entrée est supérieure à celle mentionnée dans cette tâche qui est {}!'.format(self.float_time_to_time(task.planned_hours)))  
+#                     return False
             
         if vals.get('unit_amount'):
             total = (total - self.unit_amount) + vals.get('unit_amount')
@@ -428,17 +370,7 @@ class AccountAnalyticLine(models.Model):
             if vals.get('unit_amount') > heure_par_jour :
                 raise Warning('Vous ne pouvez pas travailler plus de {} aujourd\'hui!'.format(self.float_time_to_time(heure_par_jour)))
                 return False
-          
-#             if vals.get('unit_amount') > self.unit_amount:
-#                     print "self.task_id.planned_hours : ",self.task_id.planned_hours
-#                     total_planned_hours = 0
-#                     current_timesheets = self.env['account.analytic.line'].search([['project_id', '=', self.project_id.id], ['task_id', '=', self.task_id.id]])
-#                     for current_timesheet in current_timesheets:
-#                         total_planned_hours += float(current_timesheet.unit_amount)
-#                         
-#                     if (total_planned_hours + vals.get('unit_amount') - self.unit_amount) > self.task_id.planned_hours:
-#                         raise Warning(u'Le nombre d\'heure pour cette tâche dépasse de {}'.format(self.float_time_to_time((total_planned_hours + vals.get('unit_amount') - self.unit_amount) - self.task_id.planned_hours)))
-#                         return False
+
                     
         self.traiter_unit_amount(vals)
         
