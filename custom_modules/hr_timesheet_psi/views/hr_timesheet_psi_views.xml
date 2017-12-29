@@ -142,7 +142,7 @@
 			<field name="project_id" position="replace">
 				<field name="project_id"
 					options="{'no_quick_create': True, 'no_create_edit' : True}"
-					attrs="{'readonly' : [('project_name','=','Absences/Permission/Conges')]}" />
+					attrs="{'readonly' : [('project_name','=','Absences/Permission/Congés')]}" />
 			</field>
 		</field>
 	</record>
