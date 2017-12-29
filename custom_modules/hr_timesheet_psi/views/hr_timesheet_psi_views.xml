@@ -136,6 +136,19 @@
 			<field name="task_id" position="attributes">
 				<attribute name="invisible">1</attribute>
 			</field>
+			<field name="project_id" position="replace">
+				<field name="project_id" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+			</field>
+		</field>
+	</record>
+	<record id="view_timesheet_form_psi_inherit" model="ir.ui.view">
+		<field name="name">Timesheet lines for grid psi</field>
+		<field name="model">account.analytic.line</field>
+		<field name="inherit_id" ref="timesheet_grid.view_timesheet_form" />
+		<field name="arch" type="xml">
+			<field name="project_id" position="replace">
+				<field name="project_id" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+			</field>
 		</field>
 	</record>
 	<record id="view_timesheet_grid_psi_inherit" model="ir.ui.view">
