@@ -1,7 +1,39 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <odoo>
 	<data>
+	<!-- Make invisible old menu -->
+	<record id="make_invisible" model="res.groups">
+	    <field name="name">Invisible</field>
+	</record>
+	<record model="ir.ui.menu" id="hr_holidays.menu_open_company_allocation">
+	    <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+	</record>
+	<record model="ir.ui.menu" id="hr_holidays.menu_open_ask_holidays_new">
+	    <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+	</record>
 	
+	<!-- Rename name Menu -->
+	<menuitem
+            id="menu_open_company_allocation"
+            name="Liste des demandes d'absence"
+            parent="hr_holidays.menu_hr_holidays_my_leaves"
+            action="hr_holidays.open_company_allocation"
+            sequence="22"/>
+            
+    <menuitem
+            id="menu_open_ask_holidays_new"
+            name="Faire une demande d'absence"
+            parent="hr_holidays.menu_hr_holidays_my_leaves"
+            action="hr_holidays.open_ask_holidays"
+            sequence="22"/>
+            
+	<menuitem
+            id="menu_open_company_allocation"
+            name="Liste des demandes d'absence"
+            parent="hr_holidays.menu_hr_holidays_my_leaves"
+            action="hr_holidays.open_company_allocation"
+            sequence="100"/>
+            
 	<menuitem
             id="menu_hr_holidays_config_psi"
             name="Configuration PSI"
@@ -31,12 +63,33 @@
 			</field>
 	</record>
 
-
+	
+            
+	
    	<record id="view_holiday_simple_inherit" model="ir.ui.view">
 		<field name="name">view.holiday.simple.inherit</field>
 		<field name="model">hr.holidays</field>
 		<field name="inherit_id" ref="hr_holidays.view_holiday_simple" />
 		<field name="arch" type="xml">
+			<!-- <xpath expr="/tree" position="replace">
+				<tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Liste des demandes d'absence">
+                    <field name="employee_id"/>
+                    <field name="category_id" invisible="1"/>
+                    <field name="department_id" invisible="1"/>
+                    <field name="type"/>
+                    <field name="name"/>
+                    <field name="number_of_days_temp" string="Nombre de jour(s)" sum="Remaining Days"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="holiday_status_id"/>
+                    <field name="manager_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="state"/>
+                </tree>
+			</xpath> -->
+			<!-- <xpath expr="//tree" position="attributes">
+				<attribute name="string">Liste des demandes d'absence</attribute>
+			</xpath> -->
    			<xpath expr="//field[@name='number_of_days']" position="replace">
    				<field name="number_of_days_temp" string="Nombre de jour(s)" />
    			</xpath>
