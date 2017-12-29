@@ -27,7 +27,7 @@ class ProjectProject(models.Model):
     
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
-
+    
     project_timesheet_id = fields.Integer(store=True)
 #     project_id = fields.Many2one('project.project', 'Project', domain=lambda self: 
 #                                     [
@@ -80,6 +80,8 @@ class AccountAnalyticLine(models.Model):
 #             'target': 'new',
 #         }
         
+    project_name = fields.Char(related='project_id.name', store=True)
+    
     @api.v8
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):
