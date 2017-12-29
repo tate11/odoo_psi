@@ -121,6 +121,12 @@ class hr_holidays_psi(models.Model):
                 date_from = datetime.datetime.strptime(record.date_from, "%Y-%m-%d").date()
                 date_to = datetime.datetime.strptime(record.date_to, "%Y-%m-%d").date()
 
+
+                # Verification si date_from et date_to W-END ou JOUR FERIE
+                self.verif_day_off(str(date_from))
+                self.verif_day_off(str(date_to))
+                # FIN Verification si date_from et date_to W-END ou JOUR FERIE
+        
                 holidays_status_maternite = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])   #  CONGE MATERNITE
                 holidays_status_sans_solde = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',3)])  #  CONGE SANS SOLDE
                 
@@ -236,25 +242,19 @@ class hr_holidays_psi(models.Model):
     def create(self, values):
         
         print "create hr.holidays"
-        date_from = datetime.datetime.strptime(values.get('date_from'),"%Y-%m-%d").date()
-        date_to = datetime.datetime.strptime(values.get('date_to'),"%Y-%m-%d").date()
-        delta = date_to - date_from
-        
-        self.verif_day_off(str(date_from))
-        self.verif_day_off(str(date_to))
-        
-        for i in range(delta.days + 1):
-            day = datetime.datetime.strptime(str(date_from + timedelta(days=i)), '%Y-%m-%d').strftime('%w')   
-            print day                                             
-            public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
-            print public_holidays_line,'  public_holidays_line'
-            for public_holiday in public_holidays_line:
-                print  public_holiday.date, u" liste jour ferié == date_from > date_to ",date_from + timedelta(days=i)
-                if str(public_holiday.date) == str(date_from + timedelta(days=i)):
-                    print 'ENTER'
-                    if day == "6" or day =="0":
-                        raise Warning('Erreur.')
-        
+                
+#         for i in range(delta.days + 1):
+#             day = datetime.datetime.strptime(str(date_from + timedelta(days=i)), '%Y-%m-%d').strftime('%w')   
+#             print day                                             
+#             public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
+#             print public_holidays_line,'  public_holidays_line'
+#             for public_holiday in public_holidays_line:
+#                 print  public_holiday.date, u" liste jour ferié == date_from > date_to ",date_from + timedelta(days=i)
+#                 if str(public_holiday.date) == str(date_from + timedelta(days=i)):
+#                     print 'ENTER'
+#                     if day == "6" or day =="0":
+#                         raise Warning('Erreur.')
+
         if values.has_key('employee_id'):
             employee = self.env['hr.employee'].browse(values.get('employee_id'))
             recrutement_type = self.env['hr.recruitment.type'].sudo().search([('recrutement_type','=','collaborateur')])
@@ -277,9 +277,10 @@ class hr_holidays_psi(models.Model):
 
           
     @api.multi
-    def write(self, values):
-        print values
-        employee_id = values.get('employee_id', False)
+    def write(self, vals):
+        print "write"
+        print vals
+        employee_id = vals.get('employee_id', False)
         #self._send_email_rappel_absences_to_assist_and_coord(False)
         #self._verif_leave_date()
         
@@ -294,7 +295,7 @@ class hr_holidays_psi(models.Model):
 #             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
 #             return False
 
-        result = super(hr_holidays_psi, self).write(values)
+        result = super(hr_holidays_psi, self).write(vals)
         #self.add_follower(employee_id)
         return result
     
