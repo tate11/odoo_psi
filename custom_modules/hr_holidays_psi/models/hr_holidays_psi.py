@@ -124,8 +124,8 @@ class hr_holidays_psi(models.Model):
                 print date_to
                 
                 # Verification si date_from et date_to W-END ou JOUR FERIE
-                self.verif_day_off(str(date_from))
-                self.verif_day_off(str(date_to))
+#                 self.verif_day_off(str(date_from))
+#                 self.verif_day_off(str(date_to))
                 # FIN Verification si date_from et date_to W-END ou JOUR FERIE
         
                 holidays_status_maternite = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])   #  CONGE MATERNITE
