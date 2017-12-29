@@ -115,6 +115,7 @@ class hr_holidays_psi(models.Model):
                             record.number_of_days_temp = 1.0
                         else:
                             record.number_of_days_temp = float(day_hours[0]) + 1.0
+
                 
                 
                 # ENLEVE WEEK END ET JOUR FERIE (sauf CONGE SANS SOLDE)
@@ -137,6 +138,36 @@ class hr_holidays_psi(models.Model):
                             current_day=datetime.datetime.strptime(str(date_from + timedelta(days=i)), '%Y-%m-%d').strftime('%w')
                             if current_day == "6" or current_day == "0" :                                   # VERIFICATION W-END
 #                                 print "W-end"
+
+            
+            from_dt = record.date_from
+            to_dt = record.date_to
+            
+            # ENLEVE WEEK END ET JOUR FERIE (sauf CONGE SANS SOLDE)
+            print from_dt
+            print to_dt,' to date'
+            date_from = datetime.datetime.strptime(from_dt, "%Y-%m-%d").date()
+            date_to = datetime.datetime.strptime(to_dt, "%Y-%m-%d").date()
+            print date_from,' date_from'
+            print date_to,' date_to'
+            
+#             holidays_status = self.env['hr.holidays.status'].sudo().search([('holidays_status_id_psi','!=',3)]) # NO CONGE SANS SOLDE
+#             if holidays_status[0].id:
+            delta = date_to - date_from
+            print delta,' delta'
+            for i in range(delta.days + 1):
+                        current_day=datetime.datetime.strptime(str(date_from + timedelta(days=i)), '%Y-%m-%d').strftime('%w')
+                        print date_from + timedelta(days=i)
+                        print current_day,' JOUR SEMAINE'
+                        if current_day == "6" or current_day == "0" :                                   # VERIFICATION W-END
+                            print "W-end"
+                            record.number_of_days_temp -= 1
+        #                 record.number_of_days_temp -= compute_day_off(from_dt + timedelta(days=i))
+                        for public_holiday in public_holidays_line:                                     # VERIFICATION JOUR FERIE
+                            #print "JOUR FERIE ",public_holiday.date
+                            if str(public_holiday.date) == str(date_from + timedelta(days=i)):
+                                print "OUI JF"
+
                                 record.number_of_days_temp -= 1
                             for public_holiday in public_holidays_line:                                     # VERIFICATION JOUR FERIE
                                 if str(public_holiday.date) == str(date_from + timedelta(days=i)):
@@ -236,24 +267,48 @@ class hr_holidays_psi(models.Model):
         public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
         for public_holiday in public_holidays_line:
             if public_holiday.date == date:
+
                 raise Warning('Vous ne pouvez pas demander de congé pendant les jours fériés.')
             
+   
+    # Contrôle week-end et jours fériés
+    def verif_day_not_working(self, date):
+        print "Verification +"
+        current_day=datetime.datetime.strptime(date, '%Y-%m-%d').strftime('%w')
+        if current_day == "6" or current_day == "0" :
+            return True
+        
+        public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
+        for public_holiday in public_holidays_line:
+            if public_holiday.date == date:
+                return True
+        return False    
+
     @api.model
     def create(self, values):
         
         print "create hr.holidays"
-                
-#         for i in range(delta.days + 1):
-#             day = datetime.datetime.strptime(str(date_from + timedelta(days=i)), '%Y-%m-%d').strftime('%w')   
-#             print day                                             
-#             public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
-#             print public_holidays_line,'  public_holidays_line'
+
+        date_from = datetime.datetime.strptime(values.get('date_from'),"%Y-%m-%d").date()
+        date_to = datetime.datetime.strptime(values.get('date_to'),"%Y-%m-%d").date()
+        delta = date_to - date_from
+        
+        self.verif_day_off(str(date_from))
+        self.verif_day_off(str(date_to))
+        
+        for i in range(delta.days + 1):
+            day = datetime.datetime.strptime(str(date_from + timedelta(days=i)), '%Y-%m-%d').strftime('%w')   
+            print day                                             
+            public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
+            print public_holidays_line,'  public_holidays_line'
+
 #             for public_holiday in public_holidays_line:
 #                 print  public_holiday.date, u" liste jour ferié == date_from > date_to ",date_from + timedelta(days=i)
 #                 if str(public_holiday.date) == str(date_from + timedelta(days=i)):
 #                     print 'ENTER'
 #                     if day == "6" or day =="0":
 #                         raise Warning('Erreur.')
+
 
         if values.has_key('employee_id'):
             employee = self.env['hr.employee'].browse(values.get('employee_id'))
@@ -477,29 +532,53 @@ class hr_holidays_psi(models.Model):
         
                     employee = holiday.employee_id
                     print employee,' employee'
-        
-                    time_from = self.str_to_timezone(holiday.date_from)
-                    time_to = self.str_to_timezone(holiday.date_to)
-        
-                    # Horaire de travail par region
-                    heure_par_jour = 0.0
-                    attendance_ids = employee.calendar_id.attendance_ids
-                    print "attendance_ids ",attendance_ids
-                    date_now = datetime.datetime.strptime(fields.Date().today(),'%Y-%m-%d')
-                    dayofweek = int(datetime.datetime.strptime(str(date_now.date()), '%Y-%m-%d').strftime('%w'))
-                    for attendance_id in attendance_ids:
-                        attendances = self.env['resource.calendar.attendance'].search([['id', '=', attendance_id.id], ['dayofweek', '=', dayofweek]])
-                        for attendance in attendances:
-                            heure_par_jour += attendance.hour_to - attendance.hour_from
-                    
-                    for timestamp in self.datespan(time_from, time_to):
-                        company = employee.company_id
-                        date = timestamp.date()
-                        hours = heure_par_jour
                         
-                        date_str = str(date)
-                        self.create_leave_analytic_line(holiday, employee, date_str, hours)
-                 
+#                     time_from = self.str_to_timezone(holiday.date_from)
+#                     time_to = self.str_to_timezone(holiday.date_to)
+#         
+#                     # Horaire de travail par region
+#                     heure_par_jour = 0.0
+#                     attendance_ids = employee.calendar_id.attendance_ids
+#                     print "attendance_ids ",attendance_ids
+#                     date_now = datetime.datetime.strptime(fields.Date().today(),'%Y-%m-%d')
+#                     dayofweek = int(datetime.datetime.strptime(str(date_now.date()), '%Y-%m-%d').strftime('%w'))
+#                     for attendance_id in attendance_ids:
+#                         attendances = self.env['resource.calendar.attendance'].search([['id', '=', attendance_id.id], ['dayofweek', '=', dayofweek]])
+#                         for attendance in attendances:
+#                             heure_par_jour += attendance.hour_to - attendance.hour_from
+#                     
+#                     for timestamp in self.datespan(time_from, time_to):
+#                         company = employee.company_id
+#                         date = timestamp.date()
+#                         hours = heure_par_jour
+#                         
+#                         date_str = str(date)
+#                         self.create_leave_analytic_line(holiday, employee, date_str, hours)
+#               
+                attendance_ids = employee.calendar_id.attendance_ids
+                date_from = datetime.datetime.strptime(holiday.date_from,"%Y-%m-%d")
+                date_to = datetime.datetime.strptime(holiday.date_to,"%Y-%m-%d")
+                    
+                d1 = date(date_from.year, date_from.month, date_from.day)  # start date
+                d2 = date(date_to.year, date_to.month, date_to.day)  # end date
+    
+                delta = d2 - d1
+                nbjour = 0.5 if holiday.demi_jour == True else 1
+                for i in range(delta.days + 1):
+                    date_str = (d1 + timedelta(days=i))
+                    heure_par_jour = 0.0
+                    dayofweek = int(datetime.datetime.strptime(str(date_str), '%Y-%m-%d').strftime('%w'))
+                    if not self.verif_day_not_working(str(date_str)) :
+                        for attendance_id in attendance_ids:
+                            attendances = self.env['resource.calendar.attendance'].search([('id', '=', attendance_id.id), ('dayofweek', '=', dayofweek)])
+                            for attendance in attendances:
+                                heure_par_jour += attendance.hour_to - attendance.hour_from
+                        print "heure_par_jour : ",heure_par_jour
+                        print "nbjour : ",nbjour
+                        heure_par_jour = heure_par_jour * nbjour
+                        self.create_leave_analytic_line(holiday, employee, date_str, heure_par_jour)
+                
+                            
                 #Add the partner_id (if exist) as an attendee
                 if holiday.user_id and holiday.user_id.partner_id :
                     meeting_values['partner_ids'] = [(4, holiday.user_id.partner_id.id)]
@@ -575,7 +654,7 @@ class hr_holidays_psi(models.Model):
 
         account = self.env.ref('hr_holidays_psi.account_leave')
         project = self.env.ref('hr_holidays_psi.project_leave')
-
+        
         return self.env['account.analytic.line'].sudo().create({
             'account_id': account.id,
             'project_id': project.id,
@@ -586,8 +665,7 @@ class hr_holidays_psi(models.Model):
             'amount_currency': 0,
             'is_timesheet': True,
             'unit_amount': hours,
-            'user_id': employee.user_id.id,
-            'leave_id': self.id
+            'user_id': employee.user_id.id
         })
         
     @api.multi
