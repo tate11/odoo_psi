@@ -141,14 +141,13 @@
 	<record id="view_timesheet_grid_psi_inherit" model="ir.ui.view">
 		<field name="name">timesheet grid psi</field>
 		<field name="model">account.analytic.line</field>
-		<field name="inherit_id" ref="timesheet_grid.view_timesheet_grid" />
+		<field name="inherit_id" ref="view_timesheet_grid_psi" />
 		<field name="mode">primary</field>
 		<field name="arch" type="xml">
 			<xpath expr="/grid" position="attributes">
 				<attribute name="create">false</attribute>
 				<attribute name="edit">false</attribute>
 			</xpath>
-			<xpath expr="//field[@name='task_id']" position="replace" />
 		</field>
 	</record>
 
@@ -177,7 +176,12 @@
 		<field name="domain">['&amp;', ('user_id', '=', uid), ('is_timesheet',
 			'=', True)]
 		</field>
-		<field name="context">{'user_id': uid}</field>
+		<field name="context">
+		   {
+		     'user_id': uid,
+		     'grid_range': 'month'
+			}
+		</field>
 	</record>
 
 	<record id="view_timesheet_grid_psi" model="ir.ui.view">
