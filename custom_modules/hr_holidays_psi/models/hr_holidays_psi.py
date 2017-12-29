@@ -209,13 +209,12 @@ class hr_holidays_psi(models.Model):
         
         for i in range(delta.days + 1):
             day = datetime.datetime.strptime(str(date_from + timedelta(days=i)), '%Y-%m-%d').strftime('%w')   
-#             print day                                             
+            print day                                             
             public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
-#             print public_holidays_line,'  public_holidays_line'
+            print public_holidays_line,'  public_holidays_line'
             for public_holiday in public_holidays_line:
                 print  public_holiday.date, " == ",date_from + timedelta(days=i)
                 if public_holiday.date == date_from + timedelta(days=i):
-                    print "ENTER"
                     if day == "6" or day =="0":
                         raise Warning('Erreur.')
         
@@ -387,6 +386,7 @@ class hr_holidays_psi(models.Model):
                         temp_not_limited = True
                if not temp_not_limited:
                     if between.days < 3 :
+                        print "*******************between.days < 3 ***********************"
                         raise ValidationError(u"Vous devez effectuer votre demande au moins 3 jours avant votre départ en congé.")
                         return False
                holidays_status_maternite = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])
