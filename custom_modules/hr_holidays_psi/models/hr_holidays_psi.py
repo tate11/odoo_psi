@@ -230,13 +230,13 @@ class hr_holidays_psi(models.Model):
         print "Verification +"
         current_day=datetime.datetime.strptime(date, '%Y-%m-%d').strftime('%w')
         if current_day == "6" or current_day == "0" :
-            raise Warning('Vous ne pouvez pas demander du congé le week-end.')  
+            raise Warning('Vous ne pouvez pas demander de congé le week-end.')  
             return False
         
         public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
         for public_holiday in public_holidays_line:
             if public_holiday.date == date:
-                raise Warning('Vous ne pouvez pas demander du congé pendant les jours fériés.')
+                raise Warning('Vous ne pouvez pas demander de congé pendant les jours fériés.')
             
     @api.model
     def create(self, values):
