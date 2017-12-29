@@ -355,7 +355,7 @@ class hr_holidays_psi(models.Model):
             else:
                 holiday.number_of_days_psi = holiday.number_of_days_temp
     
-    @api.constrains('date_from')
+    @api.constrains('date_from','name','holiday_status_id','demi_jour')
     def _check_date_from(self):
        print "_check_date_from"
        for record in self :
