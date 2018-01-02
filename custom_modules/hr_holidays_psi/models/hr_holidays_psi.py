@@ -71,7 +71,7 @@ class hr_holidays_psi(models.Model):
         ('approbation', u'A valider par les RH'),
         ('validate2', u'A valider par le DRHA'),
         ('validate', u'Validé par le DRHA')
-        ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
+        ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='draft',
             help="The status is set to 'To Submit', when a holiday request is created." +
             "\nThe status is 'To Approve', when holiday request is confirmed by user." +
             "\nThe status is 'Refused', when holiday request is refused by manager." +
@@ -471,8 +471,8 @@ class hr_holidays_psi(models.Model):
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
-            if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2']:
-                raise UserError(u'La demande ne peut pas être refusée que si elle est déjà validée par un supérieur')
+            if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2', 'approbation']:
+                raise UserError(u'Une demande de congé ne peut être refusée si elle a déjà été validée par les RH ou le DRHA')
             if holiday.state == 'validate2' and not holiday.env.user.has_group('hr_holidays_psi.group_hr_holidays_drha'):
                 raise UserError('Seul DRHA peut valider la demande.')
 
@@ -802,13 +802,15 @@ class hr_holidays_psi(models.Model):
         
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
-            if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2']:
-                raise UserError(u'La demande ne peut pas être refusée que si elle est déjà validée par un supérieur')
+            if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2', 'approbation']:
+                raise UserError(u'Une demande de congé ne peut être refusée si elle a déjà été validée par les RH ou le DRHA')
 
             if holiday.state == 'validate1':
-                holiday.write({'state': 'refuse', 'manager_id': manager.id})
+#                 holiday.write({'state': 'refuse', 'manager_id': manager.id}) #old
+                holiday.write({'state': 'draft', 'manager_id': manager.id}) #new
             else:
-                holiday.write({'state': 'refuse', 'manager_id2': manager.id})
+#                 holiday.write({'state': 'refuse', 'manager_id2': manager.id}) #old
+                holiday.write({'state': 'draft', 'manager_id2': manager.id}) #new
             # Delete the meeting
             if holiday.meeting_id:
                 holiday.meeting_id.unlink()

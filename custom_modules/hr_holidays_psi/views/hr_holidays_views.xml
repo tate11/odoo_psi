@@ -466,10 +466,9 @@
 				<field name="psi_category_id" attrs="{'invisible': [('holiday_type','not in','category')]}" />
 			</field>
 
-			<xpath expr="//button[@name='action_refuse']" position='replace'>
-				<button string="Refuser" name="action_refuse" states="confirm,validate1,validate2" type="object" 
-				groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha"/>
-			</xpath>
+			<xpath expr="//button[@name='action_confirm']" position="replace">
+				<button string="Soumettre" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+			</xpath>      
 			<xpath expr="//button[@name='action_validate']" position='replace'>
 				<!-- Valider (DRHA) -->
 				<button string="Valider cette demande" name="action_validate" states="validate2"  type="object" class="oe_highlight"
@@ -483,6 +482,10 @@
 			<xpath expr="//button[@name='action_approve']" position='replace'>
 				<!-- Valider (Supérieur hiérarchique) -->
 				<button string="Valider cette demande" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
+			</xpath>              
+			<xpath expr="//button[@name='action_refuse']" position='replace'>
+				<button string="Refuser" name="action_refuse" states="confirm,validate1,validate2,approbation" type="object" 
+				groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha"/>
 			</xpath>
 			<field name="state" position="before">
 				<!-- Valider (Responsable RH) -->
