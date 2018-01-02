@@ -120,12 +120,14 @@ class hr_holidays_psi(models.Model):
                 date_from = datetime.datetime.strptime(record.date_from, "%Y-%m-%d").date()
                 date_to = datetime.datetime.strptime(record.date_to, "%Y-%m-%d").date()
 
-                print date_from
-                print date_to
+                print date_from,' > date_from'
+                print date_to,' > date_to'
+                print record.id
+                print record.name
                 
                 # Verification si date_from et date_to W-END ou JOUR FERIE
-#                 self.verif_day_off(str(date_from))
-#                 self.verif_day_off(str(date_to))
+                self.verif_day_off(str(date_from))
+                self.verif_day_off(str(date_to))
                 # FIN Verification si date_from et date_to W-END ou JOUR FERIE
         
                 holidays_status_maternite = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])   #  CONGE MATERNITE
@@ -305,6 +307,14 @@ class hr_holidays_psi(models.Model):
     def write(self, vals):
         print "write"
         print vals
+        
+        date_from = datetime.datetime.strptime(vals.get('date_from'),"%Y-%m-%d").date()
+        date_to = datetime.datetime.strptime(vals.get('date_to'),"%Y-%m-%d").date()
+    
+        
+        self.verif_day_off(str(date_from))
+        self.verif_day_off(str(date_to))
+        
         employee_id = vals.get('employee_id', False)
         #self._send_email_rappel_absences_to_assist_and_coord(False)
         #self._verif_leave_date()
