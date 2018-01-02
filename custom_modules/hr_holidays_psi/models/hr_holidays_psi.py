@@ -63,14 +63,14 @@ class hr_holidays_psi(models.Model):
     nombre_conge = fields.Float(string="Nombre de conge attribuer")
     
     state = fields.Selection([
-        ('draft', 'To Submit'),
-        ('cancel', 'Cancelled'),
-        ('confirm', 'To Approve'),
-        ('refuse', 'Refused'),
-        ('validate1', u'Validé par Supérieur hiérarchique'),
-        ('approbation', u'Approuvé par chef de département'),
-        ('validate2', u'Validé par RH'),
-        ('validate', u'Validé par DRHA')
+        ('draft', u'A soumettre pour validation'),
+        ('cancel', u'Annuler'),
+        ('confirm', u'A valider par le Supérieur hiérarchique'),
+        ('refuse', u'Refusé'),
+        ('validate1', u'A valider par le Chef de Département'),
+        ('approbation', u'A valider par les RH'),
+        ('validate2', u'A valider par le DRHA'),
+        ('validate', u'Validé par le DRHA')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
             help="The status is set to 'To Submit', when a holiday request is created." +
             "\nThe status is 'To Approve', when holiday request is confirmed by user." +

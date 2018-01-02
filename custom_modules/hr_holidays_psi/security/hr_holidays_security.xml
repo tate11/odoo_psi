@@ -11,7 +11,8 @@
     <record id="group_hr_holidays_chef_departement" model="res.groups">
         <field name="name">PSI-Chef Département</field>
         <field name="category_id" ref="base.module_category_hr_holidays"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <!-- <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/> -->				<!-- OLD -->
+        <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/> 	<!-- NEW -->
     </record>
 	
     <record id="group_hr_holidays_rh" model="res.groups">
@@ -24,27 +25,36 @@
 	<record id="group_hr_holidays_sup_hierarchique" model="res.groups">
         <field name="name">PSI-Supérieur Hiérarchique</field>
         <field name="category_id" ref="base.module_category_hr_holidays"/>
-        <!-- <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/> --> 	<!-- OLD -->
-        <field name="implied_ids" eval="[(4, ref('group_hr_holidays_rh'))]"/>		<!-- NEW -->
+        <!-- <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/> --> 				<!-- OLD -->
+        <!-- <field name="implied_ids" eval="[(4, ref('group_hr_holidays_rh'))]"/> -->	        
+        <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/> 	<!-- NEW -->
     </record>
     
     
     <record id="group_hr_holidays_spa" model="res.groups">
         <field name="name">PSI-SPA</field>
         <field name="category_id" ref="base.module_category_hr_holidays"/>
-        <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/>
+        <!-- <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/> -->	<!-- OLD -->
+        <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/> 			<!-- NEW -->
     </record>
     
     <record id="group_hr_holidays_crh" model="res.groups">
         <field name="name">PSI-CRH</field>
         <field name="category_id" ref="base.module_category_hr_holidays"/>
-        <field name="implied_ids" eval="[(4, ref('group_hr_holidays_rh'))]"/>
+        <!-- <field name="implied_ids" eval="[(4, ref('group_hr_holidays_rh'))]"/> -->			<!-- OLD -->
+        <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/> 	<!-- NEW -->
     </record>
     
     <record id="group_hr_holidays_drha" model="res.groups">
         <field name="name">PSI-DRHA</field>
         <field name="category_id" ref="base.module_category_hr_holidays"/>
-        <field name="implied_ids" eval="[(4, ref('group_hr_holidays_crh'))]"/>
+        <!-- <field name="implied_ids" eval="[(4, ref('group_hr_holidays_crh'))]"/> -->			<!-- OLD -->
+        <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/> 	<!-- NEW -->
     </record>
 
+ 	<record id="hr_holidays.group_hr_holidays_user" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="category_id" ref="base.module_category_hr_holidays"/>
+        <field name="implied_ids" eval="[(4, ref('group_hr_holidays_employe'))]"/>
+    </record>
 </odoo>
