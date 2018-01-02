@@ -18,15 +18,9 @@
             name="Configuration PSI"
             parent="hr_holidays.menu_hr_holidays_root"
             sequence="5"/>
-            
-            
-            
-            
-	
+  
 	<!-- DEBUT RENAME VIEW 2 edit_holiday_new -->
-	
-	
-        <record id="view_holiday_simple" model="ir.ui.view">
+		<record id="view_holiday_simple" model="ir.ui.view">
             <field name="name">hr.holidays.report_tree</field>
             <field name="model">hr.holidays</field>
             <field name="priority">20</field>
@@ -99,11 +93,6 @@
         </record>
         <!-- FIN RENAME VIEW 2 edit_holiday_new -->
         
-        
-        
-        
-        
-            
    	<!-- Search Filter in HrHolidays -->
 	<record id="hr_holidays_filter_inherit" model="ir.ui.view">
 			<field name="name">hr.holidays.filter.inherit</field>
@@ -164,7 +153,7 @@
 	<!-- DEBUT RENAME VIEW edit_holiday_new -->
 	
         <!-- Holidays: Allocation Request -->
-        <record id="edit_holiday_new" model="ir.ui.view">
+        <!-- <record id="edit_holiday_new" model="ir.ui.view">
             <field name="name">Demande d'absence</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
@@ -172,39 +161,69 @@
                 <field name="can_reset" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <header>
-                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+					<button string="Refuser_" name="action_refuse" states="confirm,validate1,validate2" type="object" 
+				groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha"/>
+					<button string="Valider (DRHA)_" name="action_validate" states="validate2"  type="object" class="oe_highlight"
+				groups="hr_holidays_psi.group_hr_holidays_drha" />
+					<button string="Approuver (Chef de departement)" name="action_approbation_departement" attrs="{'invisible': [('state','not in','validate1')]}"  type="object" class="oe_highlight" 
+				groups="hr_holidays_psi.group_hr_holidays_chef_departement" />
+					<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
+					<button string="Valider (Responsable RH)" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','approbation')]}"  type="object" class="oe_highlight"
+			    groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa" />
+					<field name="state" widget="statusbar" statusbar_visible="confirm, validate1, approbation,validate2, validate"/> -->
+                
+                    <!-- <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                     <button string="Approve" name="action_approve" states="confirm" type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
                     <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
                     <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object" groups="hr_holidays.group_hr_holidays_user"/>
                     <button string="Reset to Draft" name="action_draft" type="object"
                             attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
-                </header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/> -->
+                <!-- </header>
                 <sheet>
+					<div name="button_box">
+						<button name="action_get_attachment_tree_view" 
+							class="oe_stat_button" 
+							icon="fa-book" type="object">
+							<field name="attachment_number" widget="statinfo" string="Documents"
+								modifiers="{'readonly': true}" />
+						</button>
+					</div>
                     <div class="oe_title">
                         <h1><field name="display_name"/></h1>
                     </div>
                     <group>
                         <group>
-                            <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
-                            <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
-                            <label for="number_of_days_temp" string="Duration"/>
-                            <div>
-                                <div attrs="{'invisible': [('type', '=', 'add')]}">
-                                    <field name="date_from" attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
-                                    <label string="-" class="oe_inline"/>
-                                    <field name="date_to"  attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
-                                </div>
-                                <div>
-                                    <field name="number_of_days_temp" class="oe_inline"/> days
-                                </div>
-                            </div>
-                        </group>
+							<field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
+							<field name="holiday_status_id" context="{'employee_id':employee_id}"/>
+							<field name="holiday_type_permission" attrs="{'invisible':[('id_psi_holidays_status','!=',1)], 'required': [('id_psi_holidays_status', '=', 1)]}" />
+						</group>
+						<group>
+							<div attrs="{'invisible': [('type', '=', 'add')]}">
+								<field name="date_from" attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
+								<label string="-" class="oe_inline"/>
+								<field name="date_to"  attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
+							</div>
+							<div>
+								<div>
+									<label for="number_of_days_temp" string="Durée"/>
+									<field name="number_of_days_temp" readonly="1"/> jour(s)
+								</div>
+								<label for="demi_jour" string="Demi-journée" />
+								<field name="demi_jour" class="oe_inline" />
+								<field name="matin_soir" attrs="{'invisible':[('demi_jour', '=', False)]}" class="oe_inline"/>
+							</div>
+						</group>
                         <group>
                             <field name="holiday_type" attrs="{'readonly':[('type', '=', 'remove'),('state','!=','draft')]}" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}" />
-                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="hr_holidays.group_hr_holidays_user"/>
+                            <field name="psi_category_id" attrs="{'invisible': [('holiday_type','not in','category')]}" />
+							<field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="hr_holidays.group_hr_holidays_user"/>
                             <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly': [('type', '=', 'remove'),('state','!=','draft'), ('state','!=','confirm')], 'invisible':[('holiday_type','=','employee')]}"/>
-                            <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{'readonly':['|','|' ,('type','=','add'),('holiday_type','=','category'),('state','=', 'validate')],'invisible':[('holiday_type','=','category')]}"/>
+                            <field name="category_id" invisible="1" />
+							<field name="last_business_day" invisible="1" />
+							<field name="id_psi_holidays_status" invisible="1" />
+							
+						   <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{'readonly':['|','|' ,('type','=','add'),('holiday_type','=','category'),('state','=', 'validate')],'invisible':[('holiday_type','=','category')]}"/>
                             <field name="payslip_status" groups="hr_holidays.group_hr_holidays_manager" attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
                         </group>
                         <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..." attrs="{'invisible': [('type', '=', 'remove')]}"/>
@@ -220,7 +239,7 @@
                 </div>
                 </form>
             </field>
-        </record>
+        </record> -->
 		
 		<record id="view_holiday" model="ir.ui.view">
             <field name="name">hr.holidays.tree</field>
@@ -292,7 +311,7 @@
             <field name="name">Demande d'absence</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="edit_holiday_new"/>
+            <field name="view_id" ref="hr_holidays.edit_holiday_new"/>
             <field name="context">{
                 'default_type': 'remove',
                 'search_default_my_leaves': 1,
@@ -325,7 +344,7 @@
         <record id="action_open_ask_holidays_form" model="ir.actions.act_window.view">
             <field name="sequence" eval="3"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="edit_holiday_new"/>
+            <field name="view_id" ref="hr_holidays.edit_holiday_new"/>
             <field name="act_window_id" ref="open_ask_holidays"/>
         </record>
 
@@ -343,6 +362,53 @@
             action="open_ask_holidays"
             sequence="22"/>
             
+            
+		<!-- STD -->
+		<record model="ir.actions.act_window" id="request_approve_holidays">
+            <field name="name">Requests to Approve</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="view_type">form</field>
+            <field name="context">{
+                'default_type': 'remove',
+                'search_default_approve':1,
+                'needaction_menu_ref':
+                [
+                    'hr_holidays_psi.menu_open_ask_holidays_new',
+                    'hr_holidays_psi.menu_open_company_allocation',
+                    'hr_holidays.menu_open_employee_leave',
+                ]
+            }</field>
+            <field name="domain">[('type','=','remove')]</field>
+            <field name="view_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+        </record>
+
+        <record id="action_request_approve_holidays_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_holiday"/>
+            <field name="act_window_id" ref="request_approve_holidays"/>
+        </record>
+
+        <record id="action_request_approve_holidays_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="act_window_id" ref="request_approve_holidays"/>
+        </record>
+
+
+
+       <!--  <menuitem
+            id="menu_open_allocation_holidays"
+            parent="hr_holidays.menu_hr_holidays_my_leaves"
+            action="open_allocation_holidays"
+            sequence="40"/> -->
+
+       
+
+     
+		<!-- FIN STD -->
 	<!-- FIN RENAME VIEW edit_holiday_new -->
 	
 	<!-- Holidays: Leave Request -->
@@ -387,7 +453,6 @@
 			</xpath>
 			
 			<field name="category_id" position="replace">
-				<!-- <field name="color_name_holiday_status" invisible="1" /> -->
 				<field name="category_id" invisible="1" />
 				<field name="last_business_day" invisible="1" />
 				<field name="id_psi_holidays_status" invisible="1" />
@@ -395,7 +460,6 @@
 			
 			<xpath expr="//field[@name='holiday_status_id']" position='after'>
 				<field name="holiday_type_permission" attrs="{'invisible':[('id_psi_holidays_status','!=',1)], 'required': [('id_psi_holidays_status', '=', 1)]}" />
-				<!-- <field name="holiday_type_permission" attrs="{'invisible':['&amp;',('color_name_holiday_status','not in','lightblue'),('type','not in','add')], 'required': [('color_name_holiday_status', '=', 'lightblue')]}" /> -->
 			</xpath>
 			
 			<field name="holiday_type" position="after">
@@ -554,7 +618,7 @@
 	</record>
 	
 	<menuitem
-            id="hr_holidays.menu_hr_holidays_approvals"
+            id="menu_hr_holidays_approvals"
             name="Leaves to Approve"
             parent="hr_holidays.menu_hr_holidays_root"
             sequence="3"
