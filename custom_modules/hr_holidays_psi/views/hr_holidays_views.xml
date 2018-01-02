@@ -33,17 +33,17 @@
             <field name="arch" type="xml">
                 <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Liste des demandes d'absence">
                     <field name="employee_id"/>
-                    <field name="category_id" invisible="1"/>
-                    <field name="department_id" invisible="1"/>
-                    <field name="type"/>
-                    <field name="name"/>
-                    <field name="number_of_days_temp" string="Nombre de jour(s)" />
+                    <field name="holiday_status_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <field name="holiday_status_id"/>
+                    <field name="number_of_days_temp" string="Nombre de jours" />
+                    <field name="state"/>
+                    <field name="name"/>
+                    <field name="category_id" invisible="1"/>
+                    <field name="department_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
-                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -55,13 +55,13 @@
             <field name="arch" type="xml">
                 <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Employee's Leave">
                     <field name="employee_id"/>
-                    <field name="type"/>
-                    <field name="name"/>
-                    <field name="number_of_days_temp" string="Nombre de jour(s)" />
+                    <field name="holiday_status_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <field name="holiday_status_id"/>
+                    <field name="number_of_days_temp" string="Nombre de jours" />
                     <field name="state"/>
+                    <field name="name"/>
+                    <field name="type" invisible="1" />
                     <button name="toggle_payslip_status" field_name="payslip_status" type="object"
                         widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
                     <field name="report_note"/>
@@ -130,35 +130,35 @@
 	
             
 	
-   	<record id="view_holiday_simple_inherit" model="ir.ui.view">
+   <!-- 	<record id="view_holiday_simple_inherit" model="ir.ui.view">
 		<field name="name">view.holiday.simple.inherit</field>
 		<field name="model">hr.holidays</field>
 		<field name="inherit_id" ref="hr_holidays.view_holiday_simple" />
 		<field name="arch" type="xml">
-			<!-- <xpath expr="/tree" position="replace">
+			<xpath expr="/tree" position="replace">
 				<tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Liste des demandes d'absence">
                     <field name="employee_id"/>
-                    <field name="category_id" invisible="1"/>
-                    <field name="department_id" invisible="1"/>
-                    <field name="type"/>
-                    <field name="name"/>
-                    <field name="number_of_days_temp" string="Nombre de jour(s)" sum="Remaining Days"/>
+                    <field name="holiday_status_id"/>
+                    <field name="number_of_days_temp" string="Nombre de jours" sum="Remaining Days"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <field name="holiday_status_id"/>
+                    <field name="state"/>
+                    <field name="name"/>
+                    <field name="category_id" invisible="1"/>
+                    <field name="department_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
-                    <field name="state"/>
                 </tree>
-			</xpath> -->
-			<!-- <xpath expr="//tree" position="attributes">
+			</xpath>
+			<xpath expr="//tree" position="attributes">
 				<attribute name="string">Liste des demandes d'absence</attribute>
-			</xpath> -->
+			</xpath>
    			<xpath expr="//field[@name='number_of_days']" position="replace">
-   				<field name="number_of_days_temp" string="Nombre de jour(s)" />
+   				<field name="number_of_days_temp" string="Nombre de jours" />
    			</xpath>
    		</field>
-   	</record>
+   	</record> -->
 
 
 	<!-- DEBUT RENAME VIEW edit_holiday_new -->
@@ -229,13 +229,13 @@
                 <tree decoration-danger="state == 'refuse'" decoration-info="state == ' draft'" string="Leave Requests"
                        decoration-bf="message_needaction == True">
                     <field name="employee_id"/>
-                    <field name="holiday_type" string="Mode" groups="base.group_no_one"/>
                     <field name="holiday_status_id"/>
-                    <field name="name"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <field name="number_of_days_temp" string="Nombre de jour(s)" />
+                    <field name="number_of_days_temp" string="Nombre de jours" />
                     <field name="state"/>
+                    <field name="name"/>
+                    <field name="holiday_type" string="Mode" groups="base.group_no_one" invisible="1"/>
                     <field name="payslip_status" invisible="1"/>
                     <button name="toggle_payslip_status" field_name="payslip_status" type="object"
                         widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
@@ -248,6 +248,32 @@
             </field>
         </record>
 	
+	
+		<record id="view_holiday_allocation_tree" model="ir.ui.view">
+            <field name="name">hr.holidays.allocation.tree</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.view_holiday_allocation_tree" />
+            <field name="arch" type="xml">
+            	<xpath expr="/tree" position="replace">
+	                <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
+                       decoration-bf="message_needaction == True">
+	                    <field name="employee_id"/>
+	                    <field name="holiday_status_id" />
+	                    <field name="date_from"/>
+	                    <field name="date_to"/>
+	                    <field name="number_of_days_temp" string="Nombre de jours" sum="Remaining Days"/>
+	                    <field name="state"/>
+	                    <field name="name"/>
+	                    <field name="holiday_type" invisible="1"/>
+	                    <field name="category_id" invisible="1"/>
+	                    <field name="department_id" invisible="1"/>
+	                    <field name="message_needaction" invisible="1"/>
+	                    <field name="manager_id" invisible="1"/>
+	                    <field name="user_id" invisible="1"/>
+	                </tree>
+                </xpath>
+            </field>
+        </record>
 	
     <record id="view_holiday_new_calendar" model="ir.ui.view">
             <field name="name">Demande d'absence</field>
