@@ -279,8 +279,9 @@ class AccountAnalyticLine(models.Model):
                   
     @api.model
     def create(self, vals):
-        
-        project_holidays = self.env['project.project'].sudo().search([('name', '=', 'Absences/Permission/Conges')])
+        print "Create"
+        project_holidays = self.env['project.project'].sudo().search([('name', '=', 'Absences/Permission/Congés')])
+        print project_holidays[0],' project_holidays[0]'
         if project_holidays[0].id != vals.get('project_id'):
 
             self.verif_day_off(vals['date'])
