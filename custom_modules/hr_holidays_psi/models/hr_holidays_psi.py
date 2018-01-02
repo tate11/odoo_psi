@@ -308,13 +308,13 @@ class hr_holidays_psi(models.Model):
         print "write"
         print vals
         
-        date_from = datetime.datetime.strptime(vals.get('date_from'),"%Y-%m-%d").date()
-        date_to = datetime.datetime.strptime(vals.get('date_to'),"%Y-%m-%d").date()
+#         date_from = datetime.datetime.strptime(vals.get('date_from'),"%Y-%m-%d").date()
+#         date_to = datetime.datetime.strptime(vals.get('date_to'),"%Y-%m-%d").date()
     
-#         
+        
 #         self.verif_day_off(str(date_from))
 #         self.verif_day_off(str(date_to))
-#         
+        
         employee_id = vals.get('employee_id', False)
         #self._send_email_rappel_absences_to_assist_and_coord(False)
         #self._verif_leave_date()
