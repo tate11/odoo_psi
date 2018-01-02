@@ -471,18 +471,22 @@
 				groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha"/>
 			</xpath>
 			<xpath expr="//button[@name='action_validate']" position='replace'>
-				<button string="Valider (DRHA)" name="action_validate" states="validate2"  type="object" class="oe_highlight"
+				<!-- Valider (DRHA) -->
+				<button string="Valider cette demande" name="action_validate" states="validate2"  type="object" class="oe_highlight"
 				groups="hr_holidays_psi.group_hr_holidays_drha" />
 			</xpath>
 			<xpath expr="//button[@name='action_approve']" position='after'>
-				<button string="Approuver (Chef de departement)" name="action_approbation_departement" attrs="{'invisible': [('state','not in','validate1')]}"  type="object" class="oe_highlight" 
+				<!-- Approuver (Chef de departement) -->
+				<button string="Valider cette demande" name="action_approbation_departement" attrs="{'invisible': [('state','not in','validate1')]}"  type="object" class="oe_highlight" 
 				groups="hr_holidays_psi.group_hr_holidays_chef_departement" />
 			</xpath>
 			<xpath expr="//button[@name='action_approve']" position='replace'>
-				<button string="Valider (Supérieur hiérarchique)" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
+				<!-- Valider (Supérieur hiérarchique) -->
+				<button string="Valider cette demande" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
 			</xpath>
 			<field name="state" position="before">
-			    <button string="Valider (Responsable RH)" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','approbation')]}"  type="object" class="oe_highlight"
+				<!-- Valider (Responsable RH) -->
+			    <button string="Valider cette demande" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','approbation')]}"  type="object" class="oe_highlight"
 			    groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa" />
 			</field>
 			

@@ -109,6 +109,9 @@
 				<xpath expr="//field[@name='name']" position="replace">
 					<field name="name" placeholder="Nom et prénom(s) de l'employé" string="Nom et prénom(s)" />
 				</xpath>
+				<xpath expr="//field[@name='calendar_id']" position="attributes">
+					<attribute name="string">Horaire de travail</attribute>
+				</xpath>
 				<notebook>
 					<page string="Pièces à fournir">
 						<group col="1">
