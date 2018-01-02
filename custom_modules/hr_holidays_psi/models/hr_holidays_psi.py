@@ -715,7 +715,7 @@ class hr_holidays_psi(models.Model):
         if automatic:
             self._cr.commit()
 
-    @api.onchange('holiday_status_id')
+#     @api.onchange('holiday_status_id')
     def _onchange_holiday_status_id(self):
         print "_onchange_holiday_status_id"
         
