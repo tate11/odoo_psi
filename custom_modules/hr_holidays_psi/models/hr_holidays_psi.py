@@ -261,7 +261,7 @@ class hr_holidays_psi(models.Model):
         
         print "create hr.holidays"
         
-        if values.has_key('employee_id'):
+        if values.has_key('date_from'):
 #             if record.date_from and record.date_to:
 #                 print '2'
                 date_from = datetime.datetime.strptime(values.get('date_from'),"%Y-%m-%d").date()
