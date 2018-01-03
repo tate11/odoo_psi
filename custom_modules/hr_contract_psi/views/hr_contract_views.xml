@@ -69,7 +69,7 @@
 
 			<field name="wage" position='after'>
 			    <field name="devise" required="1" />
-				<field name="psi_category" readonly="1"/>
+				<field name="psi_category_details" readonly="1"/>
 				<field name="psi_cat_cat" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 				<field name="psi_sub_category" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 				<field name="psi_echelon" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
