@@ -559,6 +559,10 @@ class hr_holidays_psi(models.Model):
                         print "heure_par_jour : ",heure_par_jour
                         print "nbjour : ",nbjour
                         heure_par_jour = heure_par_jour * nbjour
+                        account_analytic_line_s = self.env['account.analytic.line'].search([('date', '=', date_str)])
+                        for account in account_analytic_line_s :
+                            if employee.user_id.id == account.user_id.id:
+                                account.write({'unit_amount' : 0.0 })
                         self.create_leave_analytic_line(holiday, employee, date_str, heure_par_jour)
                 
                             
