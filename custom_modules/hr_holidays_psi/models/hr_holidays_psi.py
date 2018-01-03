@@ -77,6 +77,14 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'Refused', when holiday request is refused by manager." +
             "\nThe status is 'Approved', when holiday request is approved by manager.")
 
+
+    @api.multi
+    def action_confirm(self):
+        if self.filtered(lambda holiday: holiday.state != 'draft'):
+            raise UserError(_('Leave request must be in Draft state ("To Submit") in order to confirm it.'))
+        self._send_mail_action_confirm(self)
+        return self.write({'state': 'confirm'})
+    
     # Contrôle week-end et jours fériés
     def compute_day_off(self, date):
         result = 0
@@ -381,6 +389,11 @@ class hr_holidays_psi(models.Model):
         if self.env.uid != self.employee_id.coach_id.user_id.id:
             raise AccessError(u'Vous n\'avez pas le droit de valider cette demande sauf le supérieur hiérarchique.')
 
+        # Send mail 
+        print "IN"
+        self._send_mail_action_confirm(self)
+        print "OUT"
+        
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             print "holiday.state : ",holiday.state
@@ -388,6 +401,7 @@ class hr_holidays_psi(models.Model):
                 raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
             return holiday.write({'state': 'validate1', 'manager_id': manager.id if manager else False})
     
+        
     @api.multi
     def action_approve_candidate1(self):
         # if double_validation: this method is the first approval approval
@@ -408,6 +422,13 @@ class hr_holidays_psi(models.Model):
         if not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_chef_departement'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
+        
+        # Send mail 
+        print "IN"
+        self._send_mail_action_confirm(self)
+        print "OUT"
+        
+        
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state != 'validate1':
@@ -647,6 +668,8 @@ class hr_holidays_psi(models.Model):
                 leaves.action_approve()
                 if leaves and leaves[0].double_validation:
                     leaves.action_validate()
+            
+            
         return True
     
     _sql_constraints = [
@@ -810,10 +833,9 @@ class hr_holidays_psi(models.Model):
         today = datetime.datetime.today()
         if today.day == 20:
             template = self.env.ref('hr_holidays_psi.custom_template_absences_to_assist_and_coord')
-            self.env['mail.template'].browse(template.id).send_mail(self.id)               
+            self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=force_send)            
         if automatic:
             self._cr.commit()
-            
             
     #@api.constrains('state', 'number_of_days_temp')
     def _check_holidays(self):
@@ -856,3 +878,13 @@ class hr_holidays_psi(models.Model):
             holiday.linked_request_ids.action_refuse()
         self._remove_resource_leave()
         return True
+
+    # Mail state draft to confirm
+    @api.multi
+    def _send_mail_action_confirm(self, automatic=False):
+        print "Mail state draft to confirm"
+        template = self.env.ref('hr_holidays_psi.custom_template_action_confirm')
+        self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)            
+        if automatic:
+            self._cr.commit()
+            
