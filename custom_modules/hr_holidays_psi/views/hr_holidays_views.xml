@@ -484,10 +484,14 @@
 				<button string="Valider cette demande" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
 			</xpath>              
 			<xpath expr="//button[@name='action_refuse']" position='replace'>
-				<button string="Refuser" name="action_refuse" states="confirm,validate1,validate2,approbation" type="object" 
-				groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha"/>
+				<!-- REFUSER PAR RH -->
+				<button string="Refuser" name="action_refuse" states="approbation" type="object" attrs="{'invisible':[('state','not in','approbation')]}"
+				groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh"/>
+				<!-- REFUSER PAR DRHA -->
+				<button string="Refuser" name="action_refuse" states="confirm,validate1,validate2" type="object" attrs="{'invisible':[('state','not in','validate2')]}"
+				groups="hr_holidays_psi.group_hr_holidays_spa,hr_holidays_psi.group_hr_holidays_crh,hr_holidays_psi.group_hr_holidays_drha"/>
 			</xpath>
-			<field name="state" position="before">
+			<field name="state" position="after">
 				<!-- Valider (Responsable RH) -->
 			    <button string="Valider cette demande" name="action_approve_candidate1" attrs="{'invisible': [('state','not in','approbation')]}"  type="object" class="oe_highlight"
 			    groups="hr_holidays_psi.group_hr_holidays_rh,hr_holidays_psi.group_hr_holidays_spa" />
