@@ -82,7 +82,7 @@ class hr_employee(models.Model):
     #psi_budget_code_distribution = fields.Many2one(related="job_id.psi_budget_code_distribution", store=True)
     psi_budget_code_distribution= fields.Many2many('psi.code.budgetaire',string='Code Budgétaire')
     
-    nombre_conge = fields.Float(string='Nombre de congés')
+    nombre_conge = fields.Float(string='Nombre de jours de congés')
 
     psi_contract_type = fields.Selection([
         ('cdd', 'CDD'),
