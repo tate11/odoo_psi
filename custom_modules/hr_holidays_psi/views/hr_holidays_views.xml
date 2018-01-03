@@ -637,7 +637,7 @@
 	
 	<menuitem
             id="menu_hr_holidays_approvals_hierarchique"
-            name="Congés des subordonnés"
+            name="Congés à valider par le Supérieur hiérarchique"
             parent="hr_holidays.menu_hr_holidays_approvals"
             sequence="4"
             action="open_holidays_approve_hierarchique"
@@ -645,7 +645,7 @@
     
     <menuitem
             id="menu_hr_holidays_approvals_cdp"
-            name="Congés validés par supérieur hierarchique"
+            name="Congés à valider par le Chef de département"
             parent="hr_holidays.menu_hr_holidays_approvals"
             sequence="5"
             action="open_holidays_approve_cdp"
@@ -653,7 +653,7 @@
     
     <menuitem
             id="menu_hr_holidays_approvals_rh"
-            name="Congés validés par chef de département"
+            name="Congés à valider par les RH"
             parent="hr_holidays.menu_hr_holidays_approvals"
             sequence="6"
             action="open_holidays_approve_rh_spa"
@@ -661,7 +661,7 @@
             
   	<menuitem
             id="menu_hr_holidays_approvals_drha"
-            name="Congés validés par RH"
+            name="Congés à valider par le DRHA"
             parent="hr_holidays.menu_hr_holidays_approvals"
             sequence="7"
             action="open_holidays_approve_drha"
