@@ -144,6 +144,21 @@
 					options="{'no_quick_create': True, 'no_create_edit' : True}"
 					attrs="{'readonly' : [('project_name','=','Absences/Permission/Congés')]}" />
 			</field>
+			<field name="date" position="replace">
+				<field name="date"
+					options="{'no_quick_create': True, 'no_create_edit' : True}"
+					attrs="{'readonly' : [('project_name','=','Absences/Permission/Congés')]}" />
+			</field>
+			<field name="name" position="replace">
+				<field name="name"
+					options="{'no_quick_create': True, 'no_create_edit' : True}"
+					attrs="{'readonly' : [('project_name','=','Absences/Permission/Congés')]}" />
+			</field>
+			<field name="unit_amount" position="replace">
+				<field name="unit_amount"
+					options="{'no_quick_create': True, 'no_create_edit' : True}"
+					attrs="{'readonly' : [('project_name','=','Absences/Permission/Congés')]}" />
+			</field>
 		</field>
 	</record>
 
