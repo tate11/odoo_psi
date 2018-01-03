@@ -422,22 +422,22 @@
 			
 			<xpath expr="//field[@name='name']/.." position="replace">
 				<group>
-					<field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','validate2')]}"/>
-            		<field name="holiday_status_id" context="{'employee_id':employee_id}" attrs="{'readonly':[('state','!=','draft'),('state','!=','validate2')]}"/>
+					<field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','approbation')]}"/>
+            		<field name="holiday_status_id" context="{'employee_id':employee_id}" attrs="{'readonly':[('state','!=','draft'),('state','!=','approbation')]}"/>
             	</group>
 			    <group>
 	            	<div attrs="{'invisible': [('type', '=', 'add')]}">
-                        <field name="date_from" attrs="{'required':[('type', '=', 'remove')],'readonly':[('state','!=','draft'),('state','!=','validate2')]}" class="oe_inline"/>
+                        <field name="date_from" attrs="{'required':[('type', '=', 'remove')],'readonly':[('state','!=','draft'),('state','!=','approbation')]}" class="oe_inline"/>
                         <label string="-" class="oe_inline"/>
-                        <field name="date_to"  attrs="{'required':[('type', '=', 'remove')],'readonly':[('state','!=','draft'),('state','!=','validate2')]}" class="oe_inline"/>
+                        <field name="date_to"  attrs="{'required':[('type', '=', 'remove')],'readonly':[('state','!=','draft'),('state','!=','approbation')]}" class="oe_inline"/>
                     </div>
                     <div>
 	                    <div>
 	                    	<label for="number_of_days_temp" string="Durée"/>
-		                	<field name="number_of_days_temp" readonly="1" attrs="{'readonly':[('state','!=','draft'),('state','!=','validate2')]}"/> jour(s)
+		                	<field name="number_of_days_temp" readonly="1" attrs="{'readonly':[('state','!=','draft'),('state','!=','approbation')]}"/> jour(s)
 	                	</div>
 	                    <label for="demi_jour" string="Demi-journée" />
-		                <field name="demi_jour" class="oe_inline" attrs="{'readonly':[('state','!=','draft'),('state','!=','validate2')]}"/>
+		                <field name="demi_jour" class="oe_inline" attrs="{'readonly':[('state','!=','draft'),('state','!=','approbation')]}"/>
 	                    <field name="matin_soir" attrs="{'invisible':[('demi_jour', '=', False)]}" class="oe_inline"/>
 	                </div>
 	            </group>
@@ -448,7 +448,7 @@
 						class="oe_stat_button" 
 						icon="fa-book" type="object">
 						<field name="attachment_number" widget="statinfo" string="Documents"
-							modifiers="{'readonly': true}" attrs="{'readonly':[('state','!=','draft'),('state','!=','validate2')]}"/>
+							modifiers="{'readonly': true}" attrs="{'readonly':[('state','!=','draft'),('state','!=','approbation')]}"/>
 					</button>
 				</div>
 			</xpath>
@@ -460,11 +460,11 @@
 			</field>
 			
 			<xpath expr="//field[@name='holiday_status_id']" position='after'>
-				<field name="holiday_type_permission" attrs="{'invisible':[('id_psi_holidays_status','!=',1)], 'required': [('id_psi_holidays_status', '=', 1)],'readonly':[('state','!=','draft'),('state','!=','validate2')]}" />
+				<field name="holiday_type_permission" attrs="{'invisible':[('id_psi_holidays_status','!=',1)], 'required': [('id_psi_holidays_status', '=', 1)],'readonly':[('state','!=','draft'),('state','!=','approbation')]}" />
 			</xpath>
 			
 			<field name="holiday_type" position="after">
-				<field name="psi_category_id" attrs="{'invisible': [('holiday_type','not in','category')],'readonly':[('state','!=','draft'),('state','!=','validate2')]}" />
+				<field name="psi_category_id" attrs="{'invisible': [('holiday_type','not in','category')],'readonly':[('state','!=','draft'),('state','!=','approbation')]}" />
 			</field>
 
 			<xpath expr="//button[@name='action_confirm']" position="replace">
@@ -500,9 +500,27 @@
 			
 			<field name="state" position="replace">
 				<field name="state" widget="statusbar" statusbar_visible="confirm, validate1, approbation,validate2, validate"/>
-      </field>
+      		</field>
 
+			<field name="holiday_type" position="replace">
+				<field name="holiday_type" attrs="{'readonly':[('type', '=', 'remove'),('state','!=','draft')]}" string="Mode" groups="hr_holidays.group_hr_holidays_manager" context="{'employee_id':employee_id}" />
+      		</field>
 
+			<!-- <xpath expr="//field[@name='holiday_type']" position="replace">
+				<field name="holiday_type" attrs="{'readonly':[('type', '=', 'remove'),('state','!=','draft')]}" string="Mode" groups="hr_holidays.group_hr_holidays_manager" context="{'employee_id':employee_id}" />
+			</xpath> -->
+			<field name="employee_id" position="replace">
+				<field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="hr_holidays.group_hr_holidays_manager"/>
+			</field>
+			<field name="category_id" position="replace">
+				<field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly': [('type', '=', 'remove'),('state','!=','draft'), ('state','!=','confirm')], 'invisible':[('holiday_type','=','employee')]}"/>
+			</field>
+			<field name="department_id" position="replace">
+				<field name="department_id" groups="hr_holidays.group_hr_holidays_manager" attrs="{'readonly':['|','|' ,('type','=','add'),('holiday_type','=','category'),('state','=', 'validate')],'invisible':[('holiday_type','=','category')]}"/>
+			</field>
+			<field name="payslip_status" position="replace">
+				<field name="payslip_status" groups="hr_holidays.group_hr_holidays_manager" attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
+			</field>
 
 			<xpath expr="//form" position="attributes">
 				<attribute name="attrs">{'readonly':[('state','!=','draft'),('state','!=','validate2')]}</attribute> 
