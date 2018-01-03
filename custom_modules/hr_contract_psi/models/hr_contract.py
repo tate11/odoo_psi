@@ -206,8 +206,8 @@ class hr_contract(models.Model):
 
     job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
     
-    psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la Catégorie')
-    psi_category = fields.Selection(related='psi_category_details.psi_professional_category',string='Titre de la Catégorie')
+    psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la Catégorie',store=True)
+    psi_category = fields.Selection(related='psi_category_details.psi_professional_category',string='Titre de la Catégorie',store=True)
     psi_cat_cat = fields.Char(related='psi_category_details.psi_cat', string='Catégorie')
     psi_sub_category            = fields.Selection([
                                         ('1','1'),
