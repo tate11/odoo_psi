@@ -260,49 +260,52 @@ class hr_holidays_psi(models.Model):
     def create(self, values):
         
         print "create hr.holidays"
-
-        date_from = datetime.datetime.strptime(values.get('date_from'),"%Y-%m-%d").date()
-        date_to = datetime.datetime.strptime(values.get('date_to'),"%Y-%m-%d").date()
-        delta = date_to - date_from
         
-        self.verif_day_off(str(date_from))
-        self.verif_day_off(str(date_to))
         
-        for i in range(delta.days + 1):
-            day = datetime.datetime.strptime(str(date_from + timedelta(days=i)), '%Y-%m-%d').strftime('%w')   
-            print day                                             
-            public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
-            print public_holidays_line,'  public_holidays_line'
-
-#             for public_holiday in public_holidays_line:
-#                 print  public_holiday.date, u" liste jour ferié == date_from > date_to ",date_from + timedelta(days=i)
-#                 if str(public_holiday.date) == str(date_from + timedelta(days=i)):
-#                     print 'ENTER'
-#                     if day == "6" or day =="0":
-#                         raise Warning('Erreur.')
-
-
-        if values.has_key('employee_id'):
-            employee = self.env['hr.employee'].browse(values.get('employee_id'))
-            recrutement_type = self.env['hr.recruitment.type'].sudo().search([('recrutement_type','=','collaborateur')])
-            if employee.job_id.recrutement_type_id.id != recrutement_type[0].id:
-                raise ValidationError(u'Seulement les employés permanents peuvent faire une demande de congé.')
-                return False
-        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
-        if values.get('holiday_status_id') == holidays_status[0].id :
-           got_droit = self.check_droit(values)
-           if got_droit == False:
-              raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
-              return False
-           else:
-              holidays = super(hr_holidays_psi, self).create(values)
-              return holidays
-        else:
-              print "second print",values
-              holidays = super(hr_holidays_psi, self).create(values)
-              return holidays
-
-          
+        for record in self:
+            if record.date_from and record.date_to:
+                date_from = datetime.datetime.strptime(values.get('date_from'),"%Y-%m-%d").date()
+                date_to = datetime.datetime.strptime(values.get('date_to'),"%Y-%m-%d").date()
+                delta = date_to - date_from
+                
+                self.verif_day_off(str(date_from))
+                self.verif_day_off(str(date_to))
+                
+                for i in range(delta.days + 1):
+                    day = datetime.datetime.strptime(str(date_from + timedelta(days=i)), '%Y-%m-%d').strftime('%w')   
+                    print day                                             
+                    public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
+                    print public_holidays_line,'  public_holidays_line'
+        
+        #             for public_holiday in public_holidays_line:
+        #                 print  public_holiday.date, u" liste jour ferié == date_from > date_to ",date_from + timedelta(days=i)
+        #                 if str(public_holiday.date) == str(date_from + timedelta(days=i)):
+        #                     print 'ENTER'
+        #                     if day == "6" or day =="0":
+        #                         raise Warning('Erreur.')
+        
+        
+                if values.has_key('employee_id'):
+                    employee = self.env['hr.employee'].browse(values.get('employee_id'))
+                    recrutement_type = self.env['hr.recruitment.type'].sudo().search([('recrutement_type','=','collaborateur')])
+                    if employee.job_id.recrutement_type_id.id != recrutement_type[0].id:
+                        raise ValidationError(u'Seulement les employés permanents peuvent faire une demande de congé.')
+                        return False
+                holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
+                if values.get('holiday_status_id') == holidays_status[0].id :
+                   got_droit = self.check_droit(values)
+                   if got_droit == False:
+                      raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
+                      return False
+                   else:
+                      holidays = super(hr_holidays_psi, self).create(values)
+                      return holidays
+                else:
+                      print "second print",values
+                      holidays = super(hr_holidays_psi, self).create(values)
+                      return holidays
+        
+                  
     @api.multi
     def write(self, vals):
         print "write"
