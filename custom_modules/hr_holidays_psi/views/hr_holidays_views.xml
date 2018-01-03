@@ -101,6 +101,7 @@
 			<field name="arch" type="xml">
 				<xpath expr="filter[@name='approve']" position="attributes">
 					<attribute name="domain">[('state','=','confirm')]</attribute>
+					<attribute name="string">A valider par le Supérieur hiérarchique</attribute>
 				</xpath>
 				<xpath expr="filter[@name='approve']" position="before">					
 					<filter string="Personnel permanent du mois en cours" 
@@ -108,9 +109,9 @@
 						help="Liste des absences de tout le personnel permanent pour le mois courant"
 						/>
 					<separator />
-					<filter domain="[('state','=','validate1')]" string="Validé par supérieur hierarchique" name="valide_superieur_hierarchique"/>
-					<filter domain="[('state','=','approbation')]" string="Approuvé par chef de département" name="approuve_chef_departement"/>
-					<filter domain="[('state','=','validate2')]" string="Validé par RH" name="valide_rh"/>
+					<filter domain="[('state','=','validate1')]" string="A valider par le Chef de département" name="valide_superieur_hierarchique"/>
+					<filter domain="[('state','=','approbation')]" string="A valider par les RH" name="approuve_chef_departement"/>
+					<filter domain="[('state','=','validate2')]" string="A valider par le DRHA" name="valide_rh"/>
 					<filter domain="[('state','=','validate')]" string="Validé par DRHA" name="valide_drha"/>
 				</xpath>
 			</field>
