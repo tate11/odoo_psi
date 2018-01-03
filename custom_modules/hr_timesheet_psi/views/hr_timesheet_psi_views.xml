@@ -155,9 +155,9 @@
 					attrs="{'readonly' : [('project_name','=','Absences/Permission/Congés')]}" />
 			</field>
 			<field name="unit_amount" position="replace">
-				<field name="unit_amount"
+				<field name="unit_amount" string="Durée"
 					options="{'no_quick_create': True, 'no_create_edit' : True}"
-					attrs="{'readonly' : [('project_name','=','Absences/Permission/Congés')]}" />
+					attrs="{'readonly' : [('project_name','=','Absences/Permission/Congés')]}" widget="float_time" />
 			</field>
 		</field>
 	</record>
