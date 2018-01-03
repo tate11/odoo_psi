@@ -26,7 +26,7 @@ class hr_employee(models.Model):
     groupe_sanguin                  = fields.Char(string='Groupe sanguin')
     
     psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la Catégorie')
-    psi_category = fields.Selection(related='psi_category_details.psi_professional_category')
+    psi_category = fields.Selection(related='psi_category_details.psi_professional_category',store=True)
     
     emergency_contact_id            = fields.Many2one('hr.person.information', string=u'Personne à contacter en cas d\'urgence',
          help='Person to contact in case of emergency')

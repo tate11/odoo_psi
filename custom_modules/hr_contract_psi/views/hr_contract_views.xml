@@ -76,7 +76,7 @@
 			</field>
 			
 			<xpath expr="//field[@name='department_id']" position='after'>
-				<field name="psi_contract_type" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="psi_contract_type" readonly="1"/>
 				<field name="place_of_work" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
 			</xpath>
 

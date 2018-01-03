@@ -90,12 +90,13 @@ class hr_holidays_psi(models.Model):
                 result += 1
         return result
             
-    @api.depends('date_from', 'date_to', 'demi_jour', 'holiday_status_id')
+    @api.depends('date_from', 'date_to', 'demi_jour', 'holiday_status_id','number_of_days_temp')
     def _compute_date_from_to(self):
         print "_compute_date_from_to"
         #super(hr_holidays_psi,self)._onchange_date_from()
         public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
         for record in self:
+    
             if record.date_from and record.date_to:
                 if record.demi_jour == True:
                     record.number_of_days_temp = 0.5
@@ -145,8 +146,8 @@ class hr_holidays_psi(models.Model):
                                 if str(public_holiday.date) == str(date_from + timedelta(days=i)):
 #                                     print "OUI JF"
                                     record.number_of_days_temp -= 1
-                
-            
+          
+        
     @api.onchange('date_from')
     def _onchange_date_from(self):
         return {}
@@ -260,7 +261,9 @@ class hr_holidays_psi(models.Model):
     def create(self, values):
         
         print "create hr.holidays"
-        
+        if values.has_key('type') and values.get('type') == 'add' :
+            holidays = super(hr_holidays_psi, self).create(values)
+            return holidays
         if values.has_key('date_from'):
 #             if record.date_from and record.date_to:
 #                 print '2'
@@ -292,12 +295,33 @@ class hr_holidays_psi(models.Model):
                         raise ValidationError(u'Seulement les employés permanents peuvent faire une demande de congé.')
                         return False
                 holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
+                print values
                 if values.get('holiday_status_id') == holidays_status[0].id :
+                   nombre_conge = 0
+                   number_of_days = 0
                    got_droit = self.check_droit(values)
                    if got_droit == False:
                       raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
                       return False
                    else:
+                      holidays = self.env['hr.holidays'].search([('type','=','add'),('employee_id','=', employee.id)])
+                      date_from = datetime.datetime.strptime(values['date_from'],"%Y-%m-%d")
+                      date_to = datetime.datetime.strptime(values['date_to'],"%Y-%m-%d")
+                    
+                      d1 = date(date_from.year, date_from.month, date_from.day)  # start date
+                      d2 = date(date_to.year, date_to.month, date_to.day)  # end date
+    
+                      delta = d2 - d1
+                      for i in range(delta.days + 1):
+                          number_of_days += i 
+                      if len(holidays) > 0 :
+                          nombre_conge = holidays[0].nombre_conge - number_of_days
+                          if nombre_conge < 0 :
+                              raise ValidationError(u'Nombre conge insuiffisant.')
+                              return False
+                      else:
+                          raise ValidationError(u'Nombre conge insuiffisant.')
+                          return False
                       holidays = super(hr_holidays_psi, self).create(values)
                       return holidays
                 else:
@@ -478,8 +502,13 @@ class hr_holidays_psi(models.Model):
                 raise UserError(u'Une demande de congé ne peut être refusée si elle a déjà été validée par les RH ou le DRHA')
             if holiday.state == 'validate2' and not holiday.env.user.has_group('hr_holidays_psi.group_hr_holidays_drha'):
                 raise UserError('Seul DRHA peut valider la demande.')
-
+           
             holiday.write({'state': 'validate'})
+            holidays = self.env['hr.holidays'].search([('type','=','add'),('employee_id','=', holiday.employee_id.id)])
+            holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
+            if holiday.holiday_status_id.id == holidays_status[0].id and len(holidays[0]) > 0:
+                nombre_conge = holidays[0].nombre_conge - holiday.number_of_days_psi 
+                holidays[0].write({'nombre_conge': nombre_conge})
             print "holiday.write({'state': 'validate'})"
             
             if holiday.double_validation:
@@ -612,7 +641,9 @@ class hr_holidays_psi(models.Model):
                          'parent_id': holiday.id,
                          'employee_id': employee.id
                     }
-                    leaves += self.with_context(mail_notify_force_send=False).create(values)    
+                   
+                    leaves += self.with_context(mail_notify_force_send=False).create(values)  
+                    
                 leaves.action_approve()
                 if leaves and leaves[0].double_validation:
                     leaves.action_validate()
@@ -677,7 +708,7 @@ class hr_holidays_psi(models.Model):
 
                 if dt_write_date.month != dt_now.month:
                     number_of_days = holidays[0].number_of_days + 2 
-                    holidays[0].write({'number_of_days':number_of_days})
+                    holidays[0].write({'nombre_conge':number_of_days})
                 
             elif contract.date_start != False :
                 print contract.employee_id.name
@@ -688,7 +719,7 @@ class hr_holidays_psi(models.Model):
                                     'state': 'validate',
                                     'holiday_type': 'employee',
                                     'holiday_status_id': holidays_status[0].id,
-                                    'number_of_days_temp': 2,
+                                    'nombre_conge': 2,
                                     'employee_id': contract.employee_id.id
                                 }
                 self.env['hr.holidays'].create(values)

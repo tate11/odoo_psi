@@ -212,6 +212,7 @@
 						groups="hr.group_hr_user">
 						<group col="2">
 							<group string="Etat civil">
+								<field name="psi_category" />
 								<field name="matricule" required="1" />
 								<field name="psi_name" string='Nom et prénom(s)' />
 								<field name="birthday" string='Date de naissance' />
