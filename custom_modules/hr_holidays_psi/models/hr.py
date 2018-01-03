@@ -9,7 +9,7 @@ from odoo.exceptions import UserError
 class Employee(models.Model):
 
     _inherit = "hr.employee"
-    
+    leaves_count = fields.Float('Number of Leaves', compute='_compute_leaves_count')
     @api.multi
     def _compute_leaves_count(self):
        
