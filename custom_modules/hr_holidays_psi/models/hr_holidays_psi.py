@@ -375,12 +375,9 @@ class hr_holidays_psi(models.Model):
                         date_str = (d1 + timedelta(days=i))
                         if not self.verif_day_not_working(str(date_str)) :
                             date_difference += 1
-                    print "Diff : ",date_difference
-                    if date_difference > holidays_status_permission.type_permission.number_of_day :
-                        raise ValidationError(u'Maximum.')
-                        return False
-                    elif date_difference < holidays_status_permission.type_permission.number_of_day :
-                        raise ValidationError(u'Minimum.')
+                    diff = holidays_status_permission[0].type_permission.number_of_day
+                    if date_difference != diff :
+                        raise Warning(u'Vous devez poser exactement {} jour(s) pour ce type de permission.'.format(diff))
                         return False
                 holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
                 print values
