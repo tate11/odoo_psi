@@ -928,8 +928,10 @@ class hr_holidays_psi(models.Model):
             
     # Mail refuse congé
     def _send_mail_refuse_conge(self, automatic=False):
+        print ' _send_mail_refuse_conge'
         template = self.env.ref('hr_holidays_psi.custom_template_refuse_conge')
         self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)            
         if automatic:
             self._cr.commit()
+        print "end _send_mail_refuse_conge"
             
