@@ -674,7 +674,8 @@ class hr_holidays_psi(models.Model):
                                 'parent_id': holiday.id,
                                 'employee_id': employee.id
                             }
-                        leaves += self.with_context(mail_notify_force_send=False).create(values)
+#                         leaves += self.with_context(mail_notify_force_send=False).create(values) #old
+                        leaves += self.with_context(no_mail_to_attendees=True).create(values) #new
             elif holiday.holiday_type == 'employee' and holiday.all_employee == True:
                 leaves = self.env['hr.holidays']
                 employees = self.env['hr.employee'].search([])

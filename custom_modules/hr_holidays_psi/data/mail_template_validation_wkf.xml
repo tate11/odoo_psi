@@ -18,7 +18,7 @@
 	            	<p>Durée :  ${object.number_of_days_temp} jour(s)</p>
 	
 	            	%if object.state in ('draft'):  
-	            		<p>Etat: A Soumettre => A valider par le Supérieur hiérarchique</p>  
+	            		<p>Etat: A Soumettre pour validation => A valider par le Supérieur hiérarchique</p>  
 	            	%endif 
 	            	%if object.state in ('confirm'):  
 	            		<p>Etat: A valider par le Supérieur hiérarchique => A valider par le Chef de département</p> 
