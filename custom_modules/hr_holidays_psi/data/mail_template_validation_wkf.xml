@@ -10,7 +10,7 @@
             <field name="subject">Demande de congé</field>
             <field name="body_html"><![CDATA[
             	
-            	<div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+            	<div style="padding:0px;width:600px;background: #FFFFFF repeat top /100%;color:#777777">
 	            	<p>Votre demande de congé :</p>
 	            	<p>Type de congé :  ${object.holiday_status_id.name}</p>
 	            	<p>Date de début :  ${object.date_from}</p>
