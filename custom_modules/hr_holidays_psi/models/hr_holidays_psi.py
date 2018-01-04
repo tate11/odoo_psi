@@ -47,12 +47,12 @@ class hr_holidays_type_psi(models.Model):
                     # the employee to create more leaves than possible
                     status_dict['virtual_remaining_leaves'] += holiday.number_of_days_temp
                     status_dict['max_leaves'] += holiday.employee_id.nombre_conge
-                    status_dict['remaining_leaves'] += holiday.number_of_days_temp
+                    status_dict['remaining_leaves'] += holiday.nombre_conge
             elif holiday.type == 'remove':  # number of days is negative
                 status_dict['virtual_remaining_leaves'] -= holiday.number_of_days_temp
                 if holiday.state == 'validate':
                     status_dict['leaves_taken'] += holiday.number_of_days_temp
-                    status_dict['remaining_leaves'] -= holiday.number_of_days_temp
+                    status_dict['remaining_leaves'] -= holiday.nombre_conge
         return result
 
    
