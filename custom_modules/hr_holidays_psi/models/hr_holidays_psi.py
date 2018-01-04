@@ -161,7 +161,6 @@ class hr_holidays_psi(models.Model):
         #super(hr_holidays_psi,self)._onchange_date_from()
         public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
         for record in self:
-    
             if record.date_from and record.date_to:
                 if record.demi_jour == True:
                     record.number_of_days_temp = 0.5
@@ -221,7 +220,7 @@ class hr_holidays_psi(models.Model):
     def _onchange_date_to(self):
         return {}
     
-    #@api.constrains('number_of_days_temp')
+    @api.constrains('number_of_days_temp')
     def _verif_leave_date(self):
         print "_verif_leave_date"
         
@@ -273,6 +272,9 @@ class hr_holidays_psi(models.Model):
                 if self.holiday_type_permission.id == permissions.id:
                     if get_day_difference > permissions.number_of_day:
                         raise UserError(u"Vous avez depassé le nombre de jours permi pour ce type de permission.")
+                        return False
+                    elif get_day_difference < permissions.number_of_day:
+                        raise UserError(u"Veuillez verifier le date de permission.")
                         return False
 
     
@@ -358,6 +360,27 @@ class hr_holidays_psi(models.Model):
                     recrutement_type = self.env['hr.recruitment.type'].sudo().search([('recrutement_type','=','collaborateur')])
                     if employee.job_id.recrutement_type_id.id != recrutement_type[0].id:
                         raise ValidationError(u'Seulement les employés permanents peuvent faire une demande de congé.')
+                        return False
+                holidays_status_permission = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',1)])
+                if values.get('holiday_status_id') == holidays_status_permission[0].id :
+                    date_difference = 0
+                    date_from = datetime.datetime.strptime(values['date_from'],"%Y-%m-%d")
+                    date_to = datetime.datetime.strptime(values['date_to'],"%Y-%m-%d")
+                    
+                    d1 = date(date_from.year, date_from.month, date_from.day)  # start date
+                    d2 = date(date_to.year, date_to.month, date_to.day)  # end date
+    
+                    delta = d2 - d1
+                    for i in range(delta.days + 1):
+                        date_str = (d1 + timedelta(days=i))
+                        if not self.verif_day_not_working(str(date_str)) :
+                            date_difference += 1
+                    print "Diff : ",date_difference
+                    if date_difference > holidays_status_permission.type_permission.number_of_day :
+                        raise ValidationError(u'Maximum.')
+                        return False
+                    elif date_difference < holidays_status_permission.type_permission.number_of_day :
+                        raise ValidationError(u'Minimum.')
                         return False
                 holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
                 print values
