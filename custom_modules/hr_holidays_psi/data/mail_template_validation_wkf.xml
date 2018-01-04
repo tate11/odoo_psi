@@ -25,10 +25,10 @@
 	            		<p>Etat: A valider par le Supérieur hiérarchique => A valider par le Chef de département</p> 
 	            	%endif 
 	            	%if object.state == ('validate1'):  
-	            		<p>Etat: A valider par le Chef de département => A valider par le Résponsable RH</p> 
+	            		<p>Etat: A valider par le Chef de département => A valider par le Responsable RH</p> 
 	            	%endif
 	            	%if object.state == ('approbation'):  
-	            		<p>Etat: A valider par le Résponsable RH  => A valider par le DRHA</p> 
+	            		<p>Etat: A valider par le Responsable RH  => A valider par le DRHA</p> 
 	            	%endif
 	            	%if object.state == ('validate2') or object.state == ('validate'):  
 	            		<p>Etat: Validé par le DRHA</p> 
@@ -59,7 +59,7 @@
 	            	</ul>
 					<p>Refus par 
 	            	%if object.state == ('approbation'):  
-	            		le Résponsable RH </p> 
+	            		le Responsable RH </p> 
 	            	%endif
 	            	%if object.state == ('validate2'):  
 	            		le DRHA</p> 

@@ -110,7 +110,7 @@
 						/>
 					<separator />
 					<filter domain="[('state','=','validate1')]" string="A valider par le Chef de département" name="valide_superieur_hierarchique"/>
-					<filter domain="[('state','=','approbation')]" string="A valider par le Résponsable RH " name="approuve_chef_departement"/>
+					<filter domain="[('state','=','approbation')]" string="A valider par le Responsable RH " name="approuve_chef_departement"/>
 					<filter domain="[('state','=','validate2')]" string="A valider par le DRHA" name="valide_rh"/>
 					<filter domain="[('state','=','validate')]" string="Validé par DRHA" name="valide_drha"/>
 				</xpath>
@@ -679,7 +679,7 @@
     
     <menuitem
             id="menu_hr_holidays_approvals_rh"
-            name="Congés à valider par le Résponsable RH "
+            name="Congés à valider par le Responsable RH "
             parent="hr_holidays.menu_hr_holidays_approvals"
             sequence="6"
             action="open_holidays_approve_rh_spa"
