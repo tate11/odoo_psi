@@ -440,6 +440,8 @@
 	                    <label for="demi_jour" string="Demi-journée" />
 		                <field name="demi_jour" class="oe_inline" attrs="{'readonly':[('state','!=','draft'),('state','!=','approbation')]}"/>
 	                    <field name="matin_soir" attrs="{'invisible':[('demi_jour', '=', False)]}" class="oe_inline"/>
+	                    <label for="deduit" string="Déduit" />
+		                <field name="deduit" class="oe_inline" attrs="{'readonly':[('state','!=','draft'),('state','!=','approbation')]}"/>
 	                </div>
 	            </group>
     		</xpath>

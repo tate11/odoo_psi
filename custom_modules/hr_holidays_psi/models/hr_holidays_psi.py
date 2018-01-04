@@ -107,6 +107,7 @@ class hr_holidays_psi(models.Model):
     date_from = fields.Date('Start Date', readonly=True, index=True, copy=False,states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     date_to = fields.Date('End Date', readonly=True, index=True, copy=False,states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     demi_jour = fields.Boolean(string="Demi-journée")
+    deduit = fields.Boolean(string="Deduire")
     matin_soir = fields.Selection([('matin','Matin'),('soir','Soir')], default="matin", string=u'Matin ou Soir')
     
     job_id = fields.Many2one(related='employee_id.job_id', store=True)
@@ -384,6 +385,7 @@ class hr_holidays_psi(models.Model):
                 if values.get('holiday_status_id') == holidays_status[0].id :
                    nombre_conge = 0
                    number_of_days = 0
+                   
                    got_droit = self.check_droit(values)
                    if got_droit == False:
                       raise ValidationError(u'Vous ne pouvez pas encore faire une demande de congé.')
@@ -407,6 +409,7 @@ class hr_holidays_psi(models.Model):
                       else:
                           raise ValidationError(u'Nombre conge insuiffisant.')
                           return False
+                      values['deduit'] = True
                       holidays = super(hr_holidays_psi, self).create(values)
                       return holidays
                 else:
@@ -416,9 +419,28 @@ class hr_holidays_psi(models.Model):
         
                   
     @api.multi
-    def write(self, vals):
+    def write(self, values):
         print "write"
-        print vals
+        print values
+        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
+        if values.get('holiday_status_id') == holidays_status[0].id :
+            values['deduit'] = True
+        holidays_status_permission = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',1)])
+        if values.get('holiday_status_id') == holidays_status_permission[0].id :
+            date_difference = 0
+            date_from = datetime.datetime.strptime(values['date_from'],"%Y-%m-%d")
+            date_to = datetime.datetime.strptime(values['date_to'],"%Y-%m-%d")
+            d1 = date(date_from.year, date_from.month, date_from.day)  # start date
+            d2 = date(date_to.year, date_to.month, date_to.day)  # start date
+            delta = d2 - d1
+            for i in range(delta.days + 1):
+               date_str = (d1 + timedelta(days=i))
+               if not self.verif_day_not_working(str(date_str)) :
+                  date_difference += 1
+                  diff = holidays_status_permission[0].type_permission.number_of_day
+                  if date_difference != diff :
+                        raise Warning(u'Vous devez poser exactement {} jour(s) pour ce type de permission.'.format(diff))
+                        return False                         
         
 #         date_from = datetime.datetime.strptime(vals.get('date_from'),"%Y-%m-%d").date()
 #         date_to = datetime.datetime.strptime(vals.get('date_to'),"%Y-%m-%d").date()
@@ -427,7 +449,6 @@ class hr_holidays_psi(models.Model):
 #         self.verif_day_off(str(date_from))
 #         self.verif_day_off(str(date_to))
         
-        employee_id = vals.get('employee_id', False)
         #self._send_email_rappel_absences_to_assist_and_coord(False)
         #self._verif_leave_date()
         
@@ -442,7 +463,7 @@ class hr_holidays_psi(models.Model):
 #             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
 #             return False
 
-        result = super(hr_holidays_psi, self).write(vals)
+        result = super(hr_holidays_psi, self).write(values)
         #self.add_follower(employee_id)
         return result
     
@@ -854,7 +875,7 @@ class hr_holidays_psi(models.Model):
         if automatic:
             self._cr.commit()
 
-#     @api.onchange('holiday_status_id')
+    @api.onchange('holiday_status_id')
     def _onchange_holiday_status_id(self):
         print "_onchange_holiday_status_id"
         
@@ -862,11 +883,13 @@ class hr_holidays_psi(models.Model):
         
         holidays_status_maternite = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',6)])
         holidays_status_sans_solde = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',3)])
-        
+        holidays_status_conge_annuel = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
         date_from = self.date_from
         date_to = self.date_to
         
         if date_from and date_to:
+            if self.holiday_status_id.id == holidays_status_conge_annuel[0].id:
+                self.deduit = True
             if self.holiday_status_id.id == holidays_status_maternite[0].id:
                 print holidays_status_maternite[0].name
                
