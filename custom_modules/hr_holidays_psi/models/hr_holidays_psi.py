@@ -66,7 +66,30 @@ class hr_holidays_type_permission(models.Model):
     
     name = fields.Char('Type de permission', required=True)
     number_of_day = fields.Float('Jours autorisés', required=True)
-    cosomme = fields.Char('Consommés ?')
+    cosomme = fields.Char(string='Consommés ?',compute='_compute_cosomme')
+
+    @api.multi
+    def _compute_cosomme(self):
+        print "_compute_consomme"
+        if 'employee_id' in self._context:
+            employee_id = self._context['employee_id']
+        else:
+            employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)], limit=1).id
+
+        if employee_id:
+            holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',1)])
+            holidays = self.env['hr.holidays'].search([
+                                                       ('employee_id', '=', employee_id),
+                                                       #('state', 'in', ['validate']),
+                                                       ('holiday_status_id', '=', holidays_status[0].id)
+                                                       ])
+            for holiday_status in self:
+                if holidays_status.type_permission.name == holiday_status.name : 
+                    holiday_status.cosomme = 'Oui'
+                else :
+                    holiday_status.cosomme = 'Non'
+            
+
     
 class hr_holidays_psi(models.Model):
     
