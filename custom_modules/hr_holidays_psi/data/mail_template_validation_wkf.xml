@@ -9,10 +9,10 @@
 			<field name="email_to">${object.employee_id.work_email or object.user_id.email}</field>
 			<field name="email_cc">
 					%if object.state in ('draft'):  
-	            		mandaifanomezantsoa@gmail.com
+	            		${object.employee_id.coach_id.work_mail or object.employee_id.coach_id.user_id.email}
 	            	%endif 
 					%if object.state in ('confirm'):  
-	            		sefo@yopmail.com
+	            		${object.employee_id.department_id.manager_id.work_mail or object.employee_id.department_id.manager_id.user_id.email}
 	            	%endif 
 	            	%if object.state == ('approbation'):
 	            		% for user_psi in object.env['res.users'].sudo().search([]):
