@@ -14,14 +14,14 @@
 					%if object.state in ('confirm'):  
 	            		${object.employee_id.department_id.manager_id.work_mail or object.employee_id.parent_id.work_mail or object.employee_id.department_id.manager_id.user_id.email}
 	            	%endif 
-	            	%if object.state == ('approbation'):
+	            	%if object.state == ('validate1'):
 	            		% for user_psi in object.env['res.users'].sudo().search([]):
 							% if user_psi.has_group('hr_holidays_psi.group_hr_holidays_rh'):
 								${user_psi.email},
 							% endif
 						% endfor 
 					%endif
-	            	%if object.state == ('validate2'):9
+	            	%if object.state == ('approbation'):
 	            		% for user_psi in object.env['res.users'].sudo().search([]):
 							% if user_psi.has_group('hr_holidays_psi.group_hr_holidays_drha'):
 								${user_psi.email},
