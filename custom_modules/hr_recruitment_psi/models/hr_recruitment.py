@@ -205,7 +205,7 @@ class Applicant(models.Model):
                                                      day=date_start_trial.day,
                        )
                 
-                month_to_notif = date_start_trial_time + relativedelta(months=applicant.job_id.psi_professional_category.test_duration)
+                month_to_notif = date_start_trial_time + relativedelta(months=applicant.job_id.psi_category.test_duration)
                     
                 vals_contract = {'name': applicant.partner_name or contact_name,
                                                 'psi_contract_type' : applicant.job_id.psi_contract_type,
