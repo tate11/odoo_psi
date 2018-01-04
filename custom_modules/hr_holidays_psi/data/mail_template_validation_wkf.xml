@@ -6,12 +6,34 @@
 			<field name="name">PSI Congé - Mail demande de congé</field>
 			<field name="model_id" ref="hr_holidays_psi.model_hr_holidays" />
 			<field name="email_from"><![CDATA[${object.create_uid.email or object.company_id.email}]]></field>
-			<field name="email_to">${object.employee_id.work_email or
-				object.user_id.email}</field>
+			<field name="email_to">${object.employee_id.work_email or object.user_id.email}</field>
+			<field name="email_cc">
+					%if object.state in ('draft'):  
+	            		mandaifanomezantsoa@gmail.com
+	            	%endif 
+					%if object.state in ('confirm'):  
+	            		sefo@yopmail.com
+	            	%endif 
+	            	%if object.state == ('approbation'):
+	            		% for user_psi in object.env['res.users'].sudo().search([]):
+							% if user_psi.has_group('hr_holidays_psi.group_hr_holidays_rh'):
+								${user_psi.email},
+							% endif
+						% endfor 
+					%endif
+	            	%if object.state == ('validate2'):
+	            		% for user_psi in object.env['res.users'].sudo().search([]):
+							% if user_psi.has_group('hr_holidays_psi.group_hr_holidays_drha'):
+								${user_psi.email},
+							% endif
+						% endfor 
+					%endif
+					
+			</field>
 			<field name="subject">Demande de congé</field>
 			<field name="body_html"><![CDATA[            	
             	<div style="padding:0px;width:600px;background: #FFFFFF repeat top /100%;color:#777777">
-	            	<h3>Votre demande de congé :</h3>
+	            	<h3>Demande de congé de ${object.employee_id.name} :</h3>
 	            	<ul>
 	            		<li>Type de congé :  ${object.holiday_status_id.name}</li>
 	            		<li>Date de début :  ${object.date_from}</li>
@@ -33,6 +55,35 @@
 	            	%if object.state == ('validate2') or object.state == ('validate'):  
 	            		<p>Etat: Validé par le DRHA</p> 
 	            	%endif
+	            	
+            		<hr/>
+            		<p>Supérieur hiérarchique : ${object.employee_id.coach_id.name} </p>
+            		<p>Chef de Département : ${object.employee_id.department_id.manager_id.name} </p>
+            		
+            		<h2>Liste group RH</h2>
+	            	
+			        % for user_psi in object.env['res.users'].sudo().search([]):
+						% if user_psi.has_group('hr_holidays_psi.group_hr_holidays_rh'):
+						<ul>
+							<li>${user_psi.name}</li>
+							<li>${user_psi.email}</li>
+						</ul>
+						% endif
+					% endfor
+					
+					
+            		<h2>Liste group DRHA</h2>
+	            	
+			        % for user_psi in object.env['res.users'].sudo().search([]):
+						% if user_psi.has_group('hr_holidays_psi.group_hr_holidays_drha'):
+						<ul>
+							<li>${user_psi.name}</li>
+							<li>${user_psi.email}</li>
+						</ul>
+						% endif
+					% endfor
+					
+					
             	</div>
 				]]></field>
 			<field name="user_signature" eval="True" />
@@ -50,14 +101,14 @@
 			</field>
 			<field name="body_html"><![CDATA[            	
             	<div style="padding:0px;width:600px;background: #FFFFFF repeat top /100%;color:#777777">
-	            	<h3>Détails :</h3>
+	            	<h3>Votre demande de congé :</h3>
 	            	<ul>
 	            		<li>Type de congé :  ${object.holiday_status_id.name}</li>
 	            		<li>Date de début :  ${object.date_from}</li>
 	            		<li>Date de fin :  ${object.date_to}</li>
 	            		<li>Durée :  ${object.number_of_days_temp} jour(s)</li>
 	            	</ul>
-					<p>Refus par 
+	            	<p>Etat : Demande refusée par 
 	            	%if object.state == ('approbation'):  
 	            		le Responsable RH </p> 
 	            	%endif
