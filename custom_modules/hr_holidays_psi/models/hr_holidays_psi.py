@@ -107,7 +107,7 @@ class hr_holidays_psi(models.Model):
     date_from = fields.Date('Start Date', readonly=True, index=True, copy=False,states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     date_to = fields.Date('End Date', readonly=True, index=True, copy=False,states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     demi_jour = fields.Boolean(string="Demi-journée")
-    deduit = fields.Boolean(string="Deduire")
+    deduit = fields.Boolean(string="Déductible")
     matin_soir = fields.Selection([('matin','Matin'),('soir','Soir')], default="matin", string=u'Matin ou Soir')
     
     job_id = fields.Many2one(related='employee_id.job_id', store=True)
@@ -413,6 +413,7 @@ class hr_holidays_psi(models.Model):
                       holidays = super(hr_holidays_psi, self).create(values)
                       return holidays
                 else:
+                      values['deduit'] = False
                       print "second print",values
                       holidays = super(hr_holidays_psi, self).create(values)
                       return holidays
@@ -422,14 +423,13 @@ class hr_holidays_psi(models.Model):
     def write(self, values):
         print "write"
         print values
-        holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
-        if values.get('holiday_status_id') == holidays_status[0].id :
-            values['deduit'] = True
+        
         holidays_status_permission = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',1)])
-        if values.get('holiday_status_id') == holidays_status_permission[0].id :
+        if self.holiday_status_id.id == holidays_status_permission[0].id :
+            print "date_difference"
             date_difference = 0
-            date_from = datetime.datetime.strptime(values['date_from'],"%Y-%m-%d")
-            date_to = datetime.datetime.strptime(values['date_to'],"%Y-%m-%d")
+            date_from = datetime.datetime.strptime(self.date_from,"%Y-%m-%d")
+            date_to = datetime.datetime.strptime(self.date_to,"%Y-%m-%d")
             d1 = date(date_from.year, date_from.month, date_from.day)  # start date
             d2 = date(date_to.year, date_to.month, date_to.day)  # start date
             delta = d2 - d1
@@ -886,15 +886,18 @@ class hr_holidays_psi(models.Model):
         holidays_status_conge_annuel = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
         date_from = self.date_from
         date_to = self.date_to
-        
-        if date_from and date_to:
-            if self.holiday_status_id.id == holidays_status_conge_annuel[0].id:
+        if self.holiday_status_id.id == holidays_status_conge_annuel[0].id:
                 self.deduit = True
+        else :
+                self.deduit = False
+        if date_from and date_to:
+            
             if self.holiday_status_id.id == holidays_status_maternite[0].id:
                 print holidays_status_maternite[0].name
                
                 date_to_with_delta = fields.Date.from_string(date_from) + datetime.timedelta(days=97)
                 self.date_to = str(date_to_with_delta)
+            
                 
     #             date_from = datetime.datetime.strptime(date_from, "%Y-%m-%d").date()
     #             date_to = datetime.datetime.strptime(date_to, "%Y-%m-%d").date()
