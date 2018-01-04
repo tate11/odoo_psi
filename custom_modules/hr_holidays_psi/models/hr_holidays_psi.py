@@ -77,17 +77,18 @@ class hr_holidays_type_permission(models.Model):
             employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)], limit=1).id
 
         if employee_id:
-            holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',1)])
+            holidays_status_id = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',1)])
             holidays = self.env['hr.holidays'].search([
                                                        ('employee_id', '=', employee_id),
-                                                       #('state', 'in', ['validate']),
-                                                       ('holiday_status_id', '=', holidays_status[0].id)
+                                                       ('state', 'in', ['validate']),
+                                                       ('holiday_status_id', '=', holidays_status_id[0].id)
                                                        ])
             for holiday_status in self:
-                if holidays_status.type_permission.name == holiday_status.name : 
-                    holiday_status.cosomme = 'Oui'
-                else :
-                    holiday_status.cosomme = 'Non'
+                holiday_status.cosomme = 'Non'
+            for holiday in holidays :
+                for holiday_status in self:
+                    if holiday_status.name == holiday.holiday_status_id.type_permission.name : 
+                        holiday_status.cosomme = 'Oui'
             
 
     
