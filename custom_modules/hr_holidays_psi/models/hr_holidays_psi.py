@@ -894,6 +894,9 @@ class hr_holidays_psi(models.Model):
         if not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_rh') and not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_spa') and not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_crh') and not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_drha'):
             raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
         
+        # Send notif Congé
+        self._send_mail_refuse_conge(self)
+        
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2', 'approbation']:
@@ -910,14 +913,22 @@ class hr_holidays_psi(models.Model):
                 holiday.meeting_id.unlink()
             # If a category that created several holidays, cancel all related
             holiday.linked_request_ids.action_refuse()
+        
         self._remove_resource_leave()
+        
+        
         return True
 
     # Mail state draft to confirm
-    @api.multi
     def _send_mail_validation_conge(self, automatic=False):
-        print "Mail state draft to confirm"
-        template = self.env.ref('hr_holidays_psi.custom_template_action_confirm')
+        template = self.env.ref('hr_holidays_psi.custom_template_validation_conge')
+        self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)            
+        if automatic:
+            self._cr.commit()
+            
+    # Mail refuse congé
+    def _send_mail_refuse_conge(self, automatic=False):
+        template = self.env.ref('hr_holidays_psi.custom_template_refuse_conge')
         self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)            
         if automatic:
             self._cr.commit()
