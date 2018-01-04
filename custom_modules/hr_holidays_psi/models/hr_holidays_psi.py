@@ -98,7 +98,7 @@ class hr_holidays_psi(models.Model):
         ('confirm', u'A valider par le Supérieur hiérarchique'),
         ('refuse', u'Refusé'),
         ('validate1', u'A valider par le Chef de Département'),
-        ('approbation', u'A valider par les RH'),
+        ('approbation', u'A valider par le Résponsable RH'),
         ('validate2', u'A valider par le DRHA'),
         ('validate', u'Validé par le DRHA')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='draft',
@@ -550,7 +550,7 @@ class hr_holidays_psi(models.Model):
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2', 'approbation']:
-                raise UserError(u'Une demande de congé ne peut être refusée si elle a déjà été validée par les RH ou le DRHA')
+                raise UserError(u'Une demande de congé ne peut être refusée si elle a déjà été validée par le Résponsable RH ou le DRHA')
             if holiday.state == 'validate2' and not holiday.env.user.has_group('hr_holidays_psi.group_hr_holidays_drha'):
                 raise UserError('Seul DRHA peut valider la demande.')
            
@@ -900,7 +900,7 @@ class hr_holidays_psi(models.Model):
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate', 'validate1', 'validate2', 'approbation']:
-                raise UserError(u'Une demande de congé ne peut être refusée si elle a déjà été validée par les RH ou le DRHA')
+                raise UserError(u'Une demande de congé ne peut être refusée si elle a déjà été validée par le Résponsable RH ou le DRHA')
 
             if holiday.state == 'validate1':
 #                 holiday.write({'state': 'refuse', 'manager_id': manager.id}) #old
@@ -929,8 +929,10 @@ class hr_holidays_psi(models.Model):
     # Mail refuse congé
     def _send_mail_refuse_conge(self, automatic=False):
         print ' _send_mail_refuse_conge'
-        template = self.env.ref('hr_holidays_psi.custom_template_refuse_conge')
-        self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)            
+        for record in self:
+            if record.id:
+                template = self.env.ref('hr_holidays_psi.custom_template_refuse_conge')
+                self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)            
         if automatic:
             self._cr.commit()
         print "end _send_mail_refuse_conge"
