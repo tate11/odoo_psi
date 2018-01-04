@@ -10,28 +10,38 @@
             <field name="subject">Demande de congé</field>
             <field name="body_html"><![CDATA[
             	
-            	<p>Votre demande de congé :</p>
-            	<p>Type de congé :  ${object.holiday_status_id.name}</p>
-            	<p>Date de début :  ${object.date_from}</p>
-            	<p>Date de fin :  ${object.date_to}</p>
-            	<p>Durée :  ${object.number_of_days_temp} jour(s)</p>
-
-            	%if object.state in ('draft'):  
-            		<p>Etat: A Soumettre => A valider par le Supérieur hiérarchique</p>  
-            	%endif 
-            	%if object.state in ('confirm'):  
-            		<p>Etat: A valider par le Supérieur hiérarchique => A valider par le Chef de département</p> 
-            	%endif 
-            	%if object.state in ('validate1'):  
-            		<p>Etat: A valider par le Chef de département => A valider par les RH</p> 
-            	%endif
-            	%if object.state in ('approbation'):  
-            		<p>Etat: A valider par les RH => A valider par le DRHA</p> 
-            	%endif
-            	%if object.state in ('validate2'):  
-            		<p>Etat: Validé par le DRHA</p> 
-            	%endif
-            	
+				<div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+				    <table style="width:600px;background:inherit;color:inherit" cellspacing="0" cellpadding="0">
+				        <tbody><tr>
+				            <td style="padding:10px 10px 10px 5px;font-size: 12px" width="200" valign="center">
+				                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+				            </td>
+				        </tr></tbody>
+				    </table>
+				</div>
+            	<div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+	            	<p>Votre demande de congé :</p>
+	            	<p>Type de congé :  ${object.holiday_status_id.name}</p>
+	            	<p>Date de début :  ${object.date_from}</p>
+	            	<p>Date de fin :  ${object.date_to}</p>
+	            	<p>Durée :  ${object.number_of_days_temp} jour(s)</p>
+	
+	            	%if object.state in ('draft'):  
+	            		<p>Etat: A Soumettre => A valider par le Supérieur hiérarchique</p>  
+	            	%endif 
+	            	%if object.state in ('confirm'):  
+	            		<p>Etat: A valider par le Supérieur hiérarchique => A valider par le Chef de département</p> 
+	            	%endif 
+	            	%if object.state in ('validate1'):  
+	            		<p>Etat: A valider par le Chef de département => A valider par les RH</p> 
+	            	%endif
+	            	%if object.state in ('approbation'):  
+	            		<p>Etat: A valider par les RH => A valider par le DRHA</p> 
+	            	%endif
+	            	%if object.state in ('validate2'):  
+	            		<p>Etat: Validé par le DRHA</p> 
+	            	%endif
+            	</div>
 				]]></field>
             <field name="user_signature" eval="False"/>
         </record>

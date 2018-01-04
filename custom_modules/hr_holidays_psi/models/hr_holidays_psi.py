@@ -82,7 +82,10 @@ class hr_holidays_psi(models.Model):
     def action_confirm(self):
         if self.filtered(lambda holiday: holiday.state != 'draft'):
             raise UserError(_('Leave request must be in Draft state ("To Submit") in order to confirm it.'))
-        self._send_mail_action_confirm(self)
+        
+        # Send notif Congé
+        self._send_mail_validation_conge(self)
+        
         return self.write({'state': 'confirm'})
     
     # Contrôle week-end et jours fériés
@@ -389,10 +392,8 @@ class hr_holidays_psi(models.Model):
         if self.env.uid != self.employee_id.coach_id.user_id.id:
             raise AccessError(u'Vous n\'avez pas le droit de valider cette demande sauf le supérieur hiérarchique.')
 
-        # Send mail 
-        print "IN"
-        self._send_mail_action_confirm(self)
-        print "OUT"
+        # Send notif Congé
+        self._send_mail_validation_conge(self)
         
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
@@ -409,6 +410,9 @@ class hr_holidays_psi(models.Model):
         if not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_rh') and not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_spa'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
+        # Send notif Congé
+        self._send_mail_validation_conge(self)
+        
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state != 'approbation':
@@ -422,13 +426,9 @@ class hr_holidays_psi(models.Model):
         if not self.env.user.has_group('hr_holidays_psi.group_hr_holidays_chef_departement'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
-        
-        # Send mail 
-        print "IN"
-        self._send_mail_action_confirm(self)
-        print "OUT"
-        
-        
+        # Send notif Congé
+        self._send_mail_validation_conge(self)
+                
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state != 'validate1':
@@ -881,7 +881,7 @@ class hr_holidays_psi(models.Model):
 
     # Mail state draft to confirm
     @api.multi
-    def _send_mail_action_confirm(self, automatic=False):
+    def _send_mail_validation_conge(self, automatic=False):
         print "Mail state draft to confirm"
         template = self.env.ref('hr_holidays_psi.custom_template_action_confirm')
         self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)            
