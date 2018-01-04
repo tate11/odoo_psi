@@ -699,7 +699,10 @@ class hr_holidays_psi(models.Model):
                 if leaves and leaves[0].double_validation:
                     leaves.action_validate()
             
-            
+        
+        # Send notif Congé
+        self._send_mail_validation_conge(self)
+        
         return True
     
     _sql_constraints = [
