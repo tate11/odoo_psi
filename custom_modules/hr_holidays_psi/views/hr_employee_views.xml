@@ -11,7 +11,7 @@
 					<group string="Congés" groups="hr.group_hr_manager">
 						<label for="nombre_conge" />
 						<div>
-							<field name="nombre_conge" class="oe_inline" /> jour(s)
+							<field name="nombre_conge" class="oe_inline" /> jour(s) 
 						</div>
 					</group>
 				</xpath>
