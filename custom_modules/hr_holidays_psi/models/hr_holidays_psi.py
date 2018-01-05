@@ -118,6 +118,7 @@ class hr_holidays_psi(models.Model):
     nombre_conge = fields.Float(string="Nombre de conge attribuer")
     
     is_user_rh = fields.Boolean(help="Verifier si utilisateur RH", compute='_is_user_rh')
+    is_user_employee_concerned = fields.Boolean(compute="_is_current_user_equal_leave_employee")
     
     state = fields.Selection([
         ('draft', u'A soumettre pour validation'),
@@ -160,20 +161,27 @@ class hr_holidays_psi(models.Model):
     ############### BEGIN Verif if user RH ###############
     @api.one
     def _is_user_rh(self):
+        print '_is_user_rh'
         self.is_user_rh = self.env.user.has_group('hr_holidays_psi.group_hr_holidays_rh')
         print self.is_user_rh," ???? RH ????"        
     ############### END Verif if user RH ###############
+    
+    @api.one 
+    def _is_current_user_equal_leave_employee(self):
+        print '_is_current_user_equal_leave_employee'
+        user_current = self.env.user
+        for record in self:
+            if record.id:
+                if user_current == record.employee_id.user_id:
+                    record.is_user_employee_concerned = True
              
     @api.depends('date_from', 'date_to', 'demi_jour', 'holiday_status_id','number_of_days_temp')
     def _compute_date_from_to(self):
         print "_compute_date_from_to" 
-                    
+                  
         #super(hr_holidays_psi,self)._onchange_date_from()
         public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
         for record in self:
-            
-            
-            
             if record.date_from and record.date_to:
                 if record.demi_jour == True:
                     record.number_of_days_temp = 0.5
@@ -223,9 +231,10 @@ class hr_holidays_psi(models.Model):
                                 if str(public_holiday.date) == str(date_from + timedelta(days=i)):
 #                                     print "OUI JF"
                                     record.number_of_days_temp -= 1
-          
-        print record.is_user_rh,' <<< record.is_user_rh'
+            print record.is_user_rh,', record.is_user_rh'
+            print record.is_user_employee_concerned,', record.is_user_employee_concerned'
         
+          
     @api.onchange('date_from')
     def _onchange_date_from(self):
         return {}
