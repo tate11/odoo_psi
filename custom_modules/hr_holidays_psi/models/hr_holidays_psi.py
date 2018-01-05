@@ -398,7 +398,10 @@ class hr_holidays_psi(models.Model):
                         date_str = (d1 + timedelta(days=i))
                         if not self.verif_day_not_working(str(date_str)) :
                             date_difference += 1
-                    diff = holidays_status_permission[0].type_permission.number_of_day
+                    diff = 0
+                    if values.has_key('holiday_type_permission') :
+                        holidays_permission = self.env['hr.holidays.type.permission'].browse(values.get('holiday_type_permission'))
+                        diff = holidays_permission.number_of_day
                     if date_difference != diff :
                         raise Warning(u'Vous devez poser exactement {} jour(s) pour ce type de permission.'.format(diff))
                         return False
@@ -450,6 +453,7 @@ class hr_holidays_psi(models.Model):
         if self.holiday_status_id.id == holidays_status_permission[0].id :
             print "date_difference"
             date_difference = 0
+            
             date_from = datetime.datetime.strptime(self.date_from,"%Y-%m-%d")
             date_to = datetime.datetime.strptime(self.date_to,"%Y-%m-%d")
             d1 = date(date_from.year, date_from.month, date_from.day)  # start date
@@ -459,7 +463,11 @@ class hr_holidays_psi(models.Model):
                date_str = (d1 + timedelta(days=i))
                if not self.verif_day_not_working(str(date_str)) :
                   date_difference += 1
-                  diff = holidays_status_permission[0].type_permission.number_of_day
+                  diff = self.holiday_type_permission.number_of_day
+                  if values.has_key('holiday_type_permission') :
+                        holidays_permission = self.env['hr.holidays.type.permission'].browse(values.get('holiday_type_permission'))
+                        diff = holidays_permission.number_of_day
+                  
                   if date_difference != diff :
                         raise Warning(u'Vous devez poser exactement {} jour(s) pour ce type de permission.'.format(diff))
                         return False                         
