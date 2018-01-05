@@ -109,7 +109,7 @@
 						help="Liste des absences de tout le personnel permanent pour le mois courant"
 						/>
 					<separator />
-					<filter domain="[('state','=','validate1')]" string="A valider par le Chef de département" name="valide_superieur_hierarchique"/>
+					<filter domain="[('state','=','validate1'), ('department_id.manager_id.user_id', '=', uid)]" string="A valider par le Chef de département" name="valide_superieur_hierarchique"/>
 					<filter domain="[('state','=','approbation')]" string="A valider par le Responsable RH " name="approuve_chef_departement"/>
 					<filter domain="[('state','=','validate2')]" string="A valider par le DRHA" name="valide_rh"/>
 					<filter domain="[('state','=','validate')]" string="Validé par DRHA" name="valide_drha"/>
