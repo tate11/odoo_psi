@@ -117,6 +117,8 @@ class hr_holidays_psi(models.Model):
     number_of_days_temp = fields.Float(compute='_compute_date_from_to', string='Allocation', default="1.0", copy=False, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     nombre_conge = fields.Float(string="Nombre de conge attribuer")
     
+    is_user_rh = fields.Boolean(help="Verifier si utilisateur RH", compute='_is_user_rh')
+    
     state = fields.Selection([
         ('draft', u'A soumettre pour validation'),
         ('cancel', u'Annuler'),
@@ -131,8 +133,7 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'To Approve', when holiday request is confirmed by user." +
             "\nThe status is 'Refused', when holiday request is refused by manager." +
             "\nThe status is 'Approved', when holiday request is approved by manager.")
-
-
+                
     @api.multi
     def action_confirm(self):
         if self.filtered(lambda holiday: holiday.state != 'draft'):
@@ -155,13 +156,24 @@ class hr_holidays_psi(models.Model):
             if public_holiday.date == date:
                 result += 1
         return result
-            
+       
+    ############### BEGIN Verif if user RH ###############
+    @api.one
+    def _is_user_rh(self):
+        self.is_user_rh = self.env.user.has_group('hr_holidays_psi.group_hr_holidays_rh')
+        print self.is_user_rh," ???? RH ????"        
+    ############### END Verif if user RH ###############
+             
     @api.depends('date_from', 'date_to', 'demi_jour', 'holiday_status_id','number_of_days_temp')
     def _compute_date_from_to(self):
-        print "_compute_date_from_to"
+        print "_compute_date_from_to" 
+                    
         #super(hr_holidays_psi,self)._onchange_date_from()
         public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
         for record in self:
+            
+            
+            
             if record.date_from and record.date_to:
                 if record.demi_jour == True:
                     record.number_of_days_temp = 0.5
@@ -212,6 +224,7 @@ class hr_holidays_psi(models.Model):
 #                                     print "OUI JF"
                                     record.number_of_days_temp -= 1
           
+        print record.is_user_rh,' <<< record.is_user_rh'
         
     @api.onchange('date_from')
     def _onchange_date_from(self):
