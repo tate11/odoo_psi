@@ -890,9 +890,9 @@ class hr_holidays_psi(models.Model):
                 dt_write_date = datetime.datetime.strptime(holidays[0].write_date,'%Y-%m-%d %H:%M:%S')
 
                 if dt_write_date.month != dt_now.month:
-                    number_of_days = holidays[0].number_of_days + 2 
+                    number_of_days = holidays[0].nombre_conge + 2 
                     holidays[0].write({'nombre_conge':number_of_days})
-                
+                    contract.employee_id.write({'nombre_conge':number_of_days})
             elif contract.date_start != False :
                 print contract.employee_id.name
                 holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
@@ -906,6 +906,7 @@ class hr_holidays_psi(models.Model):
                                     'employee_id': contract.employee_id.id
                                 }
                 self.env['hr.holidays'].create(values)
+                contract.employee_id.write({'nombre_conge':2})
 
                 
     # Send mail - rappel piece justificatif - conge maladie  
