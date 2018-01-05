@@ -12,6 +12,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, AccessError, Warning
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.tools import float_compare
+from calendar import monthrange
 
 HOURS_PER_DAY = 8
 
@@ -878,7 +879,17 @@ class hr_holidays_psi(models.Model):
                 leave_display_name = _("%s on %s : %.2f day(s)") % (leave.employee_id.name or leave.psi_category_id.psi_professional_category, leave.holiday_status_id.name, leave.number_of_days_temp)
             res.append((leave.id, leave_display_name))
         return res
-    
+   
+    def monthdelta(self,d1, d2):
+        delta = 0
+        while True:
+            mdays = monthrange(d1.year, d1.month)[1]
+            d1 += timedelta(days=mdays)
+            if d1 <= d2:
+                delta += 1
+            else:
+                break
+        return delta
     def _increment_doit_conge(self):
         contracts = self.env['hr.contract'].sudo().search([])
         dt_now = datetime.datetime.strptime(fields.Date().today(),'%Y-%m-%d')
@@ -886,18 +897,21 @@ class hr_holidays_psi(models.Model):
         for contract in contracts :
             holidays = self.env['hr.holidays'].search([('employee_id','=',contract.employee_id.id),('type','=','add')],order='id')
             if len(holidays) > 0:
-
+                
                 dt_write_date = datetime.datetime.strptime(holidays[0].write_date,'%Y-%m-%d %H:%M:%S')
-
+              
                 if dt_write_date.month != dt_now.month:
                     number_of_days = holidays[0].nombre_conge + 2 
                     holidays[0].write({'nombre_conge':number_of_days})
                     number_of_days_emp = contract.employee_id.nombre_conge + 2
                     contract.employee_id.write({'nombre_conge':number_of_days_emp})
             elif contract.date_start != False :
-                print contract.employee_id.name
-                holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
-                values = {
+                date_start = datetime.datetime.strptime(contract.date_start,'%Y-%m-%d')
+                print "delta : ",self.monthdelta(date_start, dt_now)
+                if self.monthdelta(date_start, dt_now) >= 1:
+                    print contract.employee_id.name
+                    holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
+                    values = {
                                     'name': contract.employee_id.name,
                                     'type': 'add',
                                     'state': 'validate',
@@ -906,9 +920,9 @@ class hr_holidays_psi(models.Model):
                                     'nombre_conge': 2,
                                     'employee_id': contract.employee_id.id
                                 }
-                self.env['hr.holidays'].create(values)
-                number_of_days_emp = contract.employee_id.nombre_conge + 2
-                contract.employee_id.write({'nombre_conge':number_of_days_emp})
+                    self.env['hr.holidays'].create(values)
+                    number_of_days_emp = contract.employee_id.nombre_conge + 2
+                    contract.employee_id.write({'nombre_conge':number_of_days_emp})
 
                 
     # Send mail - rappel piece justificatif - conge maladie  
