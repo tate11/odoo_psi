@@ -273,6 +273,14 @@
 				<field name='coach_id' position="replace">
 					<field name="coach_id" string="Supérieur Hiérarchique" />
 				</field>
+				
+				<field name="department_id" position="replace">
+					<field name="job_id" string="Titre du poste_" />			
+				</field>
+				<field name="job_id" position="replace">
+					<field name="department_id" string="Département"/>		
+				</field>
+				
 			</field>
 		</record>
 		<record id="hr_contract_type_view_form" model="ir.ui.view">

@@ -119,6 +119,17 @@ class hr_employee(models.Model):
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
     
+    work_email = fields.Char(string=u'Adresse électronique professionnelle', required=True)
+    coach_id = fields.Many2one('hr.employee', string=u'Supérieur Hiérarchique', required=True)
+    calendar_id = fields.Many2one('resource.calendar', string=u"Horaire de travail", required=True)
+    department_id = fields.Many2one('hr.department', string=u"Département", readonly=True)
+    job_id = fields.Many2one('hr.job', string=u"Titre du poste")
+    
+    @api.onchange('job_id')
+    def _onchange_department_id(self):
+        print "_onchange_department_id"
+        self.department_id = self.job_id.department_id
+        
     
     @api.onchange('name') 
     def _check_change(self):
