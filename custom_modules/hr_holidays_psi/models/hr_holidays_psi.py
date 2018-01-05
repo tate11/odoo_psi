@@ -231,8 +231,7 @@ class hr_holidays_psi(models.Model):
                                 if str(public_holiday.date) == str(date_from + timedelta(days=i)):
 #                                     print "OUI JF"
                                     record.number_of_days_temp -= 1
-            print record.is_user_rh,', record.is_user_rh'
-            print record.is_user_employee_concerned,', record.is_user_employee_concerned'
+            
         
           
     @api.onchange('date_from')
@@ -386,7 +385,7 @@ class hr_holidays_psi(models.Model):
                         return False
                 holidays_status_permission = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',1)])
                 if values.get('holiday_status_id') == holidays_status_permission[0].id :
-                    date_difference = 0
+                    date_difference = 0.0
                     date_from = datetime.datetime.strptime(values['date_from'],"%Y-%m-%d")
                     date_to = datetime.datetime.strptime(values['date_to'],"%Y-%m-%d")
                     
@@ -398,15 +397,20 @@ class hr_holidays_psi(models.Model):
                         date_str = (d1 + timedelta(days=i))
                         if not self.verif_day_not_working(str(date_str)) :
                             date_difference += 1
-                    diff = 0
+                    diff = 0.0
                     if values.has_key('holiday_type_permission') :
                         holidays_permission = self.env['hr.holidays.type.permission'].browse(values.get('holiday_type_permission'))
                         diff = holidays_permission.number_of_day
-                    if date_difference != diff :
-                        raise Warning(u'Vous devez poser exactement {} jour(s) pour ce type de permission.'.format(diff))
-                        return False
+                    print "date_difference : ",date_difference
+                    print "diff : ",diff
+                    if str(date_difference) != str(diff) :
+                        print "IF"
+                        raise Warning(u'Vous devez poser exactement {} jour(s) de congé pour ce type de permission.'.format(diff))
+                        #return False
+                    else :
+                        print "ELSE"
                 holidays_status = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
-                print values
+               
                 if values.get('holiday_status_id') == holidays_status[0].id :
                    nombre_conge = 0
                    number_of_days = 0
@@ -451,26 +455,53 @@ class hr_holidays_psi(models.Model):
         
         holidays_status_permission = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',1)])
         if self.holiday_status_id.id == holidays_status_permission[0].id :
-            print "date_difference"
-            date_difference = 0
-            
-            date_from = datetime.datetime.strptime(self.date_from,"%Y-%m-%d")
-            date_to = datetime.datetime.strptime(self.date_to,"%Y-%m-%d")
-            d1 = date(date_from.year, date_from.month, date_from.day)  # start date
-            d2 = date(date_to.year, date_to.month, date_to.day)  # start date
-            delta = d2 - d1
+            date_difference = 0.0
+            diff = 0.0
+            delta = 0.0
+            d1 = 0.0
+            d2 = 0.0
+            if values.has_key('date_from') and values.has_key('date_to') :
+                date_from = datetime.datetime.strptime(values.get('date_from'),"%Y-%m-%d")
+                date_to = datetime.datetime.strptime(values.get('date_to'),"%Y-%m-%d")
+                d1 = date(date_from.year, date_from.month, date_from.day)  # start date
+                d2 = date(date_to.year, date_to.month, date_to.day)  # start date 
+                delta = d2 - d1 
+            elif values.has_key('date_from') and not values.has_key('date_to') :
+                date_from = datetime.datetime.strptime(values.get('date_from'),"%Y-%m-%d")
+                date_to = datetime.datetime.strptime(self.date_to,"%Y-%m-%d")
+                d1 = date(date_from.year, date_from.month, date_from.day)  # start date
+                d2 = date(date_to.year, date_to.month, date_to.day)  # start date
+                delta = d2 - d1
+            elif not values.has_key('date_from') and values.has_key('date_to') :
+                print "self.date_from ",self.date_from
+                print "values.has_key('date_to') ",values.get('date_to')
+                date_from = datetime.datetime.strptime(self.date_from,"%Y-%m-%d")
+                date_to = datetime.datetime.strptime(values.get('date_to'),"%Y-%m-%d")
+                d1 = date(date_from.year, date_from.month, date_from.day)  # start date
+                d2 = date(date_to.year, date_to.month, date_to.day)  # start date
+                delta = d2 - d1
+            else:
+                date_from = datetime.datetime.strptime(self.date_from,"%Y-%m-%d")
+                date_to = datetime.datetime.strptime(self.date_to,"%Y-%m-%d")
+                d1 = date(date_from.year, date_from.month, date_from.day)  # start date
+                d2 = date(date_to.year, date_to.month, date_to.day)  # start date
+                delta = d2 - d1
+            print "delta : ",delta
+            print d1
             for i in range(delta.days + 1):
                date_str = (d1 + timedelta(days=i))
                if not self.verif_day_not_working(str(date_str)) :
                   date_difference += 1
-                  diff = self.holiday_type_permission.number_of_day
-                  if values.has_key('holiday_type_permission') :
-                        holidays_permission = self.env['hr.holidays.type.permission'].browse(values.get('holiday_type_permission'))
-                        diff = holidays_permission.number_of_day
-                  
-                  if date_difference != diff :
-                        raise Warning(u'Vous devez poser exactement {} jour(s) pour ce type de permission.'.format(diff))
-                        return False                         
+            diff = self.holiday_type_permission.number_of_day
+            if values.has_key('holiday_type_permission') :
+                  print 
+                  holidays_permission = self.env['hr.holidays.type.permission'].browse(values.get('holiday_type_permission'))
+                  diff = holidays_permission.number_of_day
+            print "date_difference write",date_difference
+            print "diff write",diff
+            if str(date_difference) != str(diff) :
+                raise Warning(u'Vous devez poser exactement {} jour(s) pour ce type de permission.'.format(diff))
+                return False                         
         
 #         date_from = datetime.datetime.strptime(vals.get('date_from'),"%Y-%m-%d").date()
 #         date_to = datetime.datetime.strptime(vals.get('date_to'),"%Y-%m-%d").date()
