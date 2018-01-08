@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="group_hr_psi_rh" model="res.groups">
+    <!-- <record id="group_hr_psi_rh" model="res.groups">
         <field name="name">RH</field>
         <field name="category_id" ref="base.module_category_human_resources"/>
     </record>
@@ -18,5 +18,11 @@
     <record id="group_hr_psi_drha" model="res.groups">
         <field name="name">DRHA</field>
         <field name="category_id" ref="base.module_category_human_resources"/>
+    </record> -->
+    
+    <record id="group_hr_psi_appui_execution" model="res.groups">
+        <field name="name">PSI Appui Et Exécution</field>
+        <field name="category_id" ref="base.module_category_hr_timesheet"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 </odoo>

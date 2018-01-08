@@ -144,7 +144,7 @@ class hr_employee(models.Model):
         if vals.has_key('matricule'):
             employees = self.env['hr.employee'].search([('matricule','=',vals.get('matricule'))])
             if len(employees) > 0:
-                raise Warning('Ce matricule correspond déjà au matricule d\'un autre employé.')  
+                raise Warning('Ce matricule correspond déjà au matricule d\'un autre employé.')
         employee = super(hr_employee, self).create(vals)
         return employee
     
@@ -157,7 +157,22 @@ class hr_employee(models.Model):
         if vals.has_key('matricule')  and not vals.has_key('employee_id')  :
             employees = self.env['hr.employee'].search([('matricule','=',vals.get('matricule')),('id','<>', self.id)])
             if len(employees) > 0:
-                raise Warning('Ce matricule correspond déjà au matricule d\'un autre employé.') 
+                raise Warning('Ce matricule correspond déjà au matricule d\'un autre employé.')
+        
+        #ajout / suppression user selon catégorie professionnelle appui ou execution de l'employe 
+        if self.job_id.psi_category != False :
+            print "********* ", self.psi_category
+            if (self.job_id.psi_category.name.lower() == 'appui' or self.job_id.psi_category.name.lower() == 'execution'):
+                if self.user_id:
+                    psi_group = self.env.ref('hr_employee_psi.group_hr_psi_appui_execution')
+                    psi_group.users += self.user_id
+            else:
+                psi_group = self.env.ref('hr_employee_psi.group_hr_psi_appui_execution')
+                psi_group.users -= self.user_id
+                
+                #psi_group.users = [(4, self.user_id.id)]
+                #commission_group.write({'users': [(4, self.user_id.id)]})
+            
         employee = super(hr_employee, self).write(vals)
         return employee
     

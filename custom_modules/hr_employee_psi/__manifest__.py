@@ -14,6 +14,7 @@
               'data/hr_employee_data.xml',
               'views/hr_employee_views.xml',
               'views/res_users_view.xml',
+              'security/hr_employee_security.xml',
              ],
     'demo': [],
     'test': [],

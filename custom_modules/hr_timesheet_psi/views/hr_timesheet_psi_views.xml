@@ -48,8 +48,7 @@
 							<field name="project_id_normal"
 								attrs="{'invisible': [('project_choice', 'not in', 'heure_normal')]}" />
 							<field name="project_id_heure_sup"
-								attrs="{'invisible': [('project_choice', 'not in', 'heure_supp')]}"
-								readonly="True" />
+								attrs="{'invisible': [('project_choice', 'not in', 'heure_supp')], 'required':True}" />
 							<field name="project_id_prestataire"
 								attrs="{'invisible': [('project_choice', 'not in', 'prestataire')]}"
 								readonly="True" />
@@ -330,7 +329,7 @@
 	</record>
 	
 	<menuitem  action="act_hr_timesheet_psi_my_timesheets" id="menu_act_hr_timesheet_psi_my_timesheets"
-		parent="hr_timesheet.menu_hr_time_tracking" sequence="2" />
+		parent="hr_timesheet.menu_hr_time_tracking" sequence="2" groups="hr_employee_psi.group_hr_psi_appui_execution"/>
 
 	<menuitem name="Ma feuille de temps" id="menu_timesheet_grid_my_psi"
 		parent="hr_timesheet.menu_hr_time_tracking" action="action_timesheet_current_psi"
