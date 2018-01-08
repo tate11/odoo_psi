@@ -25,7 +25,7 @@ class hr_employee(models.Model):
     cnaps_number                    = fields.Char(string='Numéro CNaPS')
     groupe_sanguin                  = fields.Char(string='Groupe sanguin')
     
-    psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la Catégorie')
+    psi_category_details = fields.Many2one(related='job_id.psi_category',string=u'Catégorie professionnelle', readonly=True)
     psi_category = fields.Selection(related='psi_category_details.psi_professional_category',store=True)
     
     emergency_contact_id            = fields.Many2one('hr.person.information', string=u'Personne à contacter en cas d\'urgence',
@@ -126,10 +126,11 @@ class hr_employee(models.Model):
     job_id = fields.Many2one('hr.job', string=u"Titre du poste")
     
     @api.onchange('job_id')
-    def _onchange_department_id(self):
-        print "_onchange_department_id"
+    def _onchange_by_job_id(self):
+        print "_onchange_by_job_id"
         self.department_id = self.job_id.department_id
-        
+        self.psi_category_details = self.job_id.psi_category
+        print self.job_id.psi_category.psi_professional_category
     
     @api.onchange('name') 
     def _check_change(self):

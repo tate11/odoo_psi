@@ -136,6 +136,11 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'Refused', when holiday request is refused by manager." +
             "\nThe status is 'Approved', when holiday request is approved by manager.")
                 
+    notify_assist_coord_template_id = fields.Many2one(
+        'mail.template',
+        string='Rappel aux Assistantes et Coordinateurs -  Email Template'
+    )
+    
     @api.multi
     def action_confirm(self):
         if self.filtered(lambda holiday: holiday.state != 'draft'):
@@ -931,7 +936,7 @@ class hr_holidays_psi(models.Model):
         print "_send_email_rappel_justificatif_conge_maladie"
         
         # Find all congé maladie
-        all_holidays = self.env['hr.holidays'].search([('id_psi_holidays_status','=',4),('state','=','validate')])
+        all_holidays = self.env['hr.holidays'].sudo().search([('id_psi_holidays_status','=',4),('state','=','validate')])
         print all_holidays
         for holidays in all_holidays:
             date_debut_conge_maladie = holidays.date_from
@@ -1007,22 +1012,32 @@ class hr_holidays_psi(models.Model):
         #else:
         #    self.number_of_days_temp = 0
     
+    @api.model
+    def default_get(self, fields):
+        res = super(hr_holidays_psi, self).default_get(fields)
+        company = self.env.user.company_id
+        res['notify_assist_coord_template_id'] = (company.notify_assist_coord_template_id.id)
+        return res
+    
     # Mail de rappel aux Assistantes et Coordinateurs
     @api.multi
     def _send_email_rappel_absences_to_assist_and_coord(self, automatic=False):
         print "test cron by send mail rappel"
         today = datetime.datetime.today()
-        if today.day == 20:
-            template = self.env.ref('hr_holidays_psi.custom_template_absences_to_assist_and_coord')
-            self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=force_send)            
+        print today,' TODAY'
+        print today.day,' JOUR TODAY'
+        holidays = self.env['hr.holidays'].sudo().search([])
+        if today.day == 8:
+                template = self.env.ref('hr_holidays_psi.custom_template_absences_to_assist_and_coord')
+                self.env['mail.template'].browse(template.id).send_mail(holidays[0].id, force_send=True)    
         if automatic:
             self._cr.commit()
             
     #@api.constrains('state', 'number_of_days_temp')
     def _check_holidays(self):
         print "_check_holidays"
-        holidays_status_formation = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',5)])
-        holidays_status_annuel = self.env['hr.holidays.status'].search([('holidays_status_id_psi','=',2)])
+        holidays_status_formation = self.env['hr.holidays.status'].sudo().search([('holidays_status_id_psi','=',5)])
+        holidays_status_annuel = self.env['hr.holidays.status'].sudo().search([('holidays_status_id_psi','=',2)])
         for holiday in self:
             if holiday.holiday_type != 'employee' or holiday.type != 'remove' or not holiday.employee_id or holiday.holiday_status_id.limit:
               

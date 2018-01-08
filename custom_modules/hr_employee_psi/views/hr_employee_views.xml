@@ -212,7 +212,6 @@
 						groups="hr.group_hr_user">
 						<group col="2">
 							<group string="Etat civil">
-								<field name="psi_category" />
 								<field name="matricule" required="1" />
 								<field name="psi_name" string='Nom et prénom(s)' />
 								<field name="birthday" string='Date de naissance' />
@@ -274,11 +273,8 @@
 					<field name="coach_id" string="Supérieur Hiérarchique" />
 				</field>
 				
-				<field name="department_id" position="replace">
-					<field name="job_id" string="Titre du poste_" />			
-				</field>
-				<field name="job_id" position="replace">
-					<field name="department_id" string="Département"/>		
+				<field name="department_id" position="after">
+					<field name="psi_category_details" string='Catégorie professionnelle'/>
 				</field>
 				
 			</field>

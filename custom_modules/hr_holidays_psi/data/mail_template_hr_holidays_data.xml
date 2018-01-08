@@ -27,14 +27,23 @@
 		<record id="custom_template_absences_to_assist_and_coord" model="mail.template">
 			<field name="name">PSI Template email absences - Rappel aux Assistantes et Coordinateurs</field>
 			<field name="model_id" ref="hr_holidays_psi.model_hr_holidays" />
-			<field name="email_from">${object.create_uid.email}</field>
+			<field name="email_from"><![CDATA[${object.create_uid.email or object.company_id.email}]]></field>
 			<field name="subject">Rappel pour envoi des pièces de demandes d'absences</field>
-			<field name="email_to">${(object.manager_id.work_email and object.manager_id2.work_email)|safe}</field>
+			<field name="email_to">
+				% for all_employee_exec_coord in object.env['hr.employee'].sudo().search(['|',('psi_category','=','execution'),('psi_category','=','coordinateur')]):
+					${all_employee_exec_coord.work_email or all_employee_exec_coord.employee_id.user_id.email},
+				% endfor
+			</field>
 			<field name="body_html"><![CDATA[
 <div>
     <p>
-      	Bonjour, 
-		Veuillez envoyé les pièces de demandes d'absences avec les états récapitulatif avant le fin du mois le ${object.last_business_day}.
+		Bonjour,
+	</p><p></p>
+	<p>
+		Veuillez envoyer les pièces de demandes d’absences et les états récapitulatifs des absences du mois pour chaque site/ région/ département avant le ${object.last_business_day}.
+	</p><p></p>
+	<p>
+		Cordialement.
 	</p>
 </div>   ]]>
 			</field>

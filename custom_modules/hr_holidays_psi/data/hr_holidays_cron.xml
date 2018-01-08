@@ -29,7 +29,7 @@
         
         <!-- Cron rappel rappel aux Assistantes et Coordinateurs -->
         <record id="ir_cron_send_email_absence_rappel_assistances_coordinateur" model="ir.cron">
-            <field name="name">PSI Absences - Rappel aux Assistantes et Coordinateurs</field>
+            <field name="name">PSI Congé - Rappel aux Assistantes et Coordinateurs</field>
             <field name="active" eval="True" />
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">1</field>
