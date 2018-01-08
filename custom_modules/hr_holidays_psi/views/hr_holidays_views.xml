@@ -678,7 +678,7 @@
 			<field name="arch" type="xml">
 				<pivot string="Leaves Summary">
 					<field name="employee_id" type="row" />
-					<field name="nombre_conge" type="measure" />
+					<field name="nombre_conge"  string="Congé pris" type="measure" />
 				</pivot>
 			</field>
 		</record>
@@ -690,7 +690,7 @@
 			<field name="arch" type="xml">
 				<graph string="Leaves Summary">
 					<field name="employee_id" />
-					<field name="nombre_conge" type="measure" />
+					<field name="nombre_conge" string="Congé pris" type="measure" />
 				</graph>
 			</field>
 		</record>
