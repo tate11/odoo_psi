@@ -135,11 +135,7 @@ class hr_holidays_psi(models.Model):
             "\nThe status is 'To Approve', when holiday request is confirmed by user." +
             "\nThe status is 'Refused', when holiday request is refused by manager." +
             "\nThe status is 'Approved', when holiday request is approved by manager.")
-                
-    notify_assist_coord_template_id = fields.Many2one(
-        'mail.template',
-        string='Rappel aux Assistantes et Coordinateurs -  Email Template'
-    )
+   
     
     @api.multi
     def action_confirm(self):
@@ -1011,13 +1007,6 @@ class hr_holidays_psi(models.Model):
         #    self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
         #else:
         #    self.number_of_days_temp = 0
-    
-    @api.model
-    def default_get(self, fields):
-        res = super(hr_holidays_psi, self).default_get(fields)
-        company = self.env.user.company_id
-        res['notify_assist_coord_template_id'] = (company.notify_assist_coord_template_id.id)
-        return res
     
     # Mail de rappel aux Assistantes et Coordinateurs
     @api.multi
