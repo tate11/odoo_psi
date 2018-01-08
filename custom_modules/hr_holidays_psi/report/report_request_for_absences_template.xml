@@ -20,7 +20,7 @@
 							<div class="col-xs-4">
 							</div>
 							<div class="col-xs-4">
-								<h2 class="cadre1">DEMANDE D'ABSENCES</h2>
+								<h2 class="cadre1">DEMANDES D'ABSENCE</h2>
 							</div>
 							<div class="col-xs-4">
 							</div>
@@ -79,13 +79,12 @@
 						
 								<br />
 							<br />
-							
-<div class="col-xs-4"></div>
-							<div class="col-xs-4"></div>
-							<div class="col-xs-4">CRHDC <![CDATA[
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-]]> DRHA</div>
-							
+							<br />
+							<div class="row">
+								<div class="col-xs-4"></div>
+								<div class="col-xs-4"></div>
+								<div class="col-xs-4">CRHDC <span class="pull-right"> DRHA</span></div>
+							</div>	
 						</div>
 					</div>
 				</div>
