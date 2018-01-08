@@ -100,7 +100,7 @@
 			<field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter" />
 			<field name="arch" type="xml">
 				<xpath expr="filter[@name='approve']" position="attributes">
-					<attribute name="domain">[('state','=','confirm')]</attribute>
+					<attribute name="domain">[('state','=','confirm'),('employee_id.coach_id.user_id', '=', uid)]</attribute>
 					<attribute name="string">A valider par le Supérieur hiérarchique</attribute>
 				</xpath>
 				<xpath expr="filter[@name='approve']" position="before">					
