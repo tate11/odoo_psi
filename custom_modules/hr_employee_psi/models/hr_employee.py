@@ -122,15 +122,16 @@ class hr_employee(models.Model):
     work_email = fields.Char(string=u'Adresse électronique professionnelle', required=True)
     coach_id = fields.Many2one('hr.employee', string=u'Supérieur Hiérarchique', required=True)
     calendar_id = fields.Many2one('resource.calendar', string=u"Horaire de travail", required=True)
-    department_id = fields.Many2one('hr.department', string=u"Département", readonly=True)
+    department_id_psi = fields.Many2one('hr.department', string=u"Département", readonly=True)
     job_id = fields.Many2one('hr.job', string=u"Titre du poste")
     
     @api.onchange('job_id')
     def _onchange_by_job_id(self):
         print "_onchange_by_job_id"
-        self.department_id = self.job_id.department_id
+        self.department_id_psi = self.job_id.department_id
+        print self.job_id.department_id,' - ',self.department_id_psi
         self.psi_category_details = self.job_id.psi_category
-        print self.job_id.psi_category.psi_professional_category
+        print self.psi_category_details,' = ',self.job_id.psi_category
     
     @api.onchange('name') 
     def _check_change(self):
@@ -163,6 +164,8 @@ class hr_employee(models.Model):
         #ajout / suppression user selon catégorie professionnelle appui ou execution de l'employe 
         if self.job_id.psi_category != False :
             print "********* ", self.psi_category
+            print "***** ",self.department_id_psi
+            print "** ",self.psi_category_details
             if (self.job_id.psi_category.name.lower() == 'appui' or self.job_id.psi_category.name.lower() == 'execution'):
                 if self.user_id:
                     psi_group = self.env.ref('hr_employee_psi.group_hr_psi_appui_execution')
