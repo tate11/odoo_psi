@@ -671,7 +671,6 @@
 			<field name="arch" type="xml">
 				<pivot string="Leaves Summary">
 					<field name="employee_id" type="row" />
-					<field name="date_from" type="col" />
 					<field name="nombre_conge" type="measure" />
 				</pivot>
 			</field>
@@ -684,7 +683,6 @@
 			<field name="arch" type="xml">
 				<graph string="Leaves Summary">
 					<field name="employee_id" />
-					<field name="date_from" type="col" />
 					<field name="nombre_conge" type="measure" />
 				</graph>
 			</field>
