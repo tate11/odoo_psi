@@ -948,7 +948,7 @@ class hr_holidays_psi(models.Model):
             if date_to_notif.date() == datetime.datetime.today().date() :
                 print "Send mail PJ"
                 template = self.env.ref('hr_holidays_psi.custom_template_rappel_justificatif_conge_maladie')
-                self.env['mail.template'].browse(template.id).send_mail(self.id)               
+                self.env['mail.template'].browse(template.id).send_mail(holidays.id, force_send=True)
         if automatic:
             self._cr.commit()
 

@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
+
 		<!-- Template mail pour envoi de pièce justificatif - COngé maladie -->
 		<record id="custom_template_rappel_justificatif_conge_maladie" model="mail.template">
-			<field name="name">PSI Template email employee - Rappel justificatif - congé maladie</field>
 			<field name="model_id" ref="hr_holidays_psi.model_hr_holidays" />
-			<field name="email_from">${object.create_uid.email}</field>
-			<field name="subject">Rappel pour envoie des pièces justificatif de ${object.name_related or 'n/a' } - Congé maladie PSI</field>
-			<field name="email_to">${object.employee_id.work_email}</field>
+			<field name="name">PSI Template email employee - Rappel justificatif - congé maladie</field>
+			<field name="email_from"><![CDATA[${object.create_uid.email or object.company_id.email}]]></field>
+			<field name="email_to">${object.employee_id.work_email or object.employee_id.user_id.email}</field>
+			<field name="subject">Rappel pour envoie des pièces justificatif - Congé maladie</field>
 			<field name="body_html"><![CDATA[
 <div>
     <p>
-      	Bonjour ${object.employee_id.name},     	                  
+      	Bonjour,     	                  
 	</p>
 	<p>
-		Si ce n'est déjà fait, veuillez envoyer votre ordonnance ou une pièce justificative liée à votre demande de congé.
+		Si ce n'est déjà fait, veuillez joindre à votre demande de congé une ordonnance ou une pièce justificative.
 	</p>
+	<p></p>
+	<p>Cordialement</p>
 </div>   ]]>
 			</field>
 		</record>
