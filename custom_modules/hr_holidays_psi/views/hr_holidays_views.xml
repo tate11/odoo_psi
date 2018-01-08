@@ -103,8 +103,10 @@
 			<field name="arch" type="xml">
 				<xpath expr="filter[@name='approve']" position="attributes">
 
-					<attribute name="domain">[('state','=','confirm'),('employee_id.coach_id.user_id', '=', uid)]</attribute>
-					<attribute name="string">A valider par le Supérieur hiérarchique</attribute>
+					<attribute name="domain">[('state','=','confirm'),('employee_id.coach_id.user_id',
+						'=', uid)]</attribute>
+					<attribute name="string">A valider par le Supérieur hiérarchique
+					</attribute>
 
 				</xpath>
 				<xpath expr="filter[@name='approve']" position="before">
@@ -302,9 +304,12 @@
 				</p>
 				<p>
 					Once you have recorded your leave request, it will be sent
-					to a manager for validation. Be sure to set the right leave
-					type (recuperation, legal holidays, sickness) and the exact
-					number of open days related to your leave.
+					to a
+					manager for validation. Be sure to set the right leave
+					type
+					(recuperation, legal holidays, sickness) and the exact
+					number of
+					open days related to your leave.
 				</p>
 			</field>
 		</record>
@@ -650,7 +655,7 @@
 		</record>
 
 		<!-- Hide menu approve -->
-		<record id="make_invisible" model="res.groups">
+	<!--	<record id="make_invisible" model="res.groups">
 			<field name="name">Invisible</field>
 		</record>
 		<record model="ir.ui.menu" id="hr_holidays.menu_open_allocation_holidays">
@@ -660,10 +665,12 @@
 			id="hr_holidays.menu_open_department_leave_allocation_approve">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
 		</record>
+		
 		<record model="ir.ui.menu" id="hr_holidays.menu_open_department_leave_approve">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
-		</record>
-
+		</record> 
+		-->
+		
 		<record id="view_holiday_pivot_psi" model="ir.ui.view">
 			<field name="name">hr.holidays.report_pivot</field>
 			<field name="model">hr.holidays</field>
@@ -745,9 +752,16 @@
 			parent="hr_holidays.menu_hr_holidays_my_leaves" action="open_company_allocation"
 			sequence="22" />
 
+		<menuitem name="Congés pris"
+			id="hr_holidays.menu_hr_available_holidays_report_tree" action="hr_holidays.action_hr_available_holidays_report"
+			parent="hr_holidays.menu_hr_holidays_report" sequence="5" />
+
 		<!-- <menuitem id="menu_open_ask_holidays_new" name="Faire une demande 
 			d'absence" parent="hr_holidays.menu_hr_holidays_my_leaves" action="open_ask_holidays" 
 			sequence="22"/> -->
+
+		<delete id="hr_holidays.menu_open_allocation_holidays" model="ir.ui.menu" />
+		<delete id="hr_holidays.menu_open_department_leave_approve" model="ir.ui.menu" />
 
 	</data>
 </odoo>

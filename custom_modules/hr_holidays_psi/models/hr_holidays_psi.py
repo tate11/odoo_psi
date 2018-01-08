@@ -117,7 +117,7 @@ class hr_holidays_psi(models.Model):
     number_of_days_psi = fields.Float('Number of Days', compute='_compute_number_of_days_psi', store=True)
     number_of_days_temp = fields.Float(compute='_compute_date_from_to', string='Allocation', default="1.0", copy=False, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     nombre_conge = fields.Float(string="Soldes de congé")
-    
+    number_of_days = fields.Float('Congé pris', compute='_compute_number_of_days', store=True)
     is_user_rh = fields.Boolean(help="Verifier si utilisateur RH", compute='_is_user_rh')
     is_user_employee_concerned = fields.Boolean(compute="_is_current_user_equal_leave_employee")
     
