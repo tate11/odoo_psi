@@ -1027,7 +1027,7 @@ class hr_holidays_psi(models.Model):
         print today,' TODAY'
         print today.day,' JOUR TODAY'
         holidays = self.env['hr.holidays'].sudo().search([])
-        if today.day == 8:
+        if today.day == 20:
                 template = self.env.ref('hr_holidays_psi.custom_template_absences_to_assist_and_coord')
                 self.env['mail.template'].browse(template.id).send_mail(holidays[0].id, force_send=True)    
         if automatic:
