@@ -942,7 +942,7 @@ class hr_holidays_psi(models.Model):
                                          month=dt.month,
                                          day=dt.day,
                     )
-            date_to_notif = date_y_m_d + relativedelta(hours=72)   
+            date_to_notif = date_y_m_d + relativedelta(hours=48)   
             print date_to_notif.date(),' date_to_notif'
             print datetime.datetime.today().date(),' date_now'
             if date_to_notif.date() == datetime.datetime.today().date() :
