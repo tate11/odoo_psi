@@ -16,6 +16,7 @@
               'security/ir.model.access.csv',
               'security/hr_holidays_security.xml',
 			  'views/hr_timesheet_psi_views.xml',
+              'views/hr_timesheet_psi_heures_sup.xml',
              ],
     'demo': [],
     'test': [],

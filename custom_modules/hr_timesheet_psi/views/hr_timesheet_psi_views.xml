@@ -235,13 +235,14 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('timesheet_grid.view_timesheet_list')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('timesheet_grid.view_timesheet_form')}),
             ]" />
-		<field name="domain">['&amp;', ('user_id', '=', uid), ('is_timesheet',
-			'=', True)]
+		<field name="domain">['&amp;','&amp;', ('user_id', '=', uid), ('is_timesheet',
+			'=', True), ('psi_timesheet_type','=','normal')]
 		</field>
 		<field name="context">
 			{
 			'user_id': uid,
-			'grid_range': 'month'
+			'grid_range': 'month',
+			'default_psi_timesheet_type': 'normal'
 			}
 		</field>
 	</record>
@@ -329,7 +330,7 @@
 	</record>
 	
 	<menuitem  action="act_hr_timesheet_psi_my_timesheets" id="menu_act_hr_timesheet_psi_my_timesheets"
-		parent="hr_timesheet.menu_hr_time_tracking" sequence="2" groups="hr_employee_psi.group_hr_psi_appui_execution"/>
+		parent="hr_timesheet.menu_hr_time_tracking" sequence="20" groups="hr_employee_psi.group_hr_psi_appui_execution"/>
 
 	<menuitem name="Ma feuille de temps" id="menu_timesheet_grid_my_psi"
 		parent="hr_timesheet.menu_hr_time_tracking" action="action_timesheet_current_psi"

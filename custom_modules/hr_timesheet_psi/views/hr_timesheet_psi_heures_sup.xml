@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="action_timesheet_psi_heures_sup" model="ir.actions.act_window">
+		<field name="name">Feuille de temps heures supplémentaires</field>
+		<field name="res_model">account.analytic.line</field>
+		<field name="view_mode">grid,tree</field>
+		<field name="search_view_id" ref="timesheet_grid.view_timesheet_grid_search" />
+		<field name="view_ids"
+			eval="[
+                (5, 0, 0),
+                (0, 0, {'view_mode': 'grid', 'view_id': ref('view_timesheet_grid_psi_inherit')}),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('timesheet_grid.view_timesheet_list')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('timesheet_grid.view_timesheet_form')}),
+            ]" />
+		<field name="domain">['&amp;','&amp;', ('user_id', '=', uid),
+			('is_timesheet', '=', True), ('psi_timesheet_type','=','heure_sup')] 
+		</field>
+		<field name="context"> { 'user_id': uid, 'grid_range': 'month', 'default_psi_timesheet_type': 'heure_sup' }
+		</field>
+	</record>
+	
+	<menuitem name="Feuille de temps heures supplémentaires" id="menu_timesheet_grid_psi_heures_sup"
+		parent="hr_timesheet.menu_hr_time_tracking" action="action_timesheet_psi_heures_sup"
+		sequence="21" groups="hr_employee_psi.group_hr_psi_appui_execution" />
+</odoo>

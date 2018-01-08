@@ -82,6 +82,10 @@ class AccountAnalyticLine(models.Model):
         
     project_name = fields.Char(related='project_id.name', store=True)
     
+    psi_timesheet_type = fields.Selection([('normal', 'Timesheet Normal'),
+                                           ('heure_sup', u'Timesheet Heures Supplémentaires'),
+                                            ], string="Type")
+    
     @api.v8
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):
