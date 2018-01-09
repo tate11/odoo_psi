@@ -5,6 +5,7 @@ import itertools
 from __builtin__ import False
 import calendar
 from datetime import datetime, date
+import datetime as dt
 from odoo.addons.grid.models import END_OF
 
 from odoo import api, fields, models
@@ -399,10 +400,64 @@ class AccountAnalyticLine(models.Model):
         return super(AccountAnalyticLine, self).write(vals)
     
     def send_to_validate(self):
-        print "send_to_validate"
-        timesheets = self.env['account.analytic.line'].sudo().search([('state', '=', 'draft'),('user_id', '=', self.env.user.id)])
-        for timesheet in timesheets :
-            timesheet.sudo().write({'state' : 'confirm'})
+        if self.date != False :
+            timesheets = self.env['account.analytic.line'].search([('date', '=', self.date),('user_id', '=', self.env.user.id)])
+            if len(timesheets) > 0 and timesheets[0].state == 'confirm':
+                raise Warning("Votre feuille de temps a déjà été enregistrée pour validation.")
+                return False
+                
+            date = datetime.strptime(self.date,'%Y-%m-%d')
+            year = date.year
+            month = date.month
+            day = date.day
+            num_days = calendar.monthrange(year, month)[1]
+            days = [dt.date(year, month, day) for day in range(1, num_days+1)]
+            employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
+            attendance_ids = {}
+            if len(employees) > 0 :
+                attendance_ids = employees[0].calendar_id.attendance_ids
+            for day in days :
+                if not self.verif_day_not_working(str(day)) :
+                    print day
+                    heure_par_jour = 0.0
+                    dayofweek = int(datetime.strptime(str(day), '%Y-%m-%d').strftime('%w'))
+                    for attendance_id in attendance_ids:
+                            attendances = self.env['resource.calendar.attendance'].search([('id', '=', attendance_id.id), ('dayofweek', '=', dayofweek)])
+                            for attendance in attendances:
+                                heure_par_jour += attendance.hour_to - attendance.hour_from
+                    timesheets = self.env['account.analytic.line'].search([('date', '=', date),('user_id', '=', self.env.user.id)])
+                    if len(timesheets) == 0 :
+                        raise Warning('Veuillez vous assurer que votre feuille de temps est rempli correctement avant d\'enregistrer pour validation.')
+                        return False
+                    unit_amount_total = 0.0 
+                    for account in timesheets :
+                        unit_amount_total += account.unit_amount
+                    
+                    if unit_amount_total != heure_par_jour :
+                        raise Warning('Veuillez vous assurer que votre feuille de temps est rempli correctement avant d\'enregistrer pour validation.')
+                        return False
+                    for timesheet in timesheets :
+                        timesheet.sudo().write({'state' : 'confirm'})
+                    timesheets_update = self.env['account.analytic.line'].search([('date', '=', date),('user_id', '=', self.env.user.id)])
+                    if len(timesheets_update) > 0 and timesheets_update[0].state == 'confirm' :
+                        raise Warning("Votre feuille de temps a déjà été enregistrée pour validation.")
+                        return  False
+        else :
+            raise Warning('Veuillez vous assurer que votre feuille de temps est rempli correctement avant d\'enregistrer pour validation.')
+            return False      
+        
+                
+    def verif_day_not_working(self, date):
+        print "Verification +"
+        current_day = datetime.strptime(date, '%Y-%m-%d').strftime('%w')
+        if current_day == "6" or current_day == "0" :
+            return True
+        
+        public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([])
+        for public_holiday in public_holidays_line:
+            if public_holiday.date == date:
+                return True
+        return False
        
     @api.multi
     def validate(self):
