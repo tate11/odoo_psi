@@ -628,3 +628,9 @@ class CodeBudgetaire(models.Model):
     aanalytic_account_parent_id = fields.Many2one('account.analytic.account', string="Compte analytique parent")
     analytic_account_id = fields.Many2one('account.analytic.account', string="Compte analytique")
     taux = fields.Float('Taux')
+
+class ProviderSchedule(models.Model):
+    _name = 'hr.employee.provider.schedule'
+    
+    name = fields.Char(string="Nom")
+    hours = fields.Float('Heures')
