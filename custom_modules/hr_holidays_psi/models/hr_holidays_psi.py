@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from datetime import date, timedelta
-
+from calendar import monthrange
 import calendar
+from datetime import date, timedelta
 import datetime
-
 
 from dateutil.relativedelta import relativedelta
 
@@ -12,7 +11,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, AccessError, Warning
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.tools import float_compare
-from calendar import monthrange
+
 
 HOURS_PER_DAY = 8
 
@@ -869,6 +868,7 @@ class hr_holidays_psi(models.Model):
             'is_timesheet': True,
             'unit_amount': hours,
             'psi_timesheet_type':'normal',
+            'psi_timesheet_type': hours,
             'user_id': employee.user_id.id
         })
         

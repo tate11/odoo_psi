@@ -1,109 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-	<record id="hr_timesheet_sheet_tree_simplified" model="ir.ui.view">
-		<field name="name">hr.timesheet.psi.tree</field>
-		<field name="model">hr_timesheet_psi.sheet</field>
-		<field name="arch" type="xml">
-			<tree decoration-info="state == 'draft'" decoration-muted="state == 'done'"
-				decoration-bf="message_needaction == True" string="Timesheets">
-				<field name="employee_id" />
-				<field name="time_from" />
-				<field name="time_to" />
-				<field name="department_id" invisible="1" />
-				<field name="state" />
-				<field name="message_needaction" invisible="1" />
-			</tree>
-		</field>
-	</record>
-
-	<record id="hr_timesheet_psi_form" model="ir.ui.view">
-		<field name="name">hr.timesheet.psi.form</field>
-		<field name="model">hr_timesheet_psi.sheet</field>
-		<field name="arch" type="xml">
-			<form string="Timesheet">
-				<header>
-					<button name="action_timesheet_confirm" states="draft"
-						string="Soumettre au responsable" type="object" class="oe_highlight" />
-					<button name="action_timesheet_done" states="confirm"
-						string="Approuver par le supérieur hiérarchique" type="object"
-						groups="hr_timesheet.group_hr_timesheet_user" class="oe_highlight" />
-					<button name="action_timesheet_draft" states="done"
-						string="Mettre en brouillion" type="object"
-						groups="hr_timesheet.group_hr_timesheet_user" />
-					<button name="action_timesheet_draft" states="confirm"
-						string="Refuser" type="object" groups="hr_timesheet.group_hr_timesheet_user" />
-					<field name="state" widget="statusbar" statusbar_visible="new,confirm,done" />
-				</header>
-				<sheet>
-					<div class="oe_title">
-						<label for="employee_id" class="oe_edit_only" />
-						<h1>
-							<field name="employee_id" class="oe_inline" placeholder="Employee's Name" />
-						</h1>
-						<field name="user_id" invisible="1" />
-					</div>
-					<group>
-						<group>
-							<field name="project_id_normal"
-								attrs="{'invisible': [('project_choice', 'not in', 'heure_normal')]}" />
-							<field name="project_id_heure_sup"
-								attrs="{'invisible': [('project_choice', 'not in', 'heure_supp')], 'required':True}" />
-							<field name="project_id_prestataire"
-								attrs="{'invisible': [('project_choice', 'not in', 'prestataire')]}"
-								readonly="True" />
-							<field name="motif" />
-							<field name="date" />
-							<label for="time_from" string="Intervalle d'heures" />
-							<div>
-								<field name="time_from" class="oe_inline" widget="float_time"
-									sum="Hours" />
-								-
-								<field name="time_to" class="oe_inline" widget="float_time"
-									sum="Hours" />
-								=
-								<field name="hours" />
-								Hr(s)
-							</div>
-
-							<field name="name" invisible="1" />
-							<field name="department_id" invisible="1" />
-							<field name="project_time_id" invisible="1" />
-							<field name="project_choice" invisible="1" />
-							<field name="company_id" groups="base.group_multi_company" />
-						</group>
-					</group>
-				</sheet>
-				<div class="oe_chatter">
-					<field name="message_follower_ids" widget="mail_followers" />
-					<field name="message_ids" widget="mail_thread" />
-				</div>
-			</form>
-		</field>
-	</record>
-
-	<record id="view_hr_timesheet_psi_filter" model="ir.ui.view">
-		<field name="name">hr_timesheet_psi.sheet.filter</field>
-		<field name="model">hr_timesheet_psi.sheet</field>
-		<field name="arch" type="xml">
-			<search string="Recherche feuille de temps">
-				<field name="date_from" />
-				<filter name="new" string="En brouillon" domain="[('state','in',('draft', 'new'))]"
-					help="Unvalidated Timesheets" />
-				<filter name="to_approve" string="A aprouvé" domain="[('state','=','confirm'),('employee_id.coach_id.user_id','=', uid)]]"
-					help="Confirmed Timesheets" />
-				<field name="employee_id" />
-				<field name="department_id" />
-				<group expand="0" string="Group By">
-					<filter string="Employée" domain="[]"
-						context="{'group_by':'employee_id'}" />
-					<filter string="Type du feuille de temps" domain="[]"
-						context="{'group_by':'project_choice'}" />
-				</group>
-			</search>
-		</field>
-	</record>
-
 	<record id="view_timesheet_list_psi_inherit" model="ir.ui.view">
 		<field name="name">Toutes les feuilles de temps</field>
 		<field name="model">account.analytic.line</field>
@@ -349,8 +246,8 @@
 	<menuitem name="Feuilles de temps à valider"  id="menu_timesheet_grid_validate"
 		parent="hr_timesheet.timesheet_menu_root" groups="hr_timesheet.group_hr_timesheet_user"
 		action="action_timesheet_previous_month_psi" sequence="10" />
-		
-	<menuitem name="Feuilles de temps à valider"
+
+	<menuitem name="Feuilles de temps"
 		id="menu_timesheet_grid_validate_previous_month_psi" parent="menu_timesheet_grid_validate"
 		action="action_timesheet_previous_month_psi" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" /> 
 		

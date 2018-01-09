@@ -79,23 +79,24 @@ class HrTimesheetPsi(models.Model):
     project_time_id = fields.Integer(default=_default_project_time_id)
     project_timesheet_id =  fields.Integer(related='project_id_normal.project_timesheet_id', store=True)
 #    project_id = fields.Many2one('project.project', string="Projet", required=True, default=lambda self: self.env['project.project'].search([('project_timesheet_id','=',2)]))
-    project_id_normal = fields.Many2one('project.project', string="Projet", default=lambda self: self.env['project.project'].search([('project_timesheet_id','=',0)]))
-    project_id_heure_sup = fields.Many2one('project.project', string="Projet", default=lambda self: self.env['project.project'].search([('project_timesheet_id','=',1)]))
-    project_id_prestataire = fields.Many2one('project.project', string="Projet", default=lambda self: self.env['project.project'].search([('project_timesheet_id','=',2)]))
+    project_id_normal = fields.Many2one('project.project', string="Projet")
+    project_id_heure_sup = fields.Many2one('project.project', string="Projet")
+    project_id_prestataire = fields.Many2one('project.project', string="Projet")
     
     project_choice = fields.Selection([
                                        ('heure_normal',"Heure normal"),
-                                       ('heure_supp',"Heure supplementaire"),
+                                       ('heure_sup',"Heure supplementaire"),
                                        ('prestataire',"Prestataire")
                                        ], default="heure_normal")
     
     state = fields.Selection([
-        ('new', 'Nouveau'),
-        ('draft', 'Ouvert'),
-        ('confirm', 'En attente d\'approbation'),
-        ('done', 'Validé')], default='new', track_visibility='onchange',
+        ('new', 'Nouvelle demande'),
+        ('draft', 'A soumettre pour validation'),
+        ('confirm', u'A valider par le Supérieur Hiérarchique'),
+        ('done', u'Validé')], default='new', track_visibility='onchange',
         string='Etat', required=True, readonly=True, index=True,
         help='Circuit d\'approbation du timesheet')
+    
     company_id = fields.Many2one('res.company', string='Company')
     department_id = fields.Many2one('hr.department', string='Departement',
         default=lambda self: self.env['res.company']._company_default_get())
@@ -135,9 +136,17 @@ class HrTimesheetPsi(models.Model):
 
     @api.model
     def create(self, vals):
+        
+        choice = vals['project_choice']
+        if choice == 'heure_sup':
+            vals['psi_timesheet_type'] = 'heure_sup'
+        else:
+            vals['psi_timesheet_type'] = 'normal'
+        
         if 'employee_id' in vals:
             print "create account.analytic.line"
-            account_analytic_line_s = self.env['account.analytic.line'].search([('project_id', '=', vals['project_id']), ('date', '=', vals['date'])])
+            account_analytic_line_s = self.env['account.analytic.line'].search([('project_id', '=', vals['project_id_heure_sup']), ('date', '=', vals['date'])])
+            
             if vals['name'] == False :
                 vals['name'] = '.'
             if len(account_analytic_line_s) != 0 :
@@ -150,7 +159,7 @@ class HrTimesheetPsi(models.Model):
             if len(attendances) == 0:
                raise Warning(u'L\'utilisateur doit être attaché à un horaire de travail')
             for attendance in attendances:
-                if vals.get('project_choice') == "heure_supp":                    
+                if vals.get('project_choice') == "heure_sup":                    
                     if  float(vals.get('time_from')) >= int(attendance.hour_from) and float(vals.get('time_to')) <= int(attendance.hour_to):
                         raise Warning(u'Vous ne pouvez pas faire une demande d\'heure supplémentaire dans les heures de travail: {}'.format(attendance.hour_from))
                 if vals.get('project_choice') == "prestataire":
@@ -165,6 +174,8 @@ class HrTimesheetPsi(models.Model):
 #                raise UserError(_('Veuillez verifié la durée.'))
             if not self.env['hr.employee'].browse(vals['employee_id']).user_id:
                 raise UserError(_('In order to create a timesheet for this employee, you must link him/her to a user.'))
+            
+        print " ***** ", vals
         res = super(HrTimesheetPsi, self).create(vals)
         res.write({'state': 'draft'})
         return res
@@ -195,10 +206,27 @@ class HrTimesheetPsi(models.Model):
 
     @api.multi
     def action_timesheet_done(self):
-        if not self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
-            raise UserError(_('Only an HR Officer or Manager can approve timesheets.'))
+#         if not self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
+#             raise UserError(_('Only an HR Officer or Manager can approve timesheets.'))
         if self.filtered(lambda sheet: sheet.state != 'confirm'):
             raise UserError(_("Cannot approve a non-submitted timesheet."))
+        
+        #ecrire dans account.analytic.line
+        self.env['account.analytic.line'].sudo().create({
+            'account_id': self.project_id_heure_sup.analytic_account_id.id,
+            'project_id': self.project_id_heure_sup.id,
+            'project_name': self.project_id_heure_sup.name,
+            'company_id': self.employee_id.company_id.id,
+            'amount': 0,
+            'date': self.date,
+            'name': self.motif,
+            'amount_currency': 0,
+            'is_timesheet': True,
+            'unit_amount': self.hours,
+            'psi_timesheet_type': self.project_choice,
+            'user_id': self.user_id.id
+        })
+        
         self.write({'state': 'done'})
 
     @api.multi

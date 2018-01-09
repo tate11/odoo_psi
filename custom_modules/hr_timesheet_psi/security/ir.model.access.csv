@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_timesheet_psi_sheet,hr.timesheet.psi.sheet,model_hr_timesheet_psi_sheet,hr_employee_psi.group_hr_psi_appui_execution,1,1,1,0
+access_hr_timesheet_psi_sheet_sup_hier,hr.timesheet.psi.sheet,model_hr_timesheet_psi_sheet,hr_holidays_psi.group_hr_holidays_sup_hierarchique,1,1,1,1
+access_project_project,project.project,model_project_project,base.group_user,1,1,1,0
