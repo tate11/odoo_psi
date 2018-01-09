@@ -400,7 +400,16 @@ class AccountAnalyticLine(models.Model):
         print "send_to_validate"
         timesheets = self.env['account.analytic.line'].sudo().search([('state', '=', 'draft'),('user_id', '=', self.env.user.id)])
         for timesheet in timesheets :
+            print timesheet,' timesheet'
             timesheet.sudo().write({'state' : 'confirm'})
+       
+    def refuse(self):
+        print "refuse"
+        timesheets = self.env['account.analytic.line'].sudo().search([('state', '=', 'confirm'),('user_id', '=', self.env.user.id)])
+        print timesheets
+        for timesheet in timesheets :
+            print timesheet,' timesheet'
+            timesheet.sudo().write({'state' : 'draft'})
        
           
      

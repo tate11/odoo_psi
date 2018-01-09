@@ -269,6 +269,7 @@
 		<field name="arch" type="xml">
 			<xpath expr="/grid">
 				<button type="object" name="validate" string="Valider" />
+				<button type="object" name="refuse" string="Refuser" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
 			</xpath>
 		</field>
 	</record>
@@ -351,7 +352,7 @@
 		
 	<menuitem name="Feuilles de temps à valider"
 		id="menu_timesheet_grid_validate_previous_month_psi" parent="menu_timesheet_grid_validate"
-		action="action_timesheet_previous_month_psi"  groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" /> 
+		action="action_timesheet_previous_month_psi" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" /> 
 		
 
 	<delete id="timesheet_grid.menu_timesheet_grid_my" model="ir.ui.menu" />
