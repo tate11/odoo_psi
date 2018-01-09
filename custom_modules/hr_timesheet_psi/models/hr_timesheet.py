@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import itertools
 
 from __builtin__ import False
 import calendar
 from datetime import datetime, date
+from odoo.addons.grid.models import END_OF
 
 from odoo import api, fields, models
-from odoo.exceptions import Warning
+from odoo.exceptions import Warning, UserError
 
 class confirm_relance(models.TransientModel):
     _name = 'confirm.refresh.grid'
@@ -400,16 +402,37 @@ class AccountAnalyticLine(models.Model):
         print "send_to_validate"
         timesheets = self.env['account.analytic.line'].sudo().search([('state', '=', 'draft'),('user_id', '=', self.env.user.id)])
         for timesheet in timesheets :
-            print timesheet,' timesheet'
             timesheet.sudo().write({'state' : 'confirm'})
        
-    def refuse(self):
-        print "refuse"
-        timesheets = self.env['account.analytic.line'].sudo().search([('state', '=', 'confirm'),('user_id', '=', self.env.user.id)])
-        print timesheets
-        for timesheet in timesheets :
-            print timesheet,' timesheet'
-            timesheet.sudo().write({'state' : 'draft'})
-       
+    @api.multi
+    def validate(self):
+        print 'Validate'
+        anchor = fields.Date.from_string(self.env.context['grid_anchor'])
+        span = self.env.context['grid_range']
+        validate_to = fields.Date.to_string(anchor + END_OF[span])
+
+        if not self:
+            raise Warning("Pas des feuilles de temps à valider")
+
+        employees = self.mapped('user_id.employee_ids')
+        validable_employees = employees.filtered(lambda e: not e.timesheet_validated or e.timesheet_validated < validate_to)
+        if not validable_employees:
+            raise Warning('Toutes les feuilles de temps sont déjà validées')
+
+        validation = self.env['timesheet_grid.validation'].create({
+            'validate_to': validate_to,
+            'validable_ids': [
+                (0, None, {'employee_id': employee.id})
+                for employee in validable_employees
+            ]
+        })
+
+        return {
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_model': 'timesheet_grid.validation',
+            'res_id': validation.id,
+            'views': [(False, 'form')],
+        }
           
      

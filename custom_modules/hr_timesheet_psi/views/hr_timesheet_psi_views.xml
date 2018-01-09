@@ -268,8 +268,8 @@
 		<field name="mode">primary</field>
 		<field name="arch" type="xml">
 			<xpath expr="/grid">
-				<button type="object" name="validate" string="Valider" />
-				<button type="object" name="refuse" string="Refuser" />
+				<button type="object" name="validate" string="Valider" class="oe_highlight"/>
+				<!-- <button type="object" name="refuse" string="Refuser" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" /> -->
 			</xpath>
 		</field>
 	</record>
