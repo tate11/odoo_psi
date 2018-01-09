@@ -90,7 +90,7 @@
 				<field name="date_from" />
 				<filter name="new" string="En brouillon" domain="[('state','in',('draft', 'new'))]"
 					help="Unvalidated Timesheets" />
-				<filter name="to_approve" string="A aprouvé" domain="[('state','=','confirm')]"
+				<filter name="to_approve" string="A aprouvé" domain="[('state','=','confirm'),('employee_id.coach_id.user_id','=', uid)]]"
 					help="Confirmed Timesheets" />
 				<field name="employee_id" />
 				<field name="department_id" />
@@ -310,7 +310,7 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('timesheet_grid.view_timesheet_list')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('timesheet_grid.view_timesheet_form')}),
             ]" />
-		<field name="domain">[('is_timesheet', '=', True)]</field>
+		<field name="domain">[('is_timesheet', '=', True),('user_id.employee_ids.coach_id.user_id','=',uid)]</field>
 		<field name="context">{
 			'grid_anchor': (datetime.date.today() -
 			relativedelta(months=1)).strftime('%Y-%m-%d'), 'grid_range': 'month',
@@ -319,6 +319,8 @@
 			}
 		</field>
 	</record>
+	
+	
 	<record id="action_timesheet_all_psi" model="ir.actions.act_window">
 		<field name="name">Toutes les feuilles de temps</field>
 		<field name="res_model">account.analytic.line</field>
@@ -346,12 +348,11 @@
 	<menuitem name="Feuilles de temps à valider"  id="menu_timesheet_grid_validate"
 		parent="hr_timesheet.timesheet_menu_root" groups="hr_timesheet.group_hr_timesheet_user"
 		action="action_timesheet_previous_month_psi" sequence="10" />
-
+		
 	<menuitem name="Feuilles de temps à valider"
 		id="menu_timesheet_grid_validate_previous_month_psi" parent="menu_timesheet_grid_validate"
-		action="action_timesheet_previous_month_psi" />
-
-
+		action="action_timesheet_previous_month_psi"  groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" /> 
+		
 
 	<delete id="timesheet_grid.menu_timesheet_grid_my" model="ir.ui.menu" />
 	<delete id="hr_timesheet.menu_hr_working_hours" model="ir.ui.menu" />
