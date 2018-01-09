@@ -392,7 +392,7 @@ class AccountAnalyticLine(models.Model):
                 return False
 
                     
-        self.traiter_unit_amount(vals)
+       # self.traiter_unit_amount(vals)
         
         return super(AccountAnalyticLine, self).write(vals)
     
