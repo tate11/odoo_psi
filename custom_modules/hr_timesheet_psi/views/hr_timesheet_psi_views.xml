@@ -183,7 +183,7 @@
                     <field name="name"/>
                     <filter name="mine" string="My Timesheets" domain="[('user_id', '=', uid)]"/>
                     <separator/>
-                    <filter name="validated" string="Valider" domain="[('state', '=', 'validate')]"/>
+                    <filter name="validated" string="Validé" domain="[('state', '=', 'validate')]"/>
                     <filter name="nonvalidated" string="A Valider" domain="[('state', '=', 'confirm')]"/>
                     <group expand="0" string="Group By">
                         <filter string="Users" domain="[]" context="{'group_by':'user_id'}"/>
