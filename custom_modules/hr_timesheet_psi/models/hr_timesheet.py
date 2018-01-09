@@ -86,6 +86,13 @@ class AccountAnalyticLine(models.Model):
                                            ('heure_sup', u'Timesheet Heures Supplémentaires'),
                                             ], string="Type")
     
+    state = fields.Selection([
+        ('draft', u'A soumettre pour validation'),
+        ('confirm', u'A valider par le Supérieur hiérarchique'),
+        ('refuse', u'Refusé'),
+        ('validate', u'Validé par le le Supérieur hiérarchique')
+        ], string='Etat', readonly=True, track_visibility='onchange', copy=False, default='draft')
+    
     @api.v8
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):
@@ -331,10 +338,16 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def write(self, vals):
+        print self.state
+        if vals.has_key('state') and vals.get('state') == 'confirm':
+            print vals.get('state')
+            print vals
+            return super(AccountAnalyticLine, self).write(vals)
         self.verif_day_off(self.date)
         print "write  account.analytic.line"
         total = 0.0
         print self.date
+        
         vals_emp = { 'date' : self.date}
         employees = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
         heure_par_jour = self.get_heure_par_jour(employees, vals_emp)
@@ -382,3 +395,12 @@ class AccountAnalyticLine(models.Model):
         self.traiter_unit_amount(vals)
         
         return super(AccountAnalyticLine, self).write(vals)
+    
+    def send_to_validate(self):
+        print "send_to_validate"
+        timesheets = self.env['account.analytic.line'].sudo().search([('state', '=', 'draft'),('user_id', '=', self.env.user.id)])
+        for timesheet in timesheets :
+            timesheet.sudo().write({'state' : 'confirm'})
+       
+          
+     

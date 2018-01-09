@@ -187,6 +187,9 @@
 				<attribute name="create">false</attribute>
 				<attribute name="edit">false</attribute>
 			</xpath>
+			<xpath expr="/grid">
+				<button type="object" name="send_to_validate" string="Enregistrer pour validation" />
+			</xpath>
 		</field>
 	</record>
 
@@ -269,12 +272,37 @@
 			</xpath>
 		</field>
 	</record>
+	
+	        <record id="view_timesheet_grid_search_psi" model="ir.ui.view">
+            <field name="name">timesheet grid search</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <search string="Timesheet">
+                    <field name="date"/>
+                    <field name="user_id"/>
+                    <field name="project_id"/>
+                    <field name="task_id"/>
+                    <field name="name"/>
+                    <filter name="mine" string="My Timesheets" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter name="validated" string="Valider" domain="[('state', '=', 'validate')]"/>
+                    <filter name="nonvalidated" string="A Valider" domain="[('state', '=', 'confirm')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Users" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Task" domain="[]" context="{'group_by':'task_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+    
+	
 	<record id="action_timesheet_previous_month_psi" model="ir.actions.act_window">
 		<field name="name">Feuilles de temps à valider</field>
 		<field name="res_model">account.analytic.line</field>
 		<field name="view_mode">grid,tree</field>
 		<field name="search_view_id"
-			ref="timesheet_grid.view_timesheet_grid_validation_search" />
+			ref="view_timesheet_grid_search_psi" />
 		<field name="view_ids"
 			eval="[
                 (5, 0, 0),
@@ -295,7 +323,7 @@
 		<field name="name">Toutes les feuilles de temps</field>
 		<field name="res_model">account.analytic.line</field>
 		<field name="view_mode">grid,tree</field>
-		<field name="search_view_id" ref="timesheet_grid.view_timesheet_grid_search" />
+		<field name="search_view_id" ref="view_timesheet_grid_search_psi" />
 		<field name="view_ids"
 			eval="[
                 (5, 0, 0),
