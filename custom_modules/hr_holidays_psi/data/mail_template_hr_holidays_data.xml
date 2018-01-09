@@ -6,7 +6,7 @@
 			<field name="name">PSI Template email employee - Rappel justificatif - congé maladie</field>
 			<field name="model_id" ref="hr_holidays_psi.model_hr_holidays" />
 			<field name="email_from">${object.create_uid.email}</field>
-			<field name="subject">Premier rappel de ${object.name_related or 'n/a' }</field>
+			<field name="subject">Rappel pour envoie des pièces justificatif de ${object.name_related or 'n/a' } - Congé maladie PSI</field>
 			<field name="email_to">${object.employee_id.work_email}</field>
 			<field name="body_html"><![CDATA[
 <div>

@@ -944,6 +944,7 @@ class hr_holidays_psi(models.Model):
                     )
             date_to_notif = date_y_m_d + relativedelta(hours=48)   
             print date_to_notif.date(),' date_to_notif'
+            print datetime.datetime.today().date(),' date_now'
             if date_to_notif.date() == datetime.datetime.today().date() :
                 print "Send mail PJ"
                 template = self.env.ref('hr_holidays_psi.custom_template_rappel_justificatif_conge_maladie')
