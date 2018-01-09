@@ -34,5 +34,22 @@
 				</div>   ]]>
 			</field>
 		</record>
+		
+		<record id="email_for_timesheet_to_validate" model="mail.template">
+			<field name="name">PSI Template email envoie validation timesheet - Rappel d'envoie par mail de validation de feuilles de temps</field>
+			<field name="model_id" ref="hr_employee_psi.model_hr_employee" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Premier rappel de ${object.name_related or 'n/a' }</field>
+			<field name="email_to">${object.coach_id.work_email}</field>
+			<field name="body_html"><![CDATA[
+				<div>
+				    <p>
+				      	Bonjour ${object.coach_id.name}, 
+				     	Des feuilles de temps de vos subordonnés sont en attente de validation.              
+					</p>               
+				</div>   ]]>
+			</field>
+		</record>
+		
     </data>
 </odoo>
