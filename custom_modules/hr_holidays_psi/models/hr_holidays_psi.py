@@ -868,6 +868,7 @@ class hr_holidays_psi(models.Model):
             'amount_currency': 0,
             'is_timesheet': True,
             'unit_amount': hours,
+            'psi_timesheet_type':'normal',
             'user_id': employee.user_id.id
         })
         
