@@ -269,7 +269,7 @@
 		<field name="arch" type="xml">
 			<xpath expr="/grid">
 				<button type="object" name="validate" string="Valider" />
-				<button type="object" name="refuse" string="Refuser" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
+				<button type="object" name="refuse" string="Refuser" />
 			</xpath>
 		</field>
 	</record>
