@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-
+access_hr_timesheet_psi_sheet,hr.timesheet.psi.sheet,model_hr_timesheet_psi_sheet,hr_employee_psi.group_hr_psi_appui_execution,1,1,1,0

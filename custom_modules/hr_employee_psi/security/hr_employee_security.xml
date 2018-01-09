@@ -22,7 +22,7 @@
     
     <record id="group_hr_psi_appui_execution" model="res.groups">
         <field name="name">PSI Appui Et Exécution</field>
-        <field name="category_id" ref="base.module_category_hr_timesheet"/>
+        <field name="category_id" ref="base.module_category_human_resources"/>
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 </odoo>

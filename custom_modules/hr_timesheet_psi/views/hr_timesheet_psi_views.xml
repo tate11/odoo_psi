@@ -104,29 +104,6 @@
 		</field>
 	</record>
 
-	<record id="act_hr_timesheet_psi_my_timesheets" model="ir.actions.act_window">
-		<field name="name">Demande heures supplémentaires</field>
-		<field name="res_model">hr_timesheet_psi.sheet</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="context">{'default_project_choice':'heure_supp'}</field>
-		<field name="domain">[('employee_id.psi_category', '=', 'execution')]</field>
-		<field name="search_view_id" ref="view_hr_timesheet_psi_filter" />
-		<field name="help" type="html">
-			<p class="oe_view_nocontent_create">
-				Nouvelle feuille demande heures supplémentaires.
-			</p>
-			<p>
-				Vous devez remplir votre feuille de temps chaque jour,
-				et les
-				confirmer à la fin de la semaine.
-				Une fois la feuille confirmée, elle
-				doit être validée par un
-				gestionnaire.
-			</p>
-		</field>
-	</record>
-
 	<record id="view_timesheet_list_psi_inherit" model="ir.ui.view">
 		<field name="name">Toutes les feuilles de temps</field>
 		<field name="model">account.analytic.line</field>
@@ -329,9 +306,6 @@
 		<field name="domain">[('is_timesheet', '=', True)]</field>
 		<field name="context">{'group_by': ['user_id']}</field>
 	</record>
-	
-	<menuitem  action="act_hr_timesheet_psi_my_timesheets" id="menu_act_hr_timesheet_psi_my_timesheets"
-		parent="hr_timesheet.menu_hr_time_tracking" sequence="20" groups="hr_employee_psi.group_hr_psi_appui_execution"/>
 
 	<menuitem name="Ma feuille de temps" id="menu_timesheet_grid_my_psi"
 		parent="hr_timesheet.menu_hr_time_tracking" action="action_timesheet_current_psi"

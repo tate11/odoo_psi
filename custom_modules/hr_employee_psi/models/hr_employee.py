@@ -153,8 +153,6 @@ class hr_employee(models.Model):
     @api.multi
     def write(self, vals):
         print "write"
-        print "***** ",self.department_id_psi
-        print "** ",self.psi_category_details
         if vals.has_key('nombre_conge')  :
             if vals.get('nombre_conge') != 0.0 :
                 self.set_nombre_conge(vals.get('nombre_conge'))
@@ -165,13 +163,23 @@ class hr_employee(models.Model):
         
         #ajout / suppression user selon catégorie professionnelle appui ou execution de l'employe 
         if self.job_id.psi_category != False :
-            if self.job_id.psi_category.name and (self.job_id.psi_category.name.lower() == 'appui' or self.job_id.psi_category.name.lower() == 'execution'):
-                if self.user_id:
-                    psi_group = self.env.ref('hr_employee_psi.group_hr_psi_appui_execution')
+            if self.user_id:
+                psi_appui_execution = self.env['ir.model.data'].get_object_reference('hr_employee_psi', 'group_hr_psi_appui_execution')
+                psi_group = self.env['res.groups'].search([('id', '=', psi_appui_execution[1])])
+                
+                cat_name = ''
+                if self.job_id.psi_category.name:
+                    cat_name = self.job_id.psi_category.name.lower()
+                    
+                if vals.has_key('job_id'):
+                    cat_name = self.env['hr.job'].search([('id', '=', vals.get('job_id'))])[0].psi_category.name.lower()
+                
+                if cat_name and (cat_name == 'appui' or cat_name == 'execution'):
                     psi_group.users += self.user_id
-            else:
-                psi_group = self.env.ref('hr_employee_psi.group_hr_psi_appui_execution')
-                psi_group.users -= self.user_id
+                else:
+                    for us in psi_group.users:
+                        if us.id == self.user_id.id:
+                            psi_group.users = [(3, self.user_id.id)]
                 
                 #psi_group.users = [(4, self.user_id.id)]
                 #commission_group.write({'users': [(4, self.user_id.id)]})
