@@ -8,6 +8,8 @@
     'website': 'https://www.ingenosya.mg',
     'depends': ['hr_timesheet', 'hr_employee_psi'],
     'data':  [
+              'data/res_groups.xml',
+              'data/ir_model_access.xml',
               'data/hr_timesheet_data.xml',
               'views/resource_views_psi.xml',
               'data/hr_timesheet_cron.xml',

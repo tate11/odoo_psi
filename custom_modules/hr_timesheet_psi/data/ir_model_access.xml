@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<!-- access sur la feuille de temps -->
+	<record id="res_prestataire_access" model="ir.model.access">
+            <field name="name">prestataire_psi</field>
+            <field name="model_id" ref="hr_timesheet_psi.model_account_analytic_line"/>
+            <field name="group_id" ref="hr_timesheet_psi.group_prestataire"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+     </record>
+</odoo> 
