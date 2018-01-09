@@ -400,13 +400,14 @@ class AccountAnalyticLine(models.Model):
         return super(AccountAnalyticLine, self).write(vals)
     
     def send_to_validate(self):
-        if self.date != False :
-            timesheets = self.env['account.analytic.line'].search([('date', '=', self.date),('user_id', '=', self.env.user.id)])
+       for record in self:
+         if record.date != False :
+            timesheets = self.env['account.analytic.line'].search([('date', '=', record.date),('user_id', '=', self.env.user.id)])
             if len(timesheets) > 0 and timesheets[0].state == 'confirm':
                 raise Warning("Votre feuille de temps a déjà été enregistrée pour validation.")
                 return False
                 
-            date = datetime.strptime(self.date,'%Y-%m-%d')
+            date = datetime.strptime(record.date,'%Y-%m-%d')
             year = date.year
             month = date.month
             day = date.day
@@ -445,7 +446,7 @@ class AccountAnalyticLine(models.Model):
                         self.env['mail.template'].browse(template.id).send_mail(employees[0].id, force_send=True)
                         raise Warning("Votre feuille de temps a déjà été enregistrée pour validation.")
                         return  False
-        else :
+       else :
             raise Warning('Veuillez vous assurer que votre feuille de temps est rempli correctement avant d\'enregistrer pour validation.')
             return False      
         
