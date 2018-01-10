@@ -932,6 +932,7 @@ class hr_holidays_psi(models.Model):
         
         # Find all congé maladie
         all_holidays = self.env['hr.holidays'].search([('id_psi_holidays_status','=',4),('state','=','validate')])
+        print all_holidays
         for holidays in all_holidays:
             date_debut_conge_maladie = holidays.date_from
             print date_debut_conge_maladie,' date_debut'
