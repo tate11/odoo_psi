@@ -218,7 +218,7 @@ class HrTimesheetPsi(models.Model):
     def write(self, vals):
         
         for record in self:
-            employee_id = self.env['hr.employee'].search([('user_id', '=', record.env.user.id)], limit=1)
+            employee_id = self.env['hr.employee'].search([('user_id', '=', record.user_id.id)], limit=1)
             vals['employee_id'] = employee_id.id
             vals['date'] = record.date
             vals['current_id'] = record.id
@@ -241,6 +241,8 @@ class HrTimesheetPsi(models.Model):
                     
                     if  (float(time_from) >= int(attendance_id.hour_from) and float(time_from) <= int(attendance_id.hour_to)) or (float(time_to) >= int(attendance_id.hour_from) and float(time_to) <= int(attendance_id.hour_to)):
                         raise Warning(u'Vous ne pouvez faire d\'heures supplémentaires durant les horaires de travail habituels.')
+            
+            
             
             return super(HrTimesheetPsi, record).write(vals)
 
@@ -287,7 +289,7 @@ class HrTimesheetPsi(models.Model):
         self._send_mail_timesheet_soumis(self)
         return True
 
-    @api.multi
+    @api.one
     def action_timesheet_done(self):
 #         if not self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
 #             raise UserError(_('Only an HR Officer or Manager can approve timesheets.'))

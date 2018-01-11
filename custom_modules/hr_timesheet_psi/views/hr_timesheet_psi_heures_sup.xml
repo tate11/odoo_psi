@@ -85,6 +85,7 @@
 		<field name="arch" type="xml">
 			<tree string="Timesheets" create="false">
 				<field name="employee_id" />
+				<field name="date" />
 				<field name="time_from" widget="float_time" />
 				<field name="time_to" widget="float_time" />
 				<field name="department_id" invisible="1" />
