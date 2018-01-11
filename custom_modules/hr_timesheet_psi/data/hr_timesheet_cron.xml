@@ -11,6 +11,7 @@
             <field name="numbercall">-1</field>
             <field name="doall" eval="False" />
             <field eval="'account.analytic.line'" name="model" />
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 03:00:00')" />
             <field name="function" eval="'_send_email_rappel_timesheet_collaborator'" /> 
         </record>
         
