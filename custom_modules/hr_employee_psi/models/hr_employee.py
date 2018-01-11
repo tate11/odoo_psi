@@ -50,7 +50,8 @@ class hr_employee(models.Model):
                               ('close','Close')
                               ],track_visibility='always')
 
-    address_home_id = fields.Many2one('res.partner', string='Home Address', track_visibility='always')
+    #address_home_id = fields.Many2one('res.partner', string='Home Address', track_visibility='always')
+    address_home_id = fields.Char(string='Adresse personnelle', track_visibility='always')
     personal_phone = fields.Char(string='Téléphone personnel', track_visibility='always')
     
     sexe = fields.Selection([
