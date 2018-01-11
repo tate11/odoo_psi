@@ -442,8 +442,8 @@ class AccountAnalyticLine(models.Model):
                     
                 timesheets_update = self.env['account.analytic.line'].search([('date', '=', date),('user_id', '=', self.env.user.id)])
                 if len(timesheets_update) > 0 and timesheets_update[0].state == 'confirm' :
-                   #template = self.env.ref('hr_timesheet_psi.email_for_timesheet_to_validate')
-                   #self.env['mail.template'].browse(template.id).send_mail(employees[0].id, force_send=True)
+                   template = self.env.ref('hr_timesheet_psi.email_for_timesheet_to_validate')
+                   self.env['mail.template'].browse(template.id).send_mail(employees[0].id, force_send=True)
                    ctx = dict()
                    ctx.update({
                                'default_model':'confirm.send.validation',
