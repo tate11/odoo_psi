@@ -167,7 +167,7 @@
 				<field name="visa_expire" attrs="{'readonly' : [('state','=','close')]}" />
 			</field>
 			<field name='department_id' position="replace">
-				<field name="department_id" required="1" attrs="{'readonly' : [('state','=','close')]}" />
+				<field name="department_id" readonly="1" />
 			</field>
 			<field name='wage' position="replace">
 				<field name="wage" attrs="{'readonly' : [('state','=','close')]}" />
@@ -177,7 +177,7 @@
 	            <group name="duration_group" string="Duration">
 		            <label for="trial_date_start" string="Durée de la période d'essai"/>
 		            <div>
-		                <field name="trial_date_start" class="oe_inline" required="1" attrs="{'readonly' : [('state','=','close')]}"/> - <field name="trial_date_end" class="oe_inline" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
+		                <field name="trial_date_start" class="oe_inline" required="0" attrs="{'readonly' : [('state','=','close')]}"/> - <field name="trial_date_end" class="oe_inline" required="0" attrs="{'readonly' : [('state','=','close')]}"/>
 		            </div>
 		            <label for="date_start" string="Durée du contrat"/>
 		            <div>

@@ -17,7 +17,7 @@ class hr_contract(models.Model):
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today, track_visibility='onchange')
     date_end = fields.Date('End Date', track_visibility='onchange')
     #job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
-    department_id = fields.Many2one('hr.department', string="Department", track_visibility='onchange')
+    #department_id = fields.Many2one('hr.department', string="Department", track_visibility='onchange')
     preavis = fields.Selection([('preste',u'Presté'),('paye',u'Payé')],string='préavis')
     indeminite_de_preavis = fields.Float(string="Indeminité de préavis")
     date_demission = fields.Date(string=u'Date de démission')
@@ -76,6 +76,7 @@ class hr_contract(models.Model):
                                 ], string="Sous Cat")
     
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
+    department_id = fields.Many2one(related='job_id.department_id', string=u"Département", readonly=True)
     
     def action_report_certificat(self):
         date = fields.Date().today()
@@ -87,7 +88,12 @@ class hr_contract(models.Model):
                'report_name': 'hr_contract_psi.report_certificat_travail'
            }
 
-    
+    @api.onchange('job_id')
+    def _onchange_by_job_id(self):
+        self.department_id = self.job_id.department_id
+        self.psi_category_details = self.job_id.psi_category
+        self.psi_contract_type = self.job_id.psi_contract_type
+
     @api.depends('date_start')
     def _get_anniversary(self):
         
