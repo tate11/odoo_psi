@@ -41,6 +41,27 @@
 				</form>
 			</field>
 		</record>
+		<!-- Form declaration -->
+		<record id="hr_information_cin_form" model="ir.ui.view">
+			<field name="name">hr.information.cin.form</field>
+			<field name="model">hr.information.cin</field>
+			<field name="arch" type="xml">
+				<form string="Information sur CIN">
+					<group>
+						<group>
+							<field name="name" />
+							<field name="place_of_issue" />
+							<field name="duplicata" />
+						</group>
+						<group>
+							<field name="date_of_issue" />
+							<field name="end_of_validity" />
+							<field name="date_of_duplicata" />
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
 		<!-- cours d'ethique -->
 		<record id="view_action_add_cours_ethique" model="ir.ui.view">
 			<field name="name">hr.cours.ethique.form</field>
@@ -206,14 +227,15 @@
 								<field name="matricule" required="1" />
 								<field name="psi_name" string='Nom et prénom(s)' />
 								<field name="birthday" string='Date de naissance' />
+								<field name="nationality" string="Nationalité"/>
+								<field name="sexe" string="Sexe" />
 								<field name="father_name" string='Nom du père' />
 								<field name="mother_name" string='Nom de la mère' />
 								<field name="information_cin_id" string='Information sur CIN' />
 								<field name="passport_id" string='Numéro passeport' />
+								<field name="marital" string="Situation matrimoniale" />
 								<field name="conjoint_s_name" string="Nom du conjoint" />
 								<field name="spouse_s_name" string="Nom de l'époux (se)" />
-								<field name="sexe" string="Sexe" />
-								<field name="marital" string="Situation matrimoniale" />
 								<field name="information_about_children_id">
 									<tree editable="bottom">
 										<field name="name" />
@@ -238,6 +260,7 @@
 						</group>
 					</page>
 				</xpath>
+
 				<div name="button_box" position="inside">
 					<button name="action_get_attachment_tree_view" class="oe_stat_button"
 						icon="fa-book" type="object">
@@ -273,6 +296,18 @@
 
 			</field>
 		</record>
+		<record id="hr_hr_employee_view_form2_inherited" model="ir.ui.view">
+            <field name="name">hr.hr.employee.view.form2.inherited</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
+            <field name="arch" type="xml">
+        		<xpath expr="//field[@name='children']" position="replace">
+				</xpath>
+				<xpath expr="//field[@name='marital']" position="before">
+					<field name="children" />
+				</xpath>
+        	</field>
+    	</record>
 		<record id="hr_contract_type_view_form" model="ir.ui.view">
 			<field name="name">hr.contract.type.sanction.form</field>
 			<field name="model">hr.contract.type.sanction</field>
