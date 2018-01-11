@@ -150,16 +150,28 @@ class AccountAnalyticLine(models.Model):
         for employee in all_employees:
             template = self.env.ref('hr_timesheet_psi.custom_template_rappel_envoie_abscence_membres')
             self.env['mail.template'].browse(template.id).send_mail(employee.id, force_send=True)
-                    
-    def _send_email_rappel_timesheet_collaborator(self, automatic=False):
-        year_mounth = datetime.now().strftime('%Y-%m')
-        all_employees = self.env['hr.employee'].search([('job_id.recrutement_type', '=', 'collaborateur')])
-        for employee in all_employees:
-            timesheets = self.env['account.analytic.line'].search([['user_id', '=', employee.id], ['date', 'like', year_mounth]])
-            if not timesheets:
-                template = self.env.ref('hr_timesheet_psi.custom_template_rappel_timesheet_collaborator')
-                self.env['mail.template'].browse(template.id).send_mail(employee.id, force_send=True)
+
         
+    def _send_email_rappel_timesheet_collaborator(self, automatic=False):
+        date = datetime.now()
+        day_last_month = calendar.monthrange(date.year,date.month)[1]
+        lastBusDay = datetime.today()
+        new_lastBusDay = lastBusDay.replace(day=int(day_last_month))
+        if new_lastBusDay.weekday() == 5:
+            new_lastBusDay = new_lastBusDay - datetime.timedelta(days=1)
+        elif new_lastBusDay.weekday() == 6: 
+            new_lastBusDay = new_lastBusDay - datetime.timedelta(days=2)
+        
+        day_last_month = calendar.monthrange(date.year,date.month)[1]
+        new_last_day_date = lastBusDay.replace(day=int(day_last_month))
+ 
+        year_mounth = datetime.now().strftime('%Y-%m')
+        dateNow = datetime.strptime('2018-01-31', '%Y-%m-%d')
+        timesheets = self.env['account.analytic.line'].sudo().search([])
+        if date.date() == new_lastBusDay.date():
+                template = self.env.ref('hr_timesheet_psi.custom_template_rappel_timesheet_collaborator')
+                self.env['mail.template'].browse(template.id).send_mail(timesheets[0].id, force_send=True)   
+               
         if automatic:
             self._cr.commit()
             
@@ -486,7 +498,7 @@ class AccountAnalyticLine(models.Model):
     def validate(self):
         print 'Validate'
         if not self:
-            raise Warning("Pas des feuilles de temps à valider")
+            raise Warning("Il n'y a pas de feuilles de temps à valider.")
 
         employees = self.mapped('user_id.employee_ids')
         analytic_ids = self.mapped('id')

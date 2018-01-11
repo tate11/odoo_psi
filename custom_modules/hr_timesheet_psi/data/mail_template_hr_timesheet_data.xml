@@ -3,17 +3,25 @@
 	<data>
 		<record id="custom_template_rappel_timesheet_collaborator" model="mail.template">
 			<field name="name">PSI Template email timesheet - Rappel Email au collaborateur</field>
-			<field name="model_id" ref="hr_employee_psi.model_hr_employee" />
-			<field name="email_from">${object.create_uid.email}</field>
-			<field name="subject">Premier rappel de ${object.name_related or 'n/a' }</field>
-			<field name="email_to">${object.user_id.login}</field>
-			<field name="email_cc">${object.coach_id.email}</field>
+			<field name="model_id" ref="hr_timesheet_psi.model_account_analytic_line" />
+			<field name="email_from"><![CDATA[${object.create_uid.email or object.company_id.email}]]></field>
+			<field name="subject">Rappel remplissage feuilles de temps.</field>
+			<field name="email_to">
+				% for all_employee in object.env['hr.employee'].sudo().search([('job_id.recrutement_type','=','collaborateur')]):
+					${all_employee.work_email or all_employee.employee_id.user_id.email},
+				% endfor
+			</field>
 			<field name="body_html"><![CDATA[
 				<div>
 				    <p>
-				      	Bonjour ${object.name}, 
-				     	Vous devez finaliser et déposer votre timesheet!                     
+				      	Bonjour, 
+				    </p>
+				    <p>
+				      	 Veuillez remplir vos feuilles de temps avant la fin du mois.
 					</p>               
+					<p>
+						Cordialement
+					</p>
 				</div>   ]]>
 			</field>
 		</record>
