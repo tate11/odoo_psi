@@ -124,41 +124,27 @@ class HrTimesheetPsi(models.Model):
     
     @api.one
     def _check_user(self):
-        print "self.user_id : ", self.user_id
-        print "self.env.user : ", self.env.user
+        print "_check_user"
         if self.user_id.id == self.env.user.id:
-            print "--------------------"
             self.is_user_connected = True
         
     @api.depends('time_from','time_to')
     def _get_difference_hours(self):
+        print "_get_difference_hours"
         for record in self:
             if record.time_from and record.time_to:
                 hours = record.time_to - record.time_from
                 diff_hours = self.float_time_to_time(hours)
                 record.difference_hours = diff_hours
-                print "hours : ", hours
-                print "diff_hours : ", diff_hours
                 record.hours = float(hours)
     
-    @api.depends('date', 'employee_id')
     def _check_sheet_date(self, vals):
-        timesheets = self.env['hr_timesheet_psi.sheet'].search([('date', '=', vals['date']), ('employee_id','=', vals['employee_id'])])
-        if len(timesheets) > 0:
-            raise ValidationError(u'Vous ne pouvez faire qu\'une seule demande d\'heures supplémentaires par jour.')
+        print "_check_sheet_date"
+        if 'current_id'not in vals:
+            timesheets = self.env['hr_timesheet_psi.sheet'].search([('date', '=', vals['date']), ('employee_id','=', vals['employee_id'])])
+            if len(timesheets) > 0:
+                raise ValidationError(u'Vous ne pouvez faire qu\'une seule demande d\'heures supplémentaires par jour.')
             
-#             new_user_id = forced_user_id or sheet.user_id and sheet.user_id.id
-#             if new_user_id:
-#                 self.env.cr.execute('''
-#                     SELECT id
-#                     FROM hr_timesheet_psi_sheet
-#                     WHERE (date_from <= %s and %s <= date_to)
-#                         AND user_id=%s
-#                         AND id <> %s''',
-#                     (sheet.date_to, sheet.date_from, new_user_id, sheet.id))
-#                 if any(self.env.cr.fetchall()):
-#                     raise ValidationError(u'Vous ne pouvez pas avoir 2 feuilles de temps en même temps')
-
     @api.onchange('employee_id')
     def onchange_employee_id(self):
         if self.employee_id:
@@ -176,6 +162,10 @@ class HrTimesheetPsi(models.Model):
             vals['psi_timesheet_type'] = 'heure_sup'
         else:
             vals['psi_timesheet_type'] = 'normal'
+        
+        # employee en readonly -> recuperer l'employee via user connecté
+        employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)], limit=1).id
+        vals['employee_id'] = employee_id
         
         if 'employee_id' in vals:
             
@@ -199,7 +189,7 @@ class HrTimesheetPsi(models.Model):
             dayofweek = int(datetime.strptime(str(vals['date']), '%Y-%m-%d').strftime('%w'))
             for attendance_id in attendances:
                 if int(attendance_id.dayofweek) == dayofweek:
-                    if  float(vals.get('time_from')) >= int(attendance_id.hour_from) and float(vals.get('time_to')) <= int(attendance_id.hour_to):
+                    if  (float(vals.get('time_from')) >= int(attendance_id.hour_from) and float(vals.get('time_from')) <= int(attendance_id.hour_to)) or (float(vals.get('time_to')) >= int(attendance_id.hour_from) and float(vals.get('time_to')) <= int(attendance_id.hour_to)):
                         raise Warning(u'Vous ne pouvez faire d\'heures supplémentaires durant les horaires de travail habituels.')
            
             for attendance in attendances:
@@ -219,18 +209,40 @@ class HrTimesheetPsi(models.Model):
             if not self.env['hr.employee'].browse(vals['employee_id']).user_id:
                 raise UserError(_('In order to create a timesheet for this employee, you must link him/her to a user.'))
         
+        vals['state'] = 'draft'
         res = super(HrTimesheetPsi, self).create(vals)
-        res.write({'state': 'draft'})
+        #res.write({'state': 'draft'})
         return res
 
     @api.multi
     def write(self, vals):
-        if 'employee_id' in vals:
-            new_user_id = self.env['hr.employee'].browse(vals['employee_id']).user_id.id
-            if not new_user_id:
-                raise UserError(_('In order to create a timesheet for this employee, you must link him/her to a user.'))
+        
+        for record in self:
+            employee_id = self.env['hr.employee'].search([('user_id', '=', record.env.user.id)], limit=1)
+            vals['employee_id'] = employee_id.id
+            vals['date'] = record.date
+            vals['current_id'] = record.id
             
-        return super(HrTimesheetPsi, self).write(vals)
+            record._check_sheet_date(vals)
+            
+            attendances = employee_id.calendar_id.attendance_ids
+            if len(attendances) == 0:
+               raise Warning(u'L\'utilisateur doit être attaché à un horaire de travail')
+            
+            dayofweek = int(datetime.strptime(str(vals['date']), '%Y-%m-%d').strftime('%w'))
+            for attendance_id in attendances:
+                if int(attendance_id.dayofweek) == dayofweek:
+                    time_from = record.time_from
+                    if 'time_from' in vals:
+                        time_from = vals.get('time_from')
+                    time_to = record.time_to
+                    if 'time_to' in vals:
+                        time_to = vals.get('time_to')
+                    
+                    if  (float(time_from) >= int(attendance_id.hour_from) and float(time_from) <= int(attendance_id.hour_to)) or (float(time_to) >= int(attendance_id.hour_from) and float(time_to) <= int(attendance_id.hour_to)):
+                        raise Warning(u'Vous ne pouvez faire d\'heures supplémentaires durant les horaires de travail habituels.')
+            
+            return super(HrTimesheetPsi, record).write(vals)
 
     @api.multi
     def action_timesheet_draft(self):

@@ -6,6 +6,7 @@
 		<field name="arch" type="xml">
 			<tree string="Timesheets">
 				<field name="employee_id" />
+				<field name="date" />
 				<field name="time_from" widget="float_time" />
 				<field name="time_to" widget="float_time" />
 				<field name="department_id" invisible="1" />
@@ -180,7 +181,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="context">{'default_project_choice':'heure_sup'}</field>
-		<field name="domain">['&amp;',('state', 'in', ('draft', 'confirm')),('user_id.employee_ids.coach_id.user_id','=',uid)]</field>
+		<field name="domain">['&amp;',('state', '=', 'confirm'),('user_id.employee_ids.coach_id.user_id','=',uid)]</field>
 		<field name="help" type="html">
 			<p class="oe_view_nocontent">
 			Liste des feuilles de temps heures supplémentaires à valider
