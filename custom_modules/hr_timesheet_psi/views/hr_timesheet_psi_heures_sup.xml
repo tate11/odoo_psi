@@ -26,9 +26,9 @@
 					<button name="action_timesheet_done" states="confirm"
 						string="Valider cette demande" type="object"
 						groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" class="oe_highlight" />
-					<!-- <button name="action_timesheet_draft" states="done"
+					<button name="action_timesheet_draft" states="done"
 						string="Mettre en brouillon" type="object"
-						groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" /> -->
+						groups="base.group_no_one" />
 					<button name="action_timesheet_draft" states="confirm"
 						string="Refuser" type="object" 
 						groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
@@ -38,7 +38,7 @@
 					<div class="oe_title">
 						<label for="employee_id" class="oe_edit_only" />
 						<h1>
-							<field name="employee_id" class="oe_inline" placeholder="Employee's Name" />
+							<field name="employee_id" class="oe_inline" placeholder="Employee's Name" attrs="{'readonly': [('state', '=', 'done')]}" />
 						</h1>
 						<field name="user_id" invisible="1" />
 					</div>
@@ -49,21 +49,21 @@
 							
 							<field name="project_id_heure_sup"
 								options="{'no_quick_create': True, 'no_create_edit' : True}"
-								attrs="{'invisible': [('project_choice', 'not in', 'heure_sup')], 'required':True}" />
+								attrs="{'invisible': [('project_choice', 'not in', 'heure_sup')], 'required':True, 'readonly': [('state', '=', 'done')]}" />
 								
 							<!-- <field name="project_id_prestataire"
 								attrs="{'invisible': [('project_choice', 'not in', 'prestataire')]}"
 								readonly="True" /> -->
 								
-							<field name="motif" />
-							<field name="date" />
+							<field name="motif" attrs="{'readonly': [('state', '=', 'done')]}" />
+							<field name="date" attrs="{'readonly': [('state', '=', 'done')]}" />
 							<label for="time_from" string="Intervalle d'heures" />
 							<div>
 								<field name="time_from" class="oe_inline" widget="float_time"
-									sum="Hours" />
+									sum="Hours" attrs="{'readonly': [('state', '=', 'done')]}" />
 								-
 								<field name="time_to" class="oe_inline" widget="float_time"
-									sum="Hours" />
+									sum="Hours" attrs="{'readonly': [('state', '=', 'done')]}" />
 								=
 								<field name="difference_hours" />
 							</div>

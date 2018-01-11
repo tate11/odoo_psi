@@ -83,7 +83,7 @@ class HrTimesheetPsi(models.Model):
     #project_id_normal = fields.Many2one('project.project', string="Projet")
     
     account_analytic_id_psi = fields.Many2one('account.analytic.line')
-    project_id_heure_sup = fields.Many2one(related='account_analytic_id_psi.project_id', string=u'Projet')
+    project_id_heure_sup = fields.Many2one(related='account_analytic_id_psi.project_id', string=u'Projet', store=True)
     #project_id_heure_sup = fields.Many2one('project.project', string="Projet")
     #project_id_prestataire = fields.Many2one('project.project', string="Projet")
     
