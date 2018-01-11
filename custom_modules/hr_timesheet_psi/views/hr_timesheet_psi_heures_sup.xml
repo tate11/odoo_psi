@@ -203,6 +203,31 @@
 	    <field name="act_window_id" ref="open_heures_sup_a_valider"/>
 	</record>
 	
+	<record id="view_timesheet_grid_psi_heure_sup_inherit" model="ir.ui.view">
+		<field name="name">timesheet grid psi heures sup grid</field>
+		<field name="model">account.analytic.line</field>
+		<field name="inherit_id" ref="view_timesheet_grid_psi" />
+		<field name="mode">primary</field>
+		<field name="arch" type="xml">
+			<xpath expr="/grid" position="attributes">
+				<attribute name="create">false</attribute>
+				<attribute name="edit">false</attribute>
+			</xpath>
+		</field>
+	</record>
+	
+	<record id="my_view_timesheet_list_psi_heure_sup_inherit" model="ir.ui.view">
+		<field name="name">timesheet grid psi heures sup grid List</field>
+		<field name="model">account.analytic.line</field>
+		<field name="inherit_id" ref="timesheet_grid.view_timesheet_list" />
+		<field name="arch" type="xml">
+			<xpath expr="/tree" position="attributes">
+				<attribute name="create">false</attribute>
+				<attribute name="edit">false</attribute>
+			</xpath>
+		</field>
+	</record>
+	
 	<record id="action_timesheet_psi_heures_sup" model="ir.actions.act_window">
 		<field name="name">Feuilles de temps heures supplémentaires</field>
 		<field name="res_model">account.analytic.line</field>
@@ -211,8 +236,8 @@
 		<field name="view_ids"
 			eval="[
                 (5, 0, 0),
-                (0, 0, {'view_mode': 'grid', 'view_id': ref('view_timesheet_grid_psi_inherit')}),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('timesheet_grid.view_timesheet_list')}),
+                (0, 0, {'view_mode': 'grid', 'view_id': ref('view_timesheet_grid_psi_heure_sup_inherit')}),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('my_view_timesheet_list_psi_heure_sup_inherit')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('timesheet_grid.view_timesheet_form')}),
             ]" />
 		<field name="domain">['&amp;', ('user_id', '=', uid), ('psi_timesheet_type','=','heure_sup')] 
