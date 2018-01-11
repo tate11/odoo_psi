@@ -17,7 +17,6 @@ class hr_employee(models.Model):
 
     father_name                     = fields.Char(string=u'Nom du père')
     mother_name                     = fields.Char(string=u'Nom de la mère')
-    
     conjoint_s_name                 = fields.Char(string='Nom du conjoint')
     spouse_s_name                   = fields.Char(string='Nom de l\'epoux(se)')
     matricule                       = fields.Char(string='Matricule')
@@ -124,6 +123,12 @@ class hr_employee(models.Model):
     calendar_id = fields.Many2one('resource.calendar', string=u"Horaire de travail", required=True)
     department_id_psi = fields.Many2one(related='job_id.department_id', string=u"Département", readonly=True)
     job_id = fields.Many2one('hr.job', string=u"Titre du poste")
+    
+    def _get_countries(self):
+        self.env.cr.execute("SELECT res_country.code , res_country.name FROM res_country ORDER BY name")
+        return self.env.cr.fetchall()
+
+    nationality                     = fields.Selection(_get_countries)
     
     @api.onchange('job_id')
     def _onchange_by_job_id(self):
@@ -437,8 +442,7 @@ class ChildrenInformation(models.Model):
 class InformationCin(models.Model):
     
     _name               = 'hr.information.cin'
-    
-    name             = fields.Char(u'Numéro', size=64, required=True)
+    name                = fields.Char(u'Numéro', size=64, required=True)
     date_of_issue       = fields.Date(string=u"Date d’émission")
     place_of_issue      = fields.Char(string=u'Lieu d’émission')
     end_of_validity     = fields.Date(string=u"Fin de validité")
