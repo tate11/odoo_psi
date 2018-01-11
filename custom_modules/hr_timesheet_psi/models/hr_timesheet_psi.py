@@ -82,6 +82,8 @@ class HrTimesheetPsi(models.Model):
 #    project_id = fields.Many2one('project.project', string="Projet", required=True, default=lambda self: self.env['project.project'].search([('project_timesheet_id','=',2)]))
     #project_id_normal = fields.Many2one('project.project', string="Projet")
     
+    is_user_connected = fields.Boolean(compute="_check_user", default=False)
+    
     account_analytic_id_psi = fields.Many2one('account.analytic.line')
     project_id_heure_sup = fields.Many2one(related='account_analytic_id_psi.project_id', string=u'Projet', store=True)
     #project_id_heure_sup = fields.Many2one('project.project', string="Projet")
@@ -119,6 +121,14 @@ class HrTimesheetPsi(models.Model):
             time = "{}h00".format(data)
             
         return time
+    
+    @api.one
+    def _check_user(self):
+        print "self.user_id : ", self.user_id
+        print "self.env.user : ", self.env.user
+        if self.user_id.id == self.env.user.id:
+            print "--------------------"
+            self.is_user_connected = True
         
     @api.depends('time_from','time_to')
     def _get_difference_hours(self):
