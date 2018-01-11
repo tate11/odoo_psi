@@ -13,9 +13,9 @@ from odoo.exceptions import ValidationError, Warning
 class hr_contract(models.Model):
     _inherit = 'hr.contract'
     
-    place_of_work   = fields.Selection(related="employee_id.work_location", string='Lieu d\'affectaction', track_visibility='onchange', store=True) #lieu d'affectation
+    place_of_work   = fields.Selection(related="employee_id.work_location", string='Lieu de travail', track_visibility='onchange', store=True) #lieu d'affectation
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today, track_visibility='onchange')
-    date_end = fields.Date('End Date', track_visibility='onchange')
+    date_end = fields.Date('End Date', track_visibility='onchange',default="9999-12-31")
     #job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
     #department_id = fields.Many2one('hr.department', string="Department", track_visibility='onchange')
     preavis = fields.Selection([('preste',u'Presté'),('paye',u'Payé')],string='préavis')
@@ -68,21 +68,14 @@ class hr_contract(models.Model):
     psi_professional_category = fields.Many2one(related='job_id.psi_category',string='Catégorie professionnelle')
     psi_category = fields.Selection(related='psi_professional_category.psi_professional_category',string='Catégorie professionnelle')
     
-    psi_sub_category            = fields.Selection([
-                                        ('1','1'),
-                                        ('2','2'),
-                                        ('3','3'),
-                                        ('4','4')
-                                ], string="Sous Cat")
-    
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
     department_id = fields.Many2one(related='job_id.department_id', string=u"Département", readonly=True)
-    
+    working_hours = fields.Selection(related='employee_id.work_location', string='Horaire de travail')
+
     def action_report_certificat(self):
         date = fields.Date().today()
         psi_contract_historicals = self.env['psi.contract.historical'].search([('contract_id', '=', self.id)])
         psi_contract_historicals[len(psi_contract_historicals)-1].write({'fin': date})
-        self
         return {
                'type': 'ir.actions.report.xml',
                'report_name': 'hr_contract_psi.report_certificat_travail'
@@ -93,6 +86,10 @@ class hr_contract(models.Model):
         self.department_id = self.job_id.department_id
         self.psi_category_details = self.job_id.psi_category
         self.psi_contract_type = self.job_id.psi_contract_type
+
+    @api.onchange('employee_id')
+    def _onchange_by_employee_id(self):
+        self.working_hours = self.employee_id.work_location
 
     @api.depends('date_start')
     def _get_anniversary(self):
@@ -208,7 +205,7 @@ class hr_contract(models.Model):
                                     ('echelon_13','ECHELON 13'),('echelon_14','ECHELON 14'),('echelon_15','ECHELON 15'),
                                     ('echelon_16','ECHELON 16'),('echelon_17','ECHELON 17'),('echelon_18','ECHELON 18'),
                                     ('echelon_19','ECHELON 19'),('echelon_20','ECHELON 20'),('echelon_hc','ECHELON HC')
-                                    ],string="Echelon",track_visibility="onchange" )
+                                    ],default="echelon_1",string="Echelon",track_visibility="onchange" )
 
     job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
     
@@ -220,7 +217,7 @@ class hr_contract(models.Model):
                                         ('2','2'),
                                         ('3','3'),
                                         ('4','4')
-                                ], string="Sous-catégorie")
+                                ],default="1", string="Sous-catégorie")
     matricule = fields.Char(string='Matricule', related="employee_id.matricule")
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
    
@@ -231,7 +228,15 @@ class hr_contract(models.Model):
     def action_send_email_desactivate_account(self):
         template = self.env.ref('hr_contract_psi.template_desactivate_account_id')
         self.env['mail.template'].browse(template.id).send_mail(self.id,force_send=True)
-           
+       
+
+    @api.onchange("psi_sub_category","psi_echelon")
+    def onchange_psi_sub_psi_echelon(self):
+        if self.psi_sub_category is False:
+            self.psi_sub_category="1"
+        if self.psi_echelon is False:
+            self.psi_echelon="echelon_1"
+
     @api.model
     def create(self, vals):  
         contract = super(hr_contract, self).create(vals)

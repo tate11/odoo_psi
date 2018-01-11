@@ -128,8 +128,12 @@ class hr_employee(models.Model):
         self.env.cr.execute("SELECT res_country.code , res_country.name FROM res_country ORDER BY name")
         return self.env.cr.fetchall()
 
-    nationality                     = fields.Selection(_get_countries)
-    
+    nationality                     = fields.Selection(_get_countries,default="MG")
+    civility = fields.Selection([
+        ('m', 'M.'),
+        ('mme', 'Mme'),
+        ('mlle', 'Mlle')],string="Civilité")
+
     @api.onchange('job_id')
     def _onchange_by_job_id(self):
         print "_onchange_by_job_id"

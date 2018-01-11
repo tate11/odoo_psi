@@ -225,6 +225,7 @@
 						<group col="2">
 							<group string="Etat civil">
 								<field name="matricule" required="1" />
+								<field name="civility"/>
 								<field name="psi_name" string='Nom et prénom(s)' />
 								<field name="birthday" string='Date de naissance' />
 								<field name="nationality" string="Nationalité"/>
