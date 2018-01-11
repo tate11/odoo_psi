@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Task -->
+        <record id="view_task_form_prestataire" model="ir.ui.view">
+            <field name="name">project.task.form</field>
+            <field name="model">project.task</field>
+            <field eval="2" name="priority"/>
+            <field name="inherit_id" ref="project.view_task_form2" />
+            <field name="arch" type="xml">
+            <field name="project_id" position="replace" >
+            	<field name="project_id" options="{'no_quick_create': True, 'no_create_edit' : True}" />
+            </field>
+            </field>
+        </record>
+        
+            <record id="action_form_timesheet_prestataire" model="ir.actions.act_window">
+            <field name="name">Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Here, you can create new tasks
+                </p>
+                <p>
+                    You can now manage your tasks in order to get things done efficiently. Track progress, discuss, attach documents, etc.
+                </p>
+            </field>
+        </record>
+        
+        <!-- Top menu item -->
+        <menuitem name="Project"
+            id="menu_main_pm"
+            groups="group_prestataire"
+            web_icon="project,static/description/icon.png"
+            sequence="50" action="action_form_timesheet_prestataire"/>
+         
+         <menuitem action="project.open_view_project_all_config" 
+         	id="project.menu_projects_config" name="Projects" groups="group_permanent"
+         	parent="project.menu_project_config" sequence="10"/>
+         
+</odoo>

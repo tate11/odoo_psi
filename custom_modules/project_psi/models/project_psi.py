@@ -4,6 +4,7 @@ from odoo import api, fields, models
 class Project_psi(models.Model):
     _inherit = "project.project"
     employee_ids = fields.Many2many('hr.employee',string='Employés')
+    partner_ids = fields.Many2many('res.partner',string='Fournisseur')
     
 class Hr_employee_psi(models.Model):
     _inherit = 'hr.employee'

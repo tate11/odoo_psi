@@ -10,6 +10,9 @@
                 <group string="Employés">
                     <field name="employee_ids"/>
                 </group>
+                <group string="Fournisseur">
+                    <field name="partner_ids"/>
+                </group>
             </xpath>
         </field>
     </record>
