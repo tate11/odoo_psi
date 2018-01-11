@@ -168,7 +168,8 @@ class AccountAnalyticLine(models.Model):
         year_mounth = datetime.now().strftime('%Y-%m')
         dateNow = datetime.strptime('2018-01-31', '%Y-%m-%d')
         timesheets = self.env['account.analytic.line'].sudo().search([])
-        if date.date() == new_lastBusDay.date():
+        print dateNow.date(),' == ',new_lastBusDay.date()
+        if dateNow.date() == new_lastBusDay.date():
                 template = self.env.ref('hr_timesheet_psi.custom_template_rappel_timesheet_collaborator')
                 self.env['mail.template'].browse(template.id).send_mail(timesheets[0].id, force_send=True)   
                
