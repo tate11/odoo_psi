@@ -15,6 +15,7 @@
               'data/hr_timesheet_cron.xml',
               'data/resource_calendar_data.xml',
               'data/mail_template_hr_timesheet_data.xml',
+              'data/mail_template_hr_timesheet_heure_sup.xml',
               'security/ir.model.access.csv',
               'security/hr_holidays_security.xml',
 			  'views/hr_timesheet_psi_views.xml',

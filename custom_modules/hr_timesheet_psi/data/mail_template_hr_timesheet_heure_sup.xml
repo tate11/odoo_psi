@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="custom_template_timesheet_soumis" model="mail.template">
+			<field name="name">PSI Timesheet Heure sup - Demande heures supplémentaires soumis</field>
+			<field name="model_id" ref="hr_timesheet_psi.model_hr_timesheet_psi_sheet" />
+			<field name="email_from"><![CDATA[${object.create_uid.email or object.company_id.email}]]></field>
+			<field name="subject">Demande heure supplémentaire soumis</field>
+			<field name="email_to">${object.employee_id.coach_id.work_mail or object.employee_id.coach_id.user_id.email}</field>
+			<field name="body_html"><![CDATA[
+				<div style="padding:0px;width:600px;background: #FFFFFF repeat top /100%;color:#777777">
+	            	<h3>Demande d'heure supplémentaire de ${object.employee_id.name} :</h3>
+	            	<ul>
+	            		<li>Projet :  ${object.project_id_heure_sup.name}</li>
+	            		<li>Motif : ${object.motif}
+	            		<li>Date :  ${object.date}</li>
+	            		<li>Date de debut :  ${object.float_time_to_time(object.time_from)}</li>
+	            		<li>Date de fin :  ${object.float_time_to_time(object.time_to)}</li>
+	            		<li>Durée :  ${object.hours} heure(s)</li>
+					</ul>
+            	</div>				
+				]]>
+			</field>
+		</record>
+		
+		<record id="custom_template_timesheet_validate" model="mail.template">
+			<field name="name">PSI Timesheet Heure sup - Demande heures supplémentaires validé</field>
+			<field name="model_id" ref="hr_timesheet_psi.model_hr_timesheet_psi_sheet" />
+			<field name="email_from"><![CDATA[${object.create_uid.email or object.company_id.email}]]></field>
+			<field name="subject">Demande heure supplémentaire validé</field>
+			<field name="email_to">${object.employee_id.work_email or object.user_id.email}</field>
+			<field name="body_html"><![CDATA[
+				<div style="padding:0px;width:600px;background: #FFFFFF repeat top /100%;color:#777777">
+	            	<h3>Demande d'heure supplémentaire de ${object.employee_id.name} :</h3>
+	            	<ul>
+	            		<li>Projet :  ${object.project_id_heure_sup.name}</li>
+	            		<li>Motif : ${object.motif}
+	            		<li>Date :  ${object.date}</li>
+	            		<li>Date de debut :  ${object.float_time_to_time(object.time_from)}</li>
+	            		<li>Date de fin :  ${object.float_time_to_time(object.time_to)}</li>
+	            		<li>Durée :  ${object.hours} heure(s)</li>
+					</ul>
+            	</div>	 
+				 ]]>
+			</field>
+		</record>
+		
+		<record id="custom_template_timesheet_refuse" model="mail.template">
+			<field name="name">PSI Timesheet Heure sup - Demande heures supplémentaires refusé</field>
+			<field name="model_id" ref="hr_timesheet_psi.model_hr_timesheet_psi_sheet" />
+			<field name="email_from"><![CDATA[${object.create_uid.email or object.company_id.email}]]></field>
+			<field name="subject">Demande heure supplémentaire refusé</field>
+			<field name="email_to">${object.employee_id.work_email or object.user_id.email}</field>
+			<field name="body_html"><![CDATA[
+				<div style="padding:0px;width:600px;background: #FFFFFF repeat top /100%;color:#777777">
+	            	<h3>Demande d'heure supplémentaire de ${object.employee_id.name} :</h3>
+	            	<ul>
+	            		<li>Projet :  ${object.project_id_heure_sup.name}</li>
+	            		<li>Motif : ${object.motif}
+	            		<li>Date :  ${object.date}</li>
+	            		<li>Date de debut :  ${object.float_time_to_time(object.time_from)}</li>
+	            		<li>Date de fin :  ${object.float_time_to_time(object.time_to)}</li>
+	            		<li>Durée :  ${object.hours} heure(s)</li>
+					</ul>
+            	</div>	
+				 ]]>
+			</field>
+		</record>
+		
+    </data>
+</odoo>

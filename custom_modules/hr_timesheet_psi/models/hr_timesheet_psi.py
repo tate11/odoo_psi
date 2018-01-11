@@ -244,11 +244,36 @@ class HrTimesheetPsi(models.Model):
             
             return super(HrTimesheetPsi, record).write(vals)
 
+    def _send_mail_timesheet_soumis(self, automatic=False):
+        print '_send_mail_timesheet_soumis'
+        print self.id
+        template = self.env.ref('hr_timesheet_psi.custom_template_timesheet_soumis')
+        self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)  
+        if automatic:
+            self._cr.commit()
+            
+    def _send_mail_timesheet_validate(self, automatic=False):
+        print '_send_mail_timesheet_validate'
+        template = self.env.ref('hr_timesheet_psi.custom_template_timesheet_validate')
+        self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)            
+        if automatic:
+            self._cr.commit()
+            
+    def _send_mail_timesheet_refuse(self, automatic=False):
+        print '_send_mail_timesheet_refuse'
+        template = self.env.ref('hr_timesheet_psi.custom_template_timesheet_refuse')
+        self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)            
+        if automatic:
+            self._cr.commit()
+            
     @api.multi
     def action_timesheet_draft(self):
         if not self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             raise UserError(_('Only an HR Officer or Manager can refuse timesheets or reset them to draft.'))
         self.write({'state': 'draft'})
+        
+        # Send mail to user
+        self._send_mail_timesheet_refuse(self)
         return True
 
     @api.multi
@@ -257,6 +282,9 @@ class HrTimesheetPsi(models.Model):
             if sheet.employee_id and sheet.employee_id.parent_id and sheet.employee_id.parent_id.user_id:
                 self.message_subscribe_users(user_ids=[sheet.employee_id.parent_id.user_id.id])
         self.write({'state': 'confirm'})
+        
+        # Send mail to superieur hierarchique
+        self._send_mail_timesheet_soumis(self)
         return True
 
     @api.multi
@@ -284,7 +312,10 @@ class HrTimesheetPsi(models.Model):
         })
         
         self.write({'state': 'done'})
-
+        
+        # Send mail to user
+        self._send_mail_timesheet_validate(self)
+        
     @api.multi
     def name_get(self):
         # week number according to ISO 8601 Calendar
