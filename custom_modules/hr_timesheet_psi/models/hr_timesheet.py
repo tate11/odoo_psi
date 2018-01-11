@@ -12,9 +12,9 @@ from odoo import api, fields, models
 from odoo.exceptions import Warning, UserError
 
 class confirm_relance(models.TransientModel):
-    _name = 'confirm.refresh.grid'
+    _name = 'confirm.send.validation'
  
-    yes_no = fields.Char(default='Voulez-vous remetre à zero?')
+    yes_no = fields.Char(default='Votre feuille de temps a bien été enregistrée pour validation.')
      
     def yes(self):
         return {
@@ -426,7 +426,7 @@ class AccountAnalyticLine(models.Model):
                             attendances = self.env['resource.calendar.attendance'].search([('id', '=', attendance_id.id), ('dayofweek', '=', dayofweek)])
                             for attendance in attendances:
                                 heure_par_jour += attendance.hour_to - attendance.hour_from
-                    timesheets = self.env['account.analytic.line'].search([('date', '=', date),('user_id', '=', self.env.user.id)])
+                    timesheets = self.env['account.analytic.line'].search([('date', '=', day),('user_id', '=', self.env.user.id)])
                     if len(timesheets) == 0 :
                         raise Warning('Veuillez vous assurer que votre feuille de temps est rempli correctement avant d\'enregistrer pour validation.')
                         return False
@@ -440,12 +440,31 @@ class AccountAnalyticLine(models.Model):
                     for timesheet in timesheets :
                         timesheet.sudo().write({'state' : 'confirm'})
                     
-                    timesheets_update = self.env['account.analytic.line'].search([('date', '=', date),('user_id', '=', self.env.user.id)])
-                    if len(timesheets_update) > 0 and timesheets_update[0].state == 'confirm' :
-                        template = self.env.ref('hr_timesheet_psi.email_for_timesheet_to_validate')
-                        self.env['mail.template'].browse(template.id).send_mail(employees[0].id, force_send=True)
-                        raise Warning("Votre feuille de temps a déjà été enregistrée pour validation.")
-                        return  False
+                timesheets_update = self.env['account.analytic.line'].search([('date', '=', date),('user_id', '=', self.env.user.id)])
+                if len(timesheets_update) > 0 and timesheets_update[0].state == 'confirm' :
+                   #template = self.env.ref('hr_timesheet_psi.email_for_timesheet_to_validate')
+                   #self.env['mail.template'].browse(template.id).send_mail(employees[0].id, force_send=True)
+                   ctx = dict()
+                   ctx.update({
+                               'default_model':'confirm.send.validation',
+                               'default_use_template': True,
+                                'default_template_id':self.env['ir.model.data'].get_object_reference('hr_timesheet_psi','action_confirm_send_validation')[1]
+                                })
+         
+                   view_id=self.env['ir.model.data'].get_object_reference('hr_timesheet_psi','confirm_send_validation')[1]
+         
+                   return {
+                                'name': 'Confirmation',
+                                'domain': [],
+                                'res_model': 'confirm.send.validation',
+                                'type': 'ir.actions.act_window',
+                                'view_mode': 'form',
+                                'view_type': 'form',
+                                'views': [(view_id, 'form')],
+                                'view_id': view_id,
+                                'context': ctx,
+                                'target': 'new',
+                                }
        else :
             raise Warning('Veuillez vous assurer que votre feuille de temps est rempli correctement avant d\'enregistrer pour validation.')
             return False      

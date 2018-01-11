@@ -30,7 +30,8 @@
 			<field name="unit_amount" position="replace">
 				<field name="unit_amount" string="Durée"
 					options="{'no_quick_create': True, 'no_create_edit' : True}"
-					attrs="{'readonly' : [('project_name','=','Absences/Permission/Congés')]}" widget="float_time" />
+					attrs="{'readonly' : [('project_name','=','Absences/Permission/Congés')]}"
+					widget="float_time" />
 			</field>
 		</field>
 	</record>
@@ -41,22 +42,22 @@
 		<field name="model">account.analytic.line</field>
 		<field name="inherit_id" ref="timesheet_grid.view_timesheet_list" />
 		<field name="arch" type="xml">
-	
+
 			<field name="task_id" position="attributes">
 				<attribute name="invisible">1</attribute>
 			</field>
 		</field>
 	</record>
-	
+
 	<record id="my_view_timesheet_form_psi_inherit" model="ir.ui.view">
 		<field name="name">Toutes les feuilles de temps</field>
 		<field name="model">account.analytic.line</field>
 		<field name="inherit_id" ref="timesheet_grid.view_timesheet_form" />
 		<field name="arch" type="xml">
 			<xpath expr="/form" position="attributes">
-                    <attribute name="create">false</attribute>
-                    <attribute name="edit">false</attribute>
-                </xpath>
+				<attribute name="create">false</attribute>
+				<attribute name="edit">false</attribute>
+			</xpath>
 			<field name="task_id" position="attributes">
 				<attribute name="invisible">1</attribute>
 			</field>
@@ -112,7 +113,8 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('timesheet_grid.view_timesheet_list')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('timesheet_grid.view_timesheet_form')}),
             ]" />
-		<field name="domain">['&amp;','&amp;', ('user_id', '=', uid), ('is_timesheet',
+		<field name="domain">['&amp;','&amp;', ('user_id', '=', uid),
+			('is_timesheet',
 			'=', True), ('psi_timesheet_type','=','normal')]
 		</field>
 		<field name="context">
@@ -165,42 +167,44 @@
 		<field name="mode">primary</field>
 		<field name="arch" type="xml">
 			<xpath expr="/grid">
-				<button type="object" name="validate" string="Valider" class="oe_highlight"/>
-				<!-- <button type="object" name="refuse" string="Refuser" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" /> -->
+				<button type="object" name="validate" string="Valider" class="oe_highlight" />
+				<!-- <button type="object" name="refuse" string="Refuser" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" 
+					/> -->
 			</xpath>
 		</field>
 	</record>
-	
-	        <record id="view_timesheet_grid_search_psi" model="ir.ui.view">
-            <field name="name">timesheet grid search</field>
-            <field name="model">account.analytic.line</field>
-            <field name="arch" type="xml">
-                <search string="Timesheet">
-                    <field name="date"/>
-                    <field name="user_id"/>
-                    <field name="project_id"/>
-                    <field name="task_id"/>
-                    <field name="name"/>
-                    <filter name="mine" string="My Timesheets" domain="[('user_id', '=', uid)]"/>
-                    <separator/>
-                    <filter name="validated" string="Validé" domain="[('state', '=', 'validate')]"/>
-                    <filter name="nonvalidated" string="A Valider" domain="[('state', '=', 'confirm')]"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Users" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Project" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="Task" domain="[]" context="{'group_by':'task_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-    
-	
+
+	<record id="view_timesheet_grid_search_psi" model="ir.ui.view">
+		<field name="name">timesheet grid search</field>
+		<field name="model">account.analytic.line</field>
+		<field name="arch" type="xml">
+			<search string="Timesheet">
+				<field name="date" />
+				<field name="user_id" />
+				<field name="project_id" />
+				<field name="task_id" />
+				<field name="name" />
+				<filter name="mine" string="My Timesheets" domain="[('user_id', '=', uid)]" />
+				<separator />
+				<filter name="validated" string="Validé"
+					domain="[('state', '=', 'validate')]" />
+				<filter name="nonvalidated" string="A Valider"
+					domain="[('state', '=', 'confirm')]" />
+				<group expand="0" string="Group By">
+					<filter string="Users" domain="[]" context="{'group_by':'user_id'}" />
+					<filter string="Project" domain="[]" context="{'group_by':'project_id'}" />
+					<filter string="Task" domain="[]" context="{'group_by':'task_id'}" />
+				</group>
+			</search>
+		</field>
+	</record>
+
+
 	<record id="action_timesheet_previous_month_psi" model="ir.actions.act_window">
 		<field name="name">Feuilles de temps à valider</field>
 		<field name="res_model">account.analytic.line</field>
 		<field name="view_mode">grid,tree</field>
-		<field name="search_view_id"
-			ref="view_timesheet_grid_search_psi" />
+		<field name="search_view_id" ref="view_timesheet_grid_search_psi" />
 		<field name="view_ids"
 			eval="[
                 (5, 0, 0),
@@ -208,17 +212,19 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('timesheet_grid.view_timesheet_list')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('timesheet_grid.view_timesheet_form')}),
             ]" />
-		<field name="domain">[('is_timesheet', '=', True),('user_id.employee_ids.coach_id.user_id','=',uid)]</field>
+		<field name="domain">[('is_timesheet', '=',
+			True),('user_id.employee_ids.coach_id.user_id','=',uid)]</field>
 		<field name="context">{
 			'grid_anchor': (datetime.date.today() -
 			relativedelta(months=1)).strftime('%Y-%m-%d'), 'grid_range': 'month',
 			'search_default_nonvalidated': True,
-			'group_by': ['user_id','project_id'],
+			'group_by':
+			['user_id','project_id'],
 			}
 		</field>
 	</record>
-	
-	
+
+
 	<record id="action_timesheet_all_psi" model="ir.actions.act_window">
 		<field name="name">Toutes les feuilles de temps</field>
 		<field name="res_model">account.analytic.line</field>
@@ -234,6 +240,33 @@
 		<field name="domain">[('is_timesheet', '=', True)]</field>
 		<field name="context">{'group_by': ['user_id']}</field>
 	</record>
+	
+	<record model="ir.ui.view" id="confirm_send_validation">
+			<field name="name">confirm_send_validation</field>
+			<field name="model">confirm.send.validation</field>
+			<field name="arch" type="xml">
+				<form string="Confirmation de validation">
+					<field name="yes_no" readonly="1" />
+					<footer>
+						<button class="oe_highlight" name="yes" type="object"
+							string="Ok" />
+					</footer>
+				</form>
+			</field>
+		</record>
+	
+	<record model="ir.actions.act_window" id="action_confirm_send_validation">
+		<field name="name">confirm_send_validation</field>
+		<field name="view_mode">form</field>
+		<field name="res_model">confirm.send.validation</field>
+		<field name="view_id" ref="confirm_send_validation" />
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+				It's empty, create something
+			</p>
+		</field>
+	</record>
+
 
 	<menuitem name="Ma feuille de temps" id="menu_timesheet_grid_my_psi"
 		parent="hr_timesheet.menu_hr_time_tracking" action="action_timesheet_current_psi"
@@ -243,14 +276,14 @@
 		parent="hr_timesheet.menu_hr_time_tracking" groups="hr_timesheet.group_hr_timesheet_user"
 		action="action_timesheet_all_psi" sequence="3" />
 
-	<menuitem name="Feuilles de temps à valider"  id="menu_timesheet_grid_validate"
+	<menuitem name="Feuilles de temps à valider" id="menu_timesheet_grid_validate"
 		parent="hr_timesheet.timesheet_menu_root" groups="hr_timesheet.group_hr_timesheet_user"
 		action="action_timesheet_previous_month_psi" sequence="10" />
 
 	<menuitem name="Feuilles de temps"
 		id="menu_timesheet_grid_validate_previous_month_psi" parent="menu_timesheet_grid_validate"
-		action="action_timesheet_previous_month_psi" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" /> 
-		
+		action="action_timesheet_previous_month_psi" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
+
 
 	<delete id="timesheet_grid.menu_timesheet_grid_my" model="ir.ui.menu" />
 	<delete id="hr_timesheet.menu_hr_working_hours" model="ir.ui.menu" />
