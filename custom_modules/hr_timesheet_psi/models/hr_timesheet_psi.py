@@ -61,8 +61,8 @@ class HrTimesheetPsi(models.Model):
         emp_ids = self.env['hr.employee'].search([('user_id', '=', self.env.uid)])
         return emp_ids and emp_ids[0] or False
 
-    def _default_project_time_id(self):
-        return 1
+    #def _default_project_time_id(self):
+        #return 1
     
     name = fields.Char(string="Note", states={'confirm': [('readonly', True)], 'done': [('readonly', True)]})
     employee_id = fields.Many2one('hr.employee', string=u'Employé', default=_default_employee, required=True)
@@ -75,13 +75,17 @@ class HrTimesheetPsi(models.Model):
     time_from = fields.Float(string="Heure de debut")
     time_to = fields.Float(string="Heure de fin")
     date = fields.Date(string='Date', default=fields.Date.today(), required=True)
-    hours = fields.Integer(compute="_get_hours", String='Heure')
-    project_time_id = fields.Integer(default=_default_project_time_id)
-    project_timesheet_id =  fields.Integer(related='project_id_normal.project_timesheet_id', store=True)
+    hours = fields.Float(compute="_get_difference_hours", String='Heure', store=True)
+    difference_hours = fields.Char(compute="_get_difference_hours", string='Difference Heure')
+    #project_time_id = fields.Integer(default=_default_project_time_id)
+    #project_timesheet_id =  fields.Integer(related='project_id_normal.project_timesheet_id', store=True)
 #    project_id = fields.Many2one('project.project', string="Projet", required=True, default=lambda self: self.env['project.project'].search([('project_timesheet_id','=',2)]))
-    project_id_normal = fields.Many2one('project.project', string="Projet")
-    project_id_heure_sup = fields.Many2one('project.project', string="Projet")
-    project_id_prestataire = fields.Many2one('project.project', string="Projet")
+    #project_id_normal = fields.Many2one('project.project', string="Projet")
+    
+    account_analytic_id_psi = fields.Many2one('account.analytic.line')
+    project_id_heure_sup = fields.Many2one(related='account_analytic_id_psi.project_id', string=u'Projet')
+    #project_id_heure_sup = fields.Many2one('project.project', string="Projet")
+    #project_id_prestataire = fields.Many2one('project.project', string="Projet")
     
     project_choice = fields.Selection([
                                        ('heure_normal',"Heure normal"),
@@ -100,30 +104,50 @@ class HrTimesheetPsi(models.Model):
     company_id = fields.Many2one('res.company', string='Company')
     department_id = fields.Many2one('hr.department', string='Departement',
         default=lambda self: self.env['res.company']._company_default_get())
+    
+    def float_time_to_time(self, data):
+        time = ""
+        if len(str(data)) > 2:
+            heure, min = str(data).split(".")
+            min = str(6 * int(min) / 10)
+            if len(str(min)) > 1:
+                min = min[:2]
+            else:
+                min = "{}0".format(min)
+            time = "{}h{}".format(heure, min)
+        else:
+            time = "{}h00".format(data)
+            
+        return time
         
     @api.depends('time_from','time_to')
-    def _get_hours(self):
+    def _get_difference_hours(self):
         for record in self:
             if record.time_from and record.time_to:
-                time_from = record.time_from
-                time_to = record.time_to
-                difference = int(time_to) - int(time_from)             
-                record.hours = float(difference)
-      
-    @api.constrains('date_to', 'date_from', 'employee_id')
-    def _check_sheet_date(self, forced_user_id=False):
-        for sheet in self:
-            new_user_id = forced_user_id or sheet.user_id and sheet.user_id.id
-            if new_user_id:
-                self.env.cr.execute('''
-                    SELECT id
-                    FROM hr_timesheet_psi_sheet
-                    WHERE (date_from <= %s and %s <= date_to)
-                        AND user_id=%s
-                        AND id <> %s''',
-                    (sheet.date_to, sheet.date_from, new_user_id, sheet.id))
-                if any(self.env.cr.fetchall()):
-                    raise ValidationError(u'Vous ne pouvez pas avoir 2 feuilles de temps en même temps')
+                hours = record.time_to - record.time_from
+                diff_hours = self.float_time_to_time(hours)
+                record.difference_hours = diff_hours
+                print "hours : ", hours
+                print "diff_hours : ", diff_hours
+                record.hours = float(hours)
+    
+    @api.depends('date', 'employee_id')
+    def _check_sheet_date(self, vals):
+        timesheets = self.env['hr_timesheet_psi.sheet'].search([('date', '=', vals['date']), ('employee_id','=', vals['employee_id'])])
+        if len(timesheets) > 0:
+            raise ValidationError(u'Vous ne pouvez faire qu\'une seule demande d\'heures supplémentaires par jour.')
+            
+#             new_user_id = forced_user_id or sheet.user_id and sheet.user_id.id
+#             if new_user_id:
+#                 self.env.cr.execute('''
+#                     SELECT id
+#                     FROM hr_timesheet_psi_sheet
+#                     WHERE (date_from <= %s and %s <= date_to)
+#                         AND user_id=%s
+#                         AND id <> %s''',
+#                     (sheet.date_to, sheet.date_from, new_user_id, sheet.id))
+#                 if any(self.env.cr.fetchall()):
+#                     raise ValidationError(u'Vous ne pouvez pas avoir 2 feuilles de temps en même temps')
 
     @api.onchange('employee_id')
     def onchange_employee_id(self):
@@ -144,6 +168,9 @@ class HrTimesheetPsi(models.Model):
             vals['psi_timesheet_type'] = 'normal'
         
         if 'employee_id' in vals:
+            
+            self._check_sheet_date(vals)
+            
             print "create account.analytic.line"
             account_analytic_line_s = self.env['account.analytic.line'].search([('project_id', '=', vals['project_id_heure_sup']), ('date', '=', vals['date'])])
             
@@ -158,10 +185,17 @@ class HrTimesheetPsi(models.Model):
             attendances = employee.calendar_id.attendance_ids
             if len(attendances) == 0:
                raise Warning(u'L\'utilisateur doit être attaché à un horaire de travail')
+            
+            dayofweek = int(datetime.strptime(str(vals['date']), '%Y-%m-%d').strftime('%w'))
+            for attendance_id in attendances:
+                if int(attendance_id.dayofweek) == dayofweek:
+                    if  float(vals.get('time_from')) >= int(attendance_id.hour_from) and float(vals.get('time_to')) <= int(attendance_id.hour_to):
+                        raise Warning(u'Vous ne pouvez faire d\'heures supplémentaires durant les horaires de travail habituels.')
+           
             for attendance in attendances:
-                if vals.get('project_choice') == "heure_sup":                    
-                    if  float(vals.get('time_from')) >= int(attendance.hour_from) and float(vals.get('time_to')) <= int(attendance.hour_to):
-                        raise Warning(u'Vous ne pouvez pas faire une demande d\'heure supplémentaire dans les heures de travail: {}'.format(attendance.hour_from))
+#                 if vals.get('project_choice') == "heure_sup": 
+#                     if  float(vals.get('time_from')) >= int(attendance.hour_from) and float(vals.get('time_to')) <= int(attendance.hour_to):
+#                         raise Warning(u'Vous ne pouvez pas faire une demande d\'heure supplémentaire dans les heures de travail: {}'.format(attendance.hour_from))
                 if vals.get('project_choice') == "prestataire":
                     time_prestataires = self.env['timesheet.prestataire.hours'].search([])
                     for time_prestataire in time_prestataires:
@@ -174,8 +208,7 @@ class HrTimesheetPsi(models.Model):
 #                raise UserError(_('Veuillez verifié la durée.'))
             if not self.env['hr.employee'].browse(vals['employee_id']).user_id:
                 raise UserError(_('In order to create a timesheet for this employee, you must link him/her to a user.'))
-            
-        print " ***** ", vals
+        
         res = super(HrTimesheetPsi, self).create(vals)
         res.write({'state': 'draft'})
         return res
@@ -186,7 +219,7 @@ class HrTimesheetPsi(models.Model):
             new_user_id = self.env['hr.employee'].browse(vals['employee_id']).user_id.id
             if not new_user_id:
                 raise UserError(_('In order to create a timesheet for this employee, you must link him/her to a user.'))
-            self._check_sheet_date(forced_user_id=new_user_id)
+            
         return super(HrTimesheetPsi, self).write(vals)
 
     @api.multi
@@ -224,6 +257,7 @@ class HrTimesheetPsi(models.Model):
             'is_timesheet': True,
             'unit_amount': self.hours,
             'psi_timesheet_type': self.project_choice,
+            'state': 'confirm',
             'user_id': self.user_id.id
         })
         

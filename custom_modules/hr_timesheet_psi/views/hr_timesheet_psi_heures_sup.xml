@@ -6,8 +6,8 @@
 		<field name="arch" type="xml">
 			<tree string="Timesheets">
 				<field name="employee_id" />
-				<field name="time_from" />
-				<field name="time_to" />
+				<field name="time_from" widget="float_time" />
+				<field name="time_to" widget="float_time" />
 				<field name="department_id" invisible="1" />
 				<field name="state" />
 				<field name="message_needaction" invisible="1" />
@@ -26,9 +26,9 @@
 					<button name="action_timesheet_done" states="confirm"
 						string="Valider cette demande" type="object"
 						groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" class="oe_highlight" />
-					<button name="action_timesheet_draft" states="done"
+					<!-- <button name="action_timesheet_draft" states="done"
 						string="Mettre en brouillon" type="object"
-						groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
+						groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" /> -->
 					<button name="action_timesheet_draft" states="confirm"
 						string="Refuser" type="object" 
 						groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
@@ -44,13 +44,17 @@
 					</div>
 					<group>
 						<group>
-							<field name="project_id_normal"
-								attrs="{'invisible': [('project_choice', 'not in', 'heure_normal')]}" />
+							<!-- <field name="project_id_normal"
+								attrs="{'invisible': [('project_choice', 'not in', 'heure_normal')]}" /> -->
+							
 							<field name="project_id_heure_sup"
+								options="{'no_quick_create': True, 'no_create_edit' : True}"
 								attrs="{'invisible': [('project_choice', 'not in', 'heure_sup')], 'required':True}" />
-							<field name="project_id_prestataire"
+								
+							<!-- <field name="project_id_prestataire"
 								attrs="{'invisible': [('project_choice', 'not in', 'prestataire')]}"
-								readonly="True" />
+								readonly="True" /> -->
+								
 							<field name="motif" />
 							<field name="date" />
 							<label for="time_from" string="Intervalle d'heures" />
@@ -61,13 +65,12 @@
 								<field name="time_to" class="oe_inline" widget="float_time"
 									sum="Hours" />
 								=
-								<field name="hours" />
-								Hr(s)
+								<field name="difference_hours" />
 							</div>
 
 							<field name="name" invisible="1" />
 							<field name="department_id" invisible="1" />
-							<field name="project_time_id" invisible="1" />
+							<!-- <field name="project_time_id" invisible="1" /> -->
 							<field name="project_choice" invisible="1" />
 							<field name="company_id" groups="base.group_multi_company" />
 						</group>
