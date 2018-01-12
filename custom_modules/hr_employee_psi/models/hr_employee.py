@@ -84,13 +84,13 @@ class hr_employee(models.Model):
     
     nombre_conge = fields.Float(string='Nombre de jours de congés')
 
-    psi_contract_type = fields.Selection([
-        ('cdd', 'CDD'),
-        ('cdi', 'CDI'),
-        ('convention_stage','Convention de stage')
-    ], string='Type de contrat', help="Type de contrat", track_visibility='onchange')
+#     psi_contract_type = fields.Selection([
+#         ('cdd', 'CDD'),
+#         ('cdi', 'CDI'),
+#         ('convention_stage','Convention de stage')
+#     ], string='Type de contrat', help="Type de contrat", track_visibility='onchange')
 
-    #psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat",store=True)
+    psi_contract_type = fields.Selection(related="job_id.psi_contract_type", string="Type de contrat", store=True, track_visibility='onchange')
     
     all_files_checked = fields.Boolean(compute='_all_checked_files', string=u"Pièces completes")
 

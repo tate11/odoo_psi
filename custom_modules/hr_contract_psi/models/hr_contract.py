@@ -48,7 +48,7 @@ class hr_contract(models.Model):
                                             ])    
     scan_version_file = fields.Binary(string=u'Attacher le version scanner')
 
-    psi_contract_type = fields.Selection(related="employee_id.psi_contract_type", string="Type de contrat",store=True,track_visibility='onchange')
+    psi_contract_type = fields.Selection(related="employee_id.psi_contract_type", string="Type de contrat", store=True, track_visibility='onchange')
     
     name_employee = fields.Char(related='employee_id.name')
     job_name = fields.Char(related='employee_id.job_id.name')
