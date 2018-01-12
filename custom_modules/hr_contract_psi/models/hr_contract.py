@@ -13,7 +13,7 @@ from odoo.exceptions import ValidationError, Warning
 class hr_contract(models.Model):
     _inherit = 'hr.contract'
     
-    place_of_work   = fields.Selection(related="employee_id.work_location", string=u'Lieu de travail', track_visibility='onchange', store=True) #lieu d'affectation
+    place_of_work   = fields.Selection(related="employee_id.work_location", string='Lieu de travail', track_visibility='onchange', store=True) #lieu d'affectation
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today, track_visibility='onchange')
     date_end = fields.Date('End Date', track_visibility='onchange',default="9999-12-31")
     #job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
@@ -110,7 +110,9 @@ class hr_contract(models.Model):
                 record.date_prise_fonction = record.trial_date_start
     
                 record.work_years = datetime.today().year - datetime.strptime(record.trial_date_start, "%Y-%m-%d").year
-    
+                if datetime.today().month<datetime.strptime(record.trial_date_start, "%Y-%m-%d").month:
+                    record.work_years=int(record.work_years)-1
+
             else:
                 record.date_prise_fonction = record.date_start
 
@@ -126,6 +128,12 @@ class hr_contract(models.Model):
                 
                 record.work_years = datetime.today().year - datetime.strptime(record.trial_date_start, "%Y-%m-%d").year
 
+            if record.trial_date_start>str(datetime.now()):
+                record.trial_date_end=record.trial_date_start=str(datetime.now())
+                record.work_years = datetime.today().year - datetime.strptime(record.trial_date_start, "%Y-%m-%d").year
+                if datetime.today().month<datetime.strptime(record.trial_date_start, "%Y-%m-%d").month:
+                    record.work_years=int(record.work_years)-1
+
     @api.onchange('date_start')
     def _onchange_date_start(self):
         print "_onchange_date_start"
@@ -138,6 +146,8 @@ class hr_contract(models.Model):
                     record.date_end = record.date_start
     
                 record.work_years = datetime.today().year - datetime.strptime(record.trial_date_start, "%Y-%m-%d").year
+                if datetime.today().month<datetime.strptime(record.trial_date_start, "%Y-%m-%d").month:
+                    record.work_years=int(record.work_years)-1
                 
             elif record.date_start > record.date_end:
                 record.date_end = record.date_start
@@ -198,7 +208,21 @@ class hr_contract(models.Model):
             'target': 'new',
             'context': ctx,
         }
-        
+    
+    def _increment_seniority(self):
+        contracts = self.env['hr.contract'].search([])
+        month=date.today().month #int(datetime.strptime(date.today(), '%m'))
+        year=date.today().year
+        for record in contracts:
+            if record.work_years:
+                date_begin=record.trial_date_start if record.trial_date_start else record.date_start
+                
+                month_r=datetime.strptime(date_begin, "%Y-%m-%d").month
+                year_r=datetime.strptime(date_begin, "%Y-%m-%d").year
+                if month==month_r and year>year_r:
+                    record.work_years=int(record.work_years)+1
+                
+
     @api.multi
     def action_result_evaluation_send_ko(self):
         self.ensure_one()
@@ -501,14 +525,19 @@ class hr_contract(models.Model):
              self.env['mail.template'].browse(template5.id).send_mail(contract.id,force_send=True)
         return contract_obj
     
-    @api.depends('date_start')
+    @api.depends('date_start','trial_date_start')
     def _calculate_work_years(self):
         for record in self:
             if record.trial_date_start and record.date_start and record.trial_date_start<=record.date_start:
                 record.work_years = datetime.today().year - datetime.strptime(record.trial_date_start, "%Y-%m-%d").year
+                if datetime.today().month<datetime.strptime(record.trial_date_start, "%Y-%m-%d").month:
+                    record.work_years=int(record.work_years)-1
+
             if record.date_start and not record.trial_date_start:
                 record.work_years = datetime.today().year - datetime.strptime(record.date_start, "%Y-%m-%d").year
-    
+                if datetime.today().month<datetime.strptime(record.date_start, "%Y-%m-%d").month:
+                    record.work_years=int(record.work_years)-1
+
     def generate_certificat_travail(self):
         print "GENERATE CERTIFICAT TRAVAIL"
     

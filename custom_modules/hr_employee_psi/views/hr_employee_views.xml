@@ -250,8 +250,9 @@
 								<field name="address_home_id" string='Adresse personnelle' />
 								<field name="personal_phone" string='Téléphone portable personnel' />
 								<field name="personal_fixed_phone" string='Téléphone fixe personnel' />
-								<field name="emergency_contact_id" string="Personne à contacter d'urgence" />
-								<field name="beneficiary_of_death_benefit_id" string="Bénéficiaire d'indemnité en cas de décès" />
+								<!--field name="emergency_contact_id" string="Personne à contacter d'urgence" /-->
+								<field name="emergency_contact_id" widget="many2one" context="{'default_employee_id':id}" string="Personne à contacter d'urgence"/>
+								<field name="beneficiary_of_death_benefit_id" widget="many2one" context="{'default_employee_id':id}" string="Bénéficiaire d'indemnité en cas de décès"/>
 							</group>
 							<group string="Autres informations">
 								<field name="bank_account_id" string='Numéro compte bancaire' />
@@ -483,6 +484,30 @@
 			<field name="view_id" ref="view_provider_schedules_list" />
 		</record>
 		
+		<record id="hr_person_information_view_emergency" model="ir.ui.view">
+            <field name="name">hr.person.information.view.emergency</field>
+            <field name="model">hr.person.information</field>
+            <field name="arch" type="xml">
+            	<form>
+            		<div>
+            			<label for="employee_id">Employé</label>
+            			<field name="employee_id" string="Employé"/>
+            		</div>
+            		<group>
+						<group>
+            				<field name="name"/>
+            				<field name="relation"/>
+            				<field name="address"/>
+        				</group>
+        				<group>
+        					<field name="sex"/>
+            				<field name="date_of_birth"/>
+        					<field name="contact"/>
+        				</group>
+        			</group>
+        		</form>
+        	</field>
+    	</record>
 		
 		<!-- MENUS -->
 		<menuitem id="hr_menu_employee_horaires_collaborateurs" parent="hr_contract_psi.hr_menu_contract_psi_config"

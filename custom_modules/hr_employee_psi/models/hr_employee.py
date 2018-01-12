@@ -431,9 +431,9 @@ class PersonInformation(models.Model):
         ('enfant', 'Enfant'),
         ('famille', 'Famille'),
         ('conjoint', 'Conjoint')
-    ], string='Relation')
+    ], string=u'Relation avec l\'employé')
     
-    employee_id = fields.Many2one('hr.employee')
+    employee_id = fields.Many2one('hr.employee',string="Employé")
 
 class ChildrenInformation(models.Model):
     _inherit      = 'hr.person.information'

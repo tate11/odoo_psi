@@ -207,9 +207,7 @@
 			</field>
 		</field>
 	</record>
-
-
-
+	
 	<!-- Resume and Letters -->
 	<record id="hr_contract.ir_attachment_view_search_inherit_hr_employee"
 		model="ir.ui.view">
