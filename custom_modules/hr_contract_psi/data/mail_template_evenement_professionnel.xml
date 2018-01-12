@@ -7,17 +7,22 @@
 			<field name="name">PSI Template email - Notification avancement échelon</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
 			<field name="email_from">${object.create_uid.email}</field>
-			<field name="subject">Avancement échelon</field>
+			<field name="subject">Avancement d'échelon.</field>
 			<field name="email_to">${object.employee_id.work_email}</field>
 
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
-		      	Bonjour ${object.employee_id.name}, <br />
-		     	Votre nouvel échelon est ${object.psi_echelon}.                  
+		      	Bonjour ${object.employee_id.name},
+		    </p>
+		    <p></p>
+		    <p>
+		     	Vous avez changé d'échelon. Vous êtes passé à l'${object.psi_echelon}.                
 			</p>
-			<h5> Email - Notification avancement échelon</h5>
-		                 
+			<p></p>
+			<p>
+				Cordialement.
+			</p>
 		</div>   ]]>
 			</field>
 		</record>
@@ -47,17 +52,22 @@
 			<field name="name">PSI Template email - Notification Augmentation générale des salaires</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
 			<field name="email_from">${object.create_uid.email}</field>
-			<field name="subject">Augmentation des salaires</field>
+			<field name="subject">Augmentation de salaire.</field>
 			<field name="email_to">${object.employee_id.work_email}</field>
 
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
-		      	Bonjour ${object.employee_id.name},<br />
+		      	Bonjour ${object.employee_id.name},
+		    </p>
+		    <p></p>
+		    <p>
 		     	Votre salaire a augmenté.                  
 			</p>
-			<h5> Email - Notification de l'Augmentation des salaires</h5>
-		                 
+			<p></p>
+			<p>
+				Cordialement.
+			</p>
 		</div>   ]]>
 			</field>
 		</record>
@@ -114,9 +124,12 @@
 		<div>
 		    <p>
 		      	Bonjour ${object.employee_id.name}, <br />
-		     	Vous avez changé de poste a ${object.job_id.name}.     
+		     	Vous venez d'être promu ${object.job_id.name}.     
 			</p>
-			<h5> Email - Notification de Changement de grille salariale</h5>
+			<p></p>
+			<p>
+				Cordialement.
+			</p>
 		                 
 		</div>   ]]>
 			</field>

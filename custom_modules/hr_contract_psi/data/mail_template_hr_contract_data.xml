@@ -232,16 +232,21 @@
 			</field>
 			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
 			<field name="email_from">${object.create_uid.email}</field>
-			<field name="subject">Rappel fin periode d'essai de ${object.name}</field>
+			<field name="subject">Rappel fin periode d'essai</field>
 			<field name="email_to">${object.employee_id.work_email}</field>
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
-		      	Bonjour ${object.employee_id.name},
+		      	Bonjour ${object.employee_id.coach_id.name},
 		    </p>
-		      	<p> Categorie professionnel : ${object.job_id.psi_category.name} </p>
-			<h5> Email - fin période d'essai dans un mois</h5>
-		                 
+		    <p></p>
+		    <p>
+		    	La période d'essai de ${object.employee_id.name} se termine dans un mois.Votre période d'essai.
+		    <p>
+		    <p></p>
+		    <p>
+		    	Cordialement.
+		    </p>         
 		</div>   ]]>
 			</field>
 		</record>
