@@ -18,30 +18,30 @@ class hr_contract(models.Model):
     date_end = fields.Date('End Date', track_visibility='onchange',default="9999-12-31")
     #job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
     #department_id = fields.Many2one('hr.department', string="Department", track_visibility='onchange')
-    preavis = fields.Selection([('preste',u'Presté'),('paye',u'Payé')],string='préavis')
-    indeminite_de_preavis = fields.Float(string="Indeminité de préavis")
-    date_demission = fields.Date(string=u'Date de démission')
+    preavis = fields.Selection([('preste',u'PrestÃ©'),('paye',u'PayÃ©')],string='prÃ©avis')
+    indeminite_de_preavis = fields.Float(string="IndeminitÃ© de prÃ©avis")
+    date_demission = fields.Date(string=u'Date de dÃ©mission')
     date_prise_fonction = fields.Date(compute="_date_prise_fonction",string='Date de prise de fonction')
     
     #rupture
     date_rupture = fields.Date(string='Date rupture de contrat')
     devise = fields.Many2one('res.currency',string='Devise')
     motif_rupture = fields.Selection([
-                                      ('end_deadline_without_renewal',u"Arrivée de l'échéance sans reconduction"),
+                                      ('end_deadline_without_renewal',u"ArrivÃ©e de l'Ã©chÃ©ance sans reconduction"),
                                       ('conventional_break',"Rupture conventionnelle"),
-                                      ('resignation',u"Réception d'une lettre de démission"),
+                                      ('resignation',u"RÃ©ception d'une lettre de dÃ©mission"),
                                       ('dismissal',"Licenciement"),
-                                      ('death',u"Décès"),
+                                      ('death',u"DÃ©cÃ¨s"),
                                       ('retreat',"Retraite")
                                       ], string="Motif de rupture de contrat", track_visibility="onchange")
     
-    work_years = fields.Integer(compute="_calculate_work_years", string=u'Année de travail (Ancienneté)')
+    work_years = fields.Integer(compute="_calculate_work_years", string=u'AnnÃ©e de travail (AnciennetÃ©)')
 
     
     result_evaluation = fields.Selection([
                                           ('ok','OK'),
                                           ('ko','KO')
-                                          ], string="Résultat de l'évaluation", track_visibility="onchange")
+                                          ], string="RÃ©sultat de l'Ã©valuation", track_visibility="onchange")
     response_evaluation = fields.Selection([
                                             ('accept','Accepter'),
                                             ('decline','Refuser')
@@ -59,19 +59,19 @@ class hr_contract(models.Model):
     
     anniversary = fields.Date(compute="_get_anniversary")
     
-    indetermine = fields.Char(default='Indéterminé', readonly=True)
+    indetermine = fields.Char(default='IndÃ©terminÃ©', readonly=True)
 
-    debauchage_cnaps = fields.Boolean(string="Débauchage CNAPS", default=False)
-    debauchage_ostie = fields.Boolean(string="Débauchage OSTIE", default=False)
-    debauchage_assurance = fields.Boolean(string="Débauchage Assurance Santé", default=False)
+    debauchage_cnaps = fields.Boolean(string="DÃ©bauchage CNAPS", default=False)
+    debauchage_ostie = fields.Boolean(string="DÃ©bauchage OSTIE", default=False)
+    debauchage_assurance = fields.Boolean(string="DÃ©bauchage Assurance SantÃ©", default=False)
     
     job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
     user_id = fields.Many2one('res.users',related='job_id.user_id',string='Users ID')
-    psi_professional_category = fields.Many2one(related='job_id.psi_category',string='Catégorie professionnelle')
-    psi_category = fields.Selection(related='psi_professional_category.psi_professional_category',string='Catégorie professionnelle')
+    psi_professional_category = fields.Many2one(related='job_id.psi_category',string='CatÃ©gorie professionnelle')
+    psi_category = fields.Selection(related='psi_professional_category.psi_professional_category',string='CatÃ©gorie professionnelle')
     
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
-    department_id = fields.Many2one(related='job_id.department_id', string=u"Département", readonly=True)
+    department_id = fields.Many2one(related='job_id.department_id', string=u"DÃ©partement", readonly=True)
     working_hours = fields.Selection(related='employee_id.work_location', string='Horaire de travail')
 
     def action_report_certificat(self):
@@ -265,15 +265,15 @@ class hr_contract(models.Model):
 
     job_id = fields.Many2one('hr.job', related='employee_id.job_id',string='Job ID', required=True)
     
-    psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la Catégorie',store=True)
-    psi_category = fields.Selection(related='psi_category_details.psi_professional_category',string='Titre de la Catégorie',store=True)
-    psi_cat_cat = fields.Char(related='psi_category_details.psi_cat', string='Catégorie')
+    psi_category_details = fields.Many2one(related='job_id.psi_category',string='Titre de la CatÃ©gorie',store=True)
+    psi_category = fields.Selection(related='psi_category_details.psi_professional_category',string='Titre de la CatÃ©gorie',store=True)
+    psi_cat_cat = fields.Char(related='psi_category_details.psi_cat', string='CatÃ©gorie')
     psi_sub_category            = fields.Selection([
                                         ('1','1'),
                                         ('2','2'),
                                         ('3','3'),
                                         ('4','4')
-                                ],default="1", string="Sous-catégorie")
+                                ],default="1", string="Sous-catÃ©gorie")
     matricule = fields.Char(string='Matricule', related="employee_id.matricule")
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
    
@@ -332,7 +332,7 @@ class hr_contract(models.Model):
                 historical_obj = historical_env.browse(historical_old_id)
                 historical_obj.write({'fin':debut})
             index = "augmentation_salaire"
-            historical = "Augmentation générale des salaires "
+            historical = "Augmentation gÃ©nÃ©rale des salaires "
             vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':self.id}
             self.env['psi.contract.historical'].create(vals_historical)
             
@@ -351,10 +351,10 @@ class hr_contract(models.Model):
                 str_sanct = ''
                 for sanction_str in sanction_type :
                     str_sanct += "- "+sanction_str +"\n"
-                str = u"L'employé "+data.employee_id.name+u" a eu des sanctions ces 12 derniers mois précédents: \n"+str_sanct+u"\nDonc l'employé ne peut pas changer d'échelon."
+                str = u"L'employÃ© "+data.employee_id.name+u" a eu des sanctions ces 12 derniers mois prÃ©cÃ©dents: \n"+str_sanct+u"\nDonc l'employÃ© ne peut pas changer d'Ã©chelon."
                 raise ValidationError(str.encode('utf-8'))
                  
-            #traitement de historique de changement d'échelon
+            #traitement de historique de changement d'Ã©chelon
             
             date = fields.Date().today()
             ancien = data.psi_echelon if data.psi_echelon != '' else ''
@@ -426,7 +426,7 @@ class hr_contract(models.Model):
             self.env['psi.contract.historical'].create(vals_historical)
               
        
-       #traitement de changement de département de rattachement
+       #traitement de changement de dÃ©partement de rattachement
         if vals.has_key('department_id') :
             data = self.browse(self.id) 
             date = fields.Date().today()
@@ -533,7 +533,7 @@ class hr_contract(models.Model):
         for record in self:
             
             if self.job_id.psi_category.test_duration == 0:
-                raise Warning('La période d\'essai pour la catégorie "{}" n\'est pas encore définie.'.format(self.job_id.psi_category.psi_professional_category.upper()))
+                raise Warning('La pÃ©riode d\'essai pour la catÃ©gorie "{}" n\'est pas encore dÃ©finie.'.format(self.job_id.psi_category.psi_professional_category.upper()))
             
             contract_obj = self.env['hr.contract']
             contract = contract_obj.browse([record.id])
@@ -552,10 +552,10 @@ class hr_contract(models.Model):
             })
             
     def action_renew_trial_decline(self):
-        print "Séparation"
+        print "SÃ©paration"
         self.set_employee_inactif()    
     
-    #(R7.) Rappel - enregistrement du profil du collaborateur / complétude
+    #(R7.) Rappel - enregistrement du profil du collaborateur / complÃ©tude
     def _send_first_email_rh(self, automatic=False):
         contracts = self.env['hr.contract'].search([])
         print "Verification premier email RH"
@@ -595,7 +595,7 @@ class hr_contract(models.Model):
                 month_to_notif = date_start_trial_time + relativedelta(months=record.job_id.psi_category.test_duration-1)
                 if month_to_notif.date() == datetime.today().date():
                     template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
-                    self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)
+                    self.env['mail.template'].browse(template.id).send_mail(record.id, force_send=True)
         if automatic:
             self._cr.commit()
 
@@ -673,11 +673,11 @@ class HrDureePreavis(models.Model):
     _name = 'hr.duree.preavis'
     
     preavis_id = fields.Integer()
-    name = fields.Char(string=u"Ancienneté")
-    preavis = fields.Integer(string=u"Préavis (en jour(s))")
+    name = fields.Char(string=u"AnciennetÃ©")
+    preavis = fields.Integer(string=u"PrÃ©avis (en jour(s))")
     categorie = fields.Char(string=u"Cat")
-    sous_cat = fields.Char(string=u"Sous-catégorie")
-    sous_cat_cat = fields.Char(compute='_concat_sous_cat_cat', store=True, string=u"Catégorie")
+    sous_cat = fields.Char(string=u"Sous-catÃ©gorie")
+    sous_cat_cat = fields.Char(compute='_concat_sous_cat_cat', store=True, string=u"CatÃ©gorie")
     
     @api.depends('categorie','sous_cat')
     def _concat_sous_cat_cat(self):
