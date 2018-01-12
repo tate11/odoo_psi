@@ -42,7 +42,7 @@
 		    </p>
 		    <p></p>
 		    <p>
-		     	Une modification a été apportée à votre contrat. Vous êtes passé d'un CDD à un CDI.                
+		     	Une modification a été apportée à votre contrat. Vous êtes desormais en ${object.psi_contract_type.upper()}.                
 			</p>
 			<p></p>
 			<p>
@@ -129,7 +129,7 @@
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
-		      	Bonjour ${object.employee_id.name}, <br />
+		      	Bonjour ${object.employee_id.name}, <br /><br />
 		     	Vous venez d'être promu ${object.job_id.name}.     
 			</p>
 			<p></p>
