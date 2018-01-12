@@ -9,9 +9,20 @@
 				<field name="name" position="after">
 					<field name="ville" />
 				</field>
+				
 			</field>
 		</record>
 
-
+		<record id="view_resource_calendar_attendance_tree_inherit_psi" model="ir.ui.view">
+            <field name="name">resource.calendar.attendance.tree.inherit.psi</field>
+            <field name="model">resource.calendar.attendance</field>
+            <field name='inherit_id' ref='resource.view_resource_calendar_attendance_tree' />
+            <field name="arch" type="xml">
+            	<field name="dayofweek" position="attributes">
+            		<attribute name="invisible">1</attribute>
+            	</field>
+            </field>
+        </record>
+		
 	</data>
 </odoo>

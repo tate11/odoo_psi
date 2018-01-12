@@ -442,6 +442,28 @@
 			</field>
 		</record>
 
+		<record id="view_horaires_collaborateurs_tree" model="ir.ui.view">
+			<field name="name">Horaires collaborateurs</field>
+			<field name="model">resource.calendar</field>
+			<field name="arch" type="xml">
+				<tree string="Liste des horaires collaborateurs">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		
+		<record id="action_horaires_collaborateurs" model="ir.actions.act_window">
+			<field name="name">Horaires collaborateurs</field>
+			<field name="res_model">resource.calendar</field>
+			<field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Nouveau horaires collaborateurs.
+              </p>
+            </field>
+		</record>
+
 		<record id="view_provider_schedules_list" model="ir.ui.view">
 			<field name="name">Horaires prestataires</field>
 			<field name="model">hr.employee.provider.schedule</field>
@@ -460,8 +482,12 @@
 			<field name="view_mode">tree</field>
 			<field name="view_id" ref="view_provider_schedules_list" />
 		</record>
-
+		
+		
 		<!-- MENUS -->
+		<menuitem id="hr_menu_employee_horaires_collaborateurs" parent="hr_contract_psi.hr_menu_contract_psi_config"
+			sequence="7" name="Horaires collaborateurs" action="action_horaires_collaborateurs" />
+
 		<menuitem id="hr_menu_employee_provider_schedules" parent="hr_contract_psi.hr_menu_contract_psi_config"
 			sequence="8" name="Horaires prestataires" action="action_provider_schedules" />
 
