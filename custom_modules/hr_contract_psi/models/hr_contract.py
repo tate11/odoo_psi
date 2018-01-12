@@ -21,6 +21,8 @@ class hr_contract(models.Model):
     preavis = fields.Selection([('preste',u'Presté'),('paye',u'Payé')],string='préavis')
     indeminite_de_preavis = fields.Float(string="Indeminité de préavis")
     date_demission = fields.Date(string=u'Date de démission')
+    date_prise_fonction = fields.Date(compute="_date_prise_fonction",string='Date de prise de fonction')
+    
     #rupture
     date_rupture = fields.Date(string='Date rupture de contrat')
     devise = fields.Many2one('res.currency',string='Devise')
@@ -90,6 +92,60 @@ class hr_contract(models.Model):
     @api.onchange('employee_id')
     def _onchange_by_employee_id(self):
         self.working_hours = self.employee_id.work_location
+
+    @api.depends('date_start','trial_date_start')
+    def _date_prise_fonction(self):
+        self.date_prise_fonction = self.trial_date_start if self.trial_date_start is not False else self.date_start
+
+    @api.onchange('trial_date_start')
+    def _onchange_trial_date_start(self):
+        if self.trial_date_start is not False:
+            if self.trial_date_start>self.date_start:
+                self.trial_date_start=self.date_start
+            else:
+                self.date_prise_fonction = self.trial_date_start
+
+            if self.trial_date_start>self.trial_date_end:
+                self.trial_date_end=self.trial_date_start
+
+            self.work_years = datetime.today().year - datetime.strptime(self.trial_date_start, "%Y-%m-%d").year
+
+        else:
+            self.date_prise_fonction = self.date_start
+
+    @api.onchange('trial_date_end')
+    def _onchange_trial_date_end(self):
+        if self.trial_date_end is not False:
+            if self.trial_date_end>self.date_start:
+                self.trial_date_end=self.date_start
+
+            if self.trial_date_end<self.trial_date_start:
+                self.trial_date_start=self.trial_date_end
+                self.work_years = datetime.today().year - datetime.strptime(self.trial_date_start, "%Y-%m-%d").year
+
+    @api.onchange('date_start')
+    def _onchange_date_start(self):
+        if self.trial_date_start is False:
+            self.date_prise_fonction = self.date_start
+        elif self.date_start<self.trial_date_end:
+            self.trial_date_end=self.trial_date_start=self.date_start
+            if self.date_start>self.date_end:
+                self.date_end=self.date_start
+
+            self.work_years = datetime.today().year - datetime.strptime(self.trial_date_start, "%Y-%m-%d").year
+        elif self.date_start>self.date_end:
+            self.date_end=self.date_start
+
+    @api.onchange('date_end')
+    def _onchange_date_end(self):
+        if self.date_end<self.date_start:
+            self.date_start=self.date_end
+            if self.trial_date_start>self.date_start:
+                self.trial_date_start=self.trial_date_end=self.date_start
+                self.work_years = datetime.today().year - datetime.strptime(self.trial_date_start, "%Y-%m-%d").year
+            elif self.trial_date_end>self.date_start:
+                self.trial_date_end=self.date_start
+            
 
     @api.depends('date_start')
     def _get_anniversary(self):
@@ -439,7 +495,9 @@ class hr_contract(models.Model):
     @api.depends('date_start')
     def _calculate_work_years(self):
         for record in self:
-            if record.date_start:
+            if record.trial_date_start and record.date_start and record.trial_date_start<=record.date_start:
+                record.work_years = datetime.today().year - datetime.strptime(record.trial_date_start, "%Y-%m-%d").year
+            if record.date_start and not record.trial_date_start:
                 record.work_years = datetime.today().year - datetime.strptime(record.date_start, "%Y-%m-%d").year
     
     def generate_certificat_travail(self):

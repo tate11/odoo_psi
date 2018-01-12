@@ -68,7 +68,6 @@
 			</field>
 
 			<field name="wage" position='after'>
-			    <field name="devise" required="1" />
 				<field name="psi_category_details" readonly="1"/>
 				<field name="psi_cat_cat" readonly="1"/>
 				<field name="psi_sub_category" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
@@ -77,7 +76,7 @@
 			
 			<xpath expr="//field[@name='department_id']" position='after'>
 				<field name="psi_contract_type" readonly="1"/>
-				<field name="place_of_work" required="1" attrs="{'readonly' : [('state','=','close')]}"/>
+				<field name="place_of_work" required="1" readonly="1"/>
 			</xpath>
 
 <!-- 			<field name="date_end" position="after">
@@ -169,8 +168,13 @@
 			<field name='department_id' position="replace">
 				<field name="department_id" readonly="1" />
 			</field>
+
 			<field name='wage' position="replace">
-				<field name="wage" attrs="{'readonly' : ['|',('state','=','close')]}" />
+			</field>
+
+			<field name='psi_echelon' position="after">
+				<field name="wage" attrs="{'readonly' : [('state','=','close')]}" />
+			    <field name="devise" required="1" />
 			</field>
 			
             <group name="duration_group" position="replace">
@@ -183,7 +187,8 @@
 		            <div>
 		                <field name="date_start" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/> - <field name="date_end" required="1" class="oe_inline" attrs="{'readonly' : [('state','=','close')]}"/>
 		            </div>
-		            <field name="working_hours" attrs="{'readonly' : [('state','=','close')]}"/>
+		            <field name="date_prise_fonction" readonly="1"/>
+		            <field name="working_hours" readonly="1" string="Horaire de travail"/>
 		        </group>
             </group>
 			
