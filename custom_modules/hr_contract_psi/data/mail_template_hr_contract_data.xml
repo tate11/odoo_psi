@@ -139,29 +139,6 @@
 		</div>   ]]>
 			</field>
 		</record>
-		<!-- Template email - rappel sur rh -->
-		<record id="template_rh_id" model="mail.template">
-			<field name="name">PSI Template email - rappel sur rh</field>
-			<field name="model_id" ref="hr_contract_psi.model_hr_contract" />
-			<field name="email_from"><![CDATA[${object.create_uid.email or object.company_id.email}]]></field>
-			<field name="subject">Rappel de suivi d'anniversaire de l'employée
-				${object.employee_id.name}
-			</field>
-			<field name="email_to">${object.employee_id.department_id_psi.manager_id.work_email or object.employee_id.department_id_psi.manager_id.user_id.email}</field>
-			<field name="body_html"><![CDATA[
-		<div>
-		    <p>
-		      	Bonjour,
-
-		     	- Suivi des mises à jour à faire par l’employé ${object.name} 
-		     	- Vérification de Bridger à faire
-		     	- Augmentation d’échelon à appliquer                       
-			</p>
-			<h5> Email - rappel sur RH</h5>
-		                 
-		</div>   ]]>
-			</field>
-		</record>
 		
 		<!-- Premier rappel à la RH (pièces manquantes) -->
 		<record id="hr_contract_psi.custom_template_rappel_hr_missing_pieces"
