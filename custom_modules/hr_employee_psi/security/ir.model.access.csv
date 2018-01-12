@@ -9,6 +9,7 @@ access_hr_declaration_interest,hr.declaration.interest,model_hr_declaration_inte
 access_hr_information_cin,hr.information.cin,model_hr_information_cin,base.group_user,1,0,0,0
 access_hr_person_information,hr.person.information,model_hr_person_information,base.group_user,1,0,0,0
 access_hr_person,hr.person,model_hr_person,base.group_user,1,0,0,0
+access_hr_employee_provider_schedule,hr.employee.provider.schedule,model_hr_employee_provider_schedule,base.group_user,1,0,0,0
 access_hr_employee_bridger_insight,hr.employee.bridger.insight,model_hr_employee_bridger_insight,base.group_user,1,0,0,0
 
 

@@ -31,6 +31,8 @@ class ProjectProject(models.Model):
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
     
+    hours_prestataire_id = fields.Many2one('hr.employee.provider.schedule',string='Heure')
+    
     project_timesheet_id = fields.Integer(store=True)
 #     project_id = fields.Many2one('project.project', 'Project', domain=lambda self: 
 #                                     [
@@ -307,6 +309,16 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def create(self, vals):
         print "Create"
+        if vals.has_key('hours_prestataire_id') :
+            account_analytic_line_s = {}
+            if vals.has_key('date') :
+                account_analytic_line_s = self.env['account.analytic.line'].search([('date', '=', vals['date']), ('user_id','=',self.env.user.id)])
+            for account in account_analytic_line_s :
+                raise Warning(u'Vous ne pouvez saisir qu\'une seule activité par jour (à mi-temps ou à plein temps).')
+            hours_prestataire = self.env['hr.employee.provider.schedule'].browse(vals.get('hours_prestataire_id'))
+            vals['unit_amount'] = hours_prestataire.hours
+            return super(AccountAnalyticLine, self).create(vals)
+        
         project_holidays = self.env['project.project'].sudo().search([('name', '=', 'Absences/Permission/Congés')])
         print project_holidays[0],' project_holidays[0]'
         if project_holidays[0].id != vals.get('project_id'):
@@ -354,7 +366,10 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def write(self, vals):
-        print self.state
+        if vals.has_key('hours_prestataire_id') :
+            hours_prestataire = self.env['hr.employee.provider.schedule'].browse(vals.get('hours_prestataire_id'))
+            vals['unit_amount'] = hours_prestataire.hours
+            return super(AccountAnalyticLine, self).write(vals)
         if vals.has_key('state') and vals.get('state') == 'confirm':
             print vals.get('state')
             print vals

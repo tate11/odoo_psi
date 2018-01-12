@@ -649,5 +649,6 @@ class CodeBudgetaire(models.Model):
 class ProviderSchedule(models.Model):
     _name = 'hr.employee.provider.schedule'
     
+    _rec_name = 'hours'
     name = fields.Char(string="Nom")
     hours = fields.Float('Heures')
