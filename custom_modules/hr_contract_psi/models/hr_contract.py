@@ -221,6 +221,13 @@ class hr_contract(models.Model):
     matricule = fields.Char(string='Matricule', related="employee_id.matricule")
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
    
+    @api.onchange('psi_sub_category', 'psi_echelon')
+    def _change_salary(self):
+        print "_change_salary"
+        for record in self:
+            current_wage = self.env['hr.wage.grid.details'].search([('psi_category','=',record.psi_cat_cat), ('psi_sub_category','=',record.psi_sub_category)])
+            record.wage = current_wage._get_echelon(record.psi_echelon)
+    
     def action_send_email_desactivate_flottes(self):
         template = self.env.ref('hr_contract_psi.template_desactivate_flottes_id')
         self.env['mail.template'].browse(template.id).send_mail(self.id,force_send=True) 
