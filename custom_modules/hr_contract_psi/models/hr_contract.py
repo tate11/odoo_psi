@@ -349,9 +349,9 @@ class hr_contract(models.Model):
     @api.multi
     def write(self, vals):
           #traitement de l'augmentation des salaires
+        data = self.browse(self.id)
+        date = fields.Date().today()
         if vals.has_key('wage') :
-            data = self.browse(self.id) 
-            date = fields.Date().today()
             ancien = data.wage if data.wage != '' else ''
             nouveau = vals['wage']
             debut = fields.Date().today()
@@ -374,7 +374,6 @@ class hr_contract(models.Model):
             sanctions = sanction_env.search([('employee_id', '=', self.employee_id.id)])
             today = datetime.today()
             sanction_type = []
-            data = self.browse(self.id) 
             for sanction_obj in sanctions :
                 if sanction_obj.sanction_date != False:
                     s_date = datetime.strptime(sanction_obj.sanction_date,"%Y-%m-%d")
@@ -389,7 +388,6 @@ class hr_contract(models.Model):
                  
             #traitement de historique de changement d'échelon
             
-            date = fields.Date().today()
             ancien = data.psi_echelon if data.psi_echelon != '' else ''
             nouveau = vals['psi_echelon']
             debut = fields.Date().today()
@@ -413,34 +411,30 @@ class hr_contract(models.Model):
                     echelon = wage_grid._get_echelon(vals['psi_echelon'])
             vals['wage'] = echelon if echelon != 0 else data.wage
             
-         
-         #traitement de changement de statut    
-        if vals.has_key('psi_contract_type') :
-            data = self.browse(self.id) 
-            date = fields.Date().today()
+        #traitement de changement de statut    
+        if vals.has_key('psi_contract_type') or 'job_id' in vals:
             ancien = data.psi_contract_type if data.psi_contract_type != '' else ''
-            nouveau = vals['psi_contract_type']
+            current_job = self.env['hr.job'].sudo().search([('id','=',vals['job_id'])]) 
+            nouveau = current_job.psi_contract_type #vals['psi_contract_type']
             debut = fields.Date().today()
             psi_contract_historicals = self.env['psi.contract.historical'].search([('contract_id', '=', self.id)])
             date_changement_epsilon_last = False
-            if ancien != '':
-                historical_old_id = 0
-                for historical_obj in psi_contract_historicals :
-                    historical_old_id = historical_obj.id
-                historical_env = self.env['psi.contract.historical']
-                historical_obj = historical_env.browse(historical_old_id)
-                historical_obj.write({'fin':debut})
-            index = "changement_de_statut"
-            historical = "Changement de statut"
-            vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':self.id}
-            self.env['psi.contract.historical'].create(vals_historical)
+            if ancien != nouveau:
+                vals['psi_contract_type'] = nouveau
+                if ancien != '':
+                    historical_old_id = 0
+                    for historical_obj in psi_contract_historicals :
+                        historical_old_id = historical_obj.id
+                    historical_env = self.env['psi.contract.historical']
+                    historical_obj = historical_env.browse(historical_old_id)
+                    historical_obj.write({'fin':debut})
+                index = "changement_de_statut"
+                historical = "Changement de statut"
+                vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':self.id}
+                self.env['psi.contract.historical'].create(vals_historical)
             
-     
-        
         #traitement de l'affectation
         if vals.has_key('place_of_work') :
-            data = self.browse(self.id) 
-            date = fields.Date().today()
             ancien = data.place_of_work if data.place_of_work != '' else ''
             nouveau = vals['place_of_work']
             debut = fields.Date().today()
@@ -458,11 +452,8 @@ class hr_contract(models.Model):
             vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':self.id}
             self.env['psi.contract.historical'].create(vals_historical)
               
-       
-       #traitement de changement de département de rattachement
+        #traitement de changement de département de rattachement
         if vals.has_key('department_id') :
-            data = self.browse(self.id) 
-            date = fields.Date().today()
             departement_id = self.env['hr.department'].browse(vals['department_id'])
             ancien = data.department_id.name if data.department_id.name != '' else ''
             nouveau = departement_id.name
@@ -481,10 +472,8 @@ class hr_contract(models.Model):
             vals_historical = {'date':date,'historical' : historical,'debut':debut,'index':index,'nouveau':nouveau,'ancien':ancien, 'contract_id':self.id}
             self.env['psi.contract.historical'].create(vals_historical)
             
-         #traitement de changement de grille salariale
+        #traitement de changement de grille salariale
         if vals.has_key('job_id') :
-            data = self.browse(self.id) 
-            date = fields.Date().today()
             job_id = self.env['hr.job'].browse(vals['job_id'])
             ancien = data.job_id.name if data.job_id.name != '' else ''
             nouveau = job_id.name
