@@ -11,6 +11,33 @@
             <field name="project_id" position="replace" >
             	<field name="project_id" options="{'no_quick_create': True, 'no_create_edit' : True}" />
             </field>
+            <field name="user_id" position="replace">
+            	<field name="user_id" class="o_task_user_field" options='{"no_open": True}' readonly="1"/>
+            </field>
+            
+             <xpath expr="//notebook/page[@name='description_page']" position="after">
+                    <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}">
+                    <field name="timesheet_ids" context="{'default_project_id': project_id}">
+                        <tree editable="bottom" string="Timesheet Activities" default_order="date">
+                            <field name="date"/>
+                            <field name="user_id" required="1" readonly="1"/>
+                            <field name="name"/>
+                            <field name="unit_amount" string="Duration" widget="float_time"/>
+                            <field name="project_id" invisible="1"/>
+                        </tree>
+                    </field>
+                    <group>
+                     <group class="oe_subtotal_footer oe_right" name="project_hours">
+                        <field name="effective_hours" widget="float_time"/>
+                        <field name="children_hours" widget="float_time" attrs="{'invisible' : [('children_hours', '=', 0.0)]}"/>
+                        <field name="total_hours_spent" widget="float_time" class="oe_subtotal_footer_separator" attrs="{'invisible' : [('children_hours', '=', 0.0)]}"/>
+                        <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator" readonly="1"/>
+                     </group>
+                    </group>
+                </page>
+                </xpath>
+                    
+                    
             </field>
         </record>
         
