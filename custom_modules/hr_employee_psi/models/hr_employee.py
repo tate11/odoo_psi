@@ -649,6 +649,26 @@ class CodeBudgetaire(models.Model):
 class ProviderSchedule(models.Model):
     _name = 'hr.employee.provider.schedule'
     
-    _rec_name = 'hours'
+    _rec_name = 'hours_time'
     name = fields.Char(string="Nom")
     hours = fields.Float('Heures')
+    hours_time = fields.Char('Hours Time',compute='_hours_to_time', store=True)
+    
+    @api.multi
+    @api.depends('hours')
+    def _hours_to_time(self):
+        time = ""
+        for record in self :
+        
+            if len(str(record.hours)) > 2:
+                heure, min = str(record.hours).split(".")
+                min = str(6 * int(min) / 10)
+                if len(str(min)) > 1:
+                    min = min[:2]
+                else:
+                    min = "{}0".format(min)
+                time = "{}h{}".format(heure, min)
+            else:
+                time = "{}h00".format(self.hours)
+            
+            record.hours_time = time
