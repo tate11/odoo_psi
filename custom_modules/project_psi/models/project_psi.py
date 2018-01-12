@@ -3,8 +3,13 @@ from odoo import api, fields, models
 
 class Project_psi(models.Model):
     _inherit = "project.project"
+    @api.model
+    def get_fournisseur(self):
+        print "ok"
+        return self.env['res.partner'].search([('supplier', '=',True)]).ids
+    
     employee_ids = fields.Many2many('hr.employee',string='Employés')
-    partner_ids = fields.Many2many('res.partner',string='Fournisseur')
+    partner_ids = fields.Many2many('res.partner',domain=[('supplier', '=', True)],string='Fournisseur')
     
 class Hr_employee_psi(models.Model):
     _inherit = 'hr.employee'

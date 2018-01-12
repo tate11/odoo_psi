@@ -9,6 +9,7 @@ class Task(models.Model):
                                      [('id','in', tuple([x.id for x in self.env['res.users'].browse(self.env.user.id).partner_id.project_ids]
                                                                      )
                                                         )])
+  
     
     @api.onchange('project_id')
     def onchange_project_id(self):
