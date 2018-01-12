@@ -99,53 +99,61 @@ class hr_contract(models.Model):
 
     @api.onchange('trial_date_start')
     def _onchange_trial_date_start(self):
-        if self.trial_date_start is not False:
-            if self.trial_date_start>self.date_start:
-                self.trial_date_start=self.date_start
+        print "_onchange_trial_date_start"
+        for record in self:
+            if record.trial_date_start is not False:
+                date_start = datetime.strptime(record.trial_date_start, '%Y-%m-%d')
+                details = self.env['hr.psi.category.details'].search([('psi_cat','=',record.psi_cat_cat)])
+                record.trial_date_end = date_start + relativedelta(months=details.test_duration)
+                record.date_start = datetime.strptime(record.date_start, '%Y-%m-%d') + relativedelta(days=1)
+                
+                record.date_prise_fonction = record.trial_date_start
+    
+                record.work_years = datetime.today().year - datetime.strptime(record.trial_date_start, "%Y-%m-%d").year
+    
             else:
-                self.date_prise_fonction = self.trial_date_start
-
-            if self.trial_date_start>self.trial_date_end:
-                self.trial_date_end=self.trial_date_start
-
-            self.work_years = datetime.today().year - datetime.strptime(self.trial_date_start, "%Y-%m-%d").year
-
-        else:
-            self.date_prise_fonction = self.date_start
+                record.date_prise_fonction = record.date_start
 
     @api.onchange('trial_date_end')
     def _onchange_trial_date_end(self):
-        if self.trial_date_end is not False:
-            if self.trial_date_end>self.date_start:
-                self.trial_date_end=self.date_start
-
-            if self.trial_date_end<self.trial_date_start:
-                self.trial_date_start=self.trial_date_end
-                self.work_years = datetime.today().year - datetime.strptime(self.trial_date_start, "%Y-%m-%d").year
+        print "_onchange_trial_date_end"
+        for record in self:
+            if record.trial_date_end is not False:
+                record.date_start = datetime.strptime(record.trial_date_end, '%Y-%m-%d') + relativedelta(days=1)
+    
+                if record.trial_date_end < record.trial_date_start:
+                    record.trial_date_start = record.trial_date_end
+                
+                record.work_years = datetime.today().year - datetime.strptime(record.trial_date_start, "%Y-%m-%d").year
 
     @api.onchange('date_start')
     def _onchange_date_start(self):
-        if self.trial_date_start is False:
-            self.date_prise_fonction = self.date_start
-        elif self.date_start<self.trial_date_end:
-            self.trial_date_end=self.trial_date_start=self.date_start
-            if self.date_start>self.date_end:
-                self.date_end=self.date_start
-
-            self.work_years = datetime.today().year - datetime.strptime(self.trial_date_start, "%Y-%m-%d").year
-        elif self.date_start>self.date_end:
-            self.date_end=self.date_start
-
+        print "_onchange_date_start"
+        for record in self:
+            if record.trial_date_start is False:
+                record.date_prise_fonction = record.date_start
+            elif record.date_start < record.trial_date_end:
+                record.trial_date_end = datetime.strptime(record.date_start, '%Y-%m-%d') + relativedelta(days=-1)
+                if record.date_start > record.date_end:
+                    record.date_end = record.date_start
+    
+                record.work_years = datetime.today().year - datetime.strptime(record.trial_date_start, "%Y-%m-%d").year
+                
+            elif record.date_start > record.date_end:
+                record.date_end = record.date_start
+            
     @api.onchange('date_end')
     def _onchange_date_end(self):
-        if self.date_end<self.date_start:
-            self.date_start=self.date_end
-            if self.trial_date_start>self.date_start:
-                self.trial_date_start=self.trial_date_end=self.date_start
-                self.work_years = datetime.today().year - datetime.strptime(self.trial_date_start, "%Y-%m-%d").year
-            elif self.trial_date_end>self.date_start:
-                self.trial_date_end=self.date_start
-            
+        print "_onchange_date_end"
+        for record in self:
+            if record.date_end < record.date_start:
+                record.date_start = record.date_end
+                
+#                 if record.trial_date_start > record.date_start:
+#                     record.trial_date_start = record.trial_date_end = record.date_start
+#                     record.work_years = datetime.today().year - datetime.strptime(record.trial_date_start, "%Y-%m-%d").year
+#                 elif record.trial_date_end > record.date_start:
+#                     record.trial_date_end = record.date_start
 
     @api.depends('date_start')
     def _get_anniversary(self):
