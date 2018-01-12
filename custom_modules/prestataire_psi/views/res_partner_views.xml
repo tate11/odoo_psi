@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--inherit project.project view -->
+    <record id="view_partner_form_psi_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form.psi.inherit</field>
+            <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="replace">
+                    <field name="user_id" string="Utilisateur lié" required="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

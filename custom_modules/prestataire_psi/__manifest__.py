@@ -9,6 +9,7 @@
     'depends': ['project_psi'],
     'data':  [
               'data/res_groups.xml',
+              'views/res_partner_views.xml',
               'views/project_views.xml',
              ],
     'demo': [],
