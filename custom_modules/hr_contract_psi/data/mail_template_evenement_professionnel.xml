@@ -36,14 +36,20 @@
 			<field name="email_to">${object.employee_id.work_email}</field>
 
 			<field name="body_html"><![CDATA[
-		<div>
+			<div>
 		    <p>
-		      	Bonjour ${object.employee_id.name},<br />
-		     	Votre statut CDD a changé au statut CDI.                  
+		      	Bonjour ${object.employee_id.name},
+		    </p>
+		    <p></p>
+		    <p>
+		     	Une modification a été apportée à votre contrat. Vous êtes passé d'un CDD à un CDI.                
 			</p>
-			<h5> Email - Notification de changement de statut</h5>
-		                 
-		</div>   ]]>
+			<p></p>
+			<p>
+				Cordialement.
+			</p>
+		</div>  
+		   ]]>
 			</field>
 		</record>
 		

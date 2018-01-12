@@ -546,21 +546,30 @@ class hr_contract(models.Model):
             contract_obj = self.env['hr.contract']
             contract = contract_obj.browse([record.id])
             
-            fin = datetime.strptime(contract.trial_date_end,"%Y-%m-%d")
-            if fin.weekday() == calendar.FRIDAY:
-                fin = fin + timedelta(days=3)
-            
-            new_date_start = fin
-            new_date_end = new_date_start + relativedelta(months=contract.job_id.psi_category.test_duration)
-            
-            contract.update({
-                             'response_evaluation' : 'accept',
-                             'trial_date_start': new_date_start,
-                             'trial_date_end' : new_date_end,
-            })
+            if contract.trial_date_end:
+                fin = datetime.strptime(contract.trial_date_end,"%Y-%m-%d")
+                if fin.weekday() == calendar.FRIDAY:
+                    fin = fin + timedelta(days=3)
+                
+                new_date_start = fin
+                new_date_end = new_date_start + relativedelta(months=contract.job_id.psi_category.test_duration)
+                
+                contract.update({
+                                 'response_evaluation' : 'accept',
+                                 'trial_date_start': new_date_start,
+                                 'trial_date_end' : new_date_end,
+                })
+            else:
+                raise Warning(u'Erreur')
             
     def action_renew_trial_decline(self):
         print "Séparation"
+        for record in self:
+            contract_obj = self.env['hr.contract']
+            contract = contract_obj.browse([record.id])
+            contract.update({
+                             'response_evaluation' : 'decline',
+            })
         self.set_employee_inactif()    
     
     #(R7.) Rappel - enregistrement du profil du collaborateur / complétude

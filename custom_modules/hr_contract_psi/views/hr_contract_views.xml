@@ -48,9 +48,9 @@
 			</field>
 			<field name="employee_id" position="before">
 				<field name="matricule" readonly="1" />
-			</field>
-			<xpath expr="//label" position="before">
 				<field name="response_evaluation" invisible="1" />
+			</field>
+			<xpath expr="//div[@class='oe_title']" position="before">
 				<div class="oe_button_box" name="button_box">
 					<button class="oe_inline oe_stat_button" type="action"
 						name="%(action_historical_contract_view_tree)d" icon="fa-history">
@@ -117,16 +117,16 @@
 					<field name="result_evaluation" attrs="{'readonly' : [('state','=','close')]}"/>
 					<label string="Vous voulez renouveler la période d'essai ?"
 						confirm="Veuillez confirmer le renouvelement de sa période d'essai."
-						attrs="{'invisible':['|','|',('result_evaluation','not in','ko'),('response_evaluation','=','accept')]}" />
+						attrs="{'invisible':['|','|',('result_evaluation','not in','ko'),('response_evaluation','=','accept'),('response_evaluation','=','decline')]}" />
 					<div>
 						<button name="action_renew_trial_accept" string="OUI" type="object"
 							class="btn-primary"
-							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=','accept')]}"
+							attrs="{'invisible':['|','|',('result_evaluation','not in','ko'),('response_evaluation','=','accept'),('response_evaluation','=','decline')]}"
 							onClick="$(this).prop('disabled', true);" />
 						&#x2063;&#x2063;
 						<button name="action_renew_trial_decline" string="NON"
 							type="object" class="btn-primary"
-							attrs="{'invisible':['|',('result_evaluation','not in','ko'),('response_evaluation','=','accept')]}"
+							attrs="{'invisible':['|','|',('result_evaluation','not in','ko'),('response_evaluation','=','accept'),('response_evaluation','=','decline')]}"
 							confirm="Veuillez confirmer si vous ne voulez pas renouvelement sa période d'essai." onClick="$(this).prop('disabled', true);" />
 					</div>
 
@@ -137,6 +137,7 @@
 					<button name="action_result_evaluation_send_ko" string="Envoyer une notification"
 						type="object" class="btn-primary right"
 						attrs="{'invisible': ['|',('response_evaluation','=',False),('result_evaluation','not in','ko')]}" />
+
 				</group>
 			</xpath>
 			
