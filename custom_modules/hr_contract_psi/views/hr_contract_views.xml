@@ -170,7 +170,7 @@
 				<field name="department_id" readonly="1" />
 			</field>
 			<field name='wage' position="replace">
-				<field name="wage" attrs="{'readonly' : ['|',('state','=','close'),('psi_echelon','!=','echelon_hc')]}" />
+				<field name="wage" attrs="{'readonly' : ['|',('state','=','close')]}" />
 			</field>
 			
             <group name="duration_group" position="replace">
