@@ -97,6 +97,7 @@
 			<field name="email_from"><![CDATA[${object.create_uid.email or object.company_id.email}]]></field>
 			<field name="subject">Rappel de suivi d'anniversaire</field>
 			<field name="email_to">${object.employee_id.work_email or object.user_id.email}</field>
+			
 			<field name="body_html"><![CDATA[
 		<div>
 		    <p>
@@ -129,7 +130,11 @@
 		      	Bonjour,
 		     	Il faut mettre à jour la déclaration conflit d’intérêt (par an), l’attestation de cours d’éthique (tous les 2 ans).                      
 			</p>
-			<h5> Email - rappel Collaborateur</h5>
+			<ul>
+				<li>Suivi des mises à jour à faire par l’employé ${object.name} </li> 
+		     	<li> Vérification de Bridger à faire </li
+		     	<li> Augmentation d’échelon à appliquer </li> 
+			</ul>
 		                 
 		</div>   ]]>
 			</field>
