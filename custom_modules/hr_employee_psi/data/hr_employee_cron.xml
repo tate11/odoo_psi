@@ -8,7 +8,7 @@
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
-            <field name="doall" eval="False" />
+            <field name="doall" eval="True" />
             <field eval="'hr.employee'" name="model" />
             <field name="function" eval="'_send_first_email_collaborator'" /> 
             <field name="args" eval="'(True,)'"/>
@@ -23,7 +23,7 @@
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
-            <field name="doall" eval="False" />
+            <field name="doall" eval="True" />
             <field eval="'hr.employee'" name="model" />
             <field name="args" eval="'(True,)'"/>
             <field name="function" eval="'_send_second_email_collaborator'" /> 
@@ -36,7 +36,7 @@
             <field name="interval_number">1</field>
             <field name="interval_type">months</field>
             <field name="numbercall">-1</field>
-            <field name="doall" eval="False" />
+            <field name="doall" eval="True" />
             <field name="model" eval="'hr.employee'" />
             <field name="function" eval="'_remove_sanction_data'" /> 
             <field name="args" eval="'(1,)'"/>
@@ -50,7 +50,7 @@
             <field name="interval_number">1</field> <!-- 12 -->
             <field name="interval_type">days</field> <!-- months -->
             <field name="numbercall">-1</field>
-            <field name="doall" eval="False" />
+            <field name="doall" eval="True" />
             <field name="model" eval="'hr.employee'" />
             <field name="function" eval="'_add_declaration_interest'" /> 
             <field name="args" eval="'(True,)'"/>
@@ -64,7 +64,7 @@
             <field name="interval_number">1</field> <!-- 24 -->
             <field name="interval_type">days</field> <!-- months -->
             <field name="numbercall">-1</field>
-            <field name="doall" eval="False" />
+            <field name="doall" eval="True" />
             <field name="model" eval="'hr.employee'" />
             <field name="function" eval="'_add_certificate_ethics'" /> 
             <field name="args" eval="'(True,)'"/>

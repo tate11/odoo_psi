@@ -9,7 +9,7 @@
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>	
             <field name="numbercall">-1</field>
-            <field name="doall" eval="False" />
+			<field name="doall" eval="True" />
             <field eval="'account.analytic.line'" name="model" />
             <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 03:00:00')" />
             <field name="function" eval="'_send_email_rappel_timesheet_collaborator'" /> 
@@ -23,7 +23,7 @@
             <field name="interval_number">1</field>
             <field name="interval_type">hours</field>	
             <field name="numbercall">-1</field>
-            <field name="doall" eval="False" />
+			<field name="doall" eval="True" />
             <field eval="'account.analytic.line'" name="model" />
             <field name="function" eval="'_send_email_rappel_envoie_abscence_membres'" /> 
         </record>

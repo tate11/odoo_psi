@@ -10,7 +10,7 @@
 			<field name="interval_number">1</field>
 			<field name="interval_type">days</field>
 			<field name="numbercall">-1</field>
-			<field name="doall" eval="False" />
+			<field name="doall" eval="True" />
 			<field eval="'hr.contract'" name="model" />
 			<field name="function" eval="'_send_first_email_rh'" />
 		</record>
@@ -22,7 +22,7 @@
 			<field name="interval_number">1</field>
 			<field name="interval_type">days</field>
 			<field name="numbercall">-1</field>
-			<field name="doall">1</field>
+			<field name="doall" eval="True" />
 			<field eval="'hr.contract'" name="model" />
 			<field name="function" eval="'_send_email_trial_date_end'" />
 			<field name="args" eval="'(True,)'" />
@@ -36,7 +36,7 @@
 			<field name="interval_number">1</field>
 			<field name="interval_type">months</field>
 			<field name="numbercall">-1</field>
-			<field name="doall">1</field>
+			<field name="doall" eval="True" />
 			<field eval="'hr.contract'" name="model" />
 			<field name="function" eval="'_send_email_end_contract'" />
 			<field name="args" eval="'(True,)'" />
@@ -52,7 +52,7 @@
 			<field name="interval_number">1</field>
 			<field name="interval_type">days</field>
 			<field name="numbercall">-1</field>
-			<field name="doall">1</field>
+			<field name="doall" eval="True" />
 			<field eval="'hr.contract'" name="model" />
 			<field name="function" eval="'_send_email_birthday_date_tracking'" />
 			<field name="args" eval="" />
@@ -67,7 +67,7 @@
 			<field name="interval_number">1</field>
 			<field name="interval_type">days</field>
 			<field name="numbercall">-1</field>
-			<field name="doall">1</field>
+			<field name="doall" eval="True" />
 			<field eval="'hr.contract'" name="model" />
 			<field name="function" eval="'_close_collabo_end_contract'" />
 			<field name="args" eval="'(True,)'" />
@@ -82,7 +82,7 @@
 			<field name="interval_number">1</field>
 			<field name="interval_type">months</field>
 			<field name="numbercall">-1</field>
-			<field name="doall">1</field>
+			<field name="doall" eval="True" />
 			<field eval="'hr.contract'" name="model" />
 			<field name="function" eval="'_increment_seniority'" />
 		</record>
