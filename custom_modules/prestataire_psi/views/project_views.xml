@@ -54,16 +54,16 @@
         </record>
         
             <record id="action_form_timesheet_prestataire" model="ir.actions.act_window">
-            <field name="name">Tasks</field>
+            <field name="name">Feuilles de temps</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id', '=', uid)]</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Here, you can create new tasks
+                    Vous pouvez ajouter vos tâches avec votre feuilles de temps
                 </p>
                 <p>
-                    You can now manage your tasks in order to get things done efficiently. Track progress, discuss, attach documents, etc.
+                    Vous pouvez maintenant gérer vos tâches afin de faire les choses efficacement. Suivre les progrès, discuter, joindre des documents, etc.
                 </p>
             </field>
         </record>
