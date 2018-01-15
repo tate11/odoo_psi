@@ -11,6 +11,7 @@
             <field name="numbercall">-1</field>
             <field name="doall" eval="False" />
             <field eval="'hr.holidays'" name="model" />
+            <field name="nextcall" eval="(datetime.utcnow() + timedelta(days=0)).strftime('%Y-%m-%d 15:17:00')" />
             <field name="function" eval="'_send_email_rappel_justificatif_conge_maladie'" /> 
         </record>
 
