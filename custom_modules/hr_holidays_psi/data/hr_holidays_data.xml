@@ -57,35 +57,6 @@
             <field name="limit" eval="True"/>
 		</record>
 		
-		<delete id="hr_holidays_psi.holiday_status_cl" model="hr.holidays.status"/>
-		<!-- Casual leave -->
-        <record id="hr_holidays_psi.holiday_status_cl" model="hr.holidays.status">
-            <field name="name" eval="'Congés légaux'+time.strftime('%Y')"/>
-            <field name="limit" eval="True"/>
-        </record>
-        
-		<delete id="hr_holidays_psi.holiday_status_comp" model="hr.holidays.status"/>
-		<!-- Compensatory Days -->
-        <record id="holiday_status_comp" model="hr.holidays.status">
-            <field name="name">Arrêts maladie</field>
-            <field name="limit" eval="True"/>
-        </record>
-        
-		<delete id="hr_holidays_psi.holiday_status_comp" model="hr.holidays.status"/>
-		<!--Unpaid Leave -->
-        <record id="holiday_status_comp" model="hr.holidays.status">
-            <field name="name">jours de compensation</field>
-            <field name="limit" eval="True"/>
-        </record>
-        
-		<delete id="hr_holidays_psi.holiday_status_unpaid" model="hr.holidays.status"/>
-		<!--Unpaid Leave -->
-        <record id="holiday_status_unpaid" model="hr.holidays.status">
-            <field name="name">Impayé</field>
-            <field name="limit" eval="True"/>
-        </record>
-
-
 		<!-- Données par défaut configurations -->
 		<record model="hr.holidays.configuration" id="default_config">
 			<field name="droit_conge">6</field>
@@ -140,17 +111,6 @@
 	        <field name="name">Formalités administratives (réunions des parent d’élèves, demande de divers certificats ou actes officiels…)</field>
 	        <field name="number_of_day">0.5</field>
 	    </record>		
-		
-		<!-- rules -->
-		<record id="hr_holidays.property_rule_holidays_employee" model="ir.rule">
-	        <field name="name">Employee Holidays</field>
-	        <field name="model_id" ref="model_hr_holidays"/>
-	        <field name="domain_force">['|', ('employee_id.user_id','=',user.id),('employee_id.coach_id.user_id','=', user.id)]</field>
-	        <field name="perm_create" eval="False"/>
-	        <field name="perm_write" eval="False"/>
-	        <field name="perm_unlink" eval="False"/>
-	        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
-	    </record>
 		
 	</data>
 </odoo>
