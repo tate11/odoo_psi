@@ -6,7 +6,7 @@
     'sequence': 0,
     'description': """Gestion des Timesheet chez PSI-M""",
     'website': 'https://www.ingenosya.mg',
-    'depends': ['hr_timesheet', 'hr_employee_psi'],
+    'depends': ['hr_timesheet', 'hr_employee_psi', 'hr_holidays_psi'],
     'data':  [
               #'data/res_groups.xml',
               #'data/ir_model_access.xml',
