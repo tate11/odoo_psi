@@ -90,7 +90,7 @@
 					Click here to create a new leave request.
 				</p>
 			</field>
-			<field name="domain">[('holiday_type','=','employee')]</field>
+			<field name="domain">['&amp;',('holiday_type','=','employee'),('type','=','remove')]</field>
 			<field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter" />
 		</record>
 		<!-- FIN RENAME VIEW 2 edit_holiday_new -->
