@@ -65,6 +65,7 @@
 			<field name="type_id" position='replace'>
 				<field name="type_id" invisible="1" />
 				<field name="state_mail" invisible="1" />
+				<field name="is_birthday" invisible="1" />
 			</field>
 
 			<field name="wage" position='after'>

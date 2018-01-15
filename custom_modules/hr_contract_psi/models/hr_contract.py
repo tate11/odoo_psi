@@ -73,7 +73,9 @@ class hr_contract(models.Model):
     historical_count = fields.Integer(compute='_historical_count', string='# of Historical')
     department_id = fields.Many2one(related='job_id.department_id', string=u"Département", readonly=True)
     working_hours = fields.Selection(related='employee_id.work_location', string=u'Horaire de travail')
-
+    
+    
+    
     def action_report_certificat(self):
         date = fields.Date().today()
         psi_contract_historicals = self.env['psi.contract.historical'].search([('contract_id', '=', self.id)])
@@ -254,13 +256,16 @@ class hr_contract(models.Model):
             'target': 'new',
             'context': ctx,
         }
-    def _send_email_birthday_date_tracking(self):
-        employee_obj = self.env['hr.contract']
-        employees = employee_obj.search([])
         
-        for employee in employees : 
+    is_birthday = fields.Char()
+    
+    def _find_date_anniversaire_collab(self):
+        contract_obj = self.env['hr.contract']
+        contracts = contract_obj.search([])
+        result = ''
+        for contract in contracts : 
            
-            date_birthday = employee.date_start
+            date_birthday = contract.date_start
             if date_birthday != False :
                 datetime_now =  datetime.today()
                 date_now = datetime(
@@ -280,12 +285,45 @@ class hr_contract(models.Model):
                 weeks = (monday2 - monday1).days / 7
                 
                 if weeks == 2 :
-                    print employee.employee_id.name
-                    print employee.employee_id.department_id_psi.manager_id.name
+                     result += contract.employee_id.name
+        return result
+        
+    def _send_email_birthday_date_tracking(self):
+        contract_obj = self.env['hr.contract']
+        contracts = contract_obj.search([])
+        print self._find_date_anniversaire_collab()
+        for contract in contracts : 
+           
+            date_birthday = contract.date_start
+            if date_birthday != False :
+                datetime_now =  datetime.today()
+                date_now = datetime(
+                    year=datetime_now.year, 
+                    month=datetime_now.month,
+                    day=datetime_now.day,
+                )
+                datetime_birthday = datetime.strptime(date_birthday,"%Y-%m-%d")
+                date_birthday_time = datetime(
+                    year=datetime_now.year, 
+                    month=datetime_birthday.month,
+                    day=datetime_birthday.day,
+                )
+                monday1 = (date_now - timedelta(days=date_now.weekday()))
+                monday2 = (date_birthday_time - timedelta(days=date_birthday_time.weekday()))
+
+                weeks = (monday2 - monday1).days / 7
+                
+                if weeks == 2 :
+                    print contract.employee_id.name
+                    contract.write({'is_birthday':self._find_date_anniversaire_collab()})
+                    print contract.employee_id.department_id_psi.manager_id.name
+                    print contract.is_birthday
+                    print contract.write_date
+                    
                     template_collaborator = self.env.ref('hr_contract_psi.template_collaborator_id')
-                    self.env['mail.template'].browse(template_collaborator.id).send_mail(employee.id, force_send=True)
+                    self.env['mail.template'].browse(template_collaborator.id).send_mail(contract.id, force_send=True)
                     template_rh = self.env.ref('hr_contract_psi.template_rh_id')
-                    self.env['mail.template'].browse(template_rh.id).send_mail(employee.id, force_send=True)
+                    self.env['mail.template'].browse(template_rh.id).send_mail(contract.id, force_send=True)
                     
     psi_echelon = fields.Selection([('echelon_1','ECHELON 1'),('echelon_2','ECHELON 2'),('echelon_3','ECHELON 3'),
                                     ('echelon_4','ECHELON 4'),('echelon_5','ECHELON 5'),('echelon_6','ECHELON 6'),
@@ -629,7 +667,10 @@ class hr_contract(models.Model):
                 )
                 # Verification selection                
                 month_to_notif = date_start_trial_time + relativedelta(months=record.job_id.psi_category.test_duration-1)
+                print month_to_notif.date() ," =?= ", datetime.today().date()
+                print record.employee_id.coach_id.name
                 if month_to_notif.date() == datetime.today().date():
+                    print "=="
                     template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
                     self.env['mail.template'].browse(template.id).send_mail(record.id, force_send=True)
         if automatic:

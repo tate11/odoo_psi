@@ -104,9 +104,8 @@
 		      	Bonjour, ${object.employee_id.name}
 		    </p>
 		    <p></p>
-		    <p>
-		     	Il faut mettre à jour la déclaration conflit d’intérêt (par an), l’attestation de cours d’éthique (tous les 2 ans).                      
-			</p>
+		    <p>Nous vous rappelons que la déclaration de conflit d'intérêt doit être faite tous les ans.</p>
+			<p>Une nouvelle attestation de cours d'éthique doit être fournie tous les 2 ans.</p>
 			<p></p>
 			<p>
 				Cordialement.
@@ -126,16 +125,22 @@
 			<field name="email_to">${object.employee_id.department_id_psi.manager_id.work_email or object.employee_id.department_id_psi.manager_id.user_id.email}</field>
 			<field name="body_html"><![CDATA[
 		<div>
-		    <p>
-		      	Bonjour,
-		     	Il faut mettre à jour la déclaration conflit d’intérêt (par an), l’attestation de cours d’éthique (tous les 2 ans).                      
-			</p>
-			<ul>
-				<li>Suivi des mises à jour à faire par l’employé ${object.name} </li> 
-		     	<li> Vérification de Bridger à faire </li
-		     	<li> Augmentation d’échelon à appliquer </li> 
-			</ul>
-		                 
+			<p>Bonjour RH,</p>
+			<p></p>
+			<p>Les personnes suivantes fêtent leur anniversaire d'embauche le 16/04/2018: </p>
+			<br/>
+			<p> ${object.is_birthday} </p>
+			<br/>
+			
+			<p>De ce fait: </p>
+ 			<ul>
+ 				<li>ils devront renouveler leur déclaration de conflit d'intérêt (à faire tous les ans) </li>
+ 				<li>ils devront fournir une nouvelle attestation de cours d'éthique (à faire tous les 2 ans) </li>
+ 				<li>vous devriez revérifier leur bridger </li>
+ 				<li>vous devriez vérifier si l'augmentation d'échelon est bien effective </li>
+ 			</ul>
+			<br/>
+			<p>Cordialement.</p>
 		</div>   ]]>
 			</field>
 		</record>
