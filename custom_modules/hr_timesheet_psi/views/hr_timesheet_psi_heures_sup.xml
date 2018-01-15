@@ -223,8 +223,8 @@
 		<field name="inherit_id" ref="timesheet_grid.view_timesheet_list" />
 		<field name="arch" type="xml">
 			<xpath expr="/tree" position="attributes">
-				<attribute name="create">false</attribute>
-				<attribute name="edit">false</attribute>
+				<!-- <attribute name="create">false</attribute>
+				<attribute name="edit">false</attribute> -->
 			</xpath>
 		</field>
 	</record>
