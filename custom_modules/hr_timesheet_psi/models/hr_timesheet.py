@@ -310,8 +310,10 @@ class AccountAnalyticLine(models.Model):
     def create(self, vals):
         print "Create"
         if vals.has_key('hours_prestataire_id') :
+            print "hours_prestataire_id"
             account_analytic_line_s = {}
             if vals.has_key('date') :
+                print "date : ",vals.get('date')
                 account_analytic_line_s = self.env['account.analytic.line'].search([('date', '=', vals['date']), ('user_id','=',self.env.user.id)])
             for account in account_analytic_line_s :
                 raise Warning(u'Vous ne pouvez saisir qu\'une seule activité par jour (à mi-temps ou à plein temps).')
@@ -367,6 +369,7 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def write(self, vals):
         if vals.has_key('hours_prestataire_id') :
+            print "hours_prestataire_id write"
             hours_prestataire = self.env['hr.employee.provider.schedule'].browse(vals.get('hours_prestataire_id'))
             vals['unit_amount'] = hours_prestataire.hours
             return super(AccountAnalyticLine, self).write(vals)
