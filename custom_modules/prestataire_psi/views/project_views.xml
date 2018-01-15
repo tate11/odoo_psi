@@ -49,6 +49,8 @@
                     </field>
                     
             </field>
+            
+             </field>
         </record>
         
             <record id="action_form_timesheet_prestataire" model="ir.actions.act_window">
