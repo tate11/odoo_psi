@@ -417,7 +417,6 @@ class Person(models.Model):
         ('F', u'Féminin')
      ], string='Genre')    
      
-     
     
 class PersonInformation(models.Model):
    
@@ -503,34 +502,55 @@ class hr_cours_ethique(models.Model):
     def create(self, vals):
         this_year=datetime.now().strftime("%Y")
         
-        last_year="{}-".format(int(this_year)-1)
-        cours_ethique_this_year=self.env['hr.cours.ethique'].search([('date_add','like',last_year)])
-        if cours_ethique_this_year is not False:
+        last_year=int(this_year)-1
+        cours_ethique_this_year=self.env['hr.cours.ethique'].search([('year','=',last_year),('employee_id','=',vals.get('employee_id'))])
+        if cours_ethique_this_year:
             raise Warning("Vous ne pouvez ajouter un cours d'éthique qu'une fois dans 2 années")
             return False
+        else:
+            cours_ethique_this_year=self.env['hr.cours.ethique'].search([('year','=',this_year),('employee_id','=',vals.get('employee_id'))])
+            if cours_ethique_this_year:
+                raise Warning("Vous ne pouvez ajouter un cours d'éthique qu'une fois dans 2 années")
+                return False
+
         cours_ethique = super(hr_cours_ethique, self).create(vals)
-        document_vals = {'name': cours_ethique.certificate_ethics_filename,
+        if cours_ethique.certificate_ethics_filename:
+            document_vals = {'name': cours_ethique.certificate_ethics_filename,
                          'db_datas': vals.get('certificate_ethics_file').encode('base64'),
                          'datas_fname': False,
                          'res_model': 'hr.employee',
                          'res_id': cours_ethique.employee_id.id,
                          'type': 'binary' }
 
-        self.env['ir.attachment'].create(document_vals)
+            self.env['ir.attachment'].create(document_vals)
         return cours_ethique
         #self.env['ir.attachment'].write({'res_model':'hr.employee','res_id':self.id})
      
     @api.multi
     def write(self,vals):
+        if vals.get("year"):
+            this_year=datetime.now().strftime("%Y")
+            last_year=int(this_year)-1
+            cours_ethique_this_year=self.env['hr.cours.ethique'].search([('year','=',last_year),('employee_id','=',vals.get('employee_id'))])
+            if cours_ethique_this_year:
+                raise Warning("Vous ne pouvez ajouter un cours d'éthique qu'une fois dans 2 années")
+                return False
+            else:
+                cours_ethique_this_year=self.env['hr.cours.ethique'].search([('year','=',this_year),('employee_id','=',vals.get('employee_id'))])
+                if cours_ethique_this_year:
+                    raise Warning("Vous ne pouvez ajouter un cours d'éthique qu'une fois dans 2 années")
+                    return False
+
         cours_ethique = super(hr_cours_ethique, self).write(vals)
-        document_vals = {'name': cours_ethique.certificate_ethics_filename,
+        if cours_ethique and cours_ethique.certificate_ethics_filename:
+            document_vals = {'name': cours_ethique.certificate_ethics_filename,
                          'db_datas': vals.get('certificate_ethics_file').encode('base64'),
                          'datas_fname': False,
                          'res_model': 'hr.employee',
                          'res_id': cours_ethique.employee_id.id,
                          'type': 'binary' }
 
-        self.env['ir.attachment'].write(document_vals)
+            self.env['ir.attachment'].write(document_vals)
         return cours_ethique
     
     def verify_year_declaration(self):
@@ -569,23 +589,25 @@ class hr_declaration_interest(models.Model):
       
     @api.multi
     def create(self, vals):
-        if vals.get('date_add'):
-            this_year="{}-".format(datetime.now().strftime("%Y"))
-            declarations_interest_this_year=self.env['hr.declaration.interest'].search([('date_add','like',this_year)])
-            if declarations_interest_this_year is not False:
-                raise Warning("Vous ne pouvez ajouter plus une declaration d'interêt cette année")
-                return False
-            declaration_interest = super(hr_declaration_interest, self).create(vals)
+        this_year=datetime.now().strftime("%Y")
+        declarations_interest_this_year=self.env['hr.declaration.interest'].search([('year','=',this_year),('employee_id','=',vals.get('employee_id'))])
+        if declarations_interest_this_year:
+            raise Warning("Vous ne pouvez ajouter plus d'une declaration d'interêt cette année")
+            return False
+
+        declaration_interest = super(hr_declaration_interest, self).create(vals)
+        if declaration_interest and declaration_interest.declaration_interet_filename:
             document_vals = {'name': declaration_interest.declaration_interet_filename,
-                             'db_datas': vals.get('declaration_interet').encode('base64'),
-                             'datas_fname': False,
-                             'res_model': 'hr.employee',
-                             'res_id': declaration_interest.employee_id.id,
-                             'type': 'binary' }
-    
+                         'db_datas': vals.get('declaration_interet').encode('base64'),
+                         'datas_fname': False,
+                         'res_model': 'hr.employee',
+                         'res_id': declaration_interest.employee_id.id,
+                         'type': 'binary' }
+
             self.env['ir.attachment'].create(document_vals)
             return declaration_interest
-      
+        return False
+  
     @api.multi
     def write(self, vals):
 
@@ -594,20 +616,20 @@ class hr_declaration_interest(models.Model):
             #self.b_edit = True
             vals['b_edit'] = True                  
             declaration_interet=super(hr_declaration_interest, self).write(vals)
-            document_vals = {'name': declaration_interet.declaration_interet_filename,
+            if declaration_interest and declaration_interest.declaration_interet_filename:
+                document_vals = {'name': declaration_interet.declaration_interet_filename,
                              'db_datas': declaration_interet.declaration_interet.encode('base64'),
                              'datas_fname': False,
                              'res_model': 'hr.employee',
                              'res_id': declaration_interet.employee_id.id,
                              'type': 'binary' }
     
-            self.env['ir.attachment'].write(document_vals)
-            return declaration_interet
+                self.env['ir.attachment'].write(document_vals)
+                return declaration_interet
         else : 
             raise Warning(_(u'Vous avez déjà rempli le formulaire de déclaration cette année'))
             return False
 
-        
     def verify_year_certificate_ethics(self):
         res = False
         for record in self:
