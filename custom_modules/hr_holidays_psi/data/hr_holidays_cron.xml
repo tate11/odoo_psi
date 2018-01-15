@@ -37,7 +37,8 @@
             <field name="numbercall">-1</field>
             <field name="doall" eval="False" />
             <field eval="'hr.holidays'" name="model" />
-            <field name="function" eval="'_send_email_rappel_absences_to_assist_and_coord'" /> 
+            <field name="nextcall" eval="(datetime.utcnow() + timedelta(days=0)).strftime('%Y-%m-%d 06:30:00')" />
+            <field name="function" eval="'_send_email_rappel_absences_to_assist_and_coord'" />
         </record>
     </data>
 </odoo>
