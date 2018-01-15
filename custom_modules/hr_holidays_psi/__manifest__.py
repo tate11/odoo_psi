@@ -14,6 +14,8 @@
         'data/mail_template_hr_holidays_data.xml',
         'data/mail_template_validation_wkf.xml',
         'data/holidays_timesheet_data.xml',
+        'data/hr_holidays_rule.xml',
+        'data/hr_holidays_psi_remove_data.xml',
         'views/hr_holidays_configuration_views.xml',
         'report/report_request_for_absences.xml',
         'report/report_request_for_absences_template.xml',

@@ -73,10 +73,10 @@
         </record>
         
         <!-- Top menu item -->
-        <menuitem name="Project"
+        <menuitem name="Prestataire - Feuilles de temps"
             id="menu_main_pm"
-            groups="group_prestataire"
-            web_icon="project,static/description/icon.png"
+            groups="prestataire_psi.group_prestataire,hr_holidays_psi.group_hr_holidays_rh"
+            web_icon="prestataire_psi,static/description/icon_timesheet.png"
             sequence="50" action="action_form_timesheet_prestataire"/>
          
          <menuitem action="project.open_view_project_all_config" 

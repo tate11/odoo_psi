@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="1">
+		<!-- rules -->
+		<record id="property_rule_prestataire" model="ir.rule">
+	        <field name="name">Prestataire Rule</field>
+	        <field name="model_id" ref="base.model_ir_ui_menu"/>
+	        <field name="domain_force">[('name','=','Prestataire - Feuilles de temps')]</field>
+	        <field name="groups" eval="[(4,ref('group_prestataire'))]"/>
+	    </record>
+		
+	</data>
+</odoo>
