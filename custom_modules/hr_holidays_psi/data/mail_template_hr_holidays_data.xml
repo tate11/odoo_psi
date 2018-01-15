@@ -12,7 +12,7 @@
 			<field name="body_html"><![CDATA[
 <div>
     <p>
-      	Bonjour,     	                  
+      	Bonjour ${object.employee_id.name},     	                  
 	</p>
 	<p>
 		Si ce n'est déjà fait, veuillez joindre à votre demande de congé une ordonnance ou une pièce justificative.
