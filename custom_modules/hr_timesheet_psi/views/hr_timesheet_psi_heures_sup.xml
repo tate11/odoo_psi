@@ -98,63 +98,13 @@
 	<record id="hr_timesheet_psi_form_validate" model="ir.ui.view">
 		<field name="name">hr.timesheet.psi.form.validate</field>
 		<field name="model">hr_timesheet_psi.sheet</field>
+		<field name="inherit_id" ref="hr_timesheet_psi_form" />
+		<field name="mode">primary</field>
 		<field name="arch" type="xml">
-			<form string="Timesheet" create="false" edit="false">
-				<header>
-					<button name="action_timesheet_confirm"
-						string="Soumettre pour validation" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_user_connected','=',False), ('state','!=','draft')]}"/>
-					<button name="action_timesheet_done" states="confirm"
-						string="Valider cette demande" type="object"
-						groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" class="oe_highlight" />
-					<button name="action_timesheet_draft" states="done"
-						string="Mettre en brouillon" type="object"
-						groups="base.group_no_one" />
-					<button name="action_timesheet_draft" states="confirm"
-						string="Refuser" type="object" 
-						groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
-					<field name="state" widget="statusbar" statusbar_visible="draft,confirm,done" />
-				</header>
-				<sheet>
-					<div class="oe_title">
-						<label for="employee_id" class="oe_edit_only" />
-						<h1>
-							<field name="employee_id" class="oe_inline" placeholder="Employee's Name" attrs="{'readonly': True}" />
-						</h1>
-						<field name="user_id" invisible="1" />
-					</div>
-					<group>
-						<group>
-							
-							<field name="project_id_heure_sup"
-								options="{'no_quick_create': True, 'no_create_edit' : True}"
-								attrs="{'invisible': [('project_choice', 'not in', 'heure_sup')], 'required':True, 'readonly': [('state', '=', 'done')]}" />
-								
-							<field name="motif" attrs="{'readonly': [('state', '=', 'done')]}" />
-							<field name="date" attrs="{'readonly': [('state', '=', 'done')]}" />
-							<label for="time_from" string="Intervalle d'heures" />
-							<div>
-								<field name="time_from" class="oe_inline" widget="float_time"
-									sum="Hours" attrs="{'readonly': [('state', '=', 'done')]}" />
-								-
-								<field name="time_to" class="oe_inline" widget="float_time"
-									sum="Hours" attrs="{'readonly': [('state', '=', 'done')]}" />
-								=
-								<field name="difference_hours" />
-							</div>
-
-							<field name="name" invisible="1" />
-							<field name="department_id" invisible="1" />
-							<field name="project_choice" invisible="1" />
-							<field name="is_user_connected" invisible="1" />
-							<field name="company_id" groups="base.group_multi_company" />
-						</group>
-					</group>
-				</sheet>
-				<div class="oe_chatter">
-					<field name="message_follower_ids" widget="mail_followers" />
-					<field name="message_ids" widget="mail_thread" />
-				</div>
-			</form>
+			<xpath expr="/form" position="attributes">
+				<attribute name="create">false</attribute>
+				<attribute name="edit">false</attribute>
+			</xpath>
 		</field>
 	</record>
 	
@@ -217,18 +167,6 @@
 		</field>
 	</record>
 	
-	<record id="my_view_timesheet_list_psi_heure_sup_inherit" model="ir.ui.view">
-		<field name="name">timesheet grid psi heures sup grid List</field>
-		<field name="model">account.analytic.line</field>
-		<field name="inherit_id" ref="timesheet_grid.view_timesheet_list" />
-		<field name="arch" type="xml">
-			<xpath expr="/tree" position="attributes">
-				<!-- <attribute name="create">false</attribute>
-				<attribute name="edit">false</attribute> -->
-			</xpath>
-		</field>
-	</record>
-	
 	<record id="action_timesheet_psi_heures_sup" model="ir.actions.act_window">
 		<field name="name">Feuilles de temps heures supplémentaires</field>
 		<field name="res_model">account.analytic.line</field>
@@ -238,7 +176,7 @@
 			eval="[
                 (5, 0, 0),
                 (0, 0, {'view_mode': 'grid', 'view_id': ref('view_timesheet_grid_psi_heure_sup_inherit')}),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('my_view_timesheet_list_psi_heure_sup_inherit')}),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_timesheet_readonly')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('timesheet_grid.view_timesheet_form')}),
             ]" />
 		<field name="domain">['&amp;', ('user_id', '=', uid), ('psi_timesheet_type','=','heure_sup')] 
