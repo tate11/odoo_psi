@@ -87,9 +87,12 @@ class hr_contract(models.Model):
 
     @api.onchange('job_id')
     def _onchange_by_job_id(self):
-        self.department_id = self.job_id.department_id
-        self.psi_category_details = self.job_id.psi_category
-        self.psi_contract_type = self.job_id.psi_contract_type
+        for record in self:
+            record.department_id = record.job_id.department_id
+            record.psi_category_details = record.job_id.psi_category
+            record.psi_contract_type = record.job_id.psi_contract_type
+            current_wage = self.env['hr.wage.grid.details'].search([('psi_category','=',record.psi_cat_cat), ('psi_sub_category','=',record.psi_sub_category)])
+            record.wage = current_wage._get_echelon(record.psi_echelon)
 
     @api.onchange('employee_id')
     def _onchange_by_employee_id(self):
