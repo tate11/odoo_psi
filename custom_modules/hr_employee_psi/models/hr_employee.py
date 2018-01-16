@@ -163,6 +163,13 @@ class hr_employee(models.Model):
     @api.multi
     def write(self, vals):
         print "write"
+        
+        # tester si un utilisateur est deja lie a un employee
+        if 'user_id' in vals:
+            employee = self.env['hr.employee'].search([('user_id', '=', vals.get('user_id'))])
+            if employee:
+                raise Warning(u'Cet utilisateur est déjà lié à un autre employé {}.'.format(employee.name))
+                
         if vals.has_key('nombre_conge')  :
             if vals.get('nombre_conge') != 0.0 :
                 self.set_nombre_conge(vals.get('nombre_conge'))
