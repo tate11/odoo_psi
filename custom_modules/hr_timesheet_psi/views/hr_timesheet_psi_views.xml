@@ -206,7 +206,7 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('view_timesheet_readonly')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('my_view_timesheet_form_psi_inherit')}),
             ]" />
-		<field name="domain">['&amp;',('is_timesheet', '=', True),('psi_timesheet_type', '!=', 'heure_sup')]</field>
+		<field name="domain">['&amp;',('is_timesheet', '=', True),('psi_timesheet_type', '!=', 'heure_sup'),('state', '=', 'validate')]</field>
 		<field name="context">{'group_by': ['user_id']}</field>
 	</record>
 	
