@@ -457,7 +457,7 @@ class AccountAnalyticLine(models.Model):
                             attendances = self.env['resource.calendar.attendance'].search([('id', '=', attendance_id.id), ('dayofweek', '=', dayofweek)])
                             for attendance in attendances:
                                 heure_par_jour += attendance.hour_to - attendance.hour_from
-                    timesheets = self.env['account.analytic.line'].search([('date', '=', day),('user_id', '=', self.env.user.id)])
+                    timesheets = self.env['account.analytic.line'].search([('date', '=', day),('user_id', '=', self.env.user.id),('psi_timesheet_type', '=', 'normal')])
                     if len(timesheets) == 0 :
                         raise Warning('Veuillez vous assurer que votre feuille de temps est rempli correctement avant d\'enregistrer pour validation.')
                         return False

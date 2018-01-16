@@ -6,6 +6,11 @@
 		<field name="model">account.analytic.line</field>
 		<field name="inherit_id" ref="timesheet_grid.view_timesheet_list" />
 		<field name="arch" type="xml">
+			<xpath expr="/tree" position="attributes">
+				<attribute name="create">false</attribute>
+				<attribute name="edit">false</attribute>
+				<attribute name="domain">[('date','&gt;=', context_today().strftime("%Y-%m-1")), ('date','&lt;', ((context_today() + relativedelta(months=1)).strftime('%Y-%m-1')) )]</attribute>
+			</xpath>
 			<field name="task_id" position="attributes">
 				<attribute name="invisible">1</attribute>
 			</field>
