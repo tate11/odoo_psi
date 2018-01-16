@@ -166,6 +166,7 @@ class hr_employee(models.Model):
         
         # tester si un utilisateur est deja lie a un employee
         if 'user_id' in vals:
+
             if vals.get('user_id'):
                 employee = self.env['hr.employee'].search([('user_id', '=', vals.get('user_id'))])
                 if employee:
