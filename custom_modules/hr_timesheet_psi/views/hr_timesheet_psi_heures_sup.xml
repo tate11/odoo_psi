@@ -213,7 +213,7 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('view_timesheet_readonly')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('timesheet_grid.view_timesheet_form')}),
             ]" />
-		<field name="domain">[('is_timesheet', '=', True),('user_id.employee_ids.coach_id.user_id','=',uid),('psi_timesheet_type', '=', 'heure_sup')]</field>
+		<field name="domain">[('is_timesheet', '=', True),('user_id.employee_ids.coach_id.user_id','=',uid),('psi_timesheet_type', '=', 'heure_sup'),('state', '=', 'confirm')]</field>
 		<field name="context">{
 			'grid_anchor': (datetime.date.today() - relativedelta(months=1)).strftime('%Y-%m-%d'), 
 			'grid_range': 'month',
