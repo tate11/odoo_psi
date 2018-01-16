@@ -179,7 +179,7 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('view_timesheet_readonly')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('timesheet_grid.view_timesheet_form')}),
             ]" />
-		<field name="domain">['&amp;', ('user_id', '=', uid), ('psi_timesheet_type','=','heure_sup')] 
+		<field name="domain">[('user_id', '=', uid), ('psi_timesheet_type','=','heure_sup'),('state', '=', 'validate')] 
 		</field>
 		<field name="context"> { 'user_id': uid, 'grid_range': 'month', 'default_psi_timesheet_type': 'heure_sup' }
 		</field>
