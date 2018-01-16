@@ -433,7 +433,7 @@ class AccountAnalyticLine(models.Model):
     def send_to_validate(self):
        for record in self:
          if record.date != False :
-            timesheets = self.env['account.analytic.line'].search([('date', '=', record.date),('user_id', '=', self.env.user.id)])
+            timesheets = self.env['account.analytic.line'].search([('date', '=', record.date),('user_id', '=', self.env.user.id),('psi_timesheet_type', '=', 'normal')])
             if len(timesheets) > 0 and timesheets[0].state == 'confirm':
                 raise Warning("Votre feuille de temps a déjà été enregistrée pour validation.")
                 return False
@@ -471,7 +471,7 @@ class AccountAnalyticLine(models.Model):
                     for timesheet in timesheets :
                         timesheet.sudo().write({'state' : 'confirm'})
                     
-                timesheets_update = self.env['account.analytic.line'].search([('date', '=', date),('user_id', '=', self.env.user.id)])
+                timesheets_update = self.env['account.analytic.line'].search([('date', '=', date),('user_id', '=', self.env.user.id),('psi_timesheet_type', '=', 'normal')])
                 if len(timesheets_update) > 0 and timesheets_update[0].state == 'confirm' :
                    template = self.env.ref('hr_timesheet_psi.email_for_timesheet_to_validate')
                    self.env['mail.template'].browse(template.id).send_mail(employees[0].id, force_send=True)
