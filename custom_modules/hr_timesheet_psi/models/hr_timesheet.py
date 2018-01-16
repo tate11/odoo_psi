@@ -314,7 +314,7 @@ class AccountAnalyticLine(models.Model):
             account_analytic_line_s = {}
             if vals.has_key('date') :
                 print "date : ",vals.get('date')
-                account_analytic_line_s = self.env['account.analytic.line'].search([('date', '=', vals['date']), ('user_id','=',self.env.user.id)])
+                account_analytic_line_s = self.env['account.analytic.line'].search([('psi_timesheet_type','=',self.psi_timesheet_type),('date', '=', vals['date']), ('user_id','=',self.env.user.id)])
             for account in account_analytic_line_s :
                 raise Warning(u'Vous ne pouvez saisir qu\'une seule activité par jour (à mi-temps ou à plein temps).')
             hours_prestataire = self.env['hr.employee.provider.schedule'].browse(vals.get('hours_prestataire_id'))
@@ -335,7 +335,7 @@ class AccountAnalyticLine(models.Model):
             print "heure_par_jour", heure_par_jour
             print "date", self.date
             unit_amount_old = 0.0
-            account_analytic_line_s = self.env['account.analytic.line'].search([('date', '=', vals['date'])])
+            account_analytic_line_s = self.env['account.analytic.line'].search([('psi_timesheet_type','=',self.psi_timesheet_type),('date', '=', vals['date'])])
             for account in account_analytic_line_s :
                 if self.env.user.id == account.user_id.id:
                     if vals.get('account_id') :
@@ -387,7 +387,7 @@ class AccountAnalyticLine(models.Model):
         heure_par_jour = self.get_heure_par_jour(employees, vals_emp)
         print "heure_par_jour", heure_par_jour
         print "date", self.date
-        account_analytic_line_s = self.env['account.analytic.line'].search([('date', '=', self.date)])
+        account_analytic_line_s = self.env['account.analytic.line'].search([('psi_timesheet_type','=',self.psi_timesheet_type),('date', '=', self.date)])
         for account in account_analytic_line_s :
             if self.env.user.id == account.user_id.id:
                 total += account.unit_amount
