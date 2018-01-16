@@ -213,7 +213,7 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('view_timesheet_readonly')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('timesheet_grid.view_timesheet_form')}),
             ]" />
-		<field name="domain">[('is_timesheet', '=', True),('psi_timesheet_type', '=', 'heure_sup')]</field>
+		<field name="domain">[('is_timesheet', '=', True),('user_id.employee_ids.coach_id.user_id','=',uid),('psi_timesheet_type', '=', 'heure_sup')]</field>
 		<field name="context">{
 			'grid_anchor': (datetime.date.today() - relativedelta(months=1)).strftime('%Y-%m-%d'), 
 			'grid_range': 'month',
@@ -240,6 +240,6 @@
 		action="open_timesheet_psi_heures_sup_all" sequence="23" />
 		
 	<menuitem name="Feuilles de temps heures supplémentaires à valider" id="menu_timesheet_heures_sup_grid_validate"
-		parent="hr_timesheet_psi.menu_timesheet_grid_validate" groups="hr_holidays_psi.group_hr_holidays_rh"
+		parent="hr_timesheet_psi.menu_timesheet_grid_validate" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique"
 		action="action_timesheet_previous_month_heures_sup_psi" sequence="24" />
 </odoo>
