@@ -505,12 +505,12 @@ class hr_cours_ethique(models.Model):
         last_year=int(this_year)-1
         cours_ethique_last_year=self.env['hr.cours.ethique'].search([('year','=',last_year),('employee_id','=',vals.get('employee_id'))])
         print cours_ethique_last_year
-        print cours_ethique_this_year
         if cours_ethique_last_year:
             raise Warning("Vous ne pouvez ajouter un cours d'éthique qu'une fois dans 2 années")
             return False
         else:
             cours_ethique_this_year=self.env['hr.cours.ethique'].search([('year','=',this_year),('employee_id','=',vals.get('employee_id'))])
+            print cours_ethique_this_year
             if cours_ethique_this_year:
                 raise Warning("Vous ne pouvez ajouter un cours d'éthique qu'une fois dans 2 années")
                 return False
