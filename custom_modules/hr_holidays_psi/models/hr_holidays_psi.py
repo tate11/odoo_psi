@@ -927,7 +927,6 @@ class hr_holidays_psi(models.Model):
 
                 
      # Send mail - rappel piece justificatif - conge maladie  
-    @api.multi 
     def _send_email_rappel_justificatif_conge_maladie(self, automatic=False):
         print "_send_email_rappel_justificatif_conge_maladie"
         
@@ -1009,7 +1008,6 @@ class hr_holidays_psi(models.Model):
         #    self.number_of_days_temp = 0
     
     # Mail de rappel aux Assistantes et Coordinateurs
-    @api.multi
     def _send_email_rappel_absences_to_assist_and_coord(self, automatic=False):
         print "test cron by send mail rappel"
         today = datetime.datetime.today()
