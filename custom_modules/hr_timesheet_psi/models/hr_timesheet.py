@@ -4,7 +4,7 @@ import itertools
 
 from __builtin__ import False
 import calendar
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 import datetime as dt
 from odoo.addons.grid.models import END_OF
 
@@ -102,7 +102,81 @@ class AccountAnalyticLine(models.Model):
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):
         print "on_change_unit_amount"
+   
+    employee_timesheet_incomplet = fields.Char()
+   
+    # Count week-end et jours fériés
+    def count_day_off(self, numberday, month, year):
+        result = 0
+        start = date(year, month, 1)
+        end = date(year, month, numberday)
+        daydiff = end.weekday() - start.weekday()
+        number_days_week_end = ((end-start).days - daydiff) / 7 * 5 + min(daydiff,5) - (max(end.weekday() - 4, 0) % 5)
+        result = number_days_week_end+1
 
+        public_holidays = self.env['hr.holidays.public'].sudo().search([('year','=',year)])
+        public_holidays_line = self.env['hr.holidays.public.line'].sudo().search([('year_id','=',public_holidays[0].id)])
+
+        daterange = (start + timedelta(days=i) for i in range((end - start).days + 1))
+        for d in daterange:
+            date_temp = d.strftime('%Y-%m-%d')
+            for public_holiday in public_holidays_line:
+#                 print date_temp,' - ',public_holiday.date
+                if date_temp == public_holiday.date:
+                    result -= 1
+        return result
+
+    
+    def _send_email_collab_timesheet_incomplet(self, automatic=False):
+        this_year = datetime.now().strftime("%Y")
+        this_month = datetime.now().strftime("%m")
+        this_day = datetime.now().strftime("%d")
+        last_day_in_this_month = calendar.monthrange(int(this_year), int(this_month))[1] 
+        print this_day,' this_day'
+        print last_day_in_this_month,' last_day_in_this_month'
+        employee_incomplet = []
+        if this_day != last_day_in_this_month:
+        
+            count_days_in_month = calendar.monthrange(int(this_year), int(this_month))[1]
+            print count_days_in_month,' < nombre jour mois'
+            
+            number_day_no_day_off = self.count_day_off(int(count_days_in_month), int(this_month), int(this_year))
+            print number_day_no_day_off,' < Nombre jour mois no day off'
+            
+            timesheets = self.env['account.analytic.line'].search(['&',('psi_timesheet_type', '=', 'normal'),('state', 'in', ['confirm', 'validate'])])
+            employees = self.env['hr.employee'].search([])
+            print timesheets
+            for timesheet in timesheets:
+                date_timesheet = timesheet.date
+                date_temp = datetime.strptime(date_timesheet, '%Y-%m-%d')
+                month_date_timesheet = date_temp.month
+                print int(this_month),' == ',int(month_date_timesheet)
+                # Timesheet du mois
+                if int(this_month) == int(month_date_timesheet):
+                    nb_timesheet_save = 0
+                    for employee in employees:
+#                         print employee.name
+                        temp = 0
+                        timesheets_employee = self.env['account.analytic.line'].search([('user_id', '=', employee.user_id.id)])
+                        for timesheet_employee in timesheets_employee:
+                            date_timesheet_employee_ = timesheet_employee.date
+                            date_temp = datetime.strptime(date_timesheet_employee_,'%Y-%m-%d')
+                            month_date_timesheet_employee_ = date_temp.month
+                            if int(this_month) == int(month_date_timesheet_employee_):
+                                temp += 1
+                            nb_timesheet_save = temp
+#                             print temp,' Nombre jours timesheet'
+                        print nb_timesheet_save ,' < ', number_day_no_day_off
+                        if nb_timesheet_save < number_day_no_day_off:
+                            employee_incomplet.append(employee.work_email)
+            list_mail = ', '.join(employee_incomplet)
+            print list_mail
+            timesheets[0].employee_timesheet_incomplet = list_mail 
+            # Send mail    
+            print "Send mail"
+            template = self.env.ref('hr_timesheet_psi.email_collab_timesheet_incomplet')
+            self.env['mail.template'].browse(template.id).send_mail(timesheets[0].id, force_send=True)
+         
     def _send_email_rappel_envoie_abscence_membres(self, automatic=False):
         this_year = datetime.now().strftime("%Y")
         this_month = datetime.now().strftime("%m")

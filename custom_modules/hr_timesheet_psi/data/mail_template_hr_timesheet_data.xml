@@ -65,5 +65,25 @@
 			</field>
 		</record>
 		
+		<record id="email_collab_timesheet_incomplet" model="mail.template">
+			<field name="name">PSI timesheet - Rappel aux collaborateurs le fin du mois - Feuille de temps incomplete</field>
+			<field name="model_id" ref="hr_timesheet_psi.model_account_analytic_line" />
+			<field name="email_from"><![CDATA[${object.create_uid.email or object.company_id.email}]]></field>
+			<field name="subject">Saisie des feuilles de temps</field>
+			<field name="email_to">${object.employee_timesheet_incomplet}</field>
+			<field name="body_html"><![CDATA[
+				<div>
+				    <p>
+				      	Bonjour, 
+				    </p>
+				    <p>
+				     	Veuillez remplir vos feuilles de temps de ce mois.             
+					</p>               
+					<p>
+					Cordialement.
+					</p>
+				</div>   ]]>
+			</field>
+		</record>
     </data>
 </odoo>
