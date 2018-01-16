@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
+
+		<record id="custom_template_notif_chang_info_perso"
+			model="mail.template">
+			<field name="name">Changement d'information personnelle</field>
+			<field name="model_id" ref="hr_employee_psi.model_hr_employee" />
+			<field name="email_from">${object.create_uid.email}</field>
+			<field name="subject">Changement d'information personnelle</field>
+			<field name="email_to">${object.work_email}</field>
+			<field name="email_cc">${object.coach_id.email}</field>
+			<field name="body_html"><![CDATA[
+<div>
+    <p>
+      	Bonjour ${object.name}, <br/>
+     	Votre(s) information(s) personnelle(s) a(ont) été changée(s):                    
+	</p>
+	<p>
+		% if object.address_home_id :
+			Adresse : ${object.address_home_id}<br/>
+	  	% endif
+	  	% if object.personal_phone:
+			Téléphone portable : ${object.personal_phone}<br/>
+		% endif
+		% if object.personal_fixed_phone:
+			Téléphone fixe : ${object.personal_fixed_phone}<br/>
+		% endif
+		% if object.marital:
+			Situation matrimoniale : ${object.marital}<br/>
+		% endif
+	</p>.          
+</div>   ]]>
+			</field>
+		</record>
+
 		<record id="custom_template_rappel_collab_1"
 			model="mail.template">
 			<field name="name">PSI Template email employee - Rappel Email au

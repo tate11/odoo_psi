@@ -146,7 +146,7 @@ class hr_employee(models.Model):
     @api.onchange('name') 
     def _check_change(self):
         self.psi_name = self.name
-        
+
     @api.model
     def create(self, vals):
         print "create"
@@ -163,6 +163,8 @@ class hr_employee(models.Model):
     @api.multi
     def write(self, vals):
         print "write"
+        
+        employee = self.browse(self.id)
         
         # tester si un utilisateur est deja lie a un employee
         if 'user_id' in vals:
@@ -204,6 +206,12 @@ class hr_employee(models.Model):
                 #commission_group.write({'users': [(4, self.user_id.id)]})
             
         employee = super(hr_employee, self).write(vals)
+
+        if 'marital' in vals or 'address_home_id' in vals or 'personal_phone' in vals or 'personal_fixed_phone' in vals:
+            #envoyer un mail de notification
+            template = self.env.ref('hr_employee_psi.custom_template_notif_chang_info_perso')
+            self.env['mail.template'].browse(template.id).send_mail(employee.id,force_send=True) 
+            
         return employee
     
     def set_nombre_conge(self, nombre_conge):
