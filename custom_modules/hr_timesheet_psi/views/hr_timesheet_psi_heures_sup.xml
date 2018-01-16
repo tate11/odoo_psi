@@ -127,7 +127,7 @@
 	</record>
 	
 	<record id="open_heures_sup_a_valider" model="ir.actions.act_window">
-		<field name="name">Feuilles de temps heures supplémentaires à valider</field>
+		<field name="name">Demandes d'heures supplémentaires à valider</field>
 		<field name="res_model">hr_timesheet_psi.sheet</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -135,7 +135,7 @@
 		<field name="domain">['&amp;',('state', '=', 'confirm'),('user_id.employee_ids.coach_id.user_id','=',uid)]</field>
 		<field name="help" type="html">
 			<p class="oe_view_nocontent">
-			Liste des feuilles de temps heures supplémentaires à valider
+			Liste des demandes d'heures supplémentaires à valider
 			</p>
 		</field>
 	</record>
@@ -197,8 +197,30 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('view_timesheet_readonly')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('my_view_timesheet_form_psi_inherit')}),
             ]" />
-		<field name="domain">['&amp;',('is_timesheet', '=', True),('psi_timesheet_type', '=', 'heure_sup')]</field>
+		<field name="domain">[('is_timesheet', '=', True),('psi_timesheet_type', '=', 'heure_sup'),('state', '=', 'validate')]</field>
 		<field name="context">{'group_by': ['user_id']}</field>
+	</record>
+	
+	<record id="action_timesheet_previous_month_heures_sup_psi" model="ir.actions.act_window">
+		<field name="name">Feuilles de temps heures supplémentaires à valider</field>
+		<field name="res_model">account.analytic.line</field>
+		<field name="view_mode">grid,tree</field>
+		<field name="search_view_id" ref="view_timesheet_grid_search_psi" />
+		<field name="view_ids"
+			eval="[
+                (5, 0, 0),
+                (0, 0, {'view_mode': 'grid', 'view_id': ref('view_timesheet_grid_validate_psi')}),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_timesheet_readonly')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('timesheet_grid.view_timesheet_form')}),
+            ]" />
+		<field name="domain">[('is_timesheet', '=', True),('psi_timesheet_type', '=', 'heure_sup')]</field>
+		<field name="context">{
+			'grid_anchor': (datetime.date.today() - relativedelta(months=1)).strftime('%Y-%m-%d'), 
+			'grid_range': 'month',
+			'search_default_nonvalidated': True,
+			'group_by': ['user_id','project_id'],
+			}
+		</field>
 	</record>
 	
 	<menuitem name="Demande heures supplémentaires" id="menu_act_hr_timesheet_psi_my_timesheets"
@@ -209,11 +231,15 @@
 		parent="hr_timesheet.menu_hr_time_tracking" action="action_timesheet_psi_heures_sup"
 		sequence="21" groups="hr_employee_psi.group_hr_psi_appui_execution" />
 	
-	<menuitem name="Feuilles de temps heures supplémentaires" id="menu_heures_sup_a_valider"
+	<menuitem name="Demandes d'heures supplémentaires" id="menu_heures_sup_a_valider"
 		parent="hr_timesheet_psi.menu_timesheet_grid_validate" action="open_heures_sup_a_valider"
 		sequence="22" groups="hr_holidays_psi.group_hr_holidays_sup_hierarchique" />
 		
 	<menuitem name="Toutes les feuilles de temps heures supplémentaires" id="menu_timesheet_grid_psi_heures_sup_all"
 		parent="hr_timesheet.menu_hr_time_tracking" groups="hr_holidays_psi.group_hr_holidays_rh"
 		action="open_timesheet_psi_heures_sup_all" sequence="23" />
+		
+	<menuitem name="Feuilles de temps heures supplémentaires à valider" id="menu_timesheet_heures_sup_grid_validate"
+		parent="hr_timesheet_psi.menu_timesheet_grid_validate" groups="hr_holidays_psi.group_hr_holidays_rh"
+		action="action_timesheet_previous_month_heures_sup_psi" sequence="24" />
 </odoo>
