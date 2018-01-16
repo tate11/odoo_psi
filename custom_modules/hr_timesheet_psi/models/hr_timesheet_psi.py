@@ -310,6 +310,7 @@ class HrTimesheetPsi(models.Model):
             'unit_amount': self.hours,
             'psi_timesheet_type': self.project_choice,
             'state': 'confirm',
+            'validated': True, #force a true car deja valide par superieur hierarchique
             'user_id': self.user_id.id
         })
         
