@@ -255,7 +255,6 @@ class hr_contract(models.Model):
     
     @api.multi
     def write(self, vals):
-        self._send_email_trial_date_end(False)
           #traitement de l'augmentation des salaires
         if vals.has_key('wage') :
             data = self.browse(self.id) 
@@ -507,7 +506,6 @@ class hr_contract(models.Model):
         contracts = self.env['hr.contract'].search([])
         print "Verification un mois apres fin essai"
         for record in contracts:
-            print record
             if record.trial_date_start:
                 date_start = record.trial_date_start
                 date_start_trial = datetime.strptime(date_start,"%Y-%m-%d")
@@ -516,13 +514,9 @@ class hr_contract(models.Model):
                     month=date_start_trial.month,
                     day=date_start_trial.day,
                 )
-                print record.job_id.psi_category.test_duration,' test_duration'
-                print date_start_trial_time,' date_start_trial_time'
                 # Verification selection                
                 month_to_notif = date_start_trial_time + relativedelta(months=record.job_id.psi_category.test_duration-1)
-                print month_to_notif,' month_to_notif'
                 if month_to_notif.date() == datetime.today().date():
-                    print "mail sent"
                     template = self.env.ref('hr_contract_psi.custom_template_trial_date_end')
                     self.env['mail.template'].browse(template.id).send_mail(self.id, force_send=True)
         if automatic:
